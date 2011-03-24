@@ -127,7 +127,7 @@ public class MacroRegistry implements IMacroProvider {
 	public static IMacro createMacro (int keyCode, int modifiers, IMacroHandler handler)
 	{
 		Macro macro = new Macro(instance(), keyCode, modifiers);
-		macro.addHandler(handler);
+		macro.setHandler(handler);
 		
 		return macro;
 	}

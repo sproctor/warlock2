@@ -36,7 +36,6 @@ import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
  * @author marshall
  *
  */
-@SuppressWarnings("deprecation")
 public class StormFrontSWTSettings implements IStormFrontMacroImporter {
 
 	public static HashMap<String, Integer> keys = new HashMap<String, Integer>();
@@ -110,7 +109,7 @@ public class StormFrontSWTSettings implements IStormFrontMacroImporter {
 			int mods = modifierListToInt(modifiers);
 			
 			Macro macro = new Macro(settings.getMacroConfigurationProvider(), keyCode, mods);
-			macro.addHandler(new CommandMacroHandler(action));
+			macro.setHandler(new CommandMacroHandler(action));
 			
 			settings.getMacroConfigurationProvider().addMacro(macro);
 		}
@@ -124,7 +123,7 @@ public class StormFrontSWTSettings implements IStormFrontMacroImporter {
 					int mods = modifierListToInt(modifiers);
 					
 					Macro macro = new Macro(settings.getMacroConfigurationProvider(), k, mods);
-					macro.addHandler(new CommandMacroHandler(action));
+					macro.setHandler(new CommandMacroHandler(action));
 					
 					settings.getMacroConfigurationProvider().addMacro(macro);
 				}

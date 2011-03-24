@@ -22,7 +22,6 @@
 package cc.warlock.rcp.prefs;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -74,8 +73,8 @@ import cc.warlock.core.client.settings.macro.internal.Macro;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeText;
-import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.KeyStrokeText.KeyStrokeLockListener;
+import cc.warlock.rcp.ui.WarlockSharedImages;
 
 /**
  *
@@ -194,15 +193,12 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		macroTableView.addFilter(new ViewerFilter() {
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				IMacro macro = (IMacro) element;
-				Collection<IMacroHandler> handlers = macro.getHandlers();
+				IMacroHandler handler = macro.getHandler();
 				
-				if (handlers.size() == 1) {
-					IMacroHandler handler = (IMacroHandler) handlers.toArray()[0];
-					if (handler instanceof CommandMacroHandler) {
-						return true;
-					}
-				}
-				return false;
+				if (handler != null && handler instanceof CommandMacroHandler)
+					return true;
+				else
+					return false;
 			}	
 		});
 		macroTableView.addFilter(new MacroFilter());
@@ -309,7 +305,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected void addMacroSelected ()
 	{
 		Macro macro = new Macro(settings.getMacroConfigurationProvider(), 0);
-		macro.addHandler(new CommandMacroHandler(""));
+		macro.setHandler(new CommandMacroHandler(""));
 		
 		addedMacros.add(macro);
 		macros.add(macro);
@@ -441,7 +437,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		Macro macro = new Macro(settings.getMacroConfigurationProvider(), 0);
 		macro.setModifiers(keymod);
 		macro.setKeyCode(keycode);
-		macro.addHandler(new CommandMacroHandler(cmd));
+		macro.setHandler(new CommandMacroHandler(cmd));
 		
 		addedMacros.add(macro);
 		macros.add(macro);
@@ -455,8 +451,8 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			macroTable.clearAll();
 		addedMacros.clear();
 		for (Macro currentMacro: macros) {
-			// System Macros have no handlers, and shouldn't be removed.
-			if (!currentMacro.getHandlers().isEmpty()) {
+			IMacroHandler handler = currentMacro.getHandler();
+			if (handler != null && handler instanceof CommandMacroHandler) {
 				macroTableView.remove(currentMacro);
 				removedMacros.add(currentMacro);
 			}
@@ -464,7 +460,11 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	}
 	
 	protected CommandMacroHandler getCommandMacroHandler (IMacro macro) {
-		return (CommandMacroHandler)macro.getHandlers().toArray()[0];
+		IMacroHandler handler = macro.getHandler();
+		if(handler != null && handler instanceof CommandMacroHandler)
+			return (CommandMacroHandler)handler;
+		else
+			return null;
 	}
 	
 	protected class LabelProvider implements ITableLabelProvider

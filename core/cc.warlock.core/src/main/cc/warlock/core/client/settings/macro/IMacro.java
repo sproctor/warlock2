@@ -20,8 +20,6 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */package cc.warlock.core.client.settings.macro;
 
-import java.util.Collection;
-
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.settings.IClientSetting;
 
@@ -40,10 +38,8 @@ public interface IMacro extends IClientSetting {
 	public int getModifiers ();
 	public void setModifiers (int modifiers);
 	
-	public void addHandler (IMacroHandler handler);
-	public void removeHandler (IMacroHandler handler);
-	
-	public Collection<IMacroHandler> getHandlers();
+	public void setHandler (IMacroHandler handler);
+	public IMacroHandler getHandler();
 	
 	public void execute(IWarlockClientViewer viewer);
 	

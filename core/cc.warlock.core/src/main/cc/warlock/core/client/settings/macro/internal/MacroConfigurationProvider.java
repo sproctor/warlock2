@@ -125,7 +125,7 @@ public class MacroConfigurationProvider extends ClientConfigurationProvider impl
 			int modifiers = intValue(child, "modifiers");
 			
 			Macro macro = new Macro(this, keycode, modifiers);
-			macro.addHandler(new CommandMacroHandler(command));
+			macro.setHandler(new CommandMacroHandler(command));
 			
 			macros.add(macro);
 		}
@@ -136,17 +136,12 @@ public class MacroConfigurationProvider extends ClientConfigurationProvider impl
 		Element macrosElement = DocumentHelper.createElement("macros");
 		for (IMacro macro : macros)
 		{
-			if (macro.getHandlers().size() == 1) {
-				
-				IMacroHandler first = macro.getHandlers().iterator().next();
-				if (first instanceof CommandMacroHandler) {
-					CommandMacroHandler handler = (CommandMacroHandler)first;
-					
-					Element mElement = macrosElement.addElement("macro");
-					mElement.addAttribute("command", handler.getCommand());
-					mElement.addAttribute("keycode", macro.getKeyCode()+"");
-					mElement.addAttribute("modifiers", macro.getModifiers()+"");
-				}
+			IMacroHandler handler = macro.getHandler();
+			if (handler != null && handler instanceof CommandMacroHandler) {	
+				Element mElement = macrosElement.addElement("macro");
+				mElement.addAttribute("command", ((CommandMacroHandler)handler).getCommand());
+				mElement.addAttribute("keycode", macro.getKeyCode()+"");
+				mElement.addAttribute("modifiers", macro.getModifiers()+"");
 			}
 		}
 		

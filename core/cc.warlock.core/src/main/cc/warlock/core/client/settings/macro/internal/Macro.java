@@ -27,12 +27,8 @@
  */
 package cc.warlock.core.client.settings.macro.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.settings.internal.ClientSetting;
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
@@ -41,7 +37,7 @@ public class Macro extends ClientSetting implements IMacro
 {
 	protected int keycode;
 	protected int modifiers;
-	protected ArrayList<IMacroHandler> handlers;
+	protected IMacroHandler handler;
 	protected Object userData;
 	
 	public Macro (IMacroProvider provider, int keycode)
@@ -55,7 +51,6 @@ public class Macro extends ClientSetting implements IMacro
 		
 		this.keycode = keycode;
 		this.modifiers = modifiers;
-		this.handlers = new ArrayList<IMacroHandler>();
 	}
 	
 	public Macro (Macro other) {
@@ -63,14 +58,7 @@ public class Macro extends ClientSetting implements IMacro
 		
 		this.keycode = other.keycode;
 		this.modifiers = other.modifiers;
-		this.handlers = new ArrayList<IMacroHandler>();
-		
-		for (IMacroHandler handler : other.handlers) {
-			if (handler instanceof CommandMacroHandler)
-			{
-				this.handlers.add(new CommandMacroHandler(((CommandMacroHandler)handler).getCommand()));
-			}
-		}
+		this.handler = other.handler;
 	}
 	
 	public int getKeyCode() {
@@ -95,27 +83,18 @@ public class Macro extends ClientSetting implements IMacro
 		this.modifiers = modifiers;
 	}
 	
-	public void addHandler(IMacroHandler handler) {
+	public void setHandler(IMacroHandler handler) {
 		needsUpdate = true;
 		
-		this.handlers.add(handler);
+		this.handler = handler;
 	}
 	
-	public void removeHandler(IMacroHandler handler) {
-		if (this.handlers.remove(handler)) {
-			needsUpdate = true;
-		}
-	}
-	
-	public Collection<IMacroHandler> getHandlers() {
-		return this.handlers;
+	public IMacroHandler getHandler() {
+		return this.handler;
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		for (IMacroHandler handler : handlers)
-		{
-			handler.handleMacro(this, viewer);
-		}
+		handler.handleMacro(this, viewer);
 	}
 	
 	public Object getUserData() {
@@ -128,13 +107,7 @@ public class Macro extends ClientSetting implements IMacro
 	
 	@Override
 	public String toString() {
-		String str = "Macro (keycode="+keycode+",modifiers="+modifiers+",handlers=(";
-		for (IMacroHandler handler : handlers)
-		{
-			str += handler.toString() + ", ";
-		}
-		
-		str += ")";
+		String str = "Macro (keycode="+keycode+",modifiers="+modifiers+",handler="+handler.toString();
 		return str;
 	}
 	
