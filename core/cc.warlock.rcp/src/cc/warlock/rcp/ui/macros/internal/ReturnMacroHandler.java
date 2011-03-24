@@ -1,7 +1,7 @@
 /**
  * Warlock, the open-source cross-platform game client
  *  
- * Copyright 2008, Warlock LLC, and individual contributors as indicated
+ * Copyright 2011, Warlock LLC, and individual contributors as indicated
  * by the @authors tag. 
  *
  * This is free software; you can redistribute it and/or modify it
@@ -19,31 +19,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-/*
- * Created on Mar 27, 2005
- */
 package cc.warlock.rcp.ui.macros.internal;
 
-import java.util.ArrayList;
-
+import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.settings.macro.IMacro;
+import cc.warlock.core.client.settings.macro.IMacroHandler;
 
 /**
- * @author Marshall
- * 
- * Loads the default macros from the sytem .macros file
+ * @author Sean Proctor
  */
-public class SystemMacros {
-	public static IMacro[] getSystemMacros ()
-	{
-		ArrayList<IMacro> systemMacros = new ArrayList<IMacro>();
-		
-		SystemMacroHandler commandHistoryMacroHandler = new SystemMacroHandler();
-		for (IMacro macro : commandHistoryMacroHandler.getMacros())
-		{
-			systemMacros.add(macro);
-		}
-		
-		return systemMacros.toArray(new IMacro[systemMacros.size()]);
+public class ReturnMacroHandler implements IMacroHandler {
+
+	public boolean handleMacro(IMacro macro, IWarlockClientViewer viewer) {
+		viewer.submit();
+		return true;
 	}
+
 }

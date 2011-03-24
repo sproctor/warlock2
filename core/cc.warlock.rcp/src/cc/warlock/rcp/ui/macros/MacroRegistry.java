@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
+import org.eclipse.swt.SWT;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
@@ -51,7 +52,8 @@ import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.client.settings.macro.internal.Macro;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
-import cc.warlock.rcp.ui.macros.internal.SystemMacros;
+import cc.warlock.rcp.ui.macros.internal.EscapeMacroHandler;
+import cc.warlock.rcp.ui.macros.internal.ReturnMacroHandler;
 
 
 /**
@@ -166,10 +168,8 @@ public class MacroRegistry implements IMacroProvider {
 	}
 	
 	private void loadMacros () {
-		for (IMacro macro : SystemMacros.getSystemMacros())
-		{
-			macros.add(macro);
-		}
+		macros.add(MacroRegistry.createMacro(SWT.CR, new ReturnMacroHandler()));
+		macros.add(MacroRegistry.createMacro(SWT.ESC, new EscapeMacroHandler()));
 	}
 	
 	public IMacro getMacro(int keycode, int modifiers) {

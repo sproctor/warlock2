@@ -1,7 +1,7 @@
 /**
  * Warlock, the open-source cross-platform game client
  *  
- * Copyright 2008, Warlock LLC, and individual contributors as indicated
+ * Copyright 2011, Warlock LLC, and individual contributors as indicated
  * by the @authors tag. 
  *
  * This is free software; you can redistribute it and/or modify it
@@ -23,57 +23,23 @@ package cc.warlock.rcp.ui.macros.internal;
 
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.ScriptEngineRegistry;
-import cc.warlock.rcp.ui.macros.MacroRegistry;
 
-public class SystemMacroHandler implements IMacroHandler {
+/**
+ * @author Sean Proctor
+ */
+public class EscapeMacroHandler implements IMacroHandler {
 
-	private IMacro sendMacro, stopScript;
-	
-	public SystemMacroHandler ()
-	{
-		sendMacro = MacroRegistry.createMacro(SWT.CR, this);
-		stopScript = MacroRegistry.createMacro(SWT.ESC, this);
-	}
-	
-	public IMacro[] getMacros ()
-	{
-		return new IMacro[] { sendMacro, stopScript };
-	}
-	
-	public boolean handleMacro (IMacro macro, IWarlockClientViewer viewer)
-	{
-		if (macro.equals(sendMacro))
-		{
-			handleSend(viewer);
-			return true;
-		}
-		else if (macro.equals(stopScript))
-		{
-			handleStopScript(viewer);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public void handleSend (IWarlockClientViewer viewer)
-	{
-		viewer.submit();
-	}
-
-	private void handleStopScript(IWarlockClientViewer viewer)
-	{
+	public boolean handleMacro(IMacro macro, IWarlockClientViewer viewer) {
 		List<IScript> runningScripts = ScriptEngineRegistry.getRunningScripts(viewer);
 		for(IScript script : runningScripts) {
 			script.stop();
 		}
+		return true;
 	}
-	
+
 }
