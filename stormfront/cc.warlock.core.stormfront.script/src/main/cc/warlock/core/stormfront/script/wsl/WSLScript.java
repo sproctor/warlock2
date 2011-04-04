@@ -82,7 +82,9 @@ public class WSLScript extends AbstractScript {
 		
 		scriptCommands = new StormFrontScriptCommands(viewer, this);
 		
-		setSpecialVariable("rt", new WSLRoundTime());
+		IWSLValue rt = new WSLRoundTime();
+		setSpecialVariable("rt", rt);
+		setSpecialVariable("roundtime", rt);
 		setSpecialVariable("monstercount", new WSLMonsterCount());
 		setSpecialVariable("lhand", new WSLLeftHand());
 		setSpecialVariable("rhand", new WSLRightHand());
