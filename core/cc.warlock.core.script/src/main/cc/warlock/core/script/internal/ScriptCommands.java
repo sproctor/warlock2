@@ -65,7 +65,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	private int room = 0;
 	private int prompt = 0;
 	private boolean atPrompt;
-	private String lastCommand = null;
 	
 	private final Lock lock = new ReentrantLock();
 	private final Condition gotResume = lock.newCondition();
@@ -161,8 +160,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	}
 	
 	public void put(String text) throws InterruptedException {
-		lastCommand = text;
-		
 		Command command = new Command(text, true);
 		command.setPrefix("[" + scriptName + "]: ");
 		getClient().send(command);
@@ -325,7 +322,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	}
 	
 	public String getLastCommand() {
-		return lastCommand;
+		return getClient().getLastCommand();
 	}
 	
 	public void playSound(InputStream stream) {

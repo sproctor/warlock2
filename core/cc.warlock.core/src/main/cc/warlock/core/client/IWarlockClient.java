@@ -135,6 +135,11 @@ public interface IWarlockClient extends IRoomListener {
 	public IProperty<String> getCharacterName();
 	
 	/**
+	 * @return The last command sent
+	 */
+	public String getLastCommand();
+	
+	/**
 	 * @return This client's logger (for use by streams etc)
 	 */
 	public IClientLogger getLogger();

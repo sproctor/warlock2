@@ -59,6 +59,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	protected IConnection connection;
 	protected IWarlockClientViewer viewer;
 	protected IWarlockClientListener listener;
+	private String lastCommand;
 	protected ICommandHistory commandHistory = new CommandHistory();
 	protected String streamPrefix;
 	private Collection<IRoomListener> roomListeners = Collections.synchronizedCollection(new ArrayList<IRoomListener>());
@@ -126,11 +127,17 @@ public abstract class WarlockClient implements IWarlockClient {
 		getDefaultStream().sendCommand(command);
 		
 		try {
+			String commandString = command.getCommand();
+			lastCommand = commandString;
 			if(connection != null)
-				connection.send(command.getCommand());
+				connection.send(commandString);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String getLastCommand() {
+		return lastCommand;
 	}
 	
 	public void setViewer(IWarlockClientViewer viewer) {
