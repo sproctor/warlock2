@@ -321,10 +321,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		scriptThreads.remove(thread);
 	}
 	
-	public String getLastCommand() {
-		return getClient().getLastCommand();
-	}
-	
 	public void playSound(InputStream stream) {
 		getClient().playSound(stream);
 	}
