@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
@@ -36,11 +37,17 @@ public class VariableConfigurationProvider extends ClientConfigurationProvider i
 
 	protected HashMap<String, IVariable> variables = new HashMap<String, IVariable>();
 	
-	public VariableConfigurationProvider ()
+	public VariableConfigurationProvider (Preferences parentNode)
 	{
-		super("variables");
+		super(parentNode, "variables");
 		
-		setHandleChildren(false);
+		try {
+			for(String name : getNode().childrenNames()) {
+				variables.put(name, new Variable(getNode(), name));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void addVariable(IVariable variable) {

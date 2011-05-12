@@ -22,13 +22,10 @@
 package cc.warlock.core.client.settings;
 
 import java.util.Collection;
-import java.util.List;
 
-import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
+import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
 /**
  * @author marshall
@@ -51,14 +48,8 @@ public interface IClientSettings {
 	public Collection<IWindowSettings> getWindowSettings();
 	public IWindowSettings getWindowSettings (String windowId);
 	
-	public Collection<IMacro> getMacros();
-	public IMacro getMacro (int keycode, int modifiers);
-	
-	public List<? extends IMacroVariable> getAllMacroVariables();
-	public IMacroVariable getMacroVariable (String id);
-	
-	public List<? extends IMacroCommand> getAllMacroCommands();
-	public IMacroCommand getMacroCommand(String id);
+	public Collection<MacroSetting> getMacros();
+	public MacroSetting getMacro (int keycode, int modifiers);
 
 	public IWindowSettings getMainWindowSettings();
 

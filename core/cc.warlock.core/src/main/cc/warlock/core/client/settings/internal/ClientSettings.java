@@ -40,10 +40,8 @@ import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.IWindowSettingsProvider;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroProvider;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
+import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
 
 /**
@@ -75,7 +73,7 @@ public class ClientSettings implements IClientSettings {
 		ignoreConfigurationProvider = new IgnoreConfigurationProvider();
 		triggerConfigurationProvider = new TriggerConfigurationProvider();
 		variableConfigurationProvider = new VariableConfigurationProvider();
-		macroConfigurationProvider = new MacroConfigurationProvider();
+		macroConfigurationProvider = new MacroConfigurationProvider(node);
 		windowSettingsProvider = new WindowSettingsConfigurationProvider(node);
 	}
 	
@@ -103,13 +101,8 @@ public class ClientSettings implements IClientSettings {
 		return list;
 	}
 	
-	public IMacro getMacro(int keycode, int modifiers) {
-		for (IMacro macro : getAllMacros()) {
-			if (macro.getKeyCode() == keycode && macro.getModifiers() == modifiers) {
-				return macro;
-			}
-		}
-		return null;
+	public MacroSetting getMacro(int keycode, int modifiers) {
+		return macroConfigurationProvider.getMacro(keycode, modifiers);
 	}
 	
 	public IWarlockStyle getNamedStyle(String name) {
