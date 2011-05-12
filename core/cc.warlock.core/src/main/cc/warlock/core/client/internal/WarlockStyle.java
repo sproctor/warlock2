@@ -21,17 +21,12 @@
  */
 package cc.warlock.core.client.internal;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 
 
 public class WarlockStyle implements IWarlockStyle {
 
-	private HashSet<StyleType> styleTypes = new HashSet<StyleType>();
 	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	private boolean fullLine;
@@ -39,13 +34,11 @@ public class WarlockStyle implements IWarlockStyle {
 	private String componentName;
 	private Runnable action;
 	private IWarlockStyle originalStyle;
-	private boolean needsUpdate;
 	private String sound = new String();
-	
-	public WarlockStyle (StyleType[] styleTypes)
-	{
-		this.styleTypes.addAll(Arrays.asList(styleTypes));
-	}
+	private boolean bold;
+	private boolean italic;
+	private boolean underline;
+	private boolean monospace;
 	
 	public WarlockStyle(String name) {
 		this.name = name;
@@ -62,9 +55,9 @@ public class WarlockStyle implements IWarlockStyle {
 		this.name = other.getName();
 		this.componentName = other.getComponentName();
 		this.action = other.getAction();
-		
-		if (other.getStyleTypes() != null)
-			styleTypes.addAll(other.getStyleTypes());
+		this.bold = other.isBold();
+		this.italic = other.isItalic();
+		this.underline = other.isUnderline();
 		
 		this.originalStyle = other;
 		this.fullLine = other.isFullLine();
@@ -75,50 +68,31 @@ public class WarlockStyle implements IWarlockStyle {
 		return action;
 	}
 	
-	public void setAction(Runnable action) {
-		if (action != this.action)
-			needsUpdate = true;
-			
-		this.action = action;
+	public boolean isBold() {
+		return bold;
 	}
 	
-	public Collection<StyleType> getStyleTypes() {
-		return styleTypes;
+	public boolean isItalic() {
+		return italic;
+	}
+	
+	public boolean isUnderline() {
+		return underline;
+	}
+	
+	public boolean isMonospace() {
+		return monospace;
 	}
 	
 	public boolean isFullLine() {
 		return fullLine;
 	}
 	
-	public void addStyleType (StyleType styleType)
-	{
-		needsUpdate = true;
-		
-		styleTypes.add(styleType);
-	}
-	
-	public void inheritFrom(IWarlockStyle style) {
-		// Right now this just deals with inheriting monospace, eventually we should figure out a way to inherit other properties as well
-		if (style.getStyleTypes().contains(StyleType.MONOSPACE)
-			&& !styleTypes.contains(StyleType.MONOSPACE))
-		{
-			needsUpdate = true;
-			
-			styleTypes.add(StyleType.MONOSPACE);
-		}
-	}
-	
 	public void setFullLine(boolean fullLine) {
-		if (fullLine != this.fullLine)
-			needsUpdate = true;
-		
 		this.fullLine = fullLine;
 	}
 	
 	public void setName(String name) {
-		if (!name.equals(this.name))
-			needsUpdate = true;
-		
 		this.name = name;
 	}
 	
@@ -139,9 +113,6 @@ public class WarlockStyle implements IWarlockStyle {
 	}
 
 	public void setForegroundColor(WarlockColor foregroundColor) {
-		if (!foregroundColor.equals(this.foregroundColor))
-			needsUpdate = true;
-		
 		this.foregroundColor = foregroundColor;
 	}
 
@@ -150,15 +121,7 @@ public class WarlockStyle implements IWarlockStyle {
 	}
 
 	public void setBackgroundColor(WarlockColor backgroundColor) {
-		if (!backgroundColor.equals(this.backgroundColor))
-			needsUpdate = true;
-		
 		this.backgroundColor = backgroundColor;
-	}
-	
-	public boolean needsUpdate ()
-	{
-		return needsUpdate;
 	}
 	
 	public IWarlockStyle getOriginalStyle ()
@@ -170,26 +133,44 @@ public class WarlockStyle implements IWarlockStyle {
 		return sound;
 	}
 	
+	public void setAction(Runnable action) {
+		this.action = action;
+	}
+	
 	public void setSound(String sound){
-		if ((this.sound == null) || (sound != null && !this.sound.equals(sound))){
-
-			needsUpdate = true;
-		}
 		this.sound = sound;
 	}
 	
-	public IWarlockStyle mergeWith(IWarlockStyle style) {
-		WarlockStyle mergedStyle = new WarlockStyle(this);
+	public void setBold(boolean bold) {
+		this.bold = bold;
+	}
+	
+	public void setItalic(boolean italic) {
+		this.italic = italic;
+	}
+	
+	public void setUnderline(boolean underline) {
+		this.underline = underline;
+	}
+	
+	public void setMonospace(boolean monospace) {
+		this.monospace = monospace;
+	}
+	
+	public void mergeWith(IWarlockStyle style) {
 		WarlockColor fg = style.getForegroundColor();
 		if(fg != null && !fg.equals(WarlockColor.DEFAULT_COLOR))
-			mergedStyle.setForegroundColor(fg);
+			setForegroundColor(fg);
 		WarlockColor bg = style.getForegroundColor();
 		if(bg != null && !bg.equals(WarlockColor.DEFAULT_COLOR))
-			mergedStyle.setBackgroundColor(bg);
-		for(StyleType styleType : style.getStyleTypes()) {
-			mergedStyle.addStyleType(styleType);
-		}
-		
-		return mergedStyle;
+			setBackgroundColor(bg);
+		if(style.isBold())
+			setBold(true);
+		if(style.isItalic())
+			setItalic(true);
+		if(style.isUnderline())
+			setUnderline(true);
+		if(style.isMonospace())
+			setMonospace(true);
 	}
 }

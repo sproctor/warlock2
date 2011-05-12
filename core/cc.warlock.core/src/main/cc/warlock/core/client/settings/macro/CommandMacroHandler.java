@@ -110,10 +110,9 @@ public class CommandMacroHandler implements IMacroHandler {
 				} else {
 					String commandText = newCommand.substring(pos + 1, endPos);
 					pos = endPos + 1;
-					for(IMacroCommand macroCommand : settings.getAllMacroCommands()) {
-						if(commandText.equals(macroCommand.getIdentifier())) {
-							macroCommand.execute(viewer);
-						}
+					IMacroCommand macroCommand = settings.getMacroCommand(commandText);
+					if(macroCommand != null) {
+						macroCommand.execute(viewer);
 					}
 				}
 			} else if(curChar == '@') {

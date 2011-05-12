@@ -31,12 +31,9 @@ import cc.warlock.rcp.util.ColorUtil;
 
 public class StormFrontStyleProvider extends DefaultStyleProvider {
 
-	protected IStormFrontClientSettings settings;
-	
 	public StormFrontStyleProvider (IStormFrontClientSettings settings)
 	{
-		super(settings.getClient());
-		this.settings = settings;
+		super(settings);
 	}
 	
 	public StyleRangeWithData getStyleRange (IWarlockStyle style)

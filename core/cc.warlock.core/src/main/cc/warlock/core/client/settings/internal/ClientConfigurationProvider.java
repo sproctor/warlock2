@@ -23,22 +23,28 @@ package cc.warlock.core.client.settings.internal;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.settings.IClientSettingProvider;
-import cc.warlock.core.configuration.TreeConfigurationProvider;
 
 /**
  * An implementation class for setting providers, based on our XML configuration backend.
  * @author marshall
  *
  */
-public abstract class ClientConfigurationProvider extends TreeConfigurationProvider implements IClientSettingProvider {
+public abstract class ClientConfigurationProvider implements IClientSettingProvider {
 
-	public ClientConfigurationProvider (String elementName)
+	private Preferences node;
+	
+	public ClientConfigurationProvider (Preferences parentNode, String path)
 	{
-		super(elementName);
+		node = parentNode.node(path);
+	}
+	
+	public Preferences getNode() {
+		return node;
 	}
 	
 	protected WarlockFont elementToFont (Element element)

@@ -25,10 +25,10 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.rcp.ui.IStyleProvider;
 import cc.warlock.rcp.ui.StyleRangeWithData;
 import cc.warlock.rcp.util.ColorUtil;
@@ -36,40 +36,35 @@ import cc.warlock.rcp.util.FontUtil;
 
 public class DefaultStyleProvider implements IStyleProvider {
 	
-	protected IWarlockClient client;
+	protected IClientSettings clientSettings;
 	
-	public DefaultStyleProvider (IWarlockClient client) {
-		this.client = client;
+	public DefaultStyleProvider (IClientSettings clientSettings) {
+		this.clientSettings = clientSettings;
 	}
 	
 	public StyleRangeWithData getStyleRange (IWarlockStyle style)
 	{	
 		StyleRangeWithData range = new StyleRangeWithData();
-		range.fontStyle = SWT.NORMAL;
 		
-		for (IWarlockStyle.StyleType styleType : style.getStyleTypes())
-		{
-			if(styleType == null)
-				continue;
-			
-			if (styleType.equals(IWarlockStyle.StyleType.BOLD))
-				range.fontStyle |= SWT.BOLD;
-			else if (styleType.equals(IWarlockStyle.StyleType.ITALIC))
-				range.fontStyle |= SWT.ITALIC;
-			else if (styleType.equals(IWarlockStyle.StyleType.UNDERLINE) || styleType.equals(IWarlockStyle.StyleType.LINK))
-				range.underline = true;
-			else if (styleType.equals(IWarlockStyle.StyleType.MONOSPACE))
+		range.fontStyle = SWT.NORMAL;
+		if (style.isBold())
+			range.fontStyle |= SWT.BOLD;
+		if (style.isItalic())
+			range.fontStyle |= SWT.ITALIC;
+		if (style.isUnderline())
+			range.underline = true;
+		
+		if (style.isMonospace()) {
+			// FIXME: this will cause it to ignore bold/italic
+			IWarlockFont font = clientSettings.getMainWindowSettings().getColumnFont();
+			if (!font.isDefaultFont() && Display.getDefault().getFontList(font.getFamilyName(), true).length > 0)
 			{
-				WarlockFont font = client.getClientSettings().getMainWindowSettings().getColumnFont();
-				if (!font.isDefaultFont() && Display.getDefault().getFontList(font.getFamilyName(), true).length > 0)
-				{
-					range.font = FontUtil.warlockFontToFont(font);
-				} else {
-					range.font = JFaceResources.getTextFont();
-				}
+				range.font = FontUtil.warlockFontToFont(font);
+			} else {
+				range.font = JFaceResources.getTextFont();
 			}
 		}
-		
+
 		WarlockColor foreground = style.getForegroundColor();
 		WarlockColor background = style.getBackgroundColor();
 		if (foreground != null && !foreground.isDefault())

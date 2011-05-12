@@ -11,8 +11,8 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockSkin;
-import cc.warlock.core.client.WarlockFont;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.settings.IClientSettings;
@@ -177,7 +177,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 		if(skin != null && settings != null) {
 			Color background = ColorUtil.warlockColorToColor(client.getSkin().getMainBackground());
 			Color foreground = ColorUtil.warlockColorToColor(client.getSkin().getMainForeground());
-			WarlockFont font = client.getClientSettings().getMainWindowSettings().getFont();
+			IWarlockFont font = client.getClientSettings().getMainWindowSettings().getFont();
 			if (!streamName.equals(IWarlockClient.DEFAULT_STREAM_NAME)) {
 				IWindowSettings wsettings = settings.getWindowSettings(streamName);
 				if (wsettings != null) {

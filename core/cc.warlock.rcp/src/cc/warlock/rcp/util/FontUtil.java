@@ -27,7 +27,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.IWarlockFont;
+import cc.warlock.core.client.internal.WarlockFont;
 
 /**
  * @author marshall
@@ -35,9 +36,9 @@ import cc.warlock.core.client.WarlockFont;
  */
 public class FontUtil {
 
-	private static HashMap<WarlockFont, Font> fonts = new HashMap<WarlockFont, Font>();
+	private static HashMap<IWarlockFont, Font> fonts = new HashMap<IWarlockFont, Font>();
 	
-	public static FontData warlockFontToFontData (WarlockFont font)
+	public static FontData warlockFontToFontData (IWarlockFont font)
 	{
 		FontData data = new FontData();
 		data.setName(font.getFamilyName());
@@ -46,7 +47,7 @@ public class FontUtil {
 		return data;
 	}
 	
-	public static Font warlockFontToFont (WarlockFont font)
+	public static Font warlockFontToFont (IWarlockFont font)
 	{
 		Font f = fonts.get(font);
 		if(f == null) {
@@ -56,7 +57,7 @@ public class FontUtil {
 		return f;
 	}
 	
-	public static WarlockFont fontDataToWarlockFont (FontData data)
+	public static IWarlockFont fontDataToWarlockFont (FontData data)
 	{
 		WarlockFont font = new WarlockFont();
 		font.setFamilyName(data.getName());
@@ -64,7 +65,7 @@ public class FontUtil {
 		return font;
 	}
 	
-	public static WarlockFont fontToWarlockFont (Font font)
+	public static IWarlockFont fontToWarlockFont (Font font)
 	{
 		return fontDataToWarlockFont(font.getFontData()[0]);
 	}

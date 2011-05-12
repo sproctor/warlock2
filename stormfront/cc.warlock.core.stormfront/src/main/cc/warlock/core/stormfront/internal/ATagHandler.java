@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.stormfront.internal;
 
-import cc.warlock.core.client.IWarlockStyle.StyleType;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
@@ -73,7 +72,8 @@ public class ATagHandler extends DefaultTagHandler {
 		}
 		String coord = attributes.getValue("coord");
 
-		style = new WarlockStyle(new StyleType[] { StyleType.UNDERLINE });
+		style = new WarlockStyle();
+		style.setUnderline(true);
 		if(coord != null) {
 			String noun = attributes.getValue("noun");
 			style.setAction(new CommandRunner(handler.getClient(), coord, noun));

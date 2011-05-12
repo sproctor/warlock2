@@ -21,10 +21,11 @@
  */
 package cc.warlock.core.stormfront.settings.internal;
 
+import org.osgi.service.prefs.Preferences;
+
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.internal.ColorFontSetting;
 import cc.warlock.core.stormfront.settings.ICommandLineSettings;
-import cc.warlock.core.stormfront.settings.ICommandLineSettingsProvider;
 
 /**
  * @author marshall
@@ -34,14 +35,12 @@ public class CommandLineSettings extends ColorFontSetting implements ICommandLin
 
 	protected WarlockColor barColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	
-	public CommandLineSettings (ICommandLineSettingsProvider provider)
-	{
-		super(provider);
-	}
-	
-	public CommandLineSettings (CommandLineSettings other)
-	{
-		super(other);
+	public CommandLineSettings (Preferences parentNode, String path) {
+		super(parentNode, path);
+		
+		String colorString = getNode().get("bgcolor", null);
+		if(colorString != null)
+			barColor = new WarlockColor(colorString);
 	}
 	
 	public WarlockColor getBarColor() {
@@ -49,14 +48,8 @@ public class CommandLineSettings extends ColorFontSetting implements ICommandLin
 	}
 
 	public void setBarColor(WarlockColor barColor) {
-		if (!barColor.equals(this.barColor))
-			needsUpdate = true;
+		getNode().put("bar-color", barColor.toString());
 		
 		this.barColor = barColor;
-	}
-	
-	public CommandLineSettings getOriginalCommandLineSettings ()
-	{
-		return (CommandLineSettings)originalSetting;
 	}
 }

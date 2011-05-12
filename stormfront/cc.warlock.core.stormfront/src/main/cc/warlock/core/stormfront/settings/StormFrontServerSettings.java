@@ -37,7 +37,7 @@ import org.dom4j.Element;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;

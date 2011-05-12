@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.client.settings;
 
+import java.util.Collection;
 import java.util.List;
 
 import cc.warlock.core.client.IWarlockClient;
@@ -37,26 +38,20 @@ public interface IClientSettings {
 
 	public IWarlockClient getClient();
 	
-	public List<? extends IClientSettingProvider> getAllProviders();
-	public <T extends IClientSettingProvider> List<T> getAllProviders(Class<T> providerClass);
-	
 	public int getVersion();
 	
-	public void addClientSettingProvider (IClientSettingProvider provider);
-	public void removeClientSettingProvider (IClientSettingProvider provider);
-	
-	public List<? extends IHighlightString> getAllHighlightStrings();
+	public Collection<IHighlightString> getHighlightStrings();
 	public IWarlockStyle getNamedStyle(String name);
 	
-	public List<? extends IVariable> getAllVariables();
+	public Collection<IVariable> getVariables();
 	public IVariable getVariable(String identifier);
 	
-	public List<? extends IIgnore> getAllIgnores();
+	public Collection<IIgnore> getIgnores();
 	
-	public List<? extends IWindowSettings> getAllWindowSettings();
+	public Collection<IWindowSettings> getWindowSettings();
 	public IWindowSettings getWindowSettings (String windowId);
 	
-	public List<? extends IMacro> getAllMacros();
+	public Collection<IMacro> getMacros();
 	public IMacro getMacro (int keycode, int modifiers);
 	
 	public List<? extends IMacroVariable> getAllMacroVariables();

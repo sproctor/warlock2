@@ -21,51 +21,23 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.regex.PatternSyntaxException;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IClientSettingProvider;
-import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
 
 public class HighlightString extends PatternSetting implements IHighlightString {
 
-	protected IWarlockStyle style;
+	protected StyleSetting style;
 
-	
-	public HighlightString (IClientSettingProvider provider, String pattern, IWarlockStyle style) throws PatternSyntaxException
+	public HighlightString (Preferences parentNode, String path)
 	{
-		super(provider, pattern);
-		this.style = style;
-	}
-	
-	public HighlightString (IHighlightProvider provider, String pattern, boolean literal, boolean caseSensitive, boolean fullWordMatch, IWarlockStyle style) throws PatternSyntaxException {	
-		super(provider, pattern, literal, caseSensitive, fullWordMatch);
-		this.style = style;
-	}
-
-	public HighlightString (HighlightString other) throws PatternSyntaxException
-	{
-		super(other);
-		this.style = new WarlockStyle(other.style);
+		super(parentNode, path);
+		this.style = new StyleSetting(getNode(), "style");
 	}
 	
 	public IWarlockStyle getStyle() {
 		return style;
 	}
-
-	public void setStyle(IWarlockStyle style) {
-		if (!this.style.equals(style))
-			needsUpdate = true;
-		
-		this.style = style;
-	}
-
-	public HighlightString getOriginalHighlightString() {
-		return (HighlightString)originalSetting;
-	}
-	
-
 }
 

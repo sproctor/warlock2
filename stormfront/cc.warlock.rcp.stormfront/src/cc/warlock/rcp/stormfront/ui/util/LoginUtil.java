@@ -83,7 +83,7 @@ public class LoginUtil {
 			"******************************************************************\n";
 			
 			IWarlockStyle style = new WarlockStyle();
-			style.addStyleType(IWarlockStyle.StyleType.MONOSPACE);
+			style.setMonospace(true);
 			
 			client.getDefaultStream().put(new WarlockString(errorConnectMessage, style));
 		}

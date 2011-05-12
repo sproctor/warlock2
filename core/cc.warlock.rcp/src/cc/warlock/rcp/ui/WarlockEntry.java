@@ -38,6 +38,7 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.settings.macro.IMacro;
+import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.views.GameView;
 
 public class WarlockEntry {
@@ -86,32 +87,19 @@ public class WarlockEntry {
 		return widget;
 	}
 	
-	protected boolean checkAndExecuteMacro (IMacro macro, int keyCode, int stateMask)
-	{
-		if (macro.getKeyCode() == keyCode && macro.getModifiers() == stateMask)
-		{
-			try {
-				leaveSearchMode();
-				macro.execute(viewer);
-				//keyHandled = true;
-			} catch (Exception ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
-			}
-
-			return true;
-		}
-		return false;
-	}
-	
 	// returns whether we processed the key or not.
 	protected boolean processKey(int keyCode, int stateMask, char character) {
 		//System.out.println("got char \"" + e.character + "\"");
-		for (IMacro macro : viewer.getWarlockClient().getClientSettings().getAllMacros())
-		{
-			if (checkAndExecuteMacro(macro, keyCode, stateMask)) {
-				return true;
-			}
+		IMacro macro = viewer.getWarlockClient().getClientSettings().getMacro(keyCode, stateMask);
+		if(macro == null)
+			macro = MacroRegistry.instance().getMacro(keyCode, stateMask);
+		
+		if(macro != null) {
+				leaveSearchMode();
+				macro.execute(viewer);
+				//keyHandled = true;
+
+			return true;
 		}
 
 		if (!widget.isFocusControl() || searchMode) {

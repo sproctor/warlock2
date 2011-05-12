@@ -38,11 +38,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.swt.SWT;
 
-import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.internal.WarlockClientListener;
 import cc.warlock.core.client.settings.IClientSetting;
-import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.macro.CommandMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
@@ -51,7 +47,6 @@ import cc.warlock.core.client.settings.macro.IMacroProvider;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.client.settings.macro.internal.Macro;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.macros.internal.EscapeMacroHandler;
 import cc.warlock.rcp.ui.macros.internal.ReturnMacroHandler;
 
@@ -89,7 +84,7 @@ public class MacroRegistry implements IMacroProvider {
 			instance = new MacroRegistry();
 			instance.init();
 			
-			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new WarlockClientListener() {
+			/*WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new WarlockClientListener() {
 				public void clientActivated(IWarlockClient client) {}
 				public void clientConnected(IWarlockClient client) {}
 				public void clientDisconnected(IWarlockClient client) {}
@@ -103,7 +98,7 @@ public class MacroRegistry implements IMacroProvider {
 					if(settings != null)
 						settings.addClientSettingProvider(instance);
 				}
-			}));
+			}));*/
 		}
 		
 		return instance;
@@ -112,11 +107,6 @@ public class MacroRegistry implements IMacroProvider {
 	public static IMacro createCommandMacro(int keyCode, String command)
 	{
 		return createMacro(keyCode, new CommandMacroHandler(command));
-	}
-	
-	public static IMacro createCommandMacro(int keyCode, int modifiers, String command)
-	{
-		return createMacro(keyCode, modifiers, new CommandMacroHandler(command));
 	}
 	
 	public static IMacro createMacro (int keyCode, IMacroHandler handler)

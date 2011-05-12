@@ -49,9 +49,9 @@ import org.eclipse.ui.PlatformUI;
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.WarlockFont;
 import cc.warlock.core.client.internal.WarlockClientListener;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.stormfront.ProfileConfiguration;
@@ -371,7 +371,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		WarlockColor bg = sfClient.getStormFrontSkin().getMainBackground();
 		WarlockColor fg = sfClient.getStormFrontSkin().getMainForeground();
 		
-		WarlockFont mainFont = settings.getMainWindowSettings().getFont();
+		IWarlockFont mainFont = settings.getMainWindowSettings().getFont();
 		String fontFace = mainFont.getFamilyName();
 		int fontSize = mainFont.getSize();
 //		if (Platform.getOS().equals(Platform.OS_MACOSX)) {

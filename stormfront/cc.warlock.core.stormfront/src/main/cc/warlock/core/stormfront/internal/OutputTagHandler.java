@@ -52,9 +52,9 @@ public class OutputTagHandler extends DefaultTagHandler {
 		if (className != null) {
 			currentStyle = new WarlockStyle();
 		
-			if(className.equals("mono")) {
-				currentStyle.addStyleType(IWarlockStyle.StyleType.MONOSPACE);
-			}
+			if(className.equals("mono"))
+				currentStyle.setMonospace(true);
+			
 			currentStyle.setName(className);
 			handler.addStyle(currentStyle);
 		}

@@ -55,14 +55,15 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.client.settings.internal.WindowSettings;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontSelector;
@@ -79,6 +80,9 @@ public class PresetsPreferencePage extends PropertyPage implements
 	private ColorSelector mainBGSelector, mainFGSelector;
 	private FontSelector mainFontSelector;
 	private FontSelector columnFontSelector;
+	
+	private WarlockColor newMainBG = null, newMainFG = null;
+	private WarlockFont newMainFont = null, newColumnFont = null;
 	
 	private ColorSelector bgSelector, fgSelector;
 	private StyledText preview;
@@ -116,7 +120,6 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	private ClientSettings settings;
 	private IWarlockSkin skin;
-	private WindowSettings mainWindow;
 	private HashMap<String, WarlockStyle> styles = new HashMap<String, WarlockStyle>();
 	
 	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
@@ -320,11 +323,11 @@ public class PresetsPreferencePage extends PropertyPage implements
 		}
 		else if (source == mainBGSelector)
 		{
-			mainWindow.setBackgroundColor(color);
+			newMainBG = color;
 		}
 		else if (source == mainFGSelector)
 		{
-			mainWindow.setForegroundColor(color);
+			newMainFG = color;
 		}
 
 		updatePreview();
@@ -338,11 +341,11 @@ public class PresetsPreferencePage extends PropertyPage implements
 		
 		if (source == mainFontSelector)
 		{
-			mainWindow.setFont(font);
+			newMainFont = font;
 		}
 		else if (source == columnFontSelector)
 		{
-			mainWindow.setColumnFont(font);
+			newColumnFont = font;
 		}
 		
 		updatePreview();
@@ -354,7 +357,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 		if (client != null)
 		{
 			this.settings = (ClientSettings) client.getClientSettings();
-			this.skin = settings.getClient().getSkin();
+			this.skin = client.getSkin();
 		}
 	}
 	
@@ -365,7 +368,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			return JFaceResources.getDefaultFont().getFontData()[0];
 		}
 
-		WarlockFont font = settings.getMainWindowSettings().getFont();
+		IWarlockFont font = settings.getMainWindowSettings().getFont();
 		FontData datas[] = new FontData[0];
 		
 		if (font.getFamilyName() != null)
@@ -392,7 +395,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			return JFaceResources.getTextFont().getFontData()[0];
 		}
 
-		WarlockFont font = settings.getMainWindowSettings().getColumnFont();
+		IWarlockFont font = settings.getMainWindowSettings().getColumnFont();
 		FontData datas[] = new FontData[0];
 		
 		if (font.getFamilyName() != null)
@@ -415,9 +418,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 	private void initValues ()
 	{
 		if (settings != null)
-		{
-			mainWindow = new WindowSettings((WindowSettings)settings.getMainWindowSettings());
-			
+		{	
 			for (IWarlockStyle style: settings.getHighlightConfigurationProvider().getNamedStyles())
 			{
 				styles.put(style.getName(), new WarlockStyle(style));
@@ -530,7 +531,33 @@ public class PresetsPreferencePage extends PropertyPage implements
 			}
 		}
 		
-		if (mainWindow.needsUpdate())
+		IWindowSettings mainWindow = settings.getMainWindowSettings();
+		
+		if(newMainFG != null) {
+			mainWindow.setForegroundColor(newMainFG);
+			newMainFG = null;
+		}
+		
+		if(newMainBG != null) {
+			mainWindow.setBackgroundColor(newMainBG);
+			newMainBG = null;
+		}
+		
+		if(newMainFont != null) {
+			IWarlockFont font = mainWindow.getFont();
+			font.setFamilyName(newMainFont.getFamilyName());
+			font.setSize(newMainFont.getSize());
+			newMainFont = null;
+		}
+		
+		if(newColumnFont != null) {
+			IWarlockFont font = mainWindow.getColumnFont();
+			font.setFamilyName(newColumnFont.getFamilyName());
+			font.setSize(newColumnFont.getSize());
+			newColumnFont = null;
+		}
+		
+		/*if (mainWindow.needsUpdate())
 		{
 			updateView = true;
 			settings.getWindowSettingsProvider().removeWindowSettings(mainWindow.getOriginalWindowSettings());
@@ -539,7 +566,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 		
 		if (updateView) {
 			WarlockClientRegistry.clientSettingsLoaded(settings.getClient());
-		}
+		}*/
 		
 		return true;
 	}

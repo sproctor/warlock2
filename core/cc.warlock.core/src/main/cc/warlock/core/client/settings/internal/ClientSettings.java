@@ -22,10 +22,10 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
@@ -44,9 +44,6 @@ import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
-import cc.warlock.core.configuration.IConfigurationProvider;
-import cc.warlock.core.configuration.TreeConfigurationProvider;
-import cc.warlock.core.configuration.WarlockConfiguration;
 
 
 /**
@@ -55,14 +52,13 @@ import cc.warlock.core.configuration.WarlockConfiguration;
  * @author marshall
  */
 @SuppressWarnings("unchecked")
-public class ClientSettings extends TreeConfigurationProvider implements IClientSettings {
+public class ClientSettings implements IClientSettings {
 	
 	public static final String WINDOW_MAIN = "main";
 	
-	protected ArrayList<IClientSettingProvider> settingProviders = new ArrayList<IClientSettingProvider>();
-	
+	private IWarlockClient client;
 	protected int version;
-	protected IWarlockClient client;
+	private Preferences node;
 
 	protected HighlightConfigurationProvider highlightConfigurationProvider;
 	protected IgnoreConfigurationProvider ignoreConfigurationProvider;
@@ -71,105 +67,20 @@ public class ClientSettings extends TreeConfigurationProvider implements IClient
 	protected MacroConfigurationProvider macroConfigurationProvider;
 	protected WindowSettingsConfigurationProvider windowSettingsProvider;
 	
-	public ClientSettings (IWarlockClient client) {
-		super("client-settings");
+	public ClientSettings (IWarlockClient client, String clientId) {
 		this.client = client;
+		this.node = WarlockPreferences.getInstance().getNode().node("clients/" + clientId);
 		
 		highlightConfigurationProvider = new HighlightConfigurationProvider();
 		ignoreConfigurationProvider = new IgnoreConfigurationProvider();
 		triggerConfigurationProvider = new TriggerConfigurationProvider();
 		variableConfigurationProvider = new VariableConfigurationProvider();
 		macroConfigurationProvider = new MacroConfigurationProvider();
-		windowSettingsProvider = new WindowSettingsConfigurationProvider();
-		
-		addChildProvider(highlightConfigurationProvider);
-		addChildProvider(ignoreConfigurationProvider);
-		addChildProvider(triggerConfigurationProvider);
-		addChildProvider(variableConfigurationProvider);
-		addChildProvider(macroConfigurationProvider);
-		addChildProvider(windowSettingsProvider);
-		
-		addClientSettingProvider(highlightConfigurationProvider);
-		addClientSettingProvider(ignoreConfigurationProvider);
-		addClientSettingProvider(triggerConfigurationProvider);
-		addClientSettingProvider(variableConfigurationProvider);
-		addClientSettingProvider(macroConfigurationProvider);
-		addClientSettingProvider(windowSettingsProvider);
-		
-		setHandleChildren(true);
-		
-		WarlockConfiguration.getWarlockConfiguration("clientSettings.xml").addConfigurationProvider(this);
+		windowSettingsProvider = new WindowSettingsConfigurationProvider(node);
 	}
 	
-	public void dispose() {
-		// We're no longer needed, let's get out of the Configuration Provider Business so someone else can get in.
-		WarlockConfiguration.getWarlockConfiguration("clientSettings.xml").removeConfigurationProvider(this);
-	}
-	
-	@Override
-	public boolean supportsElement(Element element) {
-		if (element.getName().equals("client-settings")
-				&& client.getClientId() != null)
-		{
-			String clientId = element.attributeValue("client-id");
-			if (clientId.equals(client.getClientId())) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	protected void parseData() {
-		version = intValue("version");
-	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		Element element = DocumentHelper.createElement("client-settings");
-		element.addAttribute("version", version + "");
-		element.addAttribute("client-id", client.getClientId());
-		
-		elements.add(element);
-		
-		for (IConfigurationProvider provider : childProviders)
-		{
-			for (Element childElement : provider.getTopLevelElements()) {
-				element.add(childElement);
-			}
-		}
-	}
-
-	public List<? extends IClientSettingProvider> getAllProviders() {
-		return settingProviders;
-	}
-	
-	public <T extends IClientSettingProvider> List<T> getAllProviders(Class<T> providerClass) {
-		ArrayList<T> list = new ArrayList<T>();
-		for (IClientSettingProvider provider : settingProviders) {
-			if (providerClass.isAssignableFrom(provider.getClass())) {
-				list.add((T)provider);
-			}
-		}
-		return list;
-	}
-	
-	public void addClientSettingProvider(IClientSettingProvider provider) {
-		if (!settingProviders.contains(provider)) {
-			settingProviders.add(provider);
-		}
-	}
-
-	public void removeClientSettingProvider(IClientSettingProvider provider) {
-		settingProviders.remove(provider);
-	}
-	
-	public List<? extends IHighlightString> getAllHighlightStrings() {
-		ArrayList<IHighlightString> list = new ArrayList<IHighlightString>();
-		for (IHighlightProvider provider : getAllProviders(IHighlightProvider.class)) {
-			list.addAll(provider.getHighlightStrings());
-		}
-		return list;
+	public Collection<IHighlightString> getHighlightStrings() {
+		return highlightConfigurationProvider.getHighlightStrings();
 	}
 	
 	public List<? extends IIgnore> getAllIgnores() {
@@ -196,12 +107,8 @@ public class ClientSettings extends TreeConfigurationProvider implements IClient
 		return list;
 	}
 	
-	public List<? extends IMacroCommand> getAllMacroCommands() {
-		ArrayList<IMacroCommand> list = new ArrayList<IMacroCommand>();
-		for (IMacroProvider provider : getAllProviders(IMacroProvider.class)) {
-			list.addAll(provider.getMacroCommands());
-		}
-		return list;
+	public Collection<IMacroCommand> getAllMacroCommands() {
+		return macroConfigurationProvider.getMacroCommands();
 	}
 	
 	public List<? extends IVariable> getAllVariables() {
@@ -272,14 +179,6 @@ public class ClientSettings extends TreeConfigurationProvider implements IClient
 		}
 		return null;
 	}
-	
-	public IWarlockClient getClient() {
-		return client;
-	}
-
-	public ArrayList<IClientSettingProvider> getSettingProviders() {
-		return settingProviders;
-	}
 
 	public HighlightConfigurationProvider getHighlightConfigurationProvider() {
 		return highlightConfigurationProvider;
@@ -306,19 +205,6 @@ public class ClientSettings extends TreeConfigurationProvider implements IClient
 	}
 	
 	public IWindowSettings getMainWindowSettings() {
-		IWindowSettings main = getWindowSettings(WINDOW_MAIN);
-		
-		if (main == null)
-		{
-			WindowSettings mainSettings = new WindowSettings(getWindowSettingsProvider());
-			mainSettings.setId(WINDOW_MAIN);
-			mainSettings.setBackgroundColor(client.getSkin().getDefaultWindowBackground());
-			mainSettings.setForegroundColor(client.getSkin().getDefaultWindowForeground());
-			
-			getWindowSettingsProvider().addWindowSettings(mainSettings);
-			main = mainSettings;
-		}
-		
-		return main;
+		return windowSettingsProvider.getOrCreateWindowSettings(WINDOW_MAIN);
 	}
 }

@@ -21,12 +21,11 @@
  */
 package cc.warlock.core.client.settings;
 
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.IWarlockFont;
 
-public interface IWindowSettings extends IColorSetting, IFontSetting {
+public interface IWindowSettings extends IFontSetting {
 
 	public String getId();
 	
-	public WarlockFont getColumnFont();
-	public void setColumnFont (WarlockFont font);
+	public IWarlockFont getColumnFont();
 }

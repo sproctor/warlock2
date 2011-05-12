@@ -22,12 +22,11 @@
 package cc.warlock.core.client.settings;
 
 import java.util.Collection;
-import java.util.List;
 
 import cc.warlock.core.client.IWarlockStyle;
 
 public interface IHighlightProvider extends IClientSettingProvider {
-	public List<? extends IHighlightString> getHighlightStrings();
+	public Collection<? extends IHighlightString> getHighlightStrings();
 	
 	public void addHighlightString (IHighlightString string);
 	public void insertHighlightString (int index, IHighlightString string);

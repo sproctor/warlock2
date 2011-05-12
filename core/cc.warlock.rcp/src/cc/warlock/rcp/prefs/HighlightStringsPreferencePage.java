@@ -93,19 +93,19 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected HighlightString selectedString;
 	protected ArrayList<HighlightString> addedStrings = new ArrayList<HighlightString>();
 	protected ArrayList<HighlightString> removedStrings = new ArrayList<HighlightString>();
-	protected ArrayList<HighlightString> highlightStrings = new ArrayList<HighlightString>();
+	//protected ArrayList<HighlightString> highlightStrings = new ArrayList<HighlightString>();
 	
-	private void copyHighlightStrings ()
+	/*private void copyHighlightStrings ()
 	{
 		highlightStrings.clear();
-		for (IHighlightString string : client.getClientSettings().getAllHighlightStrings())
+		for (IHighlightString string : client.getClientSettings().getHighlightStrings())
 		{
 			if (string instanceof HighlightString)
 			{
 				highlightStrings.add(new HighlightString((HighlightString)string));
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	protected Control createContents(Composite parent) {
@@ -190,7 +190,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		
 		stringTable.setLabelProvider(new StringsLabelProvider());
 		stringTable.setContentProvider(new ArrayContentProvider());
-		stringTable.setInput(highlightStrings);
+		stringTable.setInput(settings.getHighlightStrings());
 		
 		int listHeight = stringTable.getTable().getItemHeight() * 8;
 		Rectangle trim = stringTable.getTable().computeTrim(0, 0, 0, listHeight);
@@ -306,12 +306,6 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected String getDisplayName ()
 	{
 		return "Highlight Strings";
-	}
-	
-	protected HighlightString createHighlightString ()
-	{
-		return new HighlightString(
-			settings.getHighlightConfigurationProvider(), "<Highlight Text>", true, true, false, new WarlockStyle());
 	}
 	
 	private void highlightStringSelected (HighlightString string)
@@ -439,7 +433,6 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			try{
 				if (selectedString != null && selectedString.getStyle() != null){
 					selectedString.getStyle().setSound(filename);
-					selectedString.setNeedsUpdate(true);
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -511,13 +504,14 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			removedStrings.add(string);
 		
 		// Remove string from our display list and notify the table
-		highlightStrings.remove(string);
+		//highlightStrings.remove(string);
 		stringTable.remove(string);
 	}
 
 	private void addStringSelected() {
-		HighlightString newString = createHighlightString();
-		highlightStrings.add(newString);
+		HighlightString newString = settings.getHighlightConfigurationProvider().createHighlightString();
+		newString.setText("<Highlight Text>");
+		
 		addedStrings.add(newString);
 		
 		selectedString = newString;
@@ -584,15 +578,15 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	public void setElement(IAdaptable element) {
 		client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
 		settings = (ClientSettings) client.getClientSettings();
-		skin = settings.getClient().getSkin();
+		skin = client.getSkin();
 		
-		if (highlightStrings.isEmpty())
-			copyHighlightStrings();
+		/*if (highlightStrings.isEmpty())
+			copyHighlightStrings();*/
 	}
 	
 	@Override
 	protected void performDefaults() {
-		copyHighlightStrings();
+		//copyHighlightStrings();
 		stringTable.refresh();
 	}
 	
@@ -602,7 +596,8 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		if(highlightConfig == null)
 			return false;
 		
-		for (HighlightString string : highlightStrings) {
+		/* FIXME: we're updating before hitting ok
+		 for (HighlightString string : highlightStrings) {
 			WarlockStyle style = (WarlockStyle) string.getStyle();
 			
 			if (addedStrings.remove(string)) {
@@ -610,15 +605,11 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			} else if (string.needsUpdate() || (style != null && style.needsUpdate())) {
 				highlightConfig.replaceHighlightString(string.getOriginalHighlightString(), string);
 			}
-		}
+		}*/
 		
 		for (HighlightString string : removedStrings)
 		{
-			if (string.getOriginalHighlightString() != null) {
-				highlightConfig.removeHighlightString(string.getOriginalHighlightString());
-			} else {
-				highlightConfig.removeHighlightString(string);
-			}
+			highlightConfig.removeHighlightString(string);
 		}
 		
 		return true;

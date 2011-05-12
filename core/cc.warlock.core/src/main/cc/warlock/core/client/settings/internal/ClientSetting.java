@@ -21,8 +21,9 @@
  */
 package cc.warlock.core.client.settings.internal;
 
+import org.osgi.service.prefs.Preferences;
+
 import cc.warlock.core.client.settings.IClientSetting;
-import cc.warlock.core.client.settings.IClientSettingProvider;
 
 /**
  * The base implementation class for all client settings
@@ -30,40 +31,14 @@ import cc.warlock.core.client.settings.IClientSettingProvider;
  */
 public class ClientSetting implements IClientSetting {
 
-	protected IClientSettingProvider provider;
-	protected ClientSetting originalSetting;
-	protected boolean needsUpdate;
+	protected Preferences node;
 	
-	public ClientSetting (IClientSettingProvider provider)
+	public ClientSetting (Preferences parentNode, String path)
 	{
-		this.provider = provider;
+		node = parentNode.node(path);
 	}
 	
-	public ClientSetting (ClientSetting other)
-	{
-		this.provider = other.provider;
-		this.originalSetting = other;
+	protected Preferences getNode() {
+		return node;
 	}
-	
-	/* (non-Javadoc)
-	 * @see cc.warlock.core.client.settings.IClientSetting#getProvider()
-	 */
-	public IClientSettingProvider getProvider() {
-		return provider;
-	}
-	
-	public ClientSetting getOriginalSetting ()
-	{
-		return originalSetting;
-	}
-	
-	public boolean needsUpdate ()
-	{
-		return needsUpdate;
-	}
-	
-	public void setNeedsUpdate (boolean needsUpdate) {
-		this.needsUpdate = needsUpdate;
-	}
-
 }

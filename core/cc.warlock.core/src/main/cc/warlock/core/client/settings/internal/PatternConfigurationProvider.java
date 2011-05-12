@@ -22,6 +22,7 @@
 package cc.warlock.core.client.settings.internal;
 
 import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IPatternSetting;
 
@@ -31,34 +32,10 @@ import cc.warlock.core.client.settings.IPatternSetting;
  */
 public abstract class PatternConfigurationProvider extends ClientConfigurationProvider {
 
-	public PatternConfigurationProvider (String elementName)
+	public PatternConfigurationProvider (Preferences parentNode, String path)
 	{
-		super(elementName);
-	}
-	
-	protected void fillElement (Element element, IPatternSetting setting)
-	{
-		element.addAttribute("pattern", setting.getText());	
-		element.addAttribute("literal", ""+setting.isLiteral());
-		element.addAttribute("caseSensitive", ""+setting.isCaseSensitive());
-		element.addAttribute("fullWordMatch", ""+setting.isFullWordMatch());
-	}
-
-	protected void fillSetting (IPatternSetting setting, Element element)
-	{
-		String pattern = stringValue(element, "pattern");
-		boolean literal = booleanValue(element, "literal");
-		boolean caseSensitive = booleanValue(element, "caseSensitive");
-		boolean fullWordMatch = true;
-		if (element.attributeValue("fullWordMatch") == null) {
-			fullWordMatch = true;
-		} else {
-			fullWordMatch = booleanValue(element, "fullWordMatch");
-		}
+		super(parentNode, path);
 		
-		setting.setLiteral(literal);
-		setting.setCaseSensitive(caseSensitive);
-		setting.setFullWordMatch(fullWordMatch);
-		setting.setText(pattern);
+		
 	}
 }

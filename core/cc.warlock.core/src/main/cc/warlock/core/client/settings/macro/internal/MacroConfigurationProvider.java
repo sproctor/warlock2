@@ -93,16 +93,11 @@ public class MacroConfigurationProvider extends ClientConfigurationProvider impl
 	}
 
 	public IMacroVariable getMacroVariable(String id) {
-		if (variables.containsKey(id)) {
-			return variables.get(id);
-		}
-		return null;
+		return variables.get(id);
 	}
 	
 	public void removeMacroVariable(IMacroVariable variable) {
-		if (variables.containsKey(variable.getIdentifier())) {
-			variables.remove(variable.getIdentifier());
-		}
+		variables.remove(variable.getIdentifier());
 	}
 
 	public Collection<IMacroVariable> getMacroVariables() {

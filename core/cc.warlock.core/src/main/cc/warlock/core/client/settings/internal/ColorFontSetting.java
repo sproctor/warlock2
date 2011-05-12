@@ -21,34 +21,35 @@
  */
 package cc.warlock.core.client.settings.internal;
 
+import org.osgi.service.prefs.Preferences;
+
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.WarlockFont;
-import cc.warlock.core.client.settings.IClientSettingProvider;
-import cc.warlock.core.client.settings.IColorSetting;
 import cc.warlock.core.client.settings.IFontSetting;
 
 /**
  * @author marshall
  *
  */
-public abstract class ColorFontSetting extends ClientSetting implements IColorSetting, IFontSetting {
+public abstract class ColorFontSetting extends ClientSetting implements IFontSetting {
 
 	protected WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	protected WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
-	protected WarlockFont font = WarlockFont.DEFAULT_FONT;
+	protected FontSetting font;
 	
-	public ColorFontSetting (ColorFontSetting other)
+	public ColorFontSetting (Preferences parentNode, String path)
 	{
-		super(other);
+		super(parentNode, path);
 		
-		this.foregroundColor = new WarlockColor(other.foregroundColor);
-		this.backgroundColor = new WarlockColor(other.backgroundColor);
-		this.font = new WarlockFont(other.font);
-	}
-	
-	public ColorFontSetting (IClientSettingProvider provider)
-	{
-		super(provider);
+		String fgcolor = getNode().get("fgcolor", null);
+		if(fgcolor != null)
+			foregroundColor = new WarlockColor(fgcolor);
+		
+		String bgcolor = getNode().get("bgcolor", null);
+		if(bgcolor != null)
+			backgroundColor = new WarlockColor(bgcolor);
+		
+		font = new FontSetting(parentNode, "font");
 	}
 
 	public WarlockColor getForegroundColor() {
@@ -56,8 +57,7 @@ public abstract class ColorFontSetting extends ClientSetting implements IColorSe
 	}
 
 	public void setForegroundColor(WarlockColor foregroundColor) {
-		if (!foregroundColor.equals(this.foregroundColor)) 
-			needsUpdate = true;
+		this.getNode().put("fgcolor", foregroundColor.toString());
 		
 		this.foregroundColor = foregroundColor;
 	}
@@ -67,22 +67,13 @@ public abstract class ColorFontSetting extends ClientSetting implements IColorSe
 	}
 
 	public void setBackgroundColor(WarlockColor backgroundColor) {
-		if (!backgroundColor.equals(this.backgroundColor)) 
-			needsUpdate = true;
+		this.getNode().put("bgcolor", backgroundColor.toString());
 		
 		this.backgroundColor = backgroundColor;
 	}
 
-	public WarlockFont getFont() {
+	public IWarlockFont getFont() {
 		return font;
 	}
 
-	public void setFont(WarlockFont font) {
-		if (!font.equals(this.font)) 
-			needsUpdate = true;
-		
-		this.font = font;
-	}
-	
-	
 }

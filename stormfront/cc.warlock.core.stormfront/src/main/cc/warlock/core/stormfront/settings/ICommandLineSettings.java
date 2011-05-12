@@ -22,14 +22,13 @@
 package cc.warlock.core.stormfront.settings;
 
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IColorSetting;
 import cc.warlock.core.client.settings.IFontSetting;
 
 /**
  * @author marshall
  *
  */
-public interface ICommandLineSettings extends IColorSetting, IFontSetting {
+public interface ICommandLineSettings extends IFontSetting {
 	public WarlockColor getBarColor();
 	public void setBarColor(WarlockColor color);
 }

@@ -21,15 +21,21 @@
  */
 package cc.warlock.core.client.settings;
 
-import cc.warlock.core.client.WarlockFont;
+import cc.warlock.core.client.IWarlockFont;
+import cc.warlock.core.client.WarlockColor;
 
 /**
  * @author marshall
  *
  */
-public interface IFontSetting extends IColorSetting {
+public interface IFontSetting extends IClientSetting {
 
-	public WarlockFont getFont();
-	public void setFont(WarlockFont font);
+	public WarlockColor getForegroundColor();
+	public void setForegroundColor (WarlockColor foreground);
+	
+	public WarlockColor getBackgroundColor();
+	public void setBackgroundColor(WarlockColor background);
+	
+	public IWarlockFont getFont();
 	
 }

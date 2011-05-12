@@ -19,58 +19,66 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client;
+package cc.warlock.core.client.settings.internal;
 
-public class WarlockFont {
+import org.osgi.service.prefs.Preferences;
 
-	public static final WarlockFont DEFAULT_FONT = new WarlockFont();
-	static {
-		DEFAULT_FONT.setFamilyName("default");
-		DEFAULT_FONT.setSize(-1);
+import cc.warlock.core.client.IWarlockFont;
+import cc.warlock.core.client.internal.WarlockFont;
+
+/**
+ * @author marshall
+ *
+ */
+public class FontSetting extends ClientSetting implements IWarlockFont {
+
+	private String familyName;
+	private int size;
+	
+	public FontSetting (Preferences parentNode, String path) {
+		super(parentNode, path);
+		familyName = getNode().get("family-name", "default");
+		size = getNode().getInt("size", -1);
 	}
-	
-	protected String familyName;
-	protected int size;
-	
-	public WarlockFont () { }
-	public WarlockFont (WarlockFont other)
-	{
-		this.familyName = new String(other.familyName);
-		this.size = other.size;
-	}
-	
+
 	public String getFamilyName() {
 		return familyName;
 	}
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
+	
 	public int getSize() {
 		return size;
 	}
+
+	public void setFamilyName(String familyName) {
+		this.getNode().put("family-name", familyName);
+		
+		this.familyName = familyName;
+	}
+
 	public void setSize(int size) {
+		this.getNode().putInt("size", size);
+		
 		this.size = size;
 	}
 	
-	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof WarlockFont) {
-			WarlockFont other = (WarlockFont)obj;
+		if (obj instanceof IWarlockFont) {
+			IWarlockFont other = (IWarlockFont)obj;
+			
+			if(size != other.getSize())
+				return false;
+			
 			// Catch null, as doing a comparison without it will cause a NPE
-			if (familyName == null) {
-				if (other.familyName == null) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-			return (familyName.equals(other.familyName) && size == other.size);
+			if (familyName == null)
+				return other.getFamilyName() == null;
+			else
+				return familyName.equals(other.getFamilyName());
 		}
 		return super.equals(obj);
 	}
 	
 	public boolean isDefaultFont()
 	{
-		return this.equals(DEFAULT_FONT);
+		return this.equals(WarlockFont.DEFAULT_FONT);
 	}
 }

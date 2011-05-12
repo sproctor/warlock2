@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.client;
 
-import java.util.Collection;
 
 /**
  * This interface represents a "style" that applies to a string of text. 
@@ -30,29 +29,30 @@ import java.util.Collection;
  */
 public interface IWarlockStyle {
 
-	public enum StyleType {
-		BOLD, ITALIC, UNDERLINE, LINK, MONOSPACE
-	};
-	
-	public Collection<StyleType> getStyleTypes();
 	public Runnable getAction();
 	
 	public WarlockColor getForegroundColor();
 	public WarlockColor getBackgroundColor();
+	// public WarlockFont getFont();
+	
+	public boolean isBold();
+	public boolean isItalic();
+	public boolean isUnderline();
 	public boolean isFullLine();
+	public boolean isMonospace();
 	public String getName();
 	public String getComponentName();
-	
-	public void addStyleType (StyleType styleType);
+	public String getSound();
 
 	public void setAction(Runnable action);
 	public void setForegroundColor(WarlockColor color);
 	public void setBackgroundColor(WarlockColor color);
 	public void setFullLine(boolean fullLine);
+	public void setBold(boolean bold);
+	public void setItalic(boolean italic);
+	public void setUnderline(boolean underline);
+	public void setMonospace(boolean monospace);
 	public void setName(String name);
 	public void setComponentName(String componentName);
-	public String getSound();
 	public void setSound(String sound);
-	public IWarlockStyle mergeWith(IWarlockStyle style);
-
 }

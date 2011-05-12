@@ -24,7 +24,8 @@ package cc.warlock.core.client.settings.internal;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import cc.warlock.core.client.settings.IClientSettingProvider;
+import org.osgi.service.prefs.Preferences;
+
 import cc.warlock.core.client.settings.IPatternSetting;
 
 public class PatternSetting extends ClientSetting implements IPatternSetting {
@@ -37,43 +38,19 @@ public class PatternSetting extends ClientSetting implements IPatternSetting {
 	protected boolean caseSensitive = false;
 	protected boolean updateDeferred = true;
 	
-	public PatternSetting (PatternSetting other)
-	{
-		super(other);	
-		this.pattern = other.pattern;
-		this.text = other.text;
-		this.literal = other.literal;
-		this.fullWord = other.fullWord;
-		this.caseSensitive = other.caseSensitive;
-	}
-	
-	public PatternSetting (IClientSettingProvider provider, String pattern) throws PatternSyntaxException
-	{
-		this(provider, pattern, false);
-	}
-	
-	public PatternSetting (IClientSettingProvider provider, String pattern, boolean literal) throws PatternSyntaxException
-	{
-		this(provider, pattern, literal, false);
-	}
-	
-	public PatternSetting (IClientSettingProvider provider, String pattern, boolean literal, boolean caseSensitive) throws PatternSyntaxException {
-		this(provider, pattern, literal, caseSensitive, true);
-	}
-	
-	public PatternSetting (IClientSettingProvider provider, String pattern, boolean literal, boolean caseSensitive, boolean fullWordMatch) throws PatternSyntaxException {
-		super(provider);
+	public PatternSetting (Preferences parentNode, String path) {
+		super(parentNode, path);
 		
-		this.text = pattern;
-		this.literal = literal;
-		this.caseSensitive = caseSensitive;
-		this.fullWord = fullWordMatch;
-		update();
+		this.text = getNode().get("pattern", "");
+		this.literal = getNode().getBoolean("literal", false);
+		this.caseSensitive = getNode().getBoolean("case-sensitive", false);
+		this.fullWord = getNode().getBoolean("full-word", true);
+		this.updateDeferred = true;
 	}
 	
 	protected void update() throws PatternSyntaxException {
-		String s = this.text;
-		if (s != null) {
+		if (this.text != null) {
+			String s = this.text;
 			int flags = 0;
 			if (literal) {
 				s = Pattern.quote(s);
@@ -105,7 +82,7 @@ public class PatternSetting extends ClientSetting implements IPatternSetting {
 	public void setText(String text) throws PatternSyntaxException {
 		if (!text.equals(this.text)) {
 			updateDeferred = true;
-			needsUpdate = true;
+			getNode().put("text", text);
 		}
 		this.text = text;
 	}
@@ -114,7 +91,7 @@ public class PatternSetting extends ClientSetting implements IPatternSetting {
 	{
 		if (literal != this.literal) {
 			updateDeferred = true;
-			needsUpdate = true;
+			getNode().putBoolean("literal", literal);
 			this.literal = literal;
 		}
 	}
@@ -123,7 +100,7 @@ public class PatternSetting extends ClientSetting implements IPatternSetting {
 	{
 		if (caseSensitive != this.caseSensitive) {
 			updateDeferred = true;
-			needsUpdate = true;
+			getNode().putBoolean("caseSensitive", caseSensitive);
 			this.caseSensitive = caseSensitive;
 		}
 	}
@@ -132,7 +109,7 @@ public class PatternSetting extends ClientSetting implements IPatternSetting {
 	{
 		if (fullWordMatch != this.fullWord) {
 			updateDeferred = true;
-			needsUpdate = true;
+			getNode().putBoolean("fullWord", fullWordMatch);
 			this.fullWord = fullWordMatch;
 		}
 	}

@@ -21,151 +21,53 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.PatternSyntaxException;
+import java.util.Map.Entry;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
 
-@SuppressWarnings("unchecked")
 public class HighlightConfigurationProvider extends PatternConfigurationProvider implements IHighlightProvider
 {
-	protected ArrayList<IHighlightString> highlights = new ArrayList<IHighlightString>();
+	protected HashMap<String, IHighlightString> highlights = new HashMap<String, IHighlightString>();
 	protected HashMap<String, IWarlockStyle> namedStyles = new HashMap<String, IWarlockStyle>();
 	
-	public HighlightConfigurationProvider ()
+	private int nextID = 0;
+	
+	public HighlightConfigurationProvider (Preferences parentNode)
 	{
-		super("highlights");
+		super(parentNode, "highlights");
 		
-		setHandleChildren(false);
+		try {
+			for(String highlightId : getNode().childrenNames()) {
+				try {
+					int id = Integer.parseInt(highlightId);
+					if(id >= nextID)
+						nextID = id + 1;
+				} catch(NumberFormatException e) {
+					// Don't care
+				}
+				highlights.put(highlightId, new HighlightString(getNode(), highlightId));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public List<? extends IHighlightString> getHighlightStrings() {
-		return highlights;
+	public Collection<IHighlightString> getHighlightStrings() {
+		return highlights.values();
 	}
 
 	public IWarlockStyle getNamedStyle(String name) {
-		if (namedStyles.containsKey(name))
-		{
-			return namedStyles.get(name);
-		}
-		return null;
+		return namedStyles.get(name);
 	}
 
-	public Collection<? extends IWarlockStyle> getNamedStyles() {
+	public Collection<IWarlockStyle> getNamedStyles() {
 		return namedStyles.values();
-	}
-	
-	@Override
-	protected void parseData() {}
-	
-	@Override
-	protected void parseChild(Element child) {
-		if (child.getName().equals("highlight"))
-		{
-			IWarlockStyle style = null;
-			if (child.elements().size() > 0 && child.element("style") != null) {
-				Element sElement = child.element("style");
-				style = createStyle(sElement);
-			}
-			
-			try {
-				HighlightString string = new HighlightString(this, null, style);
-				fillSetting(string, child);
-				highlights.add(string);
-			} catch(PatternSyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-		else if (child.getName().equals("style"))
-		{
-			IWarlockStyle style = createStyle(child);
-			
-			namedStyles.put(style.getName(), style);
-		}
-	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		//System.out.println("Saving highlights");
-		Element highlightsElement = DocumentHelper.createElement("highlights");
-		
-		for (IHighlightString string : highlights)
-		{
-			Element hElement = highlightsElement.addElement("highlight");
-			fillElement(hElement, string);
-			
-			createStyleElement (hElement, string.getStyle());
-		}
-		
-		for (Map.Entry<String, IWarlockStyle> entry : namedStyles.entrySet())
-		{
-			highlightsElement.add(createStyleElement(entry.getValue()));
-		}
-		
-		elements.add(highlightsElement);
-	}
-
-	protected IWarlockStyle createStyle (Element sElement)
-	{
-		WarlockStyle style = new WarlockStyle();
-		style.setBackgroundColor(colorValue(sElement, "background"));
-		style.setForegroundColor(colorValue(sElement, "foreground"));
-		
-		if (sElement.attributeValue("name") != null) {
-			style.setName(stringValue(sElement, "name"));
-		}
-		
-		for (Element typeElement : (List<Element>) sElement.elements()) {
-			String text = typeElement.getTextTrim();
-			style.addStyleType(IWarlockStyle.StyleType.valueOf(text));
-		}
-		
-		style.setFullLine(booleanValue(sElement, "full-line"));
-		//System.out.println("Setting style sound to " + sElement.attributeValue("sound"));
-		style.setSound(sElement.attributeValue("sound"));
-		
-		return style;
-	}
-	
-	protected Element createStyleElement(IWarlockStyle style) {
-		return createStyleElement(null, style);
-	}
-	
-	protected Element createStyleElement(Element parent, IWarlockStyle style)
-	{
-		Element element = null;
-		if (parent != null) {
-			element = parent.addElement("style");
-		} else {
-			element = DocumentHelper.createElement("style");
-		}
-		
-		if (style.getName() != null)
-			element.addAttribute("name", style.getName());
-		
-		element.addAttribute("background", colorString(style.getBackgroundColor()));
-		element.addAttribute("foreground", colorString(style.getForegroundColor()));
-		
-		for (IWarlockStyle.StyleType styleType : style.getStyleTypes())
-		{
-			Element sElement = element.addElement("styleType");
-			sElement.setText(styleType.name());
-		}
-		
-		element.addAttribute("full-line", ""+style.isFullLine());
-		//System.out.println("saving sound " + style.getSound());
-		element.addAttribute("sound", style.getSound());
-		return element;
 	}
 	
 	public void addNamedStyle (String name, IWarlockStyle style)
@@ -173,31 +75,47 @@ public class HighlightConfigurationProvider extends PatternConfigurationProvider
 		namedStyles.put(name, style);
 	}
 	
-	public void removeNamedStyle (String name)
+	public HighlightString createHighlightString ()
 	{
-		namedStyles.remove(name);
-	}
-	
-	public void addHighlightString (IHighlightString string)
-	{
-		highlights.add(string);
+		HighlightString highlight = new HighlightString(getNode(), Integer.toString(nextID));
+		nextID++;
+		highlights.put(Integer.toString(nextID), highlight);
+		
+		return highlight;
 	}
 	
 	public void insertHighlightString(int index, IHighlightString string) {
-		highlights.add(index, string);
+		IHighlightString oldHighlight = highlights.remove(Integer.toString(index));
+		if(oldHighlight != null) {
+			getNode().remove(Integer.toString(index));
+			insertHighlightString(index + 1, oldHighlight);
+		}
+		highlights.put(Integer.toString(index), string);
 	}
 	
 	public void removeHighlightString (IHighlightString string)
 	{
-		highlights.remove(string);
+		for(Entry<String, IHighlightString> entry : highlights.entrySet()) {
+			if(entry.getValue().equals(string)) {
+				highlights.remove(entry.getKey());
+				getNode().remove(entry.getKey());
+				break;
+			}
+		}
 	}
 	
-	public void replaceHighlightString(IHighlightString originalString,
+	/*public void replaceHighlightString(IHighlightString originalString,
 			IHighlightString newString) {
-		
+		for(Entry<String, IHighlightString> entry : highlights.entrySet()) {
+			if(entry.getValue().equals(originalString)) {
+				highlights.put(entry.getKey(), newString);
+				getNode().put(entry.getKey(), newString)
+				break;
+			}
+		}
 		int index = highlights.indexOf(originalString);
 		if (index > -1) {
 			highlights.set(index, newString);
 		}
-	}
+	}*/
 }

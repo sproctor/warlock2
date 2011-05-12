@@ -22,7 +22,6 @@
 package cc.warlock.core.stormfront.internal;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockStyle.StyleType;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
@@ -66,7 +65,8 @@ public class DTagHandler extends DefaultTagHandler {
 		}
 		command = null;
 		String cmd = attributes.getValue("cmd");
-		style = new WarlockStyle(new StyleType[] { StyleType.UNDERLINE });
+		style = new WarlockStyle();
+		style.setUnderline(true);
 		if(cmd != null) {
 			style.setAction(new CommandRunner(handler.getClient(), cmd));
 			gotCommand = true;

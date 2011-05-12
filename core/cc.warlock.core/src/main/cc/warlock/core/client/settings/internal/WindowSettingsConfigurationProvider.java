@@ -21,28 +21,32 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.IWindowSettingsProvider;
 
 public class WindowSettingsConfigurationProvider extends ClientConfigurationProvider implements IWindowSettingsProvider {
 
-	protected ArrayList<IWindowSettings> windowSettings = new ArrayList<IWindowSettings>();
+	protected HashMap<String, IWindowSettings> windowSettings = new HashMap<String, IWindowSettings>();
 	
-	public WindowSettingsConfigurationProvider() {
-		super("windows");
-		setHandleChildren(false);
-	}
-	
-	public void addWindowSettings(IWindowSettings settings) {
-		if (getWindowSettings(settings.getId()) == null)
-			windowSettings.add(settings);
+	public WindowSettingsConfigurationProvider(Preferences parentNode) {
+		super(parentNode, "windows");
+		
+		try {
+			for(String windowId : getNode().childrenNames()) {
+				windowSettings.put(windowId, new WindowSettings(getNode(), windowId));
+				
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Collection<? extends IWindowSettings> getWindowSettings() {
@@ -50,60 +54,20 @@ public class WindowSettingsConfigurationProvider extends ClientConfigurationProv
 	}
 
 	public IWindowSettings getWindowSettings(String windowId) {
-		for (IWindowSettings settings : windowSettings)
-		{
-			if (settings.getId().equals(windowId)) return settings;
-		}
-		return null;
+		return windowSettings.get(windowId);
 	}
 
+	public IWindowSettings getOrCreateWindowSettings(String windowId) {
+		IWindowSettings settings = windowSettings.get(windowId);
+		if(settings == null) {
+			settings = new WindowSettings(getNode(), windowId);
+			windowSettings.put(windowId, settings);
+		}
+		return settings;
+	}
+	
 	public void removeWindowSettings(IWindowSettings settings) {
 		windowSettings.remove(settings);
 	}
 
-	@Override
-	protected void parseData() {
-		
-	}
-	
-	@Override
-	protected void parseChild(Element child) {
-		if (child.getName().equals("window"))
-		{
-			WindowSettings settings = (WindowSettings)getWindowSettings(child.attributeValue("id"));
-			boolean add = false;
-			if (settings == null){
-				settings = new WindowSettings(this);
-				add = true;
-			}
-			
-			settings.setBackgroundColor(colorValue(child, "background"));
-			settings.setForegroundColor(colorValue(child, "foreground"));
-			settings.setFont(elementToFont(child.element("font")));
-			settings.setColumnFont(elementToFont(child.element("columnFont")));
-			settings.setId(child.attributeValue("id"));
-			
-			if (add) {
-				windowSettings.add(settings);
-			}
-		}
-	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		Element windows = DocumentHelper.createElement("windows");
-		
-		for (IWindowSettings settings : windowSettings)
-		{
-			Element window = windows.addElement("window");
-			window.addAttribute("id", settings.getId());
-			window.addAttribute("background", colorString(settings.getBackgroundColor()));
-			window.addAttribute("foreground", colorString(settings.getForegroundColor()));
-			
-			window.add(fontToElement(settings.getFont(), "font"));
-			window.add(fontToElement(settings.getColumnFont(), "columnFont"));
-		}
-		
-		elements.add(windows);
-	}
 }

@@ -26,5 +26,5 @@ package cc.warlock.core.client.settings;
  *
  */
 public interface IClientSetting {
-	public IClientSettingProvider getProvider();
+	
 }

@@ -21,52 +21,29 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import cc.warlock.core.client.WarlockFont;
+import org.osgi.service.prefs.Preferences;
+
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.settings.IWindowSettings;
-import cc.warlock.core.client.settings.IWindowSettingsProvider;
 
 public class WindowSettings extends ColorFontSetting implements IWindowSettings {
 
 	protected String id;
-	protected WarlockFont columnFont = WarlockFont.DEFAULT_FONT;
+	protected FontSetting columnFont;
 	
-	public WindowSettings(IWindowSettingsProvider provider) {
-		super(provider);
-	}
-	
-	public WindowSettings (WindowSettings other)
-	{
-		super(other);
+	public WindowSettings(Preferences parentNode, String id) {
+		super(parentNode, id);
 		
-		this.id = other.id == null ? null : new String(other.id);
-		this.columnFont = other.columnFont == null ? null : new WarlockFont(other.columnFont);
+		this.id = id;
+		columnFont = new FontSetting(parentNode, "column-font");
 	}
 	
-	public WarlockFont getColumnFont() {
+	public IWarlockFont getColumnFont() {
 		return columnFont;
-	}
-	
-	public void setColumnFont(WarlockFont columnFont) {
-		if (!columnFont.equals(this.columnFont))
-			needsUpdate = true;
-		
-		this.columnFont = columnFont;
 	}
 	
 	public String getId() {
 		return id;
-	}
-	
-	public void setId(String id) {
-		if (!id.equals(this.id))
-			needsUpdate = true;
-		
-		this.id = id;
-	}
-	
-	public WindowSettings getOriginalWindowSettings ()
-	{
-		return (WindowSettings) originalSetting;
 	}
 	
 	@Override

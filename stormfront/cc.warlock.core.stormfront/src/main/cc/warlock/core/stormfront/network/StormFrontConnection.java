@@ -29,7 +29,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockStyle;
@@ -123,8 +122,9 @@ public class StormFrontConnection implements IConnection
 			"******************************\n"+
 			"* Disconnected from the game *\n" +
 			"******************************\n");
-		
-		message.addStyle(new WarlockStyle(new IWarlockStyle.StyleType[] { IWarlockStyle.StyleType.MONOSPACE }));
+		WarlockStyle style = new WarlockStyle();
+		style.setMonospace(true);
+		message.addStyle(style);
 		
 		client.getDefaultStream().put(message);
 		client.getDefaultStream().flush();

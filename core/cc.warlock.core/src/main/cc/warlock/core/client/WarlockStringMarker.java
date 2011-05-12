@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import cc.warlock.core.client.internal.WarlockStyle;
+
 
 public class WarlockStringMarker {
 	
@@ -190,8 +192,11 @@ public class WarlockStringMarker {
 			return style;
 		for(WarlockStringMarker subMarker : subMarkers) {
 			IWarlockStyle baseStyle = subMarker.getBaseStyle(marker);
-			if(baseStyle != null)
-				return baseStyle.mergeWith(style);
+			if(baseStyle != null) {
+				WarlockStyle mergedStyle = new WarlockStyle(baseStyle);
+				mergedStyle.mergeWith(style);
+				return mergedStyle;
+			}
 		}
 		return null;
 	}
