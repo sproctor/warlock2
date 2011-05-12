@@ -35,9 +35,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import cc.warlock.core.client.ICommand;
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.internal.Command;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.views.GameView;
 

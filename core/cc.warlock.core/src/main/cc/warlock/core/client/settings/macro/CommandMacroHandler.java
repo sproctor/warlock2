@@ -23,6 +23,7 @@ package cc.warlock.core.client.settings.macro;
 
 import java.util.List;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.settings.IClientSettings;
 /**

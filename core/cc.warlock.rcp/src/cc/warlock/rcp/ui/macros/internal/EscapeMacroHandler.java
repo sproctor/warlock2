@@ -23,8 +23,8 @@ package cc.warlock.rcp.ui.macros.internal;
 
 import java.util.List;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.ScriptEngineRegistry;

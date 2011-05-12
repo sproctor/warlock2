@@ -22,26 +22,18 @@
 package cc.warlock.core.client.settings.macro;
 
 import java.util.Collection;
-import java.util.List;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.settings.IClientSettingProvider;
+import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
 
 public interface IMacroProvider extends IClientSettingProvider {
-	public List<? extends IMacro> getMacros();
+	public Collection<MacroSetting> getMacros();
 	
-	public IMacro getMacro (int keycode, int modifiers);
-	public void addMacro (IMacro macro);
-	public void removeMacro (IMacro macro);
-	public void replaceMacro (IMacro originalMacro, IMacro newMacro);
+	public MacroSetting getMacro (int keycode, int modifiers);
+	//public void addMacro (IMacro macro);
+	public boolean removeMacro (IMacro macro);
+	//public void replaceMacro (IMacro originalMacro, IMacro newMacro);
 	
-	public IMacroVariable getMacroVariable (String id);
-	public Collection<IMacroVariable> getMacroVariables();
-	public void setMacroVariable (String id, IMacroVariable variable);
-	public void removeMacroVariable (IMacroVariable variable);
-	
-	public IMacroCommand getMacroCommand (String id);
-	public Collection<IMacroCommand> getMacroCommands();
-	public void addMacroCommand (IMacroCommand command);
-	public void removeMacroCommand (IMacroCommand command);
 }

@@ -18,10 +18,10 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */package cc.warlock.core.client.settings.macro;
+ */package cc.warlock.core.client;
 
-import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.settings.IClientSetting;
+import cc.warlock.core.client.settings.macro.IMacroHandler;
 
 /**
  * @author Marshall
@@ -38,11 +38,9 @@ public interface IMacro extends IClientSetting {
 	public int getModifiers ();
 	public void setModifiers (int modifiers);
 	
-	public void setHandler (IMacroHandler handler);
+	//public void setCommand (String command);
 	public IMacroHandler getHandler();
 	
 	public void execute(IWarlockClientViewer viewer);
-	
-	public Object getUserData();
-	public void setUserData(Object object);
+
 }

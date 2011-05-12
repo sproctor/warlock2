@@ -27,7 +27,7 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 
 import cc.warlock.core.client.settings.macro.CommandMacroHandler;
-import cc.warlock.core.client.settings.macro.internal.Macro;
+import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
 import cc.warlock.core.stormfront.settings.IStormFrontMacroImporter;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
@@ -108,7 +108,7 @@ public class StormFrontSWTSettings implements IStormFrontMacroImporter {
 			int keyCode = keys.get(key);
 			int mods = modifierListToInt(modifiers);
 			
-			Macro macro = new Macro(settings.getMacroConfigurationProvider(), keyCode, mods);
+			MacroSetting macro = new MacroSetting(settings.getMacroConfigurationProvider(), keyCode, mods);
 			macro.setHandler(new CommandMacroHandler(action));
 			
 			settings.getMacroConfigurationProvider().addMacro(macro);
@@ -122,7 +122,7 @@ public class StormFrontSWTSettings implements IStormFrontMacroImporter {
 				{
 					int mods = modifierListToInt(modifiers);
 					
-					Macro macro = new Macro(settings.getMacroConfigurationProvider(), k, mods);
+					MacroSetting macro = new MacroSetting(settings.getMacroConfigurationProvider(), k, mods);
 					macro.setHandler(new CommandMacroHandler(action));
 					
 					settings.getMacroConfigurationProvider().addMacro(macro);

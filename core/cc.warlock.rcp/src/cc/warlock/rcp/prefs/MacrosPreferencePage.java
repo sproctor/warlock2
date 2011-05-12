@@ -62,14 +62,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.part.PageBook;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.macro.CommandMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
-import cc.warlock.core.client.settings.macro.internal.Macro;
+import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeText;
@@ -92,14 +92,14 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected IWarlockClient client;
 	protected ClientSettings settings;
 	
-	protected ArrayList<Macro> macros = new ArrayList<Macro>();
+	//protected ArrayList<MacroSetting> macros = new ArrayList<MacroSetting>();
 
 	protected Button addMacroButton;
 	protected Button removeMacroButton;
 	protected Button clearMacrosButton;
 	protected Button defaultMacrosButton;
 	
-	protected Macro selectedMacro;
+	protected MacroSetting selectedMacro;
 	protected PageBook filterBook;
 
 	protected Text commandText;
@@ -208,19 +208,19 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 				if (macroTableView.getSelection().isEmpty()) {
 					removeMacroButton.setEnabled(false);
 				} else {
-					selectedMacro = (Macro) ((IStructuredSelection)macroTableView.getSelection()).getFirstElement();
+					selectedMacro = (MacroSetting) ((IStructuredSelection)macroTableView.getSelection()).getFirstElement();
 					removeMacroButton.setEnabled(true);
 				}
 			}
 		});
 		
-		for (IMacro macro : settings.getAllMacros()) {
-			if (macro instanceof Macro) {
-				macros.add(new Macro((Macro)macro));
+		/*for (IMacro macro : settings.getAllMacros()) {
+			if (macro instanceof MacroSetting) {
+				macros.add(new MacroSetting((MacroSetting)macro));
 			}
-		}
+		}*/
 		
-		macroTableView.setInput(macros);
+		macroTableView.setInput(settings.getMacros());
 		macroTableView.getTable().setHeaderVisible(true);
 		int listHeight = macroTableView.getTable().getItemHeight() * 8;
 		Rectangle trim = macroTableView.getTable().computeTrim(0, 0, 0, listHeight);
@@ -281,10 +281,10 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 
 	protected class MacroFilter extends ViewerFilter {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			IMacro macro = (IMacro)element;
+			MacroSetting macro = (MacroSetting)element;
 			
 			if (filterByCommand) {
-				String command = getCommandMacroHandler(macro).getCommand();
+				String command = macro.getCommand();
 				
 				if (command.equals("")) {
 					return true;
@@ -301,30 +301,31 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		}
 	}
 	
-	protected ArrayList<Macro> addedMacros = new ArrayList<Macro>();
+	protected ArrayList<MacroSetting> addedMacros = new ArrayList<MacroSetting>();
 	protected void addMacroSelected ()
 	{
-		Macro macro = new Macro(settings.getMacroConfigurationProvider(), 0);
-		macro.setHandler(new CommandMacroHandler(""));
+		MacroSetting macro = settings.getMacroConfigurationProvider().createMacro();
+		macro.setCommand("");
 		
 		addedMacros.add(macro);
-		macros.add(macro);
+		//macros.add(macro);
 		macroTableView.add(macro);
 		
 		macroTableView.editElement(macro, 0);
 	}
 	
-	protected ArrayList<Macro> removedMacros = new ArrayList<Macro>();
+	protected ArrayList<MacroSetting> removedMacros = new ArrayList<MacroSetting>();
 
 	protected void removeMacroSelected ()
 	{
-		addedMacros.remove(selectedMacro);
+		/*addedMacros.remove(selectedMacro);
 		
 		if (macros.remove(selectedMacro)) {
 			removedMacros.add(selectedMacro);
 		}
 		
-		macroTableView.remove(selectedMacro);
+		macroTableView.remove(selectedMacro);*/
+		settings.getMacroConfigurationProvider().removeMacro(selectedMacro);
 	}
 	
 	
@@ -434,7 +435,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	// Mostly just to support setupDefaultMacros
 	protected void createRawMacro(String cmd, int keycode, int keymod) {
-		Macro macro = new Macro(settings.getMacroConfigurationProvider(), 0);
+		MacroSetting macro = new MacroSetting(settings.getMacroConfigurationProvider(), 0);
 		macro.setModifiers(keymod);
 		macro.setKeyCode(keycode);
 		macro.setHandler(new CommandMacroHandler(cmd));
@@ -450,21 +451,13 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		if(macroTable != null)
 			macroTable.clearAll();
 		addedMacros.clear();
-		for (Macro currentMacro: macros) {
+		for (MacroSetting currentMacro: macros) {
 			IMacroHandler handler = currentMacro.getHandler();
 			if (handler != null && handler instanceof CommandMacroHandler) {
 				macroTableView.remove(currentMacro);
 				removedMacros.add(currentMacro);
 			}
 		}
-	}
-	
-	protected CommandMacroHandler getCommandMacroHandler (IMacro macro) {
-		IMacroHandler handler = macro.getHandler();
-		if(handler != null && handler instanceof CommandMacroHandler)
-			return (CommandMacroHandler)handler;
-		else
-			return null;
 	}
 	
 	protected class LabelProvider implements ITableLabelProvider
@@ -475,9 +468,9 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			return null;
 		}
 		public String getColumnText(Object element, int columnIndex) {
-			IMacro macro = (IMacro) element;
+			MacroSetting macro = (MacroSetting) element;
 			if (columnIndex == 0) {
-				return getCommandMacroHandler(macro).getCommand();
+				return macro.getCommand();
 			} else {
 				
 				return SWTKeySupport.getKeyFormatterForPlatform().format(KeyStroke.getInstance(macro.getModifiers(), macro.getKeyCode()));
@@ -508,12 +501,11 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		}
 		
 		protected Object getValue(Object element) {
-			return getCommandMacroHandler((IMacro)element).getCommand();
+			return ((MacroSetting)element).getCommand();
 		}
 		
 		protected void setValue(Object element, Object value) {
-			getCommandMacroHandler((IMacro)element).setCommand((String)value);
-			((Macro)element).setNeedsUpdate(true);
+			((MacroSetting)element).setCommand((String)value);
 			
 			macroTableView.update(element, null);
 		}
@@ -593,12 +585,12 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		}
 
 		protected Object getValue(Object element) {
-			Macro macro = (Macro) element;
+			MacroSetting macro = (MacroSetting) element;
 			return KeyStroke.getInstance(macro.getModifiers(), macro.getKeyCode());
 		}
 
 		protected void setValue(Object element, Object value) {
-			Macro macro = (Macro) element;
+			MacroSetting macro = (MacroSetting) element;
 			KeyStroke stroke = (KeyStroke) value;
 			
 			macro.setModifiers(stroke.getModifierKeys());
@@ -616,21 +608,21 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	@Override
 	public boolean performOk() {
-		for (Macro macro : macros) {
+		/*for (MacroSetting macro : macros) {
 			if (macro.needsUpdate() && !addedMacros.contains(macro)) {
 				IMacroProvider provider = (IMacroProvider) macro.getProvider();
 				provider.replaceMacro(macro.getOriginalMacro(), macro);
 			}
 		}
 		
-		for (Macro macro : removedMacros) {
+		for (MacroSetting macro : removedMacros) {
 			IMacroProvider provider = (IMacroProvider) macro.getProvider();
 			provider.removeMacro(macro.getOriginalMacro());
 		}
 		
-		for (Macro macro : addedMacros) {
+		for (MacroSetting macro : addedMacros) {
 			settings.getMacroConfigurationProvider().addMacro(macro);
-		}
+		}*/
 		
 		return true;
 	}

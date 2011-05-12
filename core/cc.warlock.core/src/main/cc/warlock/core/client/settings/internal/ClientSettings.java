@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.settings.IClientSettingProvider;
@@ -39,7 +40,6 @@ import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.IWindowSettingsProvider;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
@@ -71,7 +71,7 @@ public class ClientSettings implements IClientSettings {
 		this.client = client;
 		this.node = WarlockPreferences.getInstance().getNode().node("clients/" + clientId);
 		
-		highlightConfigurationProvider = new HighlightConfigurationProvider();
+		highlightConfigurationProvider = new HighlightConfigurationProvider(node);
 		ignoreConfigurationProvider = new IgnoreConfigurationProvider();
 		triggerConfigurationProvider = new TriggerConfigurationProvider();
 		variableConfigurationProvider = new VariableConfigurationProvider();
@@ -91,24 +91,8 @@ public class ClientSettings implements IClientSettings {
 		return list;
 	}
 	
-	public List<? extends IMacro> getAllMacros() {
-		ArrayList<IMacro> list = new ArrayList<IMacro>();
-		for (IMacroProvider provider : getAllProviders(IMacroProvider.class)) {
-			list.addAll(provider.getMacros());
-		}
-		return list;
-	}
-	
-	public List<? extends IMacroVariable> getAllMacroVariables() {
-		ArrayList<IMacroVariable> list = new ArrayList<IMacroVariable>();
-		for (IMacroProvider provider : getAllProviders(IMacroProvider.class)) {
-			list.addAll(provider.getMacroVariables());
-		}
-		return list;
-	}
-	
-	public Collection<IMacroCommand> getAllMacroCommands() {
-		return macroConfigurationProvider.getMacroCommands();
+	public Collection<MacroSetting> getMacros() {
+		return macroConfigurationProvider.getMacros();
 	}
 	
 	public List<? extends IVariable> getAllVariables() {
@@ -124,20 +108,6 @@ public class ClientSettings implements IClientSettings {
 			if (macro.getKeyCode() == keycode && macro.getModifiers() == modifiers) {
 				return macro;
 			}
-		}
-		return null;
-	}
-	
-	public IMacroVariable getMacroVariable(String id) {
-		for (IMacroVariable var : getAllMacroVariables()) {
-			if (var.getIdentifier().equals(id)) return var;
-		}
-		return null;
-	}
-	
-	public IMacroCommand getMacroCommand(String id) {
-		for (IMacroCommand command : getAllMacroCommands()) {
-			if (command.getIdentifier().equals(id)) return command;
 		}
 		return null;
 	}

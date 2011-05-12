@@ -25,40 +25,28 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package cc.warlock.core.client.settings.macro.internal;
+package cc.warlock.core.client.internal;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.internal.ClientSetting;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacroProvider;
 
-public class Macro extends ClientSetting implements IMacro
+public class WarlockMacro implements IMacro
 {
 	protected int keycode;
 	protected int modifiers;
 	protected IMacroHandler handler;
-	protected Object userData;
 	
-	public Macro (IMacroProvider provider, int keycode)
+	public WarlockMacro (int keycode, int modifiers, IMacroHandler handler)
 	{
-		this (provider, keycode, NO_MODIFIERS);
-	}
-	
-	public Macro (IMacroProvider provider, int keycode, int modifiers)
-	{
-		super(provider);
-		
 		this.keycode = keycode;
 		this.modifiers = modifiers;
+		this.handler = handler;
 	}
 	
-	public Macro (Macro other) {
-		super(other);
-		
-		this.keycode = other.keycode;
-		this.modifiers = other.modifiers;
-		this.handler = other.handler;
+	public WarlockMacro (int keycode, IMacroHandler handler)
+	{
+		this(keycode, IMacro.NO_MODIFIERS, handler);
 	}
 	
 	public int getKeyCode() {
@@ -66,9 +54,6 @@ public class Macro extends ClientSetting implements IMacro
 	}
 	
 	public void setKeyCode(int keycode) {
-		if (keycode != this.keycode)
-			needsUpdate = true;
-		
 		this.keycode = keycode;
 	}
 	
@@ -77,15 +62,10 @@ public class Macro extends ClientSetting implements IMacro
 	}
 	
 	public void setModifiers(int modifiers) {
-		if (modifiers != this.modifiers)
-			needsUpdate = true;
-		
 		this.modifiers = modifiers;
 	}
 	
 	public void setHandler(IMacroHandler handler) {
-		needsUpdate = true;
-		
 		this.handler = handler;
 	}
 	
@@ -95,14 +75,6 @@ public class Macro extends ClientSetting implements IMacro
 	
 	public void execute(IWarlockClientViewer viewer) {
 		handler.handleMacro(this, viewer);
-	}
-	
-	public Object getUserData() {
-		return userData;
-	}
-	
-	public void setUserData(Object object) {
-		this.userData = object;
 	}
 	
 	@Override
@@ -121,8 +93,4 @@ public class Macro extends ClientSetting implements IMacro
 		return super.equals(obj);
 	}
 	
-	public Macro getOriginalMacro ()
-	{
-		return (Macro)getOriginalSetting();
-	}
 }

@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.client.settings.macro;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
 
 /**

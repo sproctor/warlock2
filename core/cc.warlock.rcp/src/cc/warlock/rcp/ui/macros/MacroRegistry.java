@@ -38,14 +38,11 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.swt.SWT;
 
+import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.IClientSetting;
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacroProvider;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
-import cc.warlock.core.client.settings.macro.internal.Macro;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
 import cc.warlock.rcp.ui.macros.internal.EscapeMacroHandler;
 import cc.warlock.rcp.ui.macros.internal.ReturnMacroHandler;
@@ -57,7 +54,7 @@ import cc.warlock.rcp.ui.macros.internal.ReturnMacroHandler;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class MacroRegistry implements IMacroProvider {
+public class MacroRegistry {
 	private static MacroRegistry instance;
 	
 	private ArrayList<IMacro> macros;
@@ -104,25 +101,7 @@ public class MacroRegistry implements IMacroProvider {
 		return instance;
 	}
 	
-	public static IMacro createCommandMacro(int keyCode, String command)
-	{
-		return createMacro(keyCode, new CommandMacroHandler(command));
-	}
-	
-	public static IMacro createMacro (int keyCode, IMacroHandler handler)
-	{
-		return createMacro(keyCode, IMacro.NO_MODIFIERS, handler);
-	}
-	
-	public static IMacro createMacro (int keyCode, int modifiers, IMacroHandler handler)
-	{
-		Macro macro = new Macro(instance(), keyCode, modifiers);
-		macro.setHandler(handler);
-		
-		return macro;
-	}
-	
-	public List<IMacro> getMacros ()
+	public Collection<IMacro> getMacros ()
 	{
 		return macros;
 	}
@@ -134,11 +113,6 @@ public class MacroRegistry implements IMacroProvider {
 	
 	public Collection<IMacroCommand> getMacroCommands() {
 		return commands.values();
-	}
-	
-	public void addMacro (int keycode, String command)
-	{
-		macros.add(createCommandMacro(keycode, command));
 	}
 	
 	public void addMacro (IMacro macro)
@@ -158,8 +132,8 @@ public class MacroRegistry implements IMacroProvider {
 	}
 	
 	private void loadMacros () {
-		macros.add(MacroRegistry.createMacro(SWT.CR, new ReturnMacroHandler()));
-		macros.add(MacroRegistry.createMacro(SWT.ESC, new EscapeMacroHandler()));
+		macros.add(new WarlockMacro(SWT.CR, new ReturnMacroHandler()));
+		macros.add(new WarlockMacro(SWT.ESC, new EscapeMacroHandler()));
 	}
 	
 	public IMacro getMacro(int keycode, int modifiers) {

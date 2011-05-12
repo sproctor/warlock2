@@ -24,9 +24,9 @@ package cc.warlock.core.client.settings;
 import java.util.Collection;
 import java.util.List;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 

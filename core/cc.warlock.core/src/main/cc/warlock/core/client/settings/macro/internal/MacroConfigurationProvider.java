@@ -21,19 +21,15 @@
  */
 package cc.warlock.core.client.settings.macro.internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map.Entry;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 
@@ -45,127 +41,77 @@ import cc.warlock.core.client.settings.macro.IMacroVariable;
  */
 public class MacroConfigurationProvider extends ClientConfigurationProvider implements IMacroProvider {
 
-	protected ArrayList<IMacro> macros = new ArrayList<IMacro>();
-	protected HashMap<String, IMacroVariable> variables = new HashMap<String, IMacroVariable>();
-	protected HashMap<String, IMacroCommand> commands = new HashMap<String, IMacroCommand>();
+	protected HashMap<String, MacroSetting> macros = new HashMap<String, MacroSetting>();
 	
-	public MacroConfigurationProvider ()
+	private int nextID = 0;
+	
+	public MacroConfigurationProvider (Preferences parentNode)
 	{
-		super("macros");
+		super(parentNode, "macros");
 		
-		setHandleChildren(false);
-	}
-	
-	public void addMacro(IMacro macro) {
-		if (!macros.contains(macro)) {
-			macros.add(macro);
+		try {
+			for(String macroId : getNode().childrenNames()) {
+				try {
+					int id = Integer.parseInt(macroId);
+					if(id >= nextID)
+						nextID = id + 1;
+				} catch(NumberFormatException e) {
+					// Don't care
+				}
+				macros.put(macroId, new MacroSetting(getNode(), macroId));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
+	
+	public MacroSetting createMacro() {
+		MacroSetting macro = new MacroSetting(getNode(), Integer.toString(nextID));
+		nextID++;
+		macros.put(Integer.toString(nextID), macro);
+		
+		return macro;
+	}
 
-	public IMacro getMacro(int keycode, int modifiers) {
-		for (IMacro macro : macros) {
+	public MacroSetting getMacro(int keycode, int modifiers) {
+		for (MacroSetting macro : macros.values()) {
 			if (macro.getKeyCode() == keycode && macro.getModifiers() == modifiers) {
 				return macro;
 			}
 		}
 		return null;
 	}
-
-	public List<? extends IMacro> getMacros() {
-		return macros;
+	
+	public MacroSetting getOrCreateMacro(int keycode, int modifiers) {
+		MacroSetting macro = getMacro(keycode, modifiers);
+		if(macro == null) {
+			macro = createMacro();
+			macro.setKeyCode(keycode);
+			macro.setModifiers(modifiers);
+		}
+		
+		return macro;
 	}
 
-	public void removeMacro(IMacro macro) {
-		if (macros.contains(macro)) {
-			macros.remove(macro);
+	public Collection<MacroSetting> getMacros() {
+		return macros.values();
+	}
+
+	public boolean removeMacro(IMacro macro) {
+		for(Entry<String, MacroSetting> entry : macros.entrySet()) {
+			if(entry.getValue().equals(macro)) {
+				macros.remove(entry.getKey());
+				return true;
+			}
 		}
+		return false;
 	}
 	
-	public void replaceMacro(IMacro originalMacro, IMacro newMacro) {
+	/*public void replaceMacro(IMacro originalMacro, IMacro newMacro) {
 		int index = macros.indexOf(originalMacro);
 		if (index > -1) {
 			macros.set(index, newMacro);
 		}
-	}
+	}*/
 
-	public void addMacroVariable(IMacroVariable var) {
-		setMacroVariable(var.getIdentifier(), var);
-	}
-
-	public IMacroVariable getMacroVariable(String id) {
-		return variables.get(id);
-	}
-	
-	public void removeMacroVariable(IMacroVariable variable) {
-		variables.remove(variable.getIdentifier());
-	}
-
-	public Collection<IMacroVariable> getMacroVariables() {
-		return variables.values();
-	}
-
-	public void setMacroVariable(String id, IMacroVariable var) {
-		variables.put(id, var);
-	}
-
-	@Override
-	protected void parseData() {}
-
-	@Override
-	protected void parseChild(Element child) {
-		if (child.getName().equals("macro"))
-		{
-			String command = child.attributeValue("command");
-			int keycode = intValue(child, "keycode");
-			int modifiers = intValue(child, "modifiers");
-			
-			Macro macro = new Macro(this, keycode, modifiers);
-			macro.setHandler(new CommandMacroHandler(command));
-			
-			macros.add(macro);
-		}
-	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		Element macrosElement = DocumentHelper.createElement("macros");
-		for (IMacro macro : macros)
-		{
-			IMacroHandler handler = macro.getHandler();
-			if (handler != null && handler instanceof CommandMacroHandler) {	
-				Element mElement = macrosElement.addElement("macro");
-				mElement.addAttribute("command", ((CommandMacroHandler)handler).getCommand());
-				mElement.addAttribute("keycode", macro.getKeyCode()+"");
-				mElement.addAttribute("modifiers", macro.getModifiers()+"");
-			}
-		}
-		
-		elements.add(macrosElement);
-	}
-	
-	public void addMacroCommand (IMacroCommand command)
-	{
-		setMacroCommand(command.getIdentifier(), command);
-	}
-
-	public Collection<IMacroCommand> getMacroCommands() {
-		return commands.values();
-	}
-	
-	public void removeMacroCommand(IMacroCommand command) {
-		if (commands.containsKey(command.getIdentifier())) {
-			commands.remove(command.getIdentifier());
-		}
-	}
-	
-	public IMacroCommand getMacroCommand(String id) {
-		if (commands.containsKey(id)) {
-			return commands.get(id);
-		}
-		return null;
-	}
-	
-	public void setMacroCommand (String id, IMacroCommand command) {
-		commands.put(id, command);
-	}
 }
