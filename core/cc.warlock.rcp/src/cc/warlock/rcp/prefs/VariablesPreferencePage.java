@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Text;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.IVariableProvider;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.Variable;
 import cc.warlock.rcp.ui.WarlockSharedImages;
@@ -74,7 +73,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 	
 	protected Text filterText;
 	protected TableViewer variableTable;
-	protected ArrayList<Variable> variables = new ArrayList<Variable>();
+	//protected ArrayList<Variable> variables = new ArrayList<Variable>();
 	protected ArrayList<Variable> addedVariables = new ArrayList<Variable>();
 	protected ArrayList<Variable> removedVariables = new ArrayList<Variable>();
 	protected Variable currentVariable;
@@ -199,24 +198,25 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		});
 		removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
-		for (IVariable var : settings.getAllVariables())
+		/*for (IVariable var : settings.getAllVariables())
 		{
 			if (var instanceof Variable) {
 				variables.add(new Variable((Variable)var));
 			}
-		}
+		}*/
 		
-		variableTable.setInput(variables);
+		variableTable.setInput(settings.getVariables());
 		
 		return main;
 	}
 	
 	protected void addVariableSelected ()
 	{
-		Variable var = new Variable(settings.getVariableConfigurationProvider(), "", "");
-		addedVariables.add(var);
-		variables.add(var);
-		variableTable.add(var);
+		IVariable var = settings.getVariableConfigurationProvider().addVariable("", "");
+		//addedVariables.add(var);
+		//variables.add(var);
+		// FIXME: do we need the following?
+		// variableTable.add(var);
 		
 		variableTable.editElement(var, 0);
 	}
@@ -225,8 +225,9 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 	{
 		addedVariables.remove(currentVariable);
 		
-		if (variables.remove(currentVariable))
-			removedVariables.add(currentVariable);
+		//if (variables.remove(currentVariable))
+			//removedVariables.add(currentVariable);
+		settings.getVariableConfigurationProvider().removeVariable(currentVariable.getIdentifier());
 		
 		variableTable.remove(currentVariable);
 	}
@@ -282,7 +283,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 	
 	@Override
 	public boolean performOk() {
-		for (Variable var : variables) {
+		/*for (Variable var : variables) {
 			if (var.needsUpdate() && !addedVariables.contains(var)) {
 				IVariableProvider provider = (IVariableProvider) var.getProvider();
 				provider.removeVariable(var.getOriginalVariable().getIdentifier());
@@ -297,7 +298,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		
 		for (Variable var : addedVariables) {
 			settings.getVariableConfigurationProvider().addVariable(var);
-		}
+		}*/
 		
 		return true;
 	}

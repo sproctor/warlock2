@@ -410,8 +410,9 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		skin = new DefaultSkin(clientSettings);
 		skin.loadDefaultStyles(clientSettings.getHighlightConfigurationProvider());
 		
-		serverSettings = new StormFrontServerSettings();
-		clientSettings.addChildProvider(serverSettings);
+		// TODO: import server settings
+		//serverSettings = new StormFrontServerSettings();
+		//clientSettings.addChildProvider(serverSettings);
 		
 		WarlockClientRegistry.clientSettingsLoaded(this);
 	}

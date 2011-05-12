@@ -21,27 +21,27 @@
  */
 package cc.warlock.core.client.settings.internal;
 
+import org.osgi.service.prefs.Preferences;
+
 import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.IVariableProvider;
 
 public class Variable extends ClientSetting implements IVariable {
 
 	protected String identifier, value;
 	
-	public Variable (Variable other)
-	{
-		super(other);
+	public Variable (Preferences parentNode, String identifier) {
+		super(parentNode, identifier);
 		
-		this.identifier = new String(other.identifier);
-		this.value = new String(other.value);
+		this.identifier = identifier;
+		this.value = getNode().get("value", null);
 	}
 	
-	public Variable (IVariableProvider provider, String identifier, String value)
-	{
-		super(provider);
+	public Variable (Preferences parentNode, String identifier, String value) {
+		super(parentNode, identifier);
 		
 		this.identifier = identifier;
 		this.value = value;
+		getNode().put("value", value);
 	}
 	
 	public String getIdentifier() {
@@ -49,10 +49,10 @@ public class Variable extends ClientSetting implements IVariable {
 	}
 
 	public void setIdentifier(String identifier) {
-		if (!identifier.equals(this.identifier))
-			needsUpdate = true;
-		
+		getNode().parent().remove(this.identifier);
 		this.identifier = identifier;
+		changePath(identifier);
+		getNode().put("value", this.value);
 	}
 	
 	public String getValue() {
@@ -60,15 +60,8 @@ public class Variable extends ClientSetting implements IVariable {
 	}
 	
 	public void setValue(String value) {
-		if (!value.equals(this.value))
-			needsUpdate = true;
+		getNode().put("value", value);
 		
 		this.value = value;
 	}
-	
-	public Variable getOriginalVariable()
-	{
-		return (Variable) originalSetting;
-	}
-
 }

@@ -25,9 +25,9 @@ import java.util.Collection;
 
 public interface IVariableProvider extends IClientSettingProvider {
 
-	public Collection<? extends IVariable> getVariables();
+	public Collection<IVariable> getVariables();
 	
 	public IVariable getVariable(String identifier);
 	public void setVariable(String id, IVariable variable);
-	public void removeVariable(String identifier);
+	public IVariable removeVariable(String identifier);
 }

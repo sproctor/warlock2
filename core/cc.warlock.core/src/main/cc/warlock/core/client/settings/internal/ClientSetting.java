@@ -31,14 +31,20 @@ import cc.warlock.core.client.settings.IClientSetting;
  */
 public class ClientSetting implements IClientSetting {
 
-	protected Preferences node;
+	private Preferences parentNode;
+	private Preferences node;
 	
 	public ClientSetting (Preferences parentNode, String path)
 	{
+		this.parentNode = parentNode;
 		node = parentNode.node(path);
 	}
 	
 	protected Preferences getNode() {
 		return node;
+	}
+	
+	protected void changePath(String path) {
+		node = parentNode.node(path);
 	}
 }

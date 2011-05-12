@@ -23,11 +23,7 @@ package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IVariable;
@@ -42,20 +38,20 @@ public class VariableConfigurationProvider extends ClientConfigurationProvider i
 		super(parentNode, "variables");
 		
 		try {
-			for(String name : getNode().childrenNames()) {
-				variables.put(name, new Variable(getNode(), name));
+			for(String id : getNode().childrenNames()) {
+				variables.put(id, new Variable(getNode(), id));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void addVariable(IVariable variable) {
-		variables.put(variable.getIdentifier(), variable);
+	public IVariable addVariable(IVariable variable) {
+		return variables.put(variable.getIdentifier(), variable);
 	}
 	
-	public void addVariable(String identifier, String value) {
-		addVariable(new Variable(this, identifier, value));
+	public IVariable addVariable(String identifier, String value) {
+		return addVariable(new Variable(getNode(), identifier, value));
 	}
 	
 	public void setVariable(String id, IVariable variable) {
@@ -63,46 +59,14 @@ public class VariableConfigurationProvider extends ClientConfigurationProvider i
 	}
 
 	public IVariable getVariable(String identifier) {
-		if (variables.containsKey(identifier)) {
-			return variables.get(identifier);
-		}
-		return null;
+		return variables.get(identifier);
 	}
 
-	public Collection<? extends IVariable> getVariables() {
+	public Collection<IVariable> getVariables() {
 		return variables.values();
 	}
 
-	public void removeVariable(String identifier) {
-		variables.remove(identifier);
-	}
-	
-	@Override
-	protected void parseData() {}
-
-	@Override
-	protected void parseChild(Element child) {
-		if (child.getName().equals("variable"))
-		{
-			String name = child.attributeValue("id");
-			String value = child.getStringValue();
-			
-			Variable variable = new Variable(this, name, value);
-			variables.put(name, variable);
-		}
-	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		Element varsElement = DocumentHelper.createElement("variables");
-		
-		for (Map.Entry<String, IVariable> entry : variables.entrySet())
-		{
-			Element element = varsElement.addElement("variable");
-			element.addAttribute("id", entry.getKey());
-			element.addText(entry.getValue().getValue());
-			
-		}
-		elements.add(varsElement);
+	public IVariable removeVariable(String identifier) {
+		return variables.remove(identifier);
 	}
 }

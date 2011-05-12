@@ -93,12 +93,8 @@ public class ClientSettings implements IClientSettings {
 		return macroConfigurationProvider.getMacros();
 	}
 	
-	public List<? extends IVariable> getAllVariables() {
-		ArrayList<IVariable> list = new ArrayList<IVariable>();
-		for (IVariableProvider provider : getAllProviders(IVariableProvider.class)) {
-			list.addAll(provider.getVariables());
-		}
-		return list;
+	public Collection<IVariable> getVariables() {
+		return variableConfigurationProvider.getVariables();
 	}
 	
 	public MacroSetting getMacro(int keycode, int modifiers) {

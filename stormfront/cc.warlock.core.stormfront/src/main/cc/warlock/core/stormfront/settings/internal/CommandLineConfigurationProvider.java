@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
 import cc.warlock.core.stormfront.settings.ICommandLineSettings;
@@ -39,9 +40,9 @@ public class CommandLineConfigurationProvider extends
 
 	protected CommandLineSettings settings;
 	
-	public CommandLineConfigurationProvider ()
+	public CommandLineConfigurationProvider (Preferences parentNode)
 	{
-		super("command-line");
+		super(parentNode, "command-line");
 		
 		settings = new CommandLineSettings(this);
 	}
