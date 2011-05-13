@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 public interface IPatternSetting extends IClientSetting {
 
 	public Pattern getPattern();
+	public boolean matches(String text);
 	
 	public String getText();
 	public void setText(String text);

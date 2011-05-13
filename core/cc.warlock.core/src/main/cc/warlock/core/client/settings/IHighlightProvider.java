@@ -25,12 +25,12 @@ import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockStyle;
 
-public interface IHighlightProvider extends IClientSettingProvider {
-	public Collection<? extends IHighlightString> getHighlightStrings();
+public interface IHighlightProvider extends IArraySettingProvider<IHighlightString> {
+	//public Collection<? extends IHighlightString> getHighlightStrings();
 	
 	//public void addHighlightString (IHighlightString string);
-	public void insertHighlightString (int index, IHighlightString string);
-	public void removeHighlightString (IHighlightString string);
+	//public void insertHighlightString (int index, IHighlightString string);
+	//public void removeHighlightString (IHighlightString string);
 	//public void replaceHighlightString (IHighlightString originalString, IHighlightString newString);
 	
 	public IWarlockStyle getNamedStyle (String name);

@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.dom4j.Element;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IPatternSetting;
@@ -30,7 +29,7 @@ import cc.warlock.core.client.settings.IPatternSetting;
  * @author marshall
  *
  */
-public abstract class PatternConfigurationProvider extends ClientConfigurationProvider {
+public abstract class PatternConfigurationProvider extends ArrayConfigurationProvider<IPatternSetting> {
 
 	public PatternConfigurationProvider (Preferences parentNode, String path)
 	{

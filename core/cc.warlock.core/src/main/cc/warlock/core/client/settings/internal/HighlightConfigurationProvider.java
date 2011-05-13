@@ -23,7 +23,6 @@ package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.osgi.service.prefs.Preferences;
 
@@ -31,37 +30,18 @@ import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
 
-public class HighlightConfigurationProvider extends PatternConfigurationProvider implements IHighlightProvider
+public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IHighlightString> implements IHighlightProvider
 {
-	protected HashMap<String, IHighlightString> highlights = new HashMap<String, IHighlightString>();
 	protected HashMap<String, IWarlockStyle> namedStyles = new HashMap<String, IWarlockStyle>();
 	
-	private int nextID = 0;
-	
-	public HighlightConfigurationProvider (Preferences parentNode)
-	{
+	public HighlightConfigurationProvider (Preferences parentNode) {
 		super(parentNode, "highlights");
-		
-		try {
-			for(String highlightId : getNode().childrenNames()) {
-				try {
-					int id = Integer.parseInt(highlightId);
-					if(id >= nextID)
-						nextID = id + 1;
-				} catch(NumberFormatException e) {
-					// Don't care
-				}
-				highlights.put(highlightId, new HighlightSetting(getNode(), highlightId));
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
-	public Collection<IHighlightString> getHighlightStrings() {
-		return highlights.values();
+	protected IHighlightString loadSetting(String id) {
+		return new HighlightSetting(getNode(), id);
 	}
-
+	
 	public IWarlockStyle getNamedStyle(String name) {
 		return namedStyles.get(name);
 	}
@@ -73,35 +53,6 @@ public class HighlightConfigurationProvider extends PatternConfigurationProvider
 	public void addNamedStyle (String name, IWarlockStyle style)
 	{
 		namedStyles.put(name, style);
-	}
-	
-	public HighlightSetting createHighlightString ()
-	{
-		HighlightSetting highlight = new HighlightSetting(getNode(), Integer.toString(nextID));
-		nextID++;
-		highlights.put(Integer.toString(nextID), highlight);
-		
-		return highlight;
-	}
-	
-	public void insertHighlightString(int index, IHighlightString string) {
-		IHighlightString oldHighlight = highlights.remove(Integer.toString(index));
-		if(oldHighlight != null) {
-			getNode().remove(Integer.toString(index));
-			insertHighlightString(index + 1, oldHighlight);
-		}
-		highlights.put(Integer.toString(index), string);
-	}
-	
-	public void removeHighlightString (IHighlightString string)
-	{
-		for(Entry<String, IHighlightString> entry : highlights.entrySet()) {
-			if(entry.getValue().equals(string)) {
-				highlights.remove(entry.getKey());
-				getNode().remove(entry.getKey());
-				break;
-			}
-		}
 	}
 	
 	/*public void replaceHighlightString(IHighlightString originalString,

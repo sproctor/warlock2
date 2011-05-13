@@ -21,64 +21,19 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.osgi.service.prefs.Preferences;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import cc.warlock.core.client.settings.IPatternSetting;
 
-import cc.warlock.core.client.settings.IIgnore;
-import cc.warlock.core.client.settings.IIgnoreProvider;
-
-public class IgnoreConfigurationProvider extends PatternConfigurationProvider
-		implements IIgnoreProvider {
-
-	protected ArrayList<IIgnore> ignores = new ArrayList<IIgnore>();
+public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IPatternSetting> {
 	
-	public IgnoreConfigurationProvider ()
+	public IgnoreConfigurationProvider (Preferences parentNode)
 	{
-		super("ignores");
-		
-		setHandleChildren(false);
+		super(parentNode, "ignores");
 	}
 	
-	@Override
-	protected void parseData() {}
-
-	@Override
-	protected void parseChild(Element child) {
-		if (child.getName().equals("ignore"))
-		{
-			Ignore ignore = new Ignore(this);
-			fillSetting(ignore, child);
-			
-			ignores.add(ignore);
-		}
-	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		Element ignoresElement = DocumentHelper.createElement("ignores");
-		
-		for (IIgnore ignore : ignores)
-		{
-			Element iElement = ignoresElement.addElement("ignore");
-			fillElement(iElement, ignore);
-		}
-		
-		elements.add(ignoresElement);
-	}
-
-	public void addIgnore(IIgnore ignore) {
-		ignores.add(ignore);
-	}
-
-	public List<? extends IIgnore> getIgnores() {
-		return ignores;
-	}
-
-	public void removeIgnore(IIgnore ignore) {
-		ignores.remove(ignore);
+	public IPatternSetting loadSetting(String id) {
+		return new PatternSetting(getNode(), id);
 	}
 
 }

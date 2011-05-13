@@ -171,7 +171,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 		if(stream != null)
 			this.title.set(stream.getFullTitle());
 		
-		IWarlockSkin skin = client.getSkin();
+		IWarlockSkin skin = DefaultSkin.getInstance();
 		IClientSettings settings = client.getClientSettings();
 		
 		if(skin != null && settings != null) {

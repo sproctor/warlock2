@@ -27,15 +27,14 @@ import java.util.List;
 
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
-import cc.warlock.core.client.settings.IIgnore;
 import cc.warlock.core.client.settings.IIgnoreProvider;
+import cc.warlock.core.client.settings.IPatternSetting;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
 import cc.warlock.core.client.settings.IWindowSettings;
@@ -70,7 +69,7 @@ public class ClientSettings implements IClientSettings {
 		this.node = WarlockPreferences.getInstance().getNode().node("clients/" + clientId);
 		
 		highlightConfigurationProvider = new HighlightConfigurationProvider(node);
-		ignoreConfigurationProvider = new IgnoreConfigurationProvider();
+		ignoreConfigurationProvider = new IgnoreConfigurationProvider(node);
 		triggerConfigurationProvider = new TriggerConfigurationProvider();
 		variableConfigurationProvider = new VariableConfigurationProvider(node);
 		macroConfigurationProvider = new MacroConfigurationProvider(node);
@@ -82,15 +81,11 @@ public class ClientSettings implements IClientSettings {
 	}
 	
 	public Collection<IHighlightString> getHighlightStrings() {
-		return highlightConfigurationProvider.getHighlightStrings();
+		return highlightConfigurationProvider.getSettings();
 	}
 	
-	public List<? extends IIgnore> getAllIgnores() {
-		ArrayList<IIgnore> list = new ArrayList<IIgnore>();
-		for (IIgnoreProvider provider : getAllProviders(IIgnoreProvider.class)) {
-			list.addAll(provider.getIgnores());
-		}
-		return list;
+	public Collection<IPatternSetting> geIgnores() {
+		return ignoreConfigurationProvider.getSettings();
 	}
 	
 	public Collection<MacroSetting> getMacros() {
@@ -119,12 +114,8 @@ public class ClientSettings implements IClientSettings {
 		return version;
 	}
 	
-	public List<? extends IWindowSettings> getAllWindowSettings() {
-		ArrayList<IWindowSettings> list = new ArrayList<IWindowSettings>();
-		for (IWindowSettingsProvider provider : getAllProviders(IWindowSettingsProvider.class)) {
-			list.addAll(provider.getWindowSettings());
-		}
-		return list;
+	public Collection<IWindowSettings> getAllWindowSettings() {
+		return windowSettingsProvider.getWindowSettings();
 	}
 	
 	public IWindowSettings getWindowSettings(String windowId) {
@@ -135,12 +126,7 @@ public class ClientSettings implements IClientSettings {
 	}
 	
 	public IVariable getVariable(String identifier) {
-		for (IVariableProvider provider : getAllProviders(IVariableProvider.class)) {
-			IVariable var = provider.getVariable(identifier);
-			if (var != null)
-				return var;
-		}
-		return null;
+		return variableConfigurationProvider.getVariable(identifier);
 	}
 
 	public HighlightConfigurationProvider getHighlightConfigurationProvider() {

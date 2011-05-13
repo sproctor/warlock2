@@ -43,7 +43,7 @@ public interface IClientSettings {
 	public Collection<IVariable> getVariables();
 	public IVariable getVariable(String identifier);
 	
-	public Collection<IIgnore> getIgnores();
+	public Collection<IPatternSetting> getIgnores();
 	
 	public Collection<IWindowSettings> getWindowSettings();
 	public IWindowSettings getWindowSettings (String windowId);
@@ -52,6 +52,4 @@ public interface IClientSettings {
 	public MacroSetting getMacro (int keycode, int modifiers);
 
 	public IWindowSettings getMainWindowSettings();
-
-	void dispose();
 }

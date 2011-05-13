@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.client.settings.internal;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -73,6 +74,11 @@ public class PatternSetting extends ClientSetting implements IPatternSetting {
 		if (updateDeferred)
 			update();
 		return pattern;
+	}
+	
+	public boolean matches(String text) {
+		Matcher m = getPattern().matcher(text);
+		return m.matches();
 	}
 	
 	public String getText() {

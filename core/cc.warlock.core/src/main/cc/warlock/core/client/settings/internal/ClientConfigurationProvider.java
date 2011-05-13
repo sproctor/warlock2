@@ -21,12 +21,8 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.settings.IClientSettingProvider;
 
 /**
@@ -45,50 +41,5 @@ public abstract class ClientConfigurationProvider implements IClientSettingProvi
 	
 	public Preferences getNode() {
 		return node;
-	}
-	
-	protected WarlockFont elementToFont (Element element)
-	{
-		if (element == null) return WarlockFont.DEFAULT_FONT;
-		if (element.attributeValue("family").equals("default")) return WarlockFont.DEFAULT_FONT;
-		
-		WarlockFont font = new WarlockFont();
-		font.setFamilyName(element.attributeValue("family"));
-		font.setSize(Integer.parseInt(element.attributeValue("size")));
-		return font;
-	}
-	
-	protected Element fontToElement (WarlockFont font, String elementName)
-	{
-		Element fontEl = DocumentHelper.createElement(elementName);
-		addFontAttributes(font, fontEl);
-		
-		return fontEl;
-	}
-	
-	protected void addFontAttributes (WarlockFont font, Element fontEl)
-	{
-		fontEl.addAttribute("family", (font == null || font.getFamilyName() == null || font.getFamilyName().equals("")) ? "default" : font.getFamilyName());
-		fontEl.addAttribute("size", (font == null || font.getSize() == -1) ? "default" : ""+font.getSize());
-	}
-
-	protected String colorString (WarlockColor color)
-	{
-		if (color == null || color.isDefault()) return "default";
-		return color.toHexString();
-	}
-	
-	protected WarlockColor colorValue (String attribute) {
-		return colorValue(this.element, attribute);
-	}
-	
-	protected WarlockColor colorValue (Element element, String attribute) {
-		String value = stringValue(element, attribute);
-		if (value == null) return null;
-		
-		if (value.equals("default")) {
-			return new WarlockColor(WarlockColor.DEFAULT_COLOR);
-		}
-		return new WarlockColor(value);
 	}
 }

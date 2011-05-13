@@ -36,8 +36,8 @@ import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
  * @author marshall
  *
  */
-public class StormFrontSWTSettings implements IStormFrontMacroImporter {
-
+public class StormFrontSWTSettings /* implements IStormFrontMacroImporter */ {
+/*
 	public static HashMap<String, Integer> keys = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> mods = new HashMap<String, Integer>();
 	static {
@@ -129,5 +129,5 @@ public class StormFrontSWTSettings implements IStormFrontMacroImporter {
 				}
 			}
 		}
-	}
+	}*/
 }

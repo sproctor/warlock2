@@ -23,8 +23,8 @@ package cc.warlock.rcp.stormfront.ui.style;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
+import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.rcp.ui.StyleRangeWithData;
 import cc.warlock.rcp.ui.style.DefaultStyleProvider;
 import cc.warlock.rcp.util.ColorUtil;
@@ -40,17 +40,15 @@ public class StormFrontStyleProvider extends DefaultStyleProvider {
 	{
 		StyleRangeWithData range = super.getStyleRange(style);
 		
-		IStormFrontClient sfClient = (IStormFrontClient)client;
-		
 		if (style.getName() != null)
 		{
 			if (style.getBackgroundColor().isDefault()) {
-				WarlockColor color = sfClient.getStormFrontSkin().getDefaultBackgroundColor(style.getName());
+				WarlockColor color = DefaultSkin.getInstance().getDefaultBackgroundColor(style.getName());
 				if (!color.isDefault())
 					range.background = ColorUtil.warlockColorToColor(color);
 			}
 			if (style.getForegroundColor().isDefault()) {
-				WarlockColor color = sfClient.getStormFrontSkin().getDefaultForegroundColor(style.getName());
+				WarlockColor color = DefaultSkin.getInstance().getDefaultForegroundColor(style.getName());
 				if (!color.isDefault())
 					range.foreground = ColorUtil.warlockColorToColor(color);
 			}

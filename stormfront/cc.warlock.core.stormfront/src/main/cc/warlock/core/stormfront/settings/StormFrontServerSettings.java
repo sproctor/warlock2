@@ -21,45 +21,7 @@
  */
 package cc.warlock.core.stormfront.settings;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-
-import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockFont;
-import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
-import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.client.settings.internal.HighlightSetting;
-import cc.warlock.core.client.settings.internal.Ignore;
-import cc.warlock.core.client.settings.internal.Variable;
-import cc.warlock.core.client.settings.internal.WindowSettings;
-import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.configuration.WarlockConfiguration;
-import cc.warlock.core.script.configuration.ScriptConfiguration;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.client.StormFrontColor;
-import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
-import cc.warlock.core.stormfront.settings.server.HighlightPreset;
-import cc.warlock.core.stormfront.settings.server.IgnoreSetting;
-import cc.warlock.core.stormfront.settings.server.MacroKey;
-import cc.warlock.core.stormfront.settings.server.Preset;
-import cc.warlock.core.stormfront.settings.server.ServerScript;
-import cc.warlock.core.stormfront.settings.server.ServerSettings;
-import cc.warlock.core.stormfront.xml.StormFrontDocument;
-import cc.warlock.core.stormfront.xml.StormFrontElement;
 
 
 /**
@@ -71,8 +33,8 @@ import cc.warlock.core.stormfront.xml.StormFrontElement;
  *
  */
 @SuppressWarnings("deprecation")
-public class StormFrontServerSettings extends ClientConfigurationProvider {
-	
+public class StormFrontServerSettings {
+/*	
 	protected String clientVersion, majorVersion, crc;
 	protected IStormFrontMacroImporter macroImporter;
 	
@@ -415,4 +377,4 @@ public class StormFrontServerSettings extends ClientConfigurationProvider {
 	public void setMacroImporter(IStormFrontMacroImporter macroImporter) {
 		this.macroImporter = macroImporter;
 	}
-}
+*/}
