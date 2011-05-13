@@ -35,10 +35,10 @@ public class CommandLineSettings extends ColorFontSetting implements ICommandLin
 
 	protected WarlockColor barColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	
-	public CommandLineSettings (Preferences parentNode, String path) {
-		super(parentNode, path);
+	public CommandLineSettings (Preferences parentNode) {
+		super(parentNode, "command-line");
 		
-		String colorString = getNode().get("bgcolor", null);
+		String colorString = getNode().get("bar-color", null);
 		if(colorString != null)
 			barColor = new WarlockColor(colorString);
 	}

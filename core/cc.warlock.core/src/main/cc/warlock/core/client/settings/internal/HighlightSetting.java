@@ -19,12 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.settings.skin;
+package cc.warlock.core.client.settings.internal;
 
-import cc.warlock.core.client.IWarlockSkin;
-import cc.warlock.core.client.settings.IHighlightProvider;
+import org.osgi.service.prefs.Preferences;
 
-public interface IStormFrontSkin extends IWarlockSkin {
+import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.settings.IHighlightString;
 
-	public void loadDefaultStyles (IHighlightProvider provider);
+public class HighlightSetting extends PatternSetting implements IHighlightString {
+
+	protected StyleSetting style;
+
+	public HighlightSetting (Preferences parentNode, String path)
+	{
+		super(parentNode, path);
+		this.style = new StyleSetting(getNode(), "style");
+	}
+	
+	public IWarlockStyle getStyle() {
+		return style;
+	}
 }
+

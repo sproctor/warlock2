@@ -40,7 +40,6 @@ import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
-import cc.warlock.core.stormfront.settings.skin.IStormFrontSkin;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
@@ -702,10 +701,6 @@ public class ServerSettings implements Comparable<ServerSettings>
 
 	public void setClientVersion(String clientVersion) {
 		this.clientVersion = clientVersion;
-	}
-
-	public IStormFrontSkin getDefaultSkin() {
-		return client.getStormFrontSkin();
 	}
 	
 	public List<IgnoreSetting> getIgnores ()

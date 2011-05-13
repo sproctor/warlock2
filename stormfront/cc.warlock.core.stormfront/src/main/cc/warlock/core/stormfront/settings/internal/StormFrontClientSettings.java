@@ -21,9 +21,6 @@
  */
 package cc.warlock.core.stormfront.settings.internal;
 
-import org.dom4j.Element;
-
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.settings.ICommandLineSettings;
@@ -59,17 +56,15 @@ public class StormFrontClientSettings extends ClientSettings implements
 	public static final String PRESET_SELECTED_LINK = "selectedLink";
 	public static final String PRESET_COMMAND = "command";
 	
-	protected CommandLineConfigurationProvider commandLineProvider;
+	protected CommandLineSettings commandLineSettings;
 	protected IStormFrontClient sfClient;
 	
-	public StormFrontClientSettings (IStormFrontClient client)
+	public StormFrontClientSettings (IStormFrontClient client, String clientId)
 	{
-		super(client);
+		super(client, clientId);
 		this.sfClient = client;
 		
-		commandLineProvider = new CommandLineConfigurationProvider();
-		addChildProvider(commandLineProvider);
-		addClientSettingProvider(commandLineProvider);
+		commandLineSettings = new CommandLineSettings(getNode());
 	}
 	
 	public IStormFrontClient getStormFrontClient() {
@@ -77,19 +72,6 @@ public class StormFrontClientSettings extends ClientSettings implements
 	}
 	
 	public ICommandLineSettings getCommandLineSettings() {
-		return commandLineProvider.getCommandLineSettings();
+		return commandLineSettings;
 	}
-	
-	public CommandLineConfigurationProvider getCommandLineConfigurationProvider()
-	{
-		return commandLineProvider;
-	}
-	
-	@Override
-	public void parseElement(Element element) {
-		super.parseElement(element);
-		
-		WarlockClientRegistry.clientSettingsLoaded(sfClient);
-	}
-
 }

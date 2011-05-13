@@ -68,13 +68,13 @@ import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.macro.CommandMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacroProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeText;
 import cc.warlock.rcp.ui.KeyStrokeText.KeyStrokeLockListener;
 import cc.warlock.rcp.ui.WarlockSharedImages;
+import cc.warlock.rcp.ui.macros.MacroRegistry;
 
 /**
  *
@@ -435,13 +435,11 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	// Mostly just to support setupDefaultMacros
 	protected void createRawMacro(String cmd, int keycode, int keymod) {
-		MacroSetting macro = new MacroSetting(settings.getMacroConfigurationProvider(), 0);
-		macro.setModifiers(keymod);
-		macro.setKeyCode(keycode);
-		macro.setHandler(new CommandMacroHandler(cmd));
+		MacroSetting macro = settings.getMacroConfigurationProvider().getOrCreateMacro(keycode, keymod);
+		macro.setCommand(cmd);
 		
 		addedMacros.add(macro);
-		macros.add(macro);
+		//macros.add(macro);
 		macroTableView.add(macro);
 	}
 	
@@ -451,12 +449,8 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		if(macroTable != null)
 			macroTable.clearAll();
 		addedMacros.clear();
-		for (MacroSetting currentMacro: macros) {
-			IMacroHandler handler = currentMacro.getHandler();
-			if (handler != null && handler instanceof CommandMacroHandler) {
-				macroTableView.remove(currentMacro);
-				removedMacros.add(currentMacro);
-			}
+		for (MacroSetting currentMacro: settings.getMacros()) {
+			settings.getMacroConfigurationProvider().removeMacro(currentMacro);
 		}
 	}
 	
@@ -553,7 +547,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			if (lastRightBracket >= 0) {
 				String commandSubstr = contents.substring(lastRightBracket+1, position).toLowerCase();
 				
-				for (IMacroCommand command : settings.getAllMacroCommands()) {
+				for (IMacroCommand command : MacroRegistry.instance().getMacroCommands()) {
 					if (command.getIdentifier().toLowerCase().startsWith(commandSubstr)) {
 						proposals.add(new MacroCommandContentProposal(
 							command, contents.substring(0, contents.length()-1), position-1));

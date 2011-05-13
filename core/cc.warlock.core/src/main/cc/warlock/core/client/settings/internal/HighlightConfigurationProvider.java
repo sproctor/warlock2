@@ -51,7 +51,7 @@ public class HighlightConfigurationProvider extends PatternConfigurationProvider
 				} catch(NumberFormatException e) {
 					// Don't care
 				}
-				highlights.put(highlightId, new HighlightString(getNode(), highlightId));
+				highlights.put(highlightId, new HighlightSetting(getNode(), highlightId));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -75,9 +75,9 @@ public class HighlightConfigurationProvider extends PatternConfigurationProvider
 		namedStyles.put(name, style);
 	}
 	
-	public HighlightString createHighlightString ()
+	public HighlightSetting createHighlightString ()
 	{
-		HighlightString highlight = new HighlightString(getNode(), Integer.toString(nextID));
+		HighlightSetting highlight = new HighlightSetting(getNode(), Integer.toString(nextID));
 		nextID++;
 		highlights.put(Integer.toString(nextID), highlight);
 		

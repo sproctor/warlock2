@@ -42,7 +42,7 @@ import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
 import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.client.settings.internal.HighlightString;
+import cc.warlock.core.client.settings.internal.HighlightSetting;
 import cc.warlock.core.client.settings.internal.Ignore;
 import cc.warlock.core.client.settings.internal.Variable;
 import cc.warlock.core.client.settings.internal.WindowSettings;
@@ -234,7 +234,7 @@ public class StormFrontServerSettings extends ClientConfigurationProvider {
 		style.setSound(string.getSound());
 		
 		try {
-			HighlightString newString = new HighlightString(
+			HighlightSetting newString = new HighlightSetting(
 					settings.getHighlightConfigurationProvider(), pattern.pattern(), true, true, true, style);
 			newString.setFullWordMatch(string.isFullWordMatch());
 			settings.getHighlightConfigurationProvider().addHighlightString(newString);

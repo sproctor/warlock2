@@ -33,7 +33,6 @@ public class WarlockStyle implements IWarlockStyle {
 	private String name;
 	private String componentName;
 	private Runnable action;
-	private IWarlockStyle originalStyle;
 	private String sound = new String();
 	private boolean bold;
 	private boolean italic;
@@ -59,7 +58,6 @@ public class WarlockStyle implements IWarlockStyle {
 		this.italic = other.isItalic();
 		this.underline = other.isUnderline();
 		
-		this.originalStyle = other;
 		this.fullLine = other.isFullLine();
 		this.setSound(other.getSound());
 	}
@@ -122,11 +120,6 @@ public class WarlockStyle implements IWarlockStyle {
 
 	public void setBackgroundColor(WarlockColor backgroundColor) {
 		this.backgroundColor = backgroundColor;
-	}
-	
-	public IWarlockStyle getOriginalStyle ()
-	{
-		return originalStyle;
 	}
 	
 	public String getSound() {

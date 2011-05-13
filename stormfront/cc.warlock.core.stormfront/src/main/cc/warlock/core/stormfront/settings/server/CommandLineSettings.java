@@ -29,6 +29,7 @@ import java.util.Map;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.stormfront.client.StormFrontColor;
+import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.core.stormfront.xml.StormFrontAttribute;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
@@ -145,7 +146,7 @@ public class CommandLineSettings extends ColorSetting {
 	{
 		if (this.barColor != null && "skin".equals(this.barColor))
 		{
-			return new StormFrontColor(serverSettings.getDefaultSkin().getColor(IWarlockSkin.ColorType.CommandLine_BarColor));
+			return new StormFrontColor(DefaultSkin.getInstance().getColor(IWarlockSkin.ColorType.CommandLine_BarColor));
 		}
 		else return getColorFromString(KEY_BARCOLOR, barColor, true);
 	}

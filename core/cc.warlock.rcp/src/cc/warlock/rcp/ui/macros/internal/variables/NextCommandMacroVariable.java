@@ -27,9 +27,7 @@ package cc.warlock.rcp.ui.macros.internal.variables;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
-import cc.warlock.rcp.ui.macros.MacroRegistry;
 
 
 /**
@@ -50,9 +48,5 @@ public class NextCommandMacroVariable implements IMacroVariable {
 		}
 		
 		return null;
-	}
-	
-	public IClientSettingProvider getProvider() {
-		return MacroRegistry.instance();
 	}
 }

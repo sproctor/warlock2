@@ -23,20 +23,19 @@ package cc.warlock.core.stormfront.settings.skin;
 
 import java.util.HashMap;
 
-import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
-import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 
 /**
  * The default skin handles any attributes who's values are "skin"
  * @author marshall
  */
-public class DefaultSkin implements IStormFrontSkin {
+public class DefaultSkin implements IWarlockSkin {
 
+	public final static DefaultSkin instance = new DefaultSkin();
+	
 	public static final int DEFAULT_FONT_SIZE = 12;
 	public static final WarlockColor MAIN_COLOR = new WarlockColor(-1, -1, -1);
 	
@@ -44,14 +43,11 @@ public class DefaultSkin implements IStormFrontSkin {
 	protected HashMap<String, WarlockColor> fgColors = new HashMap<String, WarlockColor>();
 	protected HashMap<String, WarlockColor> bgColors = new HashMap<String, WarlockColor>();
 	protected WarlockColor commandLineBarColor;
-	protected IStormFrontClientSettings settings;
 	
 	protected WarlockColor defaultWindowBackground, defaultWindowForeground;
-		
-	public DefaultSkin (IStormFrontClientSettings settings)
+	
+	private DefaultSkin ()
 	{
-		this.settings = settings;
-		
 		fgColors.put("bold", new WarlockColor("#FFFF00"));
 		fgColors.put("roomName", new WarlockColor("#FFFFFF"));
 		fgColors.put("speech", new WarlockColor("#80FF80"));
@@ -83,16 +79,8 @@ public class DefaultSkin implements IStormFrontSkin {
 		defaultWindowBackground = new WarlockColor("191932");
 	}
 	
-	public WarlockColor getMainForeground () {
-		WarlockColor mainFG = settings.getMainWindowSettings().getForegroundColor();
-		mainFG = mainFG.isDefault() ? defaultWindowForeground : mainFG;
-		return mainFG;
-	}
-	
-	public WarlockColor getMainBackground () {
-		WarlockColor mainBG = settings.getMainWindowSettings().getBackgroundColor();
-		mainBG = mainBG.isDefault() ? defaultWindowBackground: mainBG;
-		return mainBG;
+	public static DefaultSkin getInstance() {
+		return instance;
 	}
 	
 	public WarlockColor getColor(ColorType type) {
@@ -140,7 +128,7 @@ public class DefaultSkin implements IStormFrontSkin {
 		
 		if (color == MAIN_COLOR)
 		{
-			color = getMainForeground();
+			color = getDefaultWindowForeground();
 		}
 		
 		return color;
@@ -157,39 +145,10 @@ public class DefaultSkin implements IStormFrontSkin {
 		
 		if (color == MAIN_COLOR)
 		{
-			color = getMainBackground();
+			color = getDefaultWindowBackground();
 		}
 		
 		return color;
-	}
-
-	protected IWarlockStyle getStyleForId(String id, boolean fillEntireLine)
-	{
-		WarlockStyle style = new WarlockStyle();
-		style.setForegroundColor(fgColors.get(id));
-		style.setBackgroundColor(bgColors.get(id));
-		style.setFullLine(fillEntireLine);
-		style.setName(id);
-		return style;
-	}
-	
-	protected void addDefaultNamedStyle(String name, boolean fillEntireLine, IHighlightProvider provider)
-	{
-		if (!provider.getHighlightStrings().contains(name)) {
-			provider.addNamedStyle(name, getStyleForId(name, fillEntireLine));
-		}
-	}
-	
-	public void loadDefaultStyles (IHighlightProvider provider) {
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_ROOM_NAME, true, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_BOLD, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_COMMAND, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_LINK, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_SELECTED_LINK, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_SPEECH, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_THOUGHT, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_WATCHING, false, provider);
-		addDefaultNamedStyle(StormFrontClientSettings.PRESET_WHISPER, false, provider);
 	}
 	
 	public WarlockColor getDefaultWindowBackground() {
@@ -203,7 +162,7 @@ public class DefaultSkin implements IStormFrontSkin {
 	public WarlockColor getBackgroundColor(IHighlightString string) {
 		WarlockColor background = string.getStyle().getBackgroundColor();
 		if (background.isDefault()) {
-			background = getMainBackground();
+			background = getDefaultWindowBackground();
 		}
 		return background;
 	}
@@ -211,7 +170,7 @@ public class DefaultSkin implements IStormFrontSkin {
 	public WarlockColor getForegroundColor(IHighlightString string) {
 		WarlockColor foreground = string.getStyle().getForegroundColor();
 		if (foreground.isDefault()) {
-			foreground = getMainForeground();
+			foreground = getDefaultWindowForeground();
 		}
 		return foreground;
 	}

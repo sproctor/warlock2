@@ -53,7 +53,4 @@ public interface IWarlockSkin {
 
 	public WarlockColor getBackgroundColor(IHighlightString string);
 	public WarlockColor getForegroundColor(IHighlightString string);
-	
-	public WarlockColor getMainBackground ();
-	public WarlockColor getMainForeground ();
 }

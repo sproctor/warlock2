@@ -38,7 +38,6 @@ import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptListener;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
-import cc.warlock.core.stormfront.settings.skin.IStormFrontSkin;
 
 /**
  * @author Marshall
@@ -159,11 +158,6 @@ public interface IStormFrontClient extends IWarlockClient, IRoomListener {
 	public void addScriptListener (IScriptListener listener);
 	
 	public void removeScriptListener (IScriptListener listener);
-	
-	/**
-	 * @return The stormfront skin
-	 */
-	public IStormFrontSkin getStormFrontSkin();
 	
 	/**
 	 * @param componentName

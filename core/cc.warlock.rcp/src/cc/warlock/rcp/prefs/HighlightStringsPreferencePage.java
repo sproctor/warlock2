@@ -70,7 +70,7 @@ import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
-import cc.warlock.core.client.settings.internal.HighlightString;
+import cc.warlock.core.client.settings.internal.HighlightSetting;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.util.ColorUtil;
 
@@ -88,11 +88,10 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected Text filterText;
 	protected Text soundText; 
 	protected IWarlockClient client;
-	protected IWarlockSkin skin;
 	protected ClientSettings settings;
-	protected HighlightString selectedString;
-	protected ArrayList<HighlightString> addedStrings = new ArrayList<HighlightString>();
-	protected ArrayList<HighlightString> removedStrings = new ArrayList<HighlightString>();
+	protected HighlightSetting selectedString;
+	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
+	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();
 	//protected ArrayList<HighlightString> highlightStrings = new ArrayList<HighlightString>();
 	
 	/*private void copyHighlightStrings ()
@@ -159,12 +158,12 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			}
 
 			public Object getValue(Object element, String property) {
-				return ((HighlightString)element).getText();
+				return ((HighlightSetting)element).getText();
 			}
 
 			public void modify(Object element, String property, Object value) {
 				TableItem item = (TableItem)element;
-				HighlightString string = (HighlightString)item.getData();
+				HighlightSetting string = (HighlightSetting)item.getData();
 				String pattern = ((String)value).trim();
 				
 				try {
@@ -179,7 +178,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		stringTable.addFilter(new ViewerFilter () {
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				
-				HighlightString string = (HighlightString) element;
+				HighlightSetting string = (HighlightSetting) element;
 				String str = string.getText();
 				
 				if (str.equals("")) return true;
@@ -201,7 +200,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		stringTable.addSelectionChangedListener(new ISelectionChangedListener () {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				HighlightString string = (HighlightString) selection.getFirstElement();
+				HighlightSetting string = (HighlightSetting) selection.getFirstElement();
 				
 				if (string != selectedString)
 				{
@@ -308,7 +307,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		return "Highlight Strings";
 	}
 	
-	private void highlightStringSelected (HighlightString string)
+	private void highlightStringSelected (HighlightSetting string)
 	{
 		if (string == null) {
 			// No string selected, disable all fields
@@ -486,16 +485,16 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	private void removeStringSelected() {
 		// Grab selected string.
-		HighlightString string = selectedString;
+		HighlightSetting string = selectedString;
 		
 		// Select Next (or Previous if last) Highlight in line
 		int index = stringTable.getTable().getSelectionIndex();
 		if (stringTable.getElementAt(index + 1) != null) {
 			stringTable.getTable().setSelection(index + 1);
-			highlightStringSelected((HighlightString) stringTable.getElementAt(index + 1));
+			highlightStringSelected((HighlightSetting) stringTable.getElementAt(index + 1));
 		} else if (stringTable.getElementAt(index - 1) != null) {
 			stringTable.getTable().setSelection(index - 1);
-			highlightStringSelected((HighlightString) stringTable.getElementAt(index - 1));
+			highlightStringSelected((HighlightSetting) stringTable.getElementAt(index - 1));
 		}
 		
 		// Mark string removed in our changelog to commit to prefs
@@ -509,7 +508,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	}
 
 	private void addStringSelected() {
-		HighlightString newString = settings.getHighlightConfigurationProvider().createHighlightString();
+		HighlightSetting newString = settings.getHighlightConfigurationProvider().createHighlightString();
 		newString.setText("<Highlight Text>");
 		
 		addedStrings.add(newString);
@@ -544,7 +543,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
-			return ((HighlightString)element).getText();
+			return ((HighlightSetting)element).getText();
 		}
 
 		public void addListener(ILabelProviderListener listener) {	}
@@ -558,7 +557,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		public void removeListener(ILabelProviderListener listener) {}
 
 		public Color getBackground(Object element, int columnIndex) {
-			HighlightString string = (HighlightString)element;
+			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(),
 					ColorUtil.warlockColorToRGB(skin.getBackgroundColor(string)));
 			
@@ -566,7 +565,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		}
 
 		public Color getForeground(Object element, int columnIndex) {
-			HighlightString string = (HighlightString)element;
+			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(), 
 					ColorUtil.warlockColorToRGB(skin.getForegroundColor(string)));
 			
@@ -607,7 +606,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			}
 		}*/
 		
-		for (HighlightString string : removedStrings)
+		for (HighlightSetting string : removedStrings)
 		{
 			highlightConfig.removeHighlightString(string);
 		}

@@ -25,6 +25,7 @@ import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IColorSetting;
 import cc.warlock.core.stormfront.client.StormFrontColor;
+import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
 @Deprecated
@@ -128,9 +129,9 @@ public abstract class ColorSetting extends ServerSetting implements Comparable<C
 				return StormFrontColor.DEFAULT_COLOR;
 			
 			if (KEY_FGCOLOR.equals(key) || foregroundKey.equals(key))
-				return skinColor(serverSettings.getDefaultSkin().getDefaultForegroundColor(getId()));
+				return skinColor(DefaultSkin.getInstance().getDefaultForegroundColor(getId()));
 			else if (KEY_BGCOLOR.equals(key))
-				return skinColor(serverSettings.getDefaultSkin().getDefaultBackgroundColor(getId()));
+				return skinColor(DefaultSkin.getInstance().getDefaultBackgroundColor(getId()));
 		}
 		
 		return new StormFrontColor(color);

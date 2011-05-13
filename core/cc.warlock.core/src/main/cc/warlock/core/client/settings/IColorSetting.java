@@ -19,25 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings.internal;
+package cc.warlock.core.client.settings;
 
-import org.osgi.service.prefs.Preferences;
+import cc.warlock.core.client.WarlockColor;
 
-import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.settings.IHighlightString;
+/**
+ * @author marshall
+ *
+ */
+public interface IColorSetting extends IClientSetting {
 
-public class HighlightString extends PatternSetting implements IHighlightString {
-
-	protected StyleSetting style;
-
-	public HighlightString (Preferences parentNode, String path)
-	{
-		super(parentNode, path);
-		this.style = new StyleSetting(getNode(), "style");
-	}
+	public WarlockColor getForegroundColor();
+	public void setForegroundColor (WarlockColor foreground);
 	
-	public IWarlockStyle getStyle() {
-		return style;
-	}
+	public WarlockColor getBackgroundColor();
+	public void setBackgroundColor(WarlockColor background);
 }
-

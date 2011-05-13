@@ -72,9 +72,13 @@ public class ClientSettings implements IClientSettings {
 		highlightConfigurationProvider = new HighlightConfigurationProvider(node);
 		ignoreConfigurationProvider = new IgnoreConfigurationProvider();
 		triggerConfigurationProvider = new TriggerConfigurationProvider();
-		variableConfigurationProvider = new VariableConfigurationProvider();
+		variableConfigurationProvider = new VariableConfigurationProvider(node);
 		macroConfigurationProvider = new MacroConfigurationProvider(node);
 		windowSettingsProvider = new WindowSettingsConfigurationProvider(node);
+	}
+	
+	protected Preferences getNode() {
+		return node;
 	}
 	
 	public Collection<IHighlightString> getHighlightStrings() {
