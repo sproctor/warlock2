@@ -21,9 +21,8 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import org.osgi.service.prefs.BackingStoreException;
 
 import org.osgi.service.prefs.Preferences;
 
@@ -33,12 +32,9 @@ import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
-import cc.warlock.core.client.settings.IIgnoreProvider;
 import cc.warlock.core.client.settings.IPatternSetting;
 import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.IVariableProvider;
 import cc.warlock.core.client.settings.IWindowSettings;
-import cc.warlock.core.client.settings.IWindowSettingsProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
@@ -48,7 +44,6 @@ import cc.warlock.core.client.settings.macro.internal.MacroSetting;
  * This class includes a single default implementations for each {@link IClientSettingProvider}
  * @author marshall
  */
-@SuppressWarnings("unchecked")
 public class ClientSettings implements IClientSettings {
 	
 	public static final String WINDOW_MAIN = "main";
@@ -56,6 +51,7 @@ public class ClientSettings implements IClientSettings {
 	private IWarlockClient client;
 	protected int version;
 	private Preferences node;
+	private boolean newSettings;
 
 	protected HighlightConfigurationProvider highlightConfigurationProvider;
 	protected IgnoreConfigurationProvider ignoreConfigurationProvider;
@@ -66,7 +62,14 @@ public class ClientSettings implements IClientSettings {
 	
 	public ClientSettings (IWarlockClient client, String clientId) {
 		this.client = client;
-		this.node = WarlockPreferences.getInstance().getNode().node("clients/" + clientId);
+		String nodeName = "clients/" + clientId;
+		Preferences parentNode = WarlockPreferences.getInstance().getNode();
+		try {
+			newSettings = !parentNode.nodeExists(nodeName);
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
+		this.node = parentNode.node(nodeName);
 		
 		highlightConfigurationProvider = new HighlightConfigurationProvider(node);
 		ignoreConfigurationProvider = new IgnoreConfigurationProvider(node);
@@ -155,5 +158,9 @@ public class ClientSettings implements IClientSettings {
 	
 	public IWindowSettings getMainWindowSettings() {
 		return windowSettingsProvider.getOrCreateWindowSettings(WINDOW_MAIN);
+	}
+	
+	public boolean isNewSettings() {
+		return newSettings;
 	}
 }
