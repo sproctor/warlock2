@@ -24,8 +24,9 @@ package cc.warlock.core.client.settings;
 import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.settings.internal.HighlightSetting;
 
-public interface IHighlightProvider extends IArraySettingProvider<IHighlightString> {
+public interface IHighlightProvider extends IArraySettingProvider<HighlightSetting> {
 	//public Collection<? extends IHighlightString> getHighlightStrings();
 	
 	//public void addHighlightString (IHighlightString string);

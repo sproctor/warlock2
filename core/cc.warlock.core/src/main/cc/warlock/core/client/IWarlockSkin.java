@@ -38,8 +38,6 @@ public interface IWarlockSkin {
 		MainWindow_FontSize, MainWindow_MonoFontSize, CommandLine_FontSize
 	};
 	
-	public int getFontSize (FontSizeType type);
-	
 	public WarlockColor getColor (ColorType type);
 	
 	public String getFontFace (FontFaceType type);

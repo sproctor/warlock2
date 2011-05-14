@@ -28,9 +28,8 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.settings.IHighlightProvider;
-import cc.warlock.core.client.settings.IHighlightString;
 
-public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IHighlightString> implements IHighlightProvider
+public class HighlightConfigurationProvider extends ArrayConfigurationProvider<HighlightSetting> implements IHighlightProvider
 {
 	protected HashMap<String, IWarlockStyle> namedStyles = new HashMap<String, IWarlockStyle>();
 	
@@ -38,7 +37,7 @@ public class HighlightConfigurationProvider extends ArrayConfigurationProvider<I
 		super(parentNode, "highlights");
 	}
 	
-	protected IHighlightString loadSetting(String id) {
+	protected HighlightSetting loadSetting(String id) {
 		return new HighlightSetting(getNode(), id);
 	}
 	

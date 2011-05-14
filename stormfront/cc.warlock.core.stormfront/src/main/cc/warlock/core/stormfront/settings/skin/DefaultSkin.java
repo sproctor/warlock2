@@ -97,10 +97,6 @@ public class DefaultSkin implements IWarlockSkin {
 		
 		return new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	}
-	
-	public WarlockColor getStormFrontColor(ColorType type) {
-		return (WarlockColor) getColor(type);
-	}
 
 	public String getFontFace(FontFaceType type) {
 		if (System.getProperties().getProperty("os.name").contains("Windows"))
@@ -108,10 +104,6 @@ public class DefaultSkin implements IWarlockSkin {
 			return "Verdana";
 		}
 		return "Sans";
-	}
-
-	public int getFontSize(FontSizeType type) {
-		return DEFAULT_FONT_SIZE; 
 	}
 	
 	// These are hard coded for now, we should either have our own "skin" defined in a configuration somewhere,
