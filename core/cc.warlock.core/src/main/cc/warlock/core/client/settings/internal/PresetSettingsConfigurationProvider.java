@@ -28,7 +28,6 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.settings.IClientSettingProvider;
-import cc.warlock.core.client.settings.IWindowSettings;
 
 public class PresetSettingsConfigurationProvider extends ClientConfigurationProvider implements IClientSettingProvider {
 
@@ -47,25 +46,25 @@ public class PresetSettingsConfigurationProvider extends ClientConfigurationProv
 		}
 	}
 
-	public Collection<IWarlockStyle> getStyleSettings() {
+	public Collection<IWarlockStyle> getStyles() {
 		return styleSettings.values();
 	}
 
-	public IWarlockStyle getWindowSettings(String id) {
+	public IWarlockStyle getStyle(String id) {
 		return styleSettings.get(id);
 	}
 
-	public IWindowSettings getOrCreateWindowSettings(String windowId) {
-		IWindowSettings settings = windowSettings.get(windowId);
-		if(settings == null) {
-			settings = new WindowSettings(getNode(), windowId);
-			windowSettings.put(windowId, settings);
+	public IWarlockStyle getOrCreateStyle(String id) {
+		IWarlockStyle style = styleSettings.get(id);
+		if(style == null) {
+			style = new StyleSetting(getNode(), id);
+			styleSettings.put(id, style);
 		}
-		return settings;
-	}
-	
-	public void removeWindowSettings(IWindowSettings settings) {
-		windowSettings.remove(settings);
+		return style;
 	}
 
+	public void removeStyle(String id) {
+		styleSettings.remove(id);
+		getNode().remove(id);
+	}
 }

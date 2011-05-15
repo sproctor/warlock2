@@ -22,15 +22,15 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
-import org.osgi.service.prefs.BackingStoreException;
 
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.IPatternSetting;
 import cc.warlock.core.client.settings.IVariable;
@@ -59,6 +59,10 @@ public class ClientSettings implements IClientSettings {
 	protected VariableConfigurationProvider variableConfigurationProvider;
 	protected MacroConfigurationProvider macroConfigurationProvider;
 	protected WindowSettingsConfigurationProvider windowSettingsProvider;
+	private PresetSettingsConfigurationProvider presetSettingsProvider;
+	
+	// TODO: store these in settings
+	private WarlockColor defaultWindowBackground, defaultWindowForeground;
 	
 	public ClientSettings (IWarlockClient client, String clientId) {
 		this.client = client;
@@ -73,10 +77,14 @@ public class ClientSettings implements IClientSettings {
 		
 		highlightConfigurationProvider = new HighlightConfigurationProvider(node);
 		ignoreConfigurationProvider = new IgnoreConfigurationProvider(node);
-		triggerConfigurationProvider = new TriggerConfigurationProvider();
+		triggerConfigurationProvider = new TriggerConfigurationProvider(node);
 		variableConfigurationProvider = new VariableConfigurationProvider(node);
 		macroConfigurationProvider = new MacroConfigurationProvider(node);
 		windowSettingsProvider = new WindowSettingsConfigurationProvider(node);
+		presetSettingsProvider = new PresetSettingsConfigurationProvider(node);
+		
+		defaultWindowForeground = new WarlockColor("#F0F0FF");
+		defaultWindowBackground = new WarlockColor("191932");
 	}
 	
 	protected Preferences getNode() {
@@ -87,7 +95,7 @@ public class ClientSettings implements IClientSettings {
 		return highlightConfigurationProvider.getSettings();
 	}
 	
-	public Collection<IPatternSetting> geIgnores() {
+	public Collection<IPatternSetting> getIgnores() {
 		return ignoreConfigurationProvider.getSettings();
 	}
 	
@@ -104,28 +112,53 @@ public class ClientSettings implements IClientSettings {
 	}
 	
 	public IWarlockStyle getNamedStyle(String name) {
-		for (IHighlightProvider provider : getAllProviders(IHighlightProvider.class)) {
-			IWarlockStyle style = provider.getNamedStyle(name);
-			if (style != null) {
-				return style;
-			}
-		}
-		return null;
+		return presetSettingsProvider.getStyle(name);
 	}
 	
 	public int getVersion() {
 		return version;
 	}
 	
-	public Collection<IWindowSettings> getAllWindowSettings() {
+	public Collection<IWindowSettings> getWindowSettings() {
 		return windowSettingsProvider.getWindowSettings();
 	}
 	
 	public IWindowSettings getWindowSettings(String windowId) {
-		for (IWindowSettings settings : getAllWindowSettings()) {
-			if (settings.getId().equals(windowId)) return settings;
+		return windowSettingsProvider.getWindowSettings(windowId);
+	}
+	
+	public WarlockColor getDefaultBackground() {
+		WarlockColor bg = this.getMainWindowSettings().getBackgroundColor();
+		if(bg == null || bg.isDefault())
+			bg = defaultWindowBackground;
+		return bg;
+	}
+	
+	public WarlockColor getDefaultForeground() {
+		WarlockColor fg = this.getMainWindowSettings().getForegroundColor();
+		if(fg == null || fg.isDefault())
+			fg = defaultWindowForeground;
+		return fg;
+	}
+	
+	public WarlockColor getWindowBackground(String windowId) {
+		WarlockColor bg = getWindowSettings(windowId).getBackgroundColor();
+		if(bg == null || bg.isDefault()) {
+			bg = this.getMainWindowSettings().getBackgroundColor();
+			if(bg == null || bg.isDefault())
+				bg = defaultWindowBackground;
 		}
-		return null;
+		return bg;
+	}
+	
+	public WarlockColor getWindowForeground(String windowId) {
+		WarlockColor fg = getWindowSettings(windowId).getForegroundColor();
+		if(fg == null || fg.isDefault()) {
+			fg = this.getMainWindowSettings().getForegroundColor();
+			if(fg == null || fg.isDefault())
+				fg = defaultWindowForeground;
+		}
+		return fg;
 	}
 	
 	public IVariable getVariable(String identifier) {
@@ -156,11 +189,20 @@ public class ClientSettings implements IClientSettings {
 		return windowSettingsProvider;
 	}
 	
+	public PresetSettingsConfigurationProvider getPresetSettingsProvider() {
+		return presetSettingsProvider;
+	}
+	
 	public IWindowSettings getMainWindowSettings() {
 		return windowSettingsProvider.getOrCreateWindowSettings(WINDOW_MAIN);
 	}
 	
 	public boolean isNewSettings() {
 		return newSettings;
+	}
+
+	@Override
+	public IWarlockClient getClient() {
+		return client;
 	}
 }

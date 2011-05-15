@@ -349,7 +349,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 	
 	public List<? extends IHighlightString> getHighlightStrings ()
 	{	
-		return highlightStrings;
+		return /*highlightStrings*/null;
 	}
 	
 	public Collection<HighlightPreset> getHighlightPresets() {
@@ -622,7 +622,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 	
 	public void sendAllSettings ()
 	{
-		StormFrontServerSettings.sendSettingsDocument(this.client, this.document);
+		// StormFrontServerSettings.sendSettingsDocument(this.client, this.document);
 	}
 	
 	public Preset createPreset ()

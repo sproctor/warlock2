@@ -56,13 +56,10 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
-import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 import cc.warlock.rcp.util.ColorUtil;
@@ -119,7 +116,6 @@ public class PresetsPreferencePage extends PropertyPage implements
 	private StyleRange whisperStyleRange, thoughtStyleRange;
 	
 	private ClientSettings settings;
-	private IWarlockSkin skin;
 	private HashMap<String, WarlockStyle> styles = new HashMap<String, WarlockStyle>();
 	
 	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
@@ -172,7 +168,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 		if (color.isDefault())
 		{
 			if (style.getName() != null) {
-				color = skin.getDefaultBackgroundColor(style.getName());
+				color = settings.getNamedStyle(style.getName()).getBackgroundColor();
 			}
 		}
 		if (color.isDefault()) {
@@ -188,7 +184,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 		if (color.isDefault())
 		{
 			if (style.getName() != null) {
-				color = skin.getDefaultForegroundColor(style.getName());
+				color = settings.getNamedStyle(style.getName()).getForegroundColor();
 			}
 		}
 		if (color.isDefault()) {
@@ -357,7 +353,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 		if (client != null)
 		{
 			this.settings = (ClientSettings) client.getClientSettings();
-			this.skin = client.getSkin();
+			// this.skin = client.getSkin();
 		}
 	}
 	
@@ -425,10 +421,10 @@ public class PresetsPreferencePage extends PropertyPage implements
 			}
 			
 			mainBGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(skin.getMainBackground()));
+				ColorUtil.warlockColorToRGB(settings.getDefaultBackground()));
 			
 			mainFGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(skin.getMainForeground()));
+				ColorUtil.warlockColorToRGB(settings.getDefaultForeground()));
 			
 			mainFontSelector.setFontData(getDefaultFont());
 			columnFontSelector.setFontData(getDefaultColumnFont());
@@ -519,7 +515,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 	@Override
 	public boolean performOk() {
 		
-		boolean updateView = false;
+	/*	boolean updateView = false;
 		
 		for (WarlockStyle style: styles.values())
 		{
@@ -556,7 +552,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			font.setSize(newColumnFont.getSize());
 			newColumnFont = null;
 		}
-		
+		*/
 		/*if (mainWindow.needsUpdate())
 		{
 			updateView = true;

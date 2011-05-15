@@ -42,7 +42,7 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 				
 				if (sfClient.getCharacterName().get().equals(profile.getName())) {
 					clientSettings = (StormFrontClientSettings) sfClient.getStormFrontClientSettings();
-					serverSettings = sfClient.getServerSettings();
+					//serverSettings = sfClient.getServerSettings();
 					profileClient = sfClient;
 				}
 			}
@@ -59,7 +59,7 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 			}
 			try {
 				FileInputStream stream = new FileInputStream(settingsFile);
-				serverSettings.importServerSettings(stream, clientSettings);
+				//serverSettings.importServerSettings(stream, clientSettings);
 				
 				stream.close();
 			} catch (IOException e) {

@@ -25,6 +25,7 @@ import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
 /**
@@ -51,5 +52,8 @@ public interface IClientSettings {
 	public Collection<MacroSetting> getMacros();
 	public MacroSetting getMacro (int keycode, int modifiers);
 
+	public WarlockColor getDefaultBackground();
+	public WarlockColor getDefaultForeground();
+	
 	public IWindowSettings getMainWindowSettings();
 }

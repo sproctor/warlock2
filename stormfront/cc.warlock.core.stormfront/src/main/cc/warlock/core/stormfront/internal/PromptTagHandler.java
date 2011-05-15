@@ -68,7 +68,7 @@ public class PromptTagHandler extends DefaultTagHandler {
 		
 		if (waitingForInitialStreams)
 		{
-			StormFrontServerSettings.sendInitialStreamWindows(handler.getClient());
+			// StormFrontServerSettings.sendInitialStreamWindows(handler.getClient());
 			waitingForInitialStreams = false;
 		}
 	}

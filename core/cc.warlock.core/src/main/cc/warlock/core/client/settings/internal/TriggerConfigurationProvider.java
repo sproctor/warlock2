@@ -21,66 +21,18 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.osgi.service.prefs.Preferences;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import cc.warlock.core.client.settings.IPatternSetting;
 
-import cc.warlock.core.client.settings.ITrigger;
-import cc.warlock.core.client.settings.ITriggerProvider;
+public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IPatternSetting> {
 
-public class TriggerConfigurationProvider extends PatternConfigurationProvider
-		implements ITriggerProvider {
-
-	protected ArrayList<ITrigger> triggers = new ArrayList<ITrigger>();
-	
-	public TriggerConfigurationProvider ()
+	public TriggerConfigurationProvider (Preferences parentNode)
 	{
-		super("triggers");
-		
-		setHandleChildren(false);
+		super(parentNode, "triggers");
 	}
 	
-	@Override
-	protected void parseData() {}
-
-	@Override
-	protected void parseChild(Element child) {
-		if (child.getName().equals("trigger"))
-		{
-			Trigger trigger = new Trigger(this, null);
-			fillSetting(trigger, child);
-			
-			triggers.add(trigger);
-		}
+	public IPatternSetting loadSetting(String id) {
+		return new PatternSetting(getNode(), id);
 	}
-	
-	@Override
-	protected void saveTo(List<Element> elements) {
-		Element triggersElement = DocumentHelper.createElement("triggers");
-		
-		for (ITrigger trigger : triggers)
-		{
-			Element tElement = triggersElement.addElement("trigger");
-			fillElement(tElement, trigger);
-			
-			elements.add(tElement);
-		}
-		
-		elements.add(triggersElement);
-	}
-
-	public void addTrigger(ITrigger trigger) {
-		triggers.add(trigger);
-	}
-
-	public List<? extends ITrigger> getTriggers() {
-		return triggers;
-	}
-
-	public void removeTrigger(ITrigger trigger) {
-		triggers.remove(trigger);
-	}
-
 }

@@ -238,8 +238,8 @@ public class HandsView extends ViewPart
 		if(mainSettings == null)
 			return;
 		
-		Color bg = ColorUtil.warlockColorToColor(settings.getStormFrontClient().getStormFrontSkin().getMainBackground());
-		Color fg = ColorUtil.warlockColorToColor(settings.getStormFrontClient().getStormFrontSkin().getMainForeground());
+		Color bg = ColorUtil.warlockColorToColor(settings.getDefaultBackground());
+		Color fg = ColorUtil.warlockColorToColor(settings.getDefaultForeground());
 		
 		setColors(fg, bg);
 	}

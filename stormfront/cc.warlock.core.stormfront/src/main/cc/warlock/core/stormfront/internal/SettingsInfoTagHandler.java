@@ -49,7 +49,7 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 			&& attributes.getAttribute("found") != null)
 		{
 			// This is a character that has no server settings, we need to immediately send our own
-			StormFrontServerSettings.sendInitialServerSettings(handler.getClient());
+			// StormFrontServerSettings.sendInitialServerSettings(handler.getClient());
 			
 			PromptTagHandler promptHandler = (PromptTagHandler) handler.getTagHandler(PromptTagHandler.class);
 			promptHandler.setWaitingForInitialStreams(true);

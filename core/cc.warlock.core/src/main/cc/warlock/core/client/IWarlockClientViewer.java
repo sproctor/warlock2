@@ -25,6 +25,10 @@
 package cc.warlock.core.client;
 
 import java.io.InputStream;
+import java.util.Collection;
+
+import cc.warlock.core.client.settings.macro.IMacroCommand;
+import cc.warlock.core.client.settings.macro.IMacroVariable;
 
 
 
@@ -62,6 +66,10 @@ public interface IWarlockClientViewer {
 	public void paste();
 	
 	public void playSound(InputStream soundStream);
+	
+	public Collection<IMacroVariable> getMacroVariables();
+	
+	public IMacroCommand getMacroCommand(String id);
 	
 	public boolean isStreamOpen(String streamName);
 }

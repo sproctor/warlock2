@@ -507,7 +507,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	}
 
 	private void addStringSelected() {
-		HighlightSetting newString = settings.getHighlightConfigurationProvider().createSetting();
+		HighlightSetting newString = (HighlightSetting)settings.getHighlightConfigurationProvider().createSetting();
 		newString.setText("<Highlight Text>");
 		
 		addedStrings.add(newString);
@@ -558,7 +558,8 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		public Color getBackground(Object element, int columnIndex) {
 			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(),
-					ColorUtil.warlockColorToRGB(DefaultSkin.getBackgroundColor(string)));
+					ColorUtil.warlockColorToRGB(string.getStyle().getBackgroundColor().isDefault() ?
+							settings.getDefaultBackground() : string.getStyle().getBackgroundColor()));
 			
 			return c;
 		}
@@ -566,7 +567,8 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		public Color getForeground(Object element, int columnIndex) {
 			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(), 
-					ColorUtil.warlockColorToRGB(skin.getForegroundColor(string)));
+					ColorUtil.warlockColorToRGB(string.getStyle().getForegroundColor().isDefault() ?
+							settings.getDefaultForeground() : string.getStyle().getForegroundColor()));
 			
 			return c;
 		}

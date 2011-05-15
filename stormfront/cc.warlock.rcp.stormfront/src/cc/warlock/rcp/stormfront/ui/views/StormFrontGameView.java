@@ -22,6 +22,7 @@
 package cc.warlock.rcp.stormfront.ui.views;
 
 import java.net.URL;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -53,6 +54,8 @@ import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockClientListener;
+import cc.warlock.core.client.settings.macro.IMacroCommand;
+import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.stormfront.ProfileConfiguration;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -72,6 +75,7 @@ import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.ui.style.CompassThemes;
 import cc.warlock.rcp.ui.style.StyleProviders;
 import cc.warlock.rcp.util.ColorUtil;
@@ -368,8 +372,8 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			}
 		});
 		
-		WarlockColor bg = sfClient.getStormFrontSkin().getMainBackground();
-		WarlockColor fg = sfClient.getStormFrontSkin().getMainForeground();
+		WarlockColor bg = sfClient.getStormFrontClientSettings().getDefaultBackground();
+		WarlockColor fg = sfClient.getStormFrontClientSettings().getDefaultForeground();
 		
 		IWarlockFont mainFont = settings.getMainWindowSettings().getFont();
 		String fontFace = mainFont.getFamilyName();
@@ -467,4 +471,15 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			prefix += name + " - ";
 		this.setPartName(prefix + title);
 	}
+
+	@Override
+	public Collection<IMacroVariable> getMacroVariables() {
+		return MacroRegistry.instance().getMacroVariables();
+	}
+
+	@Override
+	public IMacroCommand getMacroCommand(String id) {
+		return MacroRegistry.instance().getMacroCommand(id);
+	}
+	
 }

@@ -63,8 +63,9 @@ public class WindowSettingsConfigurationProvider extends ClientConfigurationProv
 		return settings;
 	}
 	
-	public void removeWindowSettings(IWindowSettings settings) {
-		windowSettings.remove(settings);
+	public void removeWindowSettings(String id) {
+		windowSettings.remove(id);
+		getNode().remove(id);
 	}
 
 }

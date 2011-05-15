@@ -28,11 +28,14 @@
 package cc.warlock.rcp.ui.client;
 
 import java.io.InputStream;
+import java.util.Collection;
 
 import org.eclipse.swt.widgets.Display;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.settings.macro.IMacroCommand;
+import cc.warlock.core.client.settings.macro.IMacroVariable;
 
 /**
  * @author Marshall
@@ -192,5 +195,14 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	public boolean isStreamOpen(String streamName) {
 		// This method is not allowed to use any SWT methods
 		return viewer.isStreamOpen(streamName);
+	}
+
+	public Collection<IMacroVariable> getMacroVariables() {
+		return viewer.getMacroVariables();
+	}
+
+	public IMacroCommand getMacroCommand(String id) {
+		// TODO Auto-generated method stub
+		return viewer.getMacroCommand(id);
 	}
 }

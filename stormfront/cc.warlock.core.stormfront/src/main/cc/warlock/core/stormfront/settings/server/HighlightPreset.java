@@ -29,7 +29,7 @@ import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
 @Deprecated
-public class HighlightPreset extends Preset implements IHighlightString {
+public class HighlightPreset extends Preset /* implements IHighlightString */ {
 
 	public static final String KEY_TEXT = "text";
 	

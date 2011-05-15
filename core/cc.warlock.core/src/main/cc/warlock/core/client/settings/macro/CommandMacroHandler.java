@@ -21,11 +21,10 @@
  */
 package cc.warlock.core.client.settings.macro;
 
-import java.util.List;
+import java.util.Collection;
 
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.IClientSettings;
 /**
  * This is the default macro handler for a command being sent to the connection.
  * Embedded macro variables and special-commands are supported, to allow for additional functionality.
@@ -43,8 +42,7 @@ public class CommandMacroHandler implements IMacroHandler {
 	
 	public boolean handleMacro(IMacro macro, IWarlockClientViewer viewer)
 	{
-		IClientSettings settings = viewer.getWarlockClient().getClientSettings();
-		List<? extends IMacroVariable> variables = settings.getAllMacroVariables();
+		Collection<IMacroVariable> variables = viewer.getMacroVariables();
 		
 		String newCommand = new String(command);
 		String savedCommand = null;
@@ -111,7 +109,7 @@ public class CommandMacroHandler implements IMacroHandler {
 				} else {
 					String commandText = newCommand.substring(pos + 1, endPos);
 					pos = endPos + 1;
-					IMacroCommand macroCommand = settings.getMacroCommand(commandText);
+					IMacroCommand macroCommand = viewer.getMacroCommand(commandText);
 					if(macroCommand != null) {
 						macroCommand.execute(viewer);
 					}
