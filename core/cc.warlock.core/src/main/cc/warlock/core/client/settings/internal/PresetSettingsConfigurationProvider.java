@@ -38,7 +38,7 @@ public class PresetSettingsConfigurationProvider extends ClientConfigurationProv
 		
 		try {
 			for(String id : getNode().childrenNames()) {
-				styleSettings.put(id, new StyleSetting(getNode(), id));
+				styleSettings.put(id, new StyleSetting(getNode(), id, true));
 				
 			}
 		} catch(Exception e) {

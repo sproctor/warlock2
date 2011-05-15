@@ -50,12 +50,11 @@ public class OutputTagHandler extends DefaultTagHandler {
 		String className = attributes.getValue("class");
 		
 		if (className != null) {
-			currentStyle = new WarlockStyle();
+			currentStyle = new WarlockStyle(className);
 		
 			if(className.equals("mono"))
 				currentStyle.setMonospace(true);
 			
-			currentStyle.setName(className);
 			handler.addStyle(currentStyle);
 		}
 	}

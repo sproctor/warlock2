@@ -52,7 +52,6 @@ public interface IWarlockStyle {
 	public void setItalic(boolean italic);
 	public void setUnderline(boolean underline);
 	public void setMonospace(boolean monospace);
-	public void setName(String name);
 	public void setComponentName(String componentName);
 	public void setSound(String sound);
 }

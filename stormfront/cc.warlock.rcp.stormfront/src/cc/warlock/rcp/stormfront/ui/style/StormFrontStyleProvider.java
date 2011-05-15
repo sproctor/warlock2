@@ -44,7 +44,7 @@ public class StormFrontStyleProvider extends DefaultStyleProvider {
 		{
 			if (style.getBackgroundColor().isDefault()) {
 				WarlockColor color = DefaultSkin.getInstance().getDefaultBackgroundColor(style.getName());
-				if (!color.isDefault())
+				if (color != null && !color.isDefault())
 					range.background = ColorUtil.warlockColorToColor(color);
 			}
 			if (style.getForegroundColor().isDefault()) {

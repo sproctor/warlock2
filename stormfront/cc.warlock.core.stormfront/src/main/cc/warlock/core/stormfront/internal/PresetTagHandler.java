@@ -47,9 +47,8 @@ public class PresetTagHandler extends DefaultTagHandler {
 		String id = attributes.getValue("id");
 		IWarlockStyle style = handler.getClient().getClientSettings().getNamedStyle(id);
 		if (style == null)
-			style = new WarlockStyle();
+			style = new WarlockStyle(id);
 
-		style.setName(id);
 		styles.push(style);
 		handler.addStyle(style);
 	}

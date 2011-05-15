@@ -32,48 +32,65 @@ import cc.warlock.core.client.WarlockColor;
  */
 public class StyleSetting extends ClientSetting implements IWarlockStyle {
 
-	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
-	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
+	private WarlockColor fgColor;
+	private WarlockColor bgColor;
 	private boolean fullLine;
 	private String name;
-	private String componentName;
-	private Runnable action;
-	private String sound = new String();
+	private String sound;
 	private boolean bold;
 	private boolean italic;
 	private boolean underline;
 	private boolean monospace;
 	
-	public StyleSetting (Preferences parentNode, String path)
+	public StyleSetting (Preferences parentNode, String path) {
+		this(parentNode, path, false);
+	}
+	
+	public StyleSetting (Preferences parentNode, String path, boolean pathIsName)
 	{
 		super(parentNode, path);
+		
+		String fgString = getNode().get("fgcolor", null);
+		fgColor = fgString == null ? new WarlockColor(WarlockColor.DEFAULT_COLOR) : new WarlockColor(fgString);
+		
+		String bgString = getNode().get("bgcolor", null);
+		bgColor = bgString == null ? new WarlockColor(WarlockColor.DEFAULT_COLOR) : new WarlockColor(bgString);
+		
+		fullLine = getNode().getBoolean("full-line", false);
+		
+		if(pathIsName)
+			name = path;
+		
+		sound = getNode().get("sound", null);
+		bold = getNode().getBoolean("bold", false);
+		italic = getNode().getBoolean("italic", false);
+		underline = getNode().getBoolean("underline", false);
+		monospace = getNode().getBoolean("monospace", false);
 	}
 
 	public WarlockColor getForegroundColor() {
-		return foregroundColor;
+		return fgColor;
 	}
 
 	public void setForegroundColor(WarlockColor foregroundColor) {
-		if (!foregroundColor.equals(this.foregroundColor))
-			this.getNode().put("fgcolor", foregroundColor.toString());
+		this.getNode().put("fgcolor", foregroundColor.toString());
 		
-		this.foregroundColor = foregroundColor;
+		this.fgColor = foregroundColor;
 	}
 
 	public WarlockColor getBackgroundColor() {
-		return backgroundColor;
+		return bgColor;
 	}
 
 	public void setBackgroundColor(WarlockColor backgroundColor) {
-		if (!backgroundColor.equals(this.backgroundColor)) 
-			this.getNode().put("bgcolor", backgroundColor.toString());
+		this.getNode().put("bgcolor", backgroundColor.toString());
 		
-		this.backgroundColor = backgroundColor;
+		this.bgColor = backgroundColor;
 	}
 
 	@Override
 	public Runnable getAction() {
-		return action;
+		return null;
 	}
 
 	@Override
@@ -88,14 +105,12 @@ public class StyleSetting extends ClientSetting implements IWarlockStyle {
 
 	@Override
 	public String getComponentName() {
-		return componentName;
+		return "";
 	}
 
 	@Override
 	public void setAction(Runnable action) {
-		// FIXME: does this need to be saved? I don't see a way to.
-		
-		this.action = action;
+		// FIXME: this should probably throw an exception
 	}
 
 	@Override
@@ -105,22 +120,15 @@ public class StyleSetting extends ClientSetting implements IWarlockStyle {
 	}
 
 	@Override
-	public void setName(String name) {
-		getNode().put("name", name);
-		this.name = name;
-	}
-
-	@Override
-	public void setComponentName(String componentName) {
-		getNode().put("component", componentName);
-		this.componentName = componentName;
-	}
-
-	@Override
 	public String getSound() {
 		return sound;
 	}
 
+	@Override
+	public void setComponentName(String name) {
+		// No component allow
+	}
+	
 	@Override
 	public void setSound(String sound) {
 		getNode().put("sound", sound);
@@ -170,6 +178,5 @@ public class StyleSetting extends ClientSetting implements IWarlockStyle {
 		getNode().putBoolean("monospace", monospace);
 		this.monospace = monospace;
 	}
-	
 	
 }
