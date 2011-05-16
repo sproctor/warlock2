@@ -415,7 +415,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 	{
 		if (settings != null)
 		{	
-			for (IWarlockStyle style: settings.getHighlightConfigurationProvider().getNamedStyles())
+			for (IWarlockStyle style: settings.getPresetConfigurationProvider().getStyles())
 			{
 				styles.put(style.getName(), new WarlockStyle(style));
 			}

@@ -22,6 +22,7 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
@@ -29,6 +30,7 @@ import org.osgi.service.prefs.Preferences;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IClientSettings;
@@ -53,6 +55,7 @@ public class ClientSettings implements IClientSettings {
 	protected int version;
 	private Preferences node;
 	private boolean newSettings;
+	private HashMap<String, IWarlockStyle> defaultStyles = new HashMap<String, IWarlockStyle>();
 
 	protected HighlightConfigurationProvider highlightConfigurationProvider;
 	protected IgnoreConfigurationProvider ignoreConfigurationProvider;
@@ -64,7 +67,7 @@ public class ClientSettings implements IClientSettings {
 	private LoggingConfiguration loggingSettings;
 	
 	// TODO: store these in settings
-	private WarlockColor defaultWindowBackground, defaultWindowForeground;
+	private WarlockColor defaultBgColor, defaultFgColor;
 	
 	public ClientSettings (IWarlockClient client, String clientId) {
 		this.client = client;
@@ -86,8 +89,26 @@ public class ClientSettings implements IClientSettings {
 		presetSettingsProvider = new PresetSettingsConfigurationProvider(node);
 		loggingSettings = new LoggingConfiguration(node);
 		
-		defaultWindowForeground = new WarlockColor("#F0F0FF");
-		defaultWindowBackground = new WarlockColor("191932");
+		defaultFgColor = new WarlockColor("#F0F0FF");
+		defaultBgColor = new WarlockColor("191932");
+		
+		setDefaultStyle("bold", "#FFFF00", null);
+		setDefaultStyle("roomName", "#FFFFFF", "#0000FF");
+		setDefaultStyle("speech", "#80FF80", null);
+		setDefaultStyle("thought", "#FF8000", null);
+		setDefaultStyle("cmdline", "#FFFFFF", "#000000");
+		setDefaultStyle("whisper", "#80FFFF", null);
+		setDefaultStyle("watching", "#FFFF00", null);
+		setDefaultStyle("link", "#62B0FF", null);
+		setDefaultStyle("selectedLink", "#000000", "#62B0FF");
+		setDefaultStyle("command", "#FFFFFF", "#404040");
+		
+	}
+	
+	private void setDefaultStyle(String name, String fg, String bg) {
+		IWarlockStyle style = new WarlockStyle();
+		style.setForegroundColor(fg == null ? defaultFgColor : new WarlockColor(fg));
+		style.setBackgroundColor(bg == null ? defaultBgColor : new WarlockColor(bg));
 	}
 	
 	protected Preferences getNode() {
@@ -115,7 +136,11 @@ public class ClientSettings implements IClientSettings {
 	}
 	
 	public IWarlockStyle getNamedStyle(String name) {
-		return presetSettingsProvider.getStyle(name);
+		IWarlockStyle style = presetSettingsProvider.getStyle(name);
+		if(style == null)
+			style = defaultStyles.get(name);
+		
+		return style;
 	}
 	
 	public int getVersion() {
@@ -133,14 +158,14 @@ public class ClientSettings implements IClientSettings {
 	public WarlockColor getDefaultBackground() {
 		WarlockColor bg = this.getMainWindowSettings().getBackgroundColor();
 		if(bg == null || bg.isDefault())
-			bg = defaultWindowBackground;
+			bg = defaultBgColor;
 		return bg;
 	}
 	
 	public WarlockColor getDefaultForeground() {
 		WarlockColor fg = this.getMainWindowSettings().getForegroundColor();
 		if(fg == null || fg.isDefault())
-			fg = defaultWindowForeground;
+			fg = defaultFgColor;
 		return fg;
 	}
 	
@@ -149,7 +174,7 @@ public class ClientSettings implements IClientSettings {
 		if(bg == null || bg.isDefault()) {
 			bg = this.getMainWindowSettings().getBackgroundColor();
 			if(bg == null || bg.isDefault())
-				bg = defaultWindowBackground;
+				bg = defaultBgColor;
 		}
 		return bg;
 	}
@@ -159,7 +184,7 @@ public class ClientSettings implements IClientSettings {
 		if(fg == null || fg.isDefault()) {
 			fg = this.getMainWindowSettings().getForegroundColor();
 			if(fg == null || fg.isDefault())
-				fg = defaultWindowForeground;
+				fg = defaultFgColor;
 		}
 		return fg;
 	}
@@ -192,7 +217,7 @@ public class ClientSettings implements IClientSettings {
 		return windowSettingsProvider;
 	}
 	
-	public PresetSettingsConfigurationProvider getPresetSettingsProvider() {
+	public PresetSettingsConfigurationProvider getPresetConfigurationProvider() {
 		return presetSettingsProvider;
 	}
 	

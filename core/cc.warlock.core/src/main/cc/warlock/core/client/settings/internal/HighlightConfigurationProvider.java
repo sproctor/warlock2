@@ -21,38 +21,19 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import java.util.Collection;
-import java.util.HashMap;
-
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.settings.IHighlightProvider;
 import cc.warlock.core.client.settings.IHighlightString;
 
 public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IHighlightString> implements IHighlightProvider
 {
-	protected HashMap<String, IWarlockStyle> namedStyles = new HashMap<String, IWarlockStyle>();
-	
 	public HighlightConfigurationProvider (Preferences parentNode) {
 		super(parentNode, "highlights");
 	}
 	
 	protected HighlightSetting loadSetting(String id) {
 		return new HighlightSetting(getNode(), id);
-	}
-	
-	public IWarlockStyle getNamedStyle(String name) {
-		return namedStyles.get(name);
-	}
-
-	public Collection<IWarlockStyle> getNamedStyles() {
-		return namedStyles.values();
-	}
-	
-	public void addNamedStyle (String name, IWarlockStyle style)
-	{
-		namedStyles.put(name, style);
 	}
 	
 	/*public void replaceHighlightString(IHighlightString originalString,

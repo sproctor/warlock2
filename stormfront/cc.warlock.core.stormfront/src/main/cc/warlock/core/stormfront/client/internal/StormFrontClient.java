@@ -44,7 +44,6 @@ import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.CharacterStatus;
 import cc.warlock.core.client.internal.Property;
@@ -55,8 +54,6 @@ import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
 import cc.warlock.core.client.settings.internal.WarlockPreferences;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptListener;
@@ -67,9 +64,7 @@ import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.client.IStormFrontDialogMessage;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
-import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
-import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 import cc.warlock.core.util.Pair;
@@ -402,13 +397,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		clientSettings = new StormFrontClientSettings(this, playerId);
 		
 		if(clientSettings.isNewSettings()) {
-			IWarlockStyle bold = clientSettings.getPresetSettingsProvider().getOrCreateStyle("bold");
-			bold.setForegroundColor(new WarlockColor("#FFFF00"));
-			bold.setBackgroundColor(DefaultSkin.MAIN_COLOR);
-			
-			IWarlockStyle roomName = clientSettings.getPresetSettingsProvider().getOrCreateStyle("roomName");
-			roomName.setForegroundColor(new WarlockColor("#FFFFFF"));
-			roomName.setBackgroundColor(new WarlockColor("#0000FF"));
 			
 			try {
 				WarlockPreferences.getInstance().getNode().flush();

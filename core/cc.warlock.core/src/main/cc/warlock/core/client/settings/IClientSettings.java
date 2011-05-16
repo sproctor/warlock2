@@ -28,6 +28,7 @@ import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
+import cc.warlock.core.client.settings.internal.PresetSettingsConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
 /**
@@ -59,5 +60,6 @@ public interface IClientSettings {
 	
 	public IWindowSettings getMainWindowSettings();
 	public HighlightConfigurationProvider getHighlightConfigurationProvider();
+	public PresetSettingsConfigurationProvider getPresetConfigurationProvider();
 	public LoggingConfiguration getLoggingSettings();
 }

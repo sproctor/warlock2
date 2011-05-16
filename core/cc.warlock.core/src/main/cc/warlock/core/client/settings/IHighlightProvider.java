@@ -21,9 +21,6 @@
  */
 package cc.warlock.core.client.settings;
 
-import java.util.Collection;
-
-import cc.warlock.core.client.IWarlockStyle;
 
 public interface IHighlightProvider extends IArraySettingProvider<IHighlightString> {
 	//public Collection<? extends IHighlightString> getHighlightStrings();
@@ -32,10 +29,5 @@ public interface IHighlightProvider extends IArraySettingProvider<IHighlightStri
 	//public void insertHighlightString (int index, IHighlightString string);
 	//public void removeHighlightString (IHighlightString string);
 	//public void replaceHighlightString (IHighlightString originalString, IHighlightString newString);
-	
-	public IWarlockStyle getNamedStyle (String name);
-	public Collection<? extends IWarlockStyle> getNamedStyles();
-	
-	public void addNamedStyle(String name, IWarlockStyle style);
 	
 }
