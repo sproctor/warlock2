@@ -29,6 +29,7 @@ import org.osgi.service.prefs.Preferences;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IHighlightString;
@@ -60,6 +61,7 @@ public class ClientSettings implements IClientSettings {
 	protected MacroConfigurationProvider macroConfigurationProvider;
 	protected WindowSettingsConfigurationProvider windowSettingsProvider;
 	private PresetSettingsConfigurationProvider presetSettingsProvider;
+	private LoggingConfiguration loggingSettings;
 	
 	// TODO: store these in settings
 	private WarlockColor defaultWindowBackground, defaultWindowForeground;
@@ -82,6 +84,7 @@ public class ClientSettings implements IClientSettings {
 		macroConfigurationProvider = new MacroConfigurationProvider(node);
 		windowSettingsProvider = new WindowSettingsConfigurationProvider(node);
 		presetSettingsProvider = new PresetSettingsConfigurationProvider(node);
+		loggingSettings = new LoggingConfiguration(node);
 		
 		defaultWindowForeground = new WarlockColor("#F0F0FF");
 		defaultWindowBackground = new WarlockColor("191932");
@@ -195,6 +198,10 @@ public class ClientSettings implements IClientSettings {
 	
 	public IWindowSettings getMainWindowSettings() {
 		return windowSettingsProvider.getOrCreateWindowSettings(WINDOW_MAIN);
+	}
+
+	public LoggingConfiguration getLoggingSettings() {
+		return loggingSettings;
 	}
 	
 	public boolean isNewSettings() {

@@ -49,7 +49,7 @@ public class StormFrontStyleProvider extends DefaultStyleProvider {
 			}
 			if (style.getForegroundColor().isDefault()) {
 				WarlockColor color = DefaultSkin.getInstance().getDefaultForegroundColor(style.getName());
-				if (!color.isDefault())
+				if (color != null && !color.isDefault())
 					range.foreground = ColorUtil.warlockColorToColor(color);
 			}
 		}

@@ -71,10 +71,6 @@ public abstract class WarlockClient implements IWarlockClient {
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
 		
-		if (LoggingConfiguration.instance().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
-		{
-			logger = new SimpleLogger(this);
-		}
 		listener = new WarlockClientListener() {
 			@Override
 			public void clientDisconnected(IWarlockClient client) {
@@ -93,7 +89,12 @@ public abstract class WarlockClient implements IWarlockClient {
 			public void clientRemoved(IWarlockClient client) {}
 
 			@Override
-			public void clientSettingsLoaded(IWarlockClient client) {}
+			public void clientSettingsLoaded(IWarlockClient client) {
+				if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
+				{
+					logger = new SimpleLogger(WarlockClient.this);
+				}
+			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
 	}

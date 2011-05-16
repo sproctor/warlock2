@@ -26,6 +26,7 @@ import java.util.Collection;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 
 /**
@@ -56,4 +57,5 @@ public interface IClientSettings {
 	public WarlockColor getDefaultForeground();
 	
 	public IWindowSettings getMainWindowSettings();
+	public LoggingConfiguration getLoggingSettings();
 }

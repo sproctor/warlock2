@@ -70,14 +70,16 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			LoggingConfiguration.LOG_FORMAT_TEXT,
 			LoggingConfiguration.LOG_FORMAT_HTML
 		});
-		loggingType.setText(LoggingConfiguration.instance().getLogFormat());
+		//loggingType.setText(settings.getLoggingSettings().getLogFormat());
+		loggingType.setText(LoggingConfiguration.LOG_FORMAT_TEXT);
 		
 		// Log To Directory
 		new Label(main, SWT.NONE).setText("Log Directory:");
 		Composite logDirComposite = new Composite(main, SWT.NONE);
 		logDirComposite.setLayout(new GridLayout(2, false));
 		logDir = new Text(logDirComposite, SWT.BORDER | SWT.SINGLE);
-		logDir.setText(LoggingConfiguration.instance().getLogDirectory().getAbsolutePath());
+		logDir.setText("some path");
+		//logDir.setText(settings.getLoggingSettings().getLogDirectory().getAbsolutePath());
 		Button logDirButton = new Button(logDirComposite, SWT.PUSH);
 		logDirButton.setText("Browse");
 		logDirButton.addSelectionListener(new SelectionAdapter() {
@@ -112,8 +114,8 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 
 	@Override
 	public boolean performOk() {
-		LoggingConfiguration.instance().setLogFormat(loggingType.getText());
-		LoggingConfiguration.instance().setLogDirectory(new File(logDir.getText()));
+		settings.getLoggingSettings().setLogFormat(loggingType.getText());
+		settings.getLoggingSettings().setLogDirectory(new File(logDir.getText()));
 		return true;
 	}
 }

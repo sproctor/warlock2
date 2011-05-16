@@ -22,18 +22,15 @@
 package cc.warlock.core.client.logging;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.settings.IClientSettingProvider;
+import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
 import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.configuration.IConfigurationProvider;
-import cc.warlock.core.configuration.WarlockConfiguration;
 
 
-public class LoggingConfiguration implements IConfigurationProvider {
+public class LoggingConfiguration extends ClientConfigurationProvider implements IClientSettingProvider {
 
 	public static final String LOG_FORMAT_TEXT = "text";
 	public static final String LOG_FORMAT_HTML = "html";
@@ -42,55 +39,15 @@ public class LoggingConfiguration implements IConfigurationProvider {
 	protected boolean enableLogging;
 	protected File logDirectory;
 	
-	protected static LoggingConfiguration _instance;
-	
-	public static LoggingConfiguration instance()
-	{
-		if (_instance == null) _instance = new LoggingConfiguration();
-		return _instance;
-	}
-	
-	protected LoggingConfiguration ()
-	{
-		logFormat = LOG_FORMAT_TEXT;
-		enableLogging = true;
-		logDirectory = ConfigurationUtil.getConfigurationDirectory("logs", true);
-		
-		WarlockConfiguration.getMainConfiguration().addConfigurationProvider(this);
-	}
-	
-	public List<Element> getTopLevelElements() {
-		Element logging = DocumentHelper.createElement("logging");
-		logging.addAttribute("enabled", enableLogging+"");
-		logging.addAttribute("format", logFormat);
-		
-		Element dir = DocumentHelper.createElement("dir");
-		logging.add(dir);
-		dir.setText(logDirectory.getAbsolutePath());
-		
-		return Arrays.asList(new Element[] { logging });
-	}
-
-	public void parseElement(Element element) {
-		if (element.getName().equals("logging"))
-		{
-			enableLogging = Boolean.parseBoolean(element.attributeValue("enabled"));
-			logFormat = element.attributeValue("format");
-			
-			Element dir = element.element("dir");
-			if (dir != null)
-			{
-				logDirectory = new File(dir.getTextTrim());
-			}
-		}
-	}
-
-	public boolean supportsElement(Element element) {
-		if (element.getName().equals("logging"))
-		{
-			return true;
-		}
-		return false;
+	public LoggingConfiguration (Preferences parentNode) {
+		super(parentNode, "logs");
+		logFormat = getNode().get("format", LOG_FORMAT_TEXT);
+		enableLogging = getNode().getBoolean("enabled", true);
+		String dirName = getNode().get("dir", null);
+		if(dirName == null)
+			logDirectory = ConfigurationUtil.getConfigurationDirectory("logs", true);
+		else
+			logDirectory =  new File(dirName.trim());
 	}
 
 	public String getLogFormat() {
@@ -98,6 +55,7 @@ public class LoggingConfiguration implements IConfigurationProvider {
 	}
 
 	public void setLogFormat(String logFormat) {
+		getNode().put("format", logFormat);
 		this.logFormat = logFormat;
 	}
 
@@ -106,6 +64,7 @@ public class LoggingConfiguration implements IConfigurationProvider {
 	}
 
 	public void setLoggingEnabled(boolean enableLogging) {
+		getNode().putBoolean("enabled", enableLogging);
 		this.enableLogging = enableLogging;
 	}
 
@@ -114,6 +73,7 @@ public class LoggingConfiguration implements IConfigurationProvider {
 	}
 
 	public void setLogDirectory(File logDirectory) {
+		getNode().put("dir", logDirectory.getAbsolutePath());
 		this.logDirectory = logDirectory;
 	}
 
