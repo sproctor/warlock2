@@ -23,6 +23,7 @@ package cc.warlock.rcp.prefs;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,7 +39,7 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.logging.LoggingConfiguration;
-import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.client.settings.IClientSettings;
 
 /**
  * @author Will Robertson
@@ -49,8 +50,7 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 
 	public static final String PAGE_ID = "cc.warlock.rcp.prefs.logging";
 	
-	protected ClientSettings settings;
-	protected IWarlockClient client;
+	protected IClientSettings settings;
 	protected Combo loggingType;
 	protected Text logDir;
 	
@@ -70,16 +70,14 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			LoggingConfiguration.LOG_FORMAT_TEXT,
 			LoggingConfiguration.LOG_FORMAT_HTML
 		});
-		//loggingType.setText(settings.getLoggingSettings().getLogFormat());
-		loggingType.setText(LoggingConfiguration.LOG_FORMAT_TEXT);
+		loggingType.setText(settings.getLoggingSettings().getLogFormat());
 		
 		// Log To Directory
 		new Label(main, SWT.NONE).setText("Log Directory:");
 		Composite logDirComposite = new Composite(main, SWT.NONE);
 		logDirComposite.setLayout(new GridLayout(2, false));
 		logDir = new Text(logDirComposite, SWT.BORDER | SWT.SINGLE);
-		logDir.setText("some path");
-		//logDir.setText(settings.getLoggingSettings().getLogDirectory().getAbsolutePath());
+		logDir.setText(settings.getLoggingSettings().getLogDirectory().getAbsolutePath());
 		Button logDirButton = new Button(logDirComposite, SWT.PUSH);
 		logDirButton.setText("Browse");
 		logDirButton.addSelectionListener(new SelectionAdapter() {
@@ -105,6 +103,11 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			File dir = new File(directory);
 			logDir.setText(dir.getAbsolutePath());
 		}
+	}
+	
+	@Override
+	public void setElement(IAdaptable element) {
+		settings = ((IWarlockClient)element.getAdapter(IWarlockClient.class)).getClientSettings();
 	}
 	
 	protected void performDefaults() {
