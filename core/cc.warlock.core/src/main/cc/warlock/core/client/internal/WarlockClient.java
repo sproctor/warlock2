@@ -90,10 +90,8 @@ public abstract class WarlockClient implements IWarlockClient {
 
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {
-				if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
-				{
+				// if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
 					logger = new SimpleLogger(WarlockClient.this);
-				}
 			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
