@@ -46,6 +46,7 @@ import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.CharacterStatus;
+import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.internal.Stream;
 import cc.warlock.core.client.internal.WarlockClient;
@@ -54,6 +55,7 @@ import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
 import cc.warlock.core.client.settings.internal.WarlockPreferences;
+import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptListener;
@@ -397,7 +399,10 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		clientSettings = new StormFrontClientSettings(this, playerId);
 		
 		if(clientSettings.isNewSettings()) {
-			
+			for(DefaultMacro macro : viewer.getDefaultMacros()) {
+				MacroSetting smacro = clientSettings.getMacroConfigurationProvider().getOrCreateMacro(macro.getKeyCode(), macro.getModifiers());
+				smacro.setCommand(macro.getCommand());
+			}
 			try {
 				WarlockPreferences.getInstance().getNode().flush();
 			} catch(Exception e) {

@@ -27,6 +27,7 @@ package cc.warlock.core.client;
 import java.io.InputStream;
 import java.util.Collection;
 
+import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 
@@ -70,6 +71,8 @@ public interface IWarlockClientViewer {
 	public Collection<IMacroVariable> getMacroVariables();
 	
 	public IMacroCommand getMacroCommand(String id);
+	
+	public Collection<DefaultMacro> getDefaultMacros();
 	
 	public boolean isStreamOpen(String streamName);
 }

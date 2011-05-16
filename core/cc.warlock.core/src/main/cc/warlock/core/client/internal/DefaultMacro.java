@@ -7,6 +7,7 @@ public class DefaultMacro extends WarlockMacro {
 	
 	public DefaultMacro(String command, int keycode, int modifiers) {
 		super(keycode, modifiers, new CommandMacroHandler(command));
+		this.command = command;
 	}
 	
 	public String getCommand() {

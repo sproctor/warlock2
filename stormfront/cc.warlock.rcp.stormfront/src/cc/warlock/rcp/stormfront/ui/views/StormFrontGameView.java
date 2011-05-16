@@ -53,6 +53,7 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.internal.WarlockClientListener;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
@@ -480,6 +481,11 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	@Override
 	public IMacroCommand getMacroCommand(String id) {
 		return MacroRegistry.instance().getMacroCommand(id);
+	}
+
+	@Override
+	public Collection<DefaultMacro> getDefaultMacros() {
+		return MacroRegistry.instance().getDefaultMacros();
 	}
 	
 }

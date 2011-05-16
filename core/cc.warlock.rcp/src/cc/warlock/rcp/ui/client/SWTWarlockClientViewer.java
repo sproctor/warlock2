@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Display;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 
@@ -202,7 +203,10 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	}
 
 	public IMacroCommand getMacroCommand(String id) {
-		// TODO Auto-generated method stub
 		return viewer.getMacroCommand(id);
+	}
+
+	public Collection<DefaultMacro> getDefaultMacros() {
+		return viewer.getDefaultMacros();
 	}
 }
