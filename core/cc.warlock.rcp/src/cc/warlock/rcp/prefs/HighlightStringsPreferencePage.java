@@ -65,8 +65,8 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IWindowSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.internal.HighlightSetting;
 import cc.warlock.rcp.ui.WarlockSharedImages;
@@ -85,8 +85,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected Button addString, removeString, soundButton;
 	protected Text filterText;
 	protected Text soundText; 
-	protected IWarlockClient client;
-	protected ClientSettings settings;
+	protected IClientSettings settings;
 	protected HighlightSetting selectedString;
 	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
 	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();
@@ -576,8 +575,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	@Override
 	public void setElement(IAdaptable element) {
-		client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
-		settings = (ClientSettings) client.getClientSettings();
+		settings = ((IWarlockClient)element.getAdapter(IWarlockClient.class)).getClientSettings();
 		
 		/*if (highlightStrings.isEmpty())
 			copyHighlightStrings();*/
