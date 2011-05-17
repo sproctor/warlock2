@@ -20,15 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */package cc.warlock.core.client;
 
-import cc.warlock.core.client.settings.macro.IMacroHandler;
-import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author Marshall
  *
  * A macro represents a certain key code / modifier combination and the list of handlers (ordered by precedence) that are able/willing to handle the macro.
  */
-public interface IMacro extends IWarlockSetting {
+public interface IMacro {
 
 	public static final int NO_MODIFIERS = 0;
 	

@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.configuration;
 
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 
@@ -32,18 +33,28 @@ public class WarlockSetting implements IWarlockSetting {
 
 	private Preferences parentNode;
 	private Preferences node;
+	private boolean newSetting;
 	
 	public WarlockSetting (Preferences parentNode, String path)
 	{
 		this.parentNode = parentNode;
+		try {
+			newSetting = !parentNode.nodeExists(path);
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
 		node = parentNode.node(path);
 	}
 	
-	protected Preferences getNode() {
+	public Preferences getNode() {
 		return node;
 	}
 	
 	protected void changePath(String path) {
 		node = parentNode.node(path);
+	}
+	
+	public boolean isNewSetting() {
+		return newSetting;
 	}
 }

@@ -28,8 +28,6 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import cc.warlock.core.client.internal.DefaultMacro;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
 
 
 

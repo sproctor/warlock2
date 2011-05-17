@@ -21,10 +21,13 @@
  */
 package cc.warlock.core.configuration;
 
+import org.osgi.service.prefs.Preferences;
+
 /**
  * @author marshall
  *
  */
 public interface IWarlockSetting {
-	
+	public Preferences getNode();
+	public boolean isNewSetting();
 }

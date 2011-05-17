@@ -19,15 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings.macro;
+package cc.warlock.core.client;
 
-import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author Marshall
  */
-public interface IMacroVariable extends IWarlockSetting {
+public interface IMacroVariable {
 
 	public String getIdentifier();
 	

@@ -32,11 +32,11 @@ import java.util.Collection;
 
 import org.eclipse.swt.widgets.Display;
 
+import cc.warlock.core.client.IMacroCommand;
+import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.internal.DefaultMacro;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
 
 /**
  * @author Marshall

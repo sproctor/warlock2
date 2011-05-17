@@ -398,7 +398,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		
 		clientSettings = new StormFrontClientSettings(this, playerId);
 		
-		if(clientSettings.isNewSettings()) {
+		if(clientSettings.isNewSetting()) {
 			for(DefaultMacro macro : viewer.getDefaultMacros()) {
 				MacroSetting smacro = clientSettings.getMacroConfigurationProvider().getOrCreateMacro(macro.getKeyCode(), macro.getModifiers());
 				smacro.setCommand(macro.getCommand());

@@ -41,7 +41,7 @@ public class GameViewConfiguration extends ConfigurationProvider implements ICon
 	protected int defaultFontSize;
 	protected boolean suppressPrompt;
 	
-	protected GameViewConfiguration (Preferences parentNode)
+	public GameViewConfiguration (Preferences parentNode)
 	{
 		super(parentNode, "view");
 		

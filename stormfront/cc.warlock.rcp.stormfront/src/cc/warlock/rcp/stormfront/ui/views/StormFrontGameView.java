@@ -48,6 +48,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.ICompass;
+import cc.warlock.core.client.IMacroCommand;
+import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
@@ -55,8 +57,6 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.internal.WarlockClientListener;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;

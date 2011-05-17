@@ -28,8 +28,8 @@
 package cc.warlock.core.client.internal;
 
 import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.macro.IMacroHandler;
 
 public class WarlockMacro implements IMacro
 {

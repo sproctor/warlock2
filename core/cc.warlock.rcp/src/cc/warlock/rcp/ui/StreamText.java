@@ -16,7 +16,6 @@ import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IWindowSettings;
-import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
@@ -83,7 +82,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 	
 	private void showPrompt(String prompt) {
-		if(!GameViewConfiguration.instance().getSuppressPrompt()) {
+		if(!GameView.getGameViewForClient(client).getConfiguration().getSuppressPrompt()) {
 			WarlockString text = new WarlockString();
 			text.append(prompt);
 			append(text);
@@ -192,8 +191,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 			this.setBackground(background);
 			this.setForeground(foreground);
 
-			String defaultFontFace = GameViewConfiguration.instance().getDefaultFontFace();
-			int defaultFontSize = GameViewConfiguration.instance().getDefaultFontSize();
+			String defaultFontFace = GameView.getGameViewForClient(client).getConfiguration().getDefaultFontFace();
+			int defaultFontSize = GameView.getGameViewForClient(client).getConfiguration().getDefaultFontSize();
 
 			if (font.isDefaultFont()) {
 				this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));

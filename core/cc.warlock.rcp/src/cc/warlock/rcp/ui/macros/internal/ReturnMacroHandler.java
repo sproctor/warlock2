@@ -22,8 +22,8 @@
 package cc.warlock.rcp.ui.macros.internal;
 
 import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.macro.IMacroHandler;
 
 /**
  * @author Sean Proctor

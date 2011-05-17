@@ -63,12 +63,12 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.IMacroCommand;
+import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.macro.CommandMacroHandler;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroHandler;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeCellEditor;

@@ -30,12 +30,13 @@ import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.internal.PresetSettingsConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public interface IClientSettings {
+public interface IClientSettings extends IWarlockSetting {
 
 	public IWarlockClient getClient();
 	

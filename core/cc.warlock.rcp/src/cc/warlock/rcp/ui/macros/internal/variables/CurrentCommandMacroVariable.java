@@ -24,8 +24,8 @@
  */
 package cc.warlock.rcp.ui.macros.internal.variables;
 
+import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
 
 
 /**

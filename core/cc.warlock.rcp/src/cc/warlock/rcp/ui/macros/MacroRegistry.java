@@ -30,7 +30,6 @@ package cc.warlock.rcp.ui.macros;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -39,11 +38,10 @@ import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.swt.SWT;
 
 import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.IMacroCommand;
+import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.internal.WarlockMacro;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
-import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
 import cc.warlock.rcp.ui.macros.internal.EscapeMacroHandler;
 import cc.warlock.rcp.ui.macros.internal.ReturnMacroHandler;
@@ -256,10 +254,6 @@ public class MacroRegistry {
 	
 	public void removeMacroCommand(IMacroCommand command) {
 		commands.remove(command.getIdentifier());
-	}
-	
-	public List<? extends IWarlockSetting> getSettings() {
-		return macros;
 	}
 	
 	private void loadCommands () {

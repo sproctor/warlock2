@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.osgi.service.prefs.BackingStoreException;
-import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
@@ -40,6 +39,7 @@ import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.core.configuration.IConfigurationProvider;
+import cc.warlock.core.configuration.WarlockSetting;
 
 
 /**
@@ -47,14 +47,12 @@ import cc.warlock.core.configuration.IConfigurationProvider;
  * This class includes a single default implementations for each {@link IConfigurationProvider}
  * @author marshall
  */
-public class ClientSettings implements IClientSettings {
+public class ClientSettings extends WarlockSetting implements IClientSettings {
 	
 	public static final String WINDOW_MAIN = "main";
 	
 	private IWarlockClient client;
 	protected int version;
-	private Preferences node;
-	private boolean newSettings;
 	private HashMap<String, IWarlockStyle> defaultStyles = new HashMap<String, IWarlockStyle>();
 
 	protected HighlightConfigurationProvider highlightConfigurationProvider;
@@ -70,24 +68,17 @@ public class ClientSettings implements IClientSettings {
 	private WarlockColor defaultBgColor, defaultFgColor;
 	
 	public ClientSettings (IWarlockClient client, String clientId) {
+		super(WarlockPreferences.getInstance().getNode(), "clients/" + clientId);
 		this.client = client;
-		String nodeName = "clients/" + clientId;
-		Preferences parentNode = WarlockPreferences.getInstance().getNode();
-		try {
-			newSettings = !parentNode.nodeExists(nodeName);
-		} catch(BackingStoreException e) {
-			e.printStackTrace();
-		}
-		this.node = parentNode.node(nodeName);
 		
-		highlightConfigurationProvider = new HighlightConfigurationProvider(node);
-		ignoreConfigurationProvider = new IgnoreConfigurationProvider(node);
-		triggerConfigurationProvider = new TriggerConfigurationProvider(node);
-		variableConfigurationProvider = new VariableConfigurationProvider(node);
-		macroConfigurationProvider = new MacroConfigurationProvider(node);
-		windowSettingsProvider = new WindowSettingsConfigurationProvider(node);
-		presetSettingsProvider = new PresetSettingsConfigurationProvider(node);
-		loggingSettings = new LoggingConfiguration(node);
+		highlightConfigurationProvider = new HighlightConfigurationProvider(getNode());
+		ignoreConfigurationProvider = new IgnoreConfigurationProvider(getNode());
+		triggerConfigurationProvider = new TriggerConfigurationProvider(getNode());
+		variableConfigurationProvider = new VariableConfigurationProvider(getNode());
+		macroConfigurationProvider = new MacroConfigurationProvider(getNode());
+		windowSettingsProvider = new WindowSettingsConfigurationProvider(getNode());
+		presetSettingsProvider = new PresetSettingsConfigurationProvider(getNode());
+		loggingSettings = new LoggingConfiguration(getNode());
 		
 		defaultFgColor = new WarlockColor("#F0F0FF");
 		defaultBgColor = new WarlockColor("191932");
@@ -109,10 +100,6 @@ public class ClientSettings implements IClientSettings {
 		IWarlockStyle style = new WarlockStyle();
 		style.setForegroundColor(fg == null ? defaultFgColor : new WarlockColor(fg));
 		style.setBackgroundColor(bg == null ? defaultBgColor : new WarlockColor(bg));
-	}
-	
-	protected Preferences getNode() {
-		return node;
 	}
 	
 	public Collection<IHighlightString> getHighlightStrings() {
@@ -227,10 +214,6 @@ public class ClientSettings implements IClientSettings {
 
 	public LoggingConfiguration getLoggingSettings() {
 		return loggingSettings;
-	}
-	
-	public boolean isNewSettings() {
-		return newSettings;
 	}
 
 	public void flush() {

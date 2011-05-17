@@ -24,7 +24,6 @@
  */
 package cc.warlock.rcp.views;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +73,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected static ArrayList<IGameViewFocusListener> focusListeners = new ArrayList<IGameViewFocusListener>();
 	protected static GameView gameInFocus;
 	
+	private GameViewConfiguration gameConfiguration;
 	protected PageBook popupPageBook;
 	protected Label emptyPopup;
 	protected StreamText streamText;
@@ -181,7 +181,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		popupPageBook.setVisible(false);
 		
 		streamText = new StreamText(mainComposite, IWarlockClient.DEFAULT_STREAM_NAME);
-		streamText.setLineLimit(GameViewConfiguration.instance().getBufferLines());
+		streamText.setLineLimit(gameConfiguration.getBufferLines());
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streamText.setIgnoreEmptyLines(false);
 		
@@ -203,8 +203,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	protected void initColors()
 	{
-		Color background = ColorUtil.warlockColorToColor(GameViewConfiguration.instance().getDefaultBackground());
-		Color foreground = ColorUtil.warlockColorToColor(GameViewConfiguration.instance().getDefaultForeground());
+		Color background = ColorUtil.warlockColorToColor(gameConfiguration.getDefaultBackground());
+		Color foreground = ColorUtil.warlockColorToColor(gameConfiguration.getDefaultForeground());
 		
 		entry.getWidget().setBackground(background);
 		entry.getWidget().setForeground(foreground);
@@ -403,6 +403,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		this.client = client;
 		client.setViewer(wrapper);
 		
+		gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
+		
 		streamText.getTitle().addListener(new PropertyListener<String>() {
 			public void propertyChanged(String value) {
 				setViewTitle(value);
@@ -422,5 +424,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 				return true;
 		}
 		return false;
+	}
+	
+	public GameViewConfiguration getConfiguration() {
+		return gameConfiguration;
 	}
 }

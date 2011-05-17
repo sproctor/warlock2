@@ -20,8 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package cc.warlock.rcp.ui.macros.internal.commands;
+import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.rcp.prefs.HighlightStringsPreferencePage;
 import cc.warlock.rcp.util.RCPUtil;
 
