@@ -31,11 +31,11 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.internal.ClientSetting;
 import cc.warlock.core.client.settings.macro.CommandMacroHandler;
 import cc.warlock.core.client.settings.macro.IMacroHandler;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class MacroSetting extends ClientSetting implements IMacro
+public class MacroSetting extends WarlockSetting implements IMacro
 {
 	protected int keycode;
 	protected int modifiers;

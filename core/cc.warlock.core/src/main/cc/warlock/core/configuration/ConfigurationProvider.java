@@ -19,27 +19,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings.internal;
+package cc.warlock.core.configuration;
 
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
-
-import cc.warlock.core.client.settings.IClientSettingProvider;
 
 /**
  * An implementation class for setting providers, based on our XML configuration backend.
  * @author marshall
  *
  */
-public abstract class ClientConfigurationProvider implements IClientSettingProvider {
+public abstract class ConfigurationProvider implements IConfigurationProvider {
 
 	private Preferences node;
 	
-	public ClientConfigurationProvider (Preferences parentNode, String path)
+	public ConfigurationProvider (Preferences parentNode, String path)
 	{
 		node = parentNode.node(path);
 	}
 	
 	public Preferences getNode() {
 		return node;
+	}
+	
+	public void flush() {
+		try {
+			getNode().flush();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 }

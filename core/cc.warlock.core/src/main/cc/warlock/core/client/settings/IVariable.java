@@ -21,7 +21,9 @@
  */
 package cc.warlock.core.client.settings;
 
-public interface IVariable extends IClientSetting {
+import cc.warlock.core.configuration.IWarlockSetting;
+
+public interface IVariable extends IWarlockSetting {
 
 	public String getIdentifier();
 	

@@ -23,7 +23,9 @@ package cc.warlock.core.client.settings;
 
 import java.util.Collection;
 
-public interface IWindowSettingsProvider extends IClientSettingProvider {
+import cc.warlock.core.configuration.IConfigurationProvider;
+
+public interface IWindowSettingsProvider extends IConfigurationProvider {
 
 	public Collection<? extends IWindowSettings> getWindowSettings();
 	

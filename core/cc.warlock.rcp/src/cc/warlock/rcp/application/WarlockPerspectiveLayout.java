@@ -21,59 +21,36 @@
  */
 package cc.warlock.rcp.application;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
-import cc.warlock.core.configuration.IConfigurationProvider;
+import cc.warlock.core.client.settings.internal.WarlockPreferences;
+import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class WarlockPerspectiveLayout implements IConfigurationProvider {
+public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlockSetting {
 	protected Rectangle bounds = new Rectangle(25, 25, 1024, 768);
-	protected static WarlockPerspectiveLayout _instance;
+	private static WarlockPerspectiveLayout instance = new WarlockPerspectiveLayout();
 	
-	public static WarlockPerspectiveLayout instance()
-	{
-		if (_instance == null) _instance = new WarlockPerspectiveLayout();
-		return _instance;
+	public static WarlockPerspectiveLayout instance() {
+		return instance;
 	}
 	
-	protected WarlockPerspectiveLayout() { }
-	
-	public List<Element> getTopLevelElements() {
-		Element windowLayout = DocumentHelper.createElement("window-layout");
-		windowLayout.addAttribute("x", "" + bounds.x);
-		windowLayout.addAttribute("y", "" + bounds.y);
-		windowLayout.addAttribute("width", "" + bounds.width);
-		windowLayout.addAttribute("height", "" + bounds.height);
+	protected WarlockPerspectiveLayout() {
+		super(WarlockPreferences.getInstance().getNode(), "window-layout");
 		
-		return Arrays.asList(new Element[] { windowLayout });
-	}
-
-	public void parseElement(Element element) {
-		if (element.attribute("x") != null)
-		{
-			bounds.x = Integer.parseInt(element.attributeValue("x"));
-			bounds.y = Integer.parseInt(element.attributeValue("y"));
-			bounds.width = Integer.parseInt(element.attributeValue("width"));
-			bounds.height = Integer.parseInt(element.attributeValue("height"));
-		}
-	}
-
-	public boolean supportsElement(Element element) {
-		if (element.getName().equals("window-layout"))
-		{
-			return true;
-		}
-		return false;
+		bounds.x = getNode().getInt("x", 25);
+		bounds.y = getNode().getInt("y", 25);
+		bounds.width = getNode().getInt("width", 1024);
+		bounds.height = getNode().getInt("height", 768);
 	}
 	
-	public void saveLayout ()
-	{
+	public void saveLayout() {
 		bounds = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getBounds();
+		getNode().putInt("x", bounds.x);
+		getNode().putInt("y", bounds.y);
+		getNode().putInt("width", bounds.width);
+		getNode().putInt("height", bounds.height);
 	}
 	
 	public void loadBounds ()

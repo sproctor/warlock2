@@ -28,10 +28,8 @@ import java.util.Map.Entry;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IMacro;
-import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
-import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
-import cc.warlock.core.client.settings.macro.IMacroVariable;
+import cc.warlock.core.configuration.ConfigurationProvider;
 
 /**
  * Macros defined by this provider are command-based only. 
@@ -39,7 +37,7 @@ import cc.warlock.core.client.settings.macro.IMacroVariable;
  *  
  * @author marshall
  */
-public class MacroConfigurationProvider extends ClientConfigurationProvider implements IMacroProvider {
+public class MacroConfigurationProvider extends ConfigurationProvider implements IMacroProvider {
 
 	protected HashMap<String, MacroSetting> macros = new HashMap<String, MacroSetting>();
 	

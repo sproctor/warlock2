@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Table;
 
 import cc.warlock.core.configuration.Account;
 import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.stormfront.ProfileConfiguration;
+import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.stormfront.adapters.SWTSGEConnectionListenerAdapter;
@@ -240,7 +240,7 @@ public class CharacterSelectWizardPage extends WizardPage {
 						Profile profile = new Profile(account, getSelectedCharacterCode(), getSelectedCharacterName(),
 								gameSelectPage.getSelectedGameCode(), gameSelectPage.getSelectedGameName());
 						
-						ProfileConfiguration.getProfileConfiguration().save();
+						ProfileProvider.getProfileConfiguration().save();
 						
 						// should be auto-added to the account list by ctor
 					}

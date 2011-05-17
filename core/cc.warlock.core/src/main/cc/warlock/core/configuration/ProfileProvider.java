@@ -19,32 +19,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings.internal;
+package cc.warlock.core.configuration;
 
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.settings.IClientSetting;
+import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 
-/**
- * The base implementation class for all client settings
- * @author marshall
- */
-public class ClientSetting implements IClientSetting {
 
-	private Preferences parentNode;
-	private Preferences node;
+public class ProfileProvider extends ArrayConfigurationProvider<Profile> implements IConfigurationProvider {
 	
-	public ClientSetting (Preferences parentNode, String path)
-	{
-		this.parentNode = parentNode;
-		node = parentNode.node(path);
+	private Account account;
+	
+	public ProfileProvider(Account account, Preferences parentNode) {
+		super(parentNode, "profiles");
 	}
 	
-	protected Preferences getNode() {
-		return node;
+	protected Profile loadSetting(String id) {
+		return new Profile(account, getNode(), id);
 	}
 	
-	protected void changePath(String path) {
-		node = parentNode.node(path);
+	public Profile createProfile (String id, String name, String gameCode, String gameName) {
+		Profile profile = createSetting();
+		profile.setId(id); //character id
+		profile.setName(name);
+		profile.setGameCode(gameCode);
+		profile.setGameName(gameName);
+		
+		return profile;
+	}
+	
+	public Profile getProfileByCharacterName (String characterName)
+	{	
+		for (Profile profile : getSettings())
+		{
+			if (profile.getName().equals(characterName))
+				return profile;
+		}
+		return null;
 	}
 }

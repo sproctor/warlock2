@@ -32,7 +32,6 @@ import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.logging.LoggingConfiguration;
-import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.IPatternSetting;
@@ -40,11 +39,12 @@ import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
+import cc.warlock.core.configuration.IConfigurationProvider;
 
 
 /**
  * This is the default Client Settings implementation, based on our XML Configuration backend.
- * This class includes a single default implementations for each {@link IClientSettingProvider}
+ * This class includes a single default implementations for each {@link IConfigurationProvider}
  * @author marshall
  */
 public class ClientSettings implements IClientSettings {
@@ -233,6 +233,14 @@ public class ClientSettings implements IClientSettings {
 		return newSettings;
 	}
 
+	public void flush() {
+		try {
+			getNode().flush();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public IWarlockClient getClient() {
 		return client;

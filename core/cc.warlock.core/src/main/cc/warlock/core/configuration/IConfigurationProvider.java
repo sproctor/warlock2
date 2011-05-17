@@ -21,15 +21,10 @@
  */
 package cc.warlock.core.configuration;
 
-import java.util.List;
-
-import org.dom4j.Element;
+import org.osgi.service.prefs.Preferences;
 
 public interface IConfigurationProvider {
 	
-	public boolean supportsElement (Element element);
-	
-	public void parseElement (Element element);
-	
-	public List<Element> getTopLevelElements();
+	public Preferences getNode();
+	public void flush();
 }

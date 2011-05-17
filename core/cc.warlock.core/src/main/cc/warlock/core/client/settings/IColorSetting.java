@@ -22,12 +22,13 @@
 package cc.warlock.core.client.settings;
 
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public interface IColorSetting extends IClientSetting {
+public interface IColorSetting extends IWarlockSetting {
 
 	public WarlockColor getForegroundColor();
 	public void setForegroundColor (WarlockColor foreground);

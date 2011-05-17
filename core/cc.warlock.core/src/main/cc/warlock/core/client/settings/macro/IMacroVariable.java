@@ -22,12 +22,12 @@
 package cc.warlock.core.client.settings.macro;
 
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.IClientSetting;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author Marshall
  */
-public interface IMacroVariable extends IClientSetting {
+public interface IMacroVariable extends IWarlockSetting {
 
 	public String getIdentifier();
 	

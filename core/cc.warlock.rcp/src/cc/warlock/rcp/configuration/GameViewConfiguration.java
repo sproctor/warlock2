@@ -27,12 +27,13 @@ import java.util.List;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.eclipse.jface.resource.JFaceResources;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.configuration.ConfigurationProvider;
 import cc.warlock.core.configuration.IConfigurationProvider;
-import cc.warlock.core.configuration.WarlockConfiguration;
 
-public class GameViewConfiguration implements IConfigurationProvider {
+public class GameViewConfiguration extends ConfigurationProvider implements IConfigurationProvider {
 
 	protected int bufferLines = 1000;
 	protected WarlockColor defaultBackground, defaultForeground, defaultEchoBackground, defaultEchoForeground;
@@ -40,16 +41,10 @@ public class GameViewConfiguration implements IConfigurationProvider {
 	protected int defaultFontSize;
 	protected boolean suppressPrompt;
 	
-	protected static GameViewConfiguration _instance;
-	
-	public static GameViewConfiguration instance()
+	protected GameViewConfiguration (Preferences parentNode)
 	{
-		if (_instance == null) _instance = new GameViewConfiguration();
-		return _instance;
-	}
-	
-	protected GameViewConfiguration ()
-	{
+		super(parentNode, "view");
+		
 		defaultBackground = new WarlockColor(25, 25, 50);
 		defaultForeground = new WarlockColor(240, 240, 255);
 		defaultFontFace = JFaceResources.getDefaultFont().getFontData()[0].getName();
@@ -60,7 +55,7 @@ public class GameViewConfiguration implements IConfigurationProvider {
 		
 		suppressPrompt = false;
 		
-		WarlockConfiguration.getMainConfiguration().addConfigurationProvider(this);
+		// WarlockConfiguration.getMainConfiguration().addConfigurationProvider(this);
 	}
 	
 	public List<Element> getTopLevelElements() {

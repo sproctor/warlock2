@@ -25,12 +25,13 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.configuration.WarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public class StyleSetting extends ClientSetting implements IWarlockStyle {
+public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 
 	private WarlockColor fgColor;
 	private WarlockColor bgColor;

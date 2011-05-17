@@ -40,11 +40,10 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.osgi.service.prefs.Preferences;
 
-public class Account {
+public class Account extends WarlockSetting {
 
-	protected Account originalAccount;
-	protected boolean needsUpdate;
 	protected String accountName, password;
 	protected ArrayList<Profile> profiles = new ArrayList<Profile>();
 	
@@ -149,25 +148,11 @@ public class Account {
 		}
 	}
 	
-	public Account () { }
-	public Account (String name, String password)
-	{
-		this.accountName = name;
-		this.password = password;
-	}
-	
-	public Account (Account other)
-	{
-		this.accountName = other.accountName == null ? null : new String(other.accountName);
-		this.password = other.password == null ? null : new String(other.password);
-				
-		this.originalAccount = other;
-		this.needsUpdate = false;
+	public Account (Preferences parentNode, String path) {
+		super(parentNode, path);
 		
-		for (Profile profile : other.getProfiles())
-		{
-			new Profile(this, profile);
-		}
+		this.accountName = getNode().get("account-name", null);
+		this.password = decryptPassword(getNode().get("password", null));
 	}
 	
 	public String getAccountName() {
@@ -175,8 +160,7 @@ public class Account {
 	}
 
 	public void setAccountName(String accountName) {
-		if (!this.accountName.equals(accountName))
-			needsUpdate = true;
+		getNode().put("account-name", accountName);
 		
 		this.accountName = accountName;
 	}
@@ -186,8 +170,7 @@ public class Account {
 	}
 
 	public void setPassword(String password) {
-		if (!this.password.equals(password))
-			needsUpdate = true;
+		getNode().put("password", encryptPassword(password));
 		
 		this.password = password;
 	}
@@ -209,13 +192,5 @@ public class Account {
 
 	public ArrayList<Profile> getProfiles() {
 		return profiles;
-	}
-
-	public Account getOriginalAccount() {
-		return originalAccount;
-	}
-	
-	public boolean needsUpdate () {
-		return needsUpdate;
 	}
 }

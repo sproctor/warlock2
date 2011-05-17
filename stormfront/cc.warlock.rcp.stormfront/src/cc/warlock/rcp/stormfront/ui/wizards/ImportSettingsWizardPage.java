@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.stormfront.ProfileConfiguration;
+import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.wizards.WizardPageWithNotification;
 
@@ -160,7 +160,7 @@ class ImportSettingsWizardPage extends WizardPageWithNotification
 			}
 		});
 		
-		profileTable.setInput(ProfileConfiguration.instance().getAllProfiles());
+		profileTable.setInput(ProfileProvider.instance().getAllProfiles());
 		profileTable.getTable().setEnabled(false);
 		profileTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}

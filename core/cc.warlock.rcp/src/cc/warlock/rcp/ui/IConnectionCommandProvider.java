@@ -21,9 +21,9 @@
  */
 package cc.warlock.rcp.ui;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface IConnectionCommandProvider {
 
-	public List<IConnectionCommand> getConnectionCommands();
+	public Collection<IConnectionCommand> getConnectionCommands();
 }

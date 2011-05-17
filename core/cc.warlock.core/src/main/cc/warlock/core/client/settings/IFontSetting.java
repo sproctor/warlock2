@@ -23,12 +23,13 @@ package cc.warlock.core.client.settings;
 
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public interface IFontSetting extends IClientSetting {
+public interface IFontSetting extends IWarlockSetting {
 
 	public WarlockColor getForegroundColor();
 	public void setForegroundColor (WarlockColor foreground);

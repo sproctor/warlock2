@@ -50,15 +50,15 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.core.configuration.Account;
+import cc.warlock.core.configuration.AccountProvider;
 import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.stormfront.ProfileConfiguration;
+import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class AccountsPreferencePage extends PropertyPage implements
 		IWorkbenchPropertyPage {
 
 	public static final String PAGE_ID = "cc.warlock.rcp.stormfront.ui.prefs.accountsAndProfiles";
-	protected ArrayList<Account> accounts = new ArrayList<Account>();
 	protected ArrayList<Account> addedAccounts = new ArrayList<Account>();
 	protected ArrayList<Account> removedAccounts = new ArrayList<Account>();
 	protected HashMap<Account, ArrayList<Profile>> addedProfiles = new HashMap<Account, ArrayList<Profile>>();
@@ -69,11 +69,13 @@ public class AccountsPreferencePage extends PropertyPage implements
 	
 	public AccountsPreferencePage ()
 	{
-		for (Account account : ProfileConfiguration.instance().getAllAccounts())
+		/* FIXME
+		for (Account account : ProfileProvider.instance().getAllAccounts())
 		{
 			Account copy = new Account(account);
 			accounts.add(copy);
 		}
+		*/
 	}
 	
 	@Override
@@ -247,7 +249,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 
 	protected void updateData ()
 	{
-		accountViewer.setInput(accounts);
+		accountViewer.setInput(AccountProvider.getInstance().getSettings());
 		accountViewer.expandAll();
 	}
 	
@@ -311,7 +313,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 		{
 			accountViewer.remove(currentAccount);
 			removedAccounts.add(currentAccount);
-			accounts.remove(currentAccount);
+			AccountProvider.getInstance().removeSetting(currentAccount);
+			//accounts.remove(currentAccount);
 		}
 	}
 
@@ -323,7 +326,10 @@ public class AccountsPreferencePage extends PropertyPage implements
 			String username = dialog.getUsername();
 			String password = dialog.getPassword();
 			
-			Account account = new Account(username, password);
+			Account account = AccountProvider.getInstance().createSetting();
+			account.setAccountName(username);
+			account.setPassword(password);
+			//	new Account(username, password);
 			accountViewer.add(account, new Object[0]);
 			addedAccounts.add(account);
 		}
@@ -331,25 +337,33 @@ public class AccountsPreferencePage extends PropertyPage implements
 
 	@Override
 	public boolean performOk() {
+		/* FIXME
 		for (Account account : accounts)
 		{
 			if (account.needsUpdate())
 			{
-				ProfileConfiguration.instance().removeAccount(account.getOriginalAccount());
-				ProfileConfiguration.instance().addAccount(account);
+				ProfileProvider.instance().removeAccount(account.getOriginalAccount());
+				ProfileProvider.instance().addAccount(account);
 			}
 		}
+		*/
 		
+		/*
 		for (Account account : removedAccounts)
 		{
-			ProfileConfiguration.instance().removeAccount(account.getOriginalAccount());
+			
+			ProfileProvider.instance().removeAccount(account.getOriginalAccount());
 		}
+		*/
 		
+		/*
 		for (Account account : addedAccounts)
 		{
-			ProfileConfiguration.instance().addAccount(account);
+			ProfileProvider.instance().addAccount(account);
 		}
+		*/
 		
+		AccountProvider.getInstance().flush();
 		return true;
 	}
 	

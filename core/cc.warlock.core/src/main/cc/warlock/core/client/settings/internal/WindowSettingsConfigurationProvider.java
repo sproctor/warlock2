@@ -28,8 +28,9 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.IWindowSettingsProvider;
+import cc.warlock.core.configuration.ConfigurationProvider;
 
-public class WindowSettingsConfigurationProvider extends ClientConfigurationProvider implements IWindowSettingsProvider {
+public class WindowSettingsConfigurationProvider extends ConfigurationProvider implements IWindowSettingsProvider {
 
 	protected HashMap<String, IWindowSettings> windowSettings = new HashMap<String, IWindowSettings>();
 	

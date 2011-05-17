@@ -6,9 +6,10 @@ import java.util.Map.Entry;
 
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.settings.IArraySettingProvider;
+import cc.warlock.core.configuration.ConfigurationProvider;
+import cc.warlock.core.configuration.IArraySettingProvider;
 
-public abstract class ArrayConfigurationProvider<T> extends ClientConfigurationProvider implements IArraySettingProvider<T> {
+public abstract class ArrayConfigurationProvider<T> extends ConfigurationProvider implements IArraySettingProvider<T> {
 	protected HashMap<String, T> settings = new HashMap<String, T>();
 	private int nextId = 0;
 	

@@ -24,11 +24,11 @@ package cc.warlock.core.client.settings.macro;
 import java.util.Collection;
 
 import cc.warlock.core.client.IMacro;
-import cc.warlock.core.client.settings.IClientSettingProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
+import cc.warlock.core.configuration.IConfigurationProvider;
 
 
-public interface IMacroProvider extends IClientSettingProvider {
+public interface IMacroProvider extends IConfigurationProvider {
 	public Collection<MacroSetting> getMacros();
 	
 	public MacroSetting getMacro (int keycode, int modifiers);

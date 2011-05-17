@@ -25,12 +25,12 @@ import java.io.File;
 
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.settings.IClientSettingProvider;
-import cc.warlock.core.client.settings.internal.ClientConfigurationProvider;
+import cc.warlock.core.configuration.ConfigurationProvider;
 import cc.warlock.core.configuration.ConfigurationUtil;
+import cc.warlock.core.configuration.IConfigurationProvider;
 
 
-public class LoggingConfiguration extends ClientConfigurationProvider implements IClientSettingProvider {
+public class LoggingConfiguration extends ConfigurationProvider implements IConfigurationProvider {
 
 	public static final String LOG_FORMAT_TEXT = "text";
 	public static final String LOG_FORMAT_HTML = "html";

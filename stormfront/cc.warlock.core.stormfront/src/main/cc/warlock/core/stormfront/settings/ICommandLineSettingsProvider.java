@@ -21,12 +21,12 @@
  */
 package cc.warlock.core.stormfront.settings;
 
-import cc.warlock.core.client.settings.IClientSettingProvider;
+import cc.warlock.core.configuration.IConfigurationProvider;
 
 /**
  * @author marshall
  *
  */
-public interface ICommandLineSettingsProvider extends IClientSettingProvider {
+public interface ICommandLineSettingsProvider extends IConfigurationProvider {
 	public ICommandLineSettings getCommandLineSettings(); 
 }

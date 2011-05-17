@@ -23,7 +23,9 @@ package cc.warlock.core.client.settings;
 
 import java.util.regex.Pattern;
 
-public interface IPatternSetting extends IClientSetting {
+import cc.warlock.core.configuration.IWarlockSetting;
+
+public interface IPatternSetting extends IWarlockSetting {
 
 	public Pattern getPattern();
 	public boolean matches(String text);

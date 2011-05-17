@@ -501,6 +501,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	@Override
 	public boolean performOk() {
+		
 		/*for (MacroSetting macro : macros) {
 			if (macro.needsUpdate() && !addedMacros.contains(macro)) {
 				IMacroProvider provider = (IMacroProvider) macro.getProvider();
@@ -516,6 +517,8 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		for (MacroSetting macro : addedMacros) {
 			settings.getMacroConfigurationProvider().addMacro(macro);
 		}*/
+		
+		settings.flush();
 		
 		return true;
 	}

@@ -28,8 +28,9 @@ import java.util.regex.PatternSyntaxException;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IPatternSetting;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class PatternSetting extends ClientSetting implements IPatternSetting {
+public class PatternSetting extends WarlockSetting implements IPatternSetting {
 
 	protected Pattern pattern;
 	

@@ -19,13 +19,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings;
+package cc.warlock.core.configuration;
+
+import org.osgi.service.prefs.Preferences;
 
 
 /**
- * A tagging interface that describes a basic client setting provider
- * 
+ * The base implementation class for all client settings
  * @author marshall
  */
-public interface IClientSettingProvider {
+public class WarlockSetting implements IWarlockSetting {
+
+	private Preferences parentNode;
+	private Preferences node;
+	
+	public WarlockSetting (Preferences parentNode, String path)
+	{
+		this.parentNode = parentNode;
+		node = parentNode.node(path);
+	}
+	
+	protected Preferences getNode() {
+		return node;
+	}
+	
+	protected void changePath(String path) {
+		node = parentNode.node(path);
+	}
 }

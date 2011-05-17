@@ -34,7 +34,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 
-import cc.warlock.core.configuration.WarlockConfiguration;
+import cc.warlock.core.client.settings.internal.WarlockPreferences;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
@@ -90,7 +90,7 @@ public class WarlockApplication implements IApplication, IAdaptable {
 		int ret = PlatformUI.createAndRunWorkbench(display, advisor);
 		
 		//save configuration
-		WarlockConfiguration.saveAll();
+		WarlockPreferences.getInstance().flush();
 		
 		if (ret == PlatformUI.RETURN_RESTART)
 			return EXIT_RESTART;

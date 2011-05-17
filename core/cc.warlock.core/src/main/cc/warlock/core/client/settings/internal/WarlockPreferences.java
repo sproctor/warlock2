@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 public class WarlockPreferences {
@@ -12,7 +13,9 @@ public class WarlockPreferences {
 	private ConfigurationScope scope = new ConfigurationScope();
 	private IEclipsePreferences topLevel = scope.getNode("cc.warlock");
 	
-	protected WarlockPreferences() { }
+	protected WarlockPreferences() {
+		System.out.print(scope.getLocation().toString());
+	}
 	
 	public static WarlockPreferences getInstance() {
 		return instance;
@@ -32,5 +35,13 @@ public class WarlockPreferences {
 	
 	public void addPreferenceChangeListener(String path, IPreferenceChangeListener listener) {
 		getScope().getNode(path).addPreferenceChangeListener(listener);
+	}
+	
+	public void flush() {
+		try {
+			topLevel.flush();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 }

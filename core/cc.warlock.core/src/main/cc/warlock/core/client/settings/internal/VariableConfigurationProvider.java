@@ -28,8 +28,9 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
+import cc.warlock.core.configuration.ConfigurationProvider;
 
-public class VariableConfigurationProvider extends ClientConfigurationProvider implements IVariableProvider {
+public class VariableConfigurationProvider extends ConfigurationProvider implements IVariableProvider {
 
 	protected HashMap<String, IVariable> variables = new HashMap<String, IVariable>();
 	

@@ -24,8 +24,9 @@ package cc.warlock.core.client.settings.internal;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.IVariable;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class Variable extends ClientSetting implements IVariable {
+public class Variable extends WarlockSetting implements IVariable {
 
 	protected String identifier, value;
 	

@@ -24,44 +24,24 @@
  */
 package cc.warlock.core.configuration;
 
+import org.osgi.service.prefs.Preferences;
+
 /**
  * @author Marshall
  */
-public class Profile {
+public class Profile extends WarlockSetting {
 
 	protected String id, name, gameCode, gameName;
-	protected Account account;
+	private Account account;
 	
-	public Profile () { }
-	public Profile (Account account, String id, String name, String gameCode, String gameName)
-	{
-		this(id, name, gameCode, gameName);
+	public Profile (Account account, Preferences parentNode, String path) {
+		super(parentNode, path);
 		
+		this.id = getNode().get("id", null);
+		this.name = getNode().get("name", null);
+		this.gameCode = getNode().get("game-code", null);
+		this.gameName = getNode().get("game-name", null);
 		this.account = account;
-		if (account != null && !account.getProfiles().contains(this)) {
-			account.getProfiles().add(this);
-		}
-	}
-	
-	public Profile (String id, String name, String gameCode, String gameName)
-	{
-		this.id = id;
-		this.name = name;
-		this.gameCode = gameCode;
-		this.gameName = gameName;
-	}
-	
-	public Profile (Account account, Profile other)
-	{
-		this.id = other.id == null ? null : new String(other.id);
-		this.name = other.name== null ? null : new String(other.name);
-		this.gameCode = other.gameCode == null ? null : new String(other.gameCode);
-		this.gameName = other.gameName == null ? null : new String(other.gameName);
-		
-		this.account = account;
-		if (account != null && !account.getProfiles().contains(this)) {
-			account.getProfiles().add(this);
-		}
 	}
 	
 	/**
@@ -74,6 +54,7 @@ public class Profile {
 	 * @param gameCode The gameCode to set.
 	 */
 	public void setGameCode(String gameCode) {
+		getNode().put("game-code", gameCode);
 		this.gameCode = gameCode;
 	}
 	/**
@@ -86,24 +67,29 @@ public class Profile {
 	 * @param gameName The gameName to set.
 	 */
 	public void setGameName(String gameName) {
+		getNode().put("game-name", gameName);
 		this.gameName = gameName;
 	}
-	public Account getAccount() {
-		return account;
-	}
-	public void setAccount(Account account) {
-		this.account = account;
-	}
+	
 	public String getId() {
 		return id;
 	}
+	
 	public void setId(String id) {
+		getNode().put("id", id);
 		this.id = id;
 	}
+	
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
+		getNode().put("name", name);
 		this.name = name;
+	}
+	
+	public Account getAccount() {
+		return account;
 	}
 }

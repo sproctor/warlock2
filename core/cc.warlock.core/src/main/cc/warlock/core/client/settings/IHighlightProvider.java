@@ -21,6 +21,8 @@
  */
 package cc.warlock.core.client.settings;
 
+import cc.warlock.core.configuration.IArraySettingProvider;
+
 
 public interface IHighlightProvider extends IArraySettingProvider<IHighlightString> {
 	//public Collection<? extends IHighlightString> getHighlightStrings();

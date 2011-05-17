@@ -23,7 +23,9 @@ package cc.warlock.core.client.settings;
 
 import java.util.Collection;
 
-public interface IVariableProvider extends IClientSettingProvider {
+import cc.warlock.core.configuration.IConfigurationProvider;
+
+public interface IVariableProvider extends IConfigurationProvider {
 
 	public Collection<IVariable> getVariables();
 	

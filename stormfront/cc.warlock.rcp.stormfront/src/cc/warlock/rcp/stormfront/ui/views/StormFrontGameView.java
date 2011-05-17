@@ -58,7 +58,7 @@ import cc.warlock.core.client.internal.WarlockClientListener;
 import cc.warlock.core.client.settings.macro.IMacroCommand;
 import cc.warlock.core.client.settings.macro.IMacroVariable;
 import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.stormfront.ProfileConfiguration;
+import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
@@ -114,7 +114,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 		String characterName = StormFrontGameViewConfiguration.instance().getProfileId(fullId);
 		
-		final Profile profile = ProfileConfiguration.instance().getProfileByCharacterName(characterName);
+		final Profile profile = ProfileProvider.instance().getProfileByCharacterName(characterName);
 		createReconnectPopup();
 		
 		if (profile != null) {
@@ -219,7 +219,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			}
 		});
 		
-		for (final Profile profile : ProfileConfiguration.instance().getAllProfiles())
+		for (final Profile profile : ProfileProvider.instance().getAllProfiles())
 		{
 			MenuItem item = new MenuItem (menu, SWT.PUSH);
 			item.setText(profile.getName());
@@ -361,7 +361,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 				
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						Profile profile = ProfileConfiguration.instance()
+						Profile profile = ProfileProvider.instance()
 								.getProfileByCharacterName(sfClient.getCharacterName().get());
 						if (profile != null) {
 							setReconnectProfile(profile);

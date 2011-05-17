@@ -26,12 +26,13 @@ import org.osgi.service.prefs.Preferences;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IFontSetting;
+import cc.warlock.core.configuration.WarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public abstract class ColorFontSetting extends ClientSetting implements IFontSetting {
+public abstract class ColorFontSetting extends WarlockSetting implements IFontSetting {
 
 	protected WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	protected WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);

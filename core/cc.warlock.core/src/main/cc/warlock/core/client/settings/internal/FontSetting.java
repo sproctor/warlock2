@@ -25,12 +25,13 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.internal.WarlockFont;
+import cc.warlock.core.configuration.WarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public class FontSetting extends ClientSetting implements IWarlockFont {
+public class FontSetting extends WarlockSetting implements IWarlockFont {
 
 	private String familyName;
 	private int size;
