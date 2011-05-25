@@ -1,4 +1,4 @@
-package cc.warlock.core.client.settings.internal;
+package cc.warlock.core.configuration;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;

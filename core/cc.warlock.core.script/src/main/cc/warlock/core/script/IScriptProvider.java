@@ -21,13 +21,13 @@
  */
 package cc.warlock.core.script;
 
-import java.util.List;
+import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockClientViewer;
 
 public interface IScriptProvider {
 
-	public List<IScriptInfo> getScriptInfos();
+	public Collection<IScriptInfo> getScriptInfos();
 	
 	public IScript startScript (IScriptInfo scriptInfo, IWarlockClientViewer viewer, String[] arguments);
 	

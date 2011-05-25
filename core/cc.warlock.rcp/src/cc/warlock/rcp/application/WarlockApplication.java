@@ -34,7 +34,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 
-import cc.warlock.core.client.settings.internal.WarlockPreferences;
+import cc.warlock.core.configuration.WarlockPreferences;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;

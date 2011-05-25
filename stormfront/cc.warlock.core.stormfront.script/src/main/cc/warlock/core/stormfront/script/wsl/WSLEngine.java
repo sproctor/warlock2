@@ -24,7 +24,6 @@ package cc.warlock.core.stormfront.script.wsl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.script.IScript;
@@ -32,8 +31,6 @@ import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptFileInfo;
 import cc.warlock.core.script.IScriptInfo;
 import cc.warlock.core.script.IScriptListener;
-import cc.warlock.core.script.configuration.ScriptConfiguration;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 
 
 public class WSLEngine implements IScriptEngine, IScriptListener {
@@ -41,16 +38,12 @@ public class WSLEngine implements IScriptEngine, IScriptListener {
 	public static final String ENGINE_ID = "cc.warlock.script.wsl.WSLEngine";
 	protected ArrayList<IScript> runningScripts = new ArrayList<IScript>();
 	protected ArrayList<IWSLCommandDefinitionProvider> commandProviders = new ArrayList<IWSLCommandDefinitionProvider>();
+	private ArrayList<String> supportedExtensions = new ArrayList<String>();
 	
-	public WSLEngine ()
-	{
-		List<String> fileExtensions = ScriptConfiguration.instance().getEngineExtensions(ENGINE_ID);
-		if (fileExtensions.size() == 0)
-		{
-			ScriptConfiguration.instance().addEngineExtension(ENGINE_ID, "wiz");
-			ScriptConfiguration.instance().addEngineExtension(ENGINE_ID, "cmd");
-			ScriptConfiguration.instance().addEngineExtension(ENGINE_ID, "wsl");
-		}
+	public WSLEngine () {
+		supportedExtensions.add("wiz");
+		supportedExtensions.add("cmd");
+		supportedExtensions.add("wsl");
 	}
 	
 	public void addCommandProvider (IWSLCommandDefinitionProvider provider)
@@ -68,19 +61,15 @@ public class WSLEngine implements IScriptEngine, IScriptListener {
 	}
 	
 	public String getScriptEngineName() {
-		return "Standard Wizard Scripting Language Engine (c) 2002-2007 Warlock Team";
+		return "Standard Wizard Scripting Language Engine (c) Warlock Team";
 	}
 	
 	public boolean supports(IScriptInfo scriptInfo) {
-		if (scriptInfo instanceof IScriptFileInfo)
-		{
+		if (scriptInfo instanceof IScriptFileInfo) {
 			IScriptFileInfo info = (IScriptFileInfo) scriptInfo;
-			if (info.getExtension() != null)
-			{
-				List<String> extensions = ScriptConfiguration.instance().getEngineExtensions(ENGINE_ID);
-				if (extensions.contains(info.getExtension().toLowerCase())) {
+			if (info.getExtension() != null
+					&& supportedExtensions.contains(info.getExtension().toLowerCase())) {
 					return true;
-				}
 			}
 		}
 		
@@ -107,5 +96,9 @@ public class WSLEngine implements IScriptEngine, IScriptListener {
 	
 	public Collection<? extends IScript> getRunningScripts() {
 		return runningScripts;
+	}
+	
+	public Collection<String> getSupportedExtensions() {
+		return supportedExtensions;
 	}
 }

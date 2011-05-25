@@ -30,7 +30,6 @@ package cc.warlock.core.script.javascript;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
@@ -48,7 +47,6 @@ import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptFileInfo;
 import cc.warlock.core.script.IScriptInfo;
 import cc.warlock.core.script.ScriptCommandsFactory;
-import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.javascript.JavascriptScript.StopException;
 
 
@@ -65,6 +63,8 @@ public class JavascriptEngine implements IScriptEngine {
 	protected ArrayList<JavascriptScript> runningScripts = new ArrayList<JavascriptScript>();
 	
 	public Scriptable scope;
+	
+	private ArrayList<String> supportedExtensions = new ArrayList<String>();
 	
 	private class WarlockContextFactory extends ContextFactory {
 		
@@ -105,6 +105,7 @@ public class JavascriptEngine implements IScriptEngine {
 	}
 	
 	public JavascriptEngine() {
+		supportedExtensions.add("js");
 		ContextFactory.initGlobal(new WarlockContextFactory());
 	}
 	
@@ -131,12 +132,8 @@ public class JavascriptEngine implements IScriptEngine {
 		if (scriptInfo instanceof IScriptFileInfo)
 		{
 			IScriptFileInfo info = (IScriptFileInfo) scriptInfo;
-			if (info.getExtension() != null)
-			{
-				List<String> extensions = ScriptConfiguration.instance().getEngineExtensions(ENGINE_ID);
-				if (extensions != null && extensions.contains(info.getExtension().toLowerCase())) {
+			if (info.getExtension() != null && supportedExtensions.contains(info.getExtension().toLowerCase())) {
 					return true;
-				}
 			}
 		}
 		
@@ -238,5 +235,9 @@ public class JavascriptEngine implements IScriptEngine {
 	
 	public Collection<? extends IScript> getRunningScripts() {
 		return runningScripts;
+	}
+	
+	public Collection<String> getSupportedExtensions() {
+		return supportedExtensions;
 	}
 }

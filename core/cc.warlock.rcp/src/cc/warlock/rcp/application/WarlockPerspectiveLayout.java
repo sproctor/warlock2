@@ -24,8 +24,8 @@ package cc.warlock.rcp.application;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
-import cc.warlock.core.client.settings.internal.WarlockPreferences;
 import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlockSetting {

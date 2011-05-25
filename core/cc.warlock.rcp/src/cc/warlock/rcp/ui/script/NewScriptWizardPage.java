@@ -92,7 +92,7 @@ public class NewScriptWizardPage extends WizardPage {
 		selected = false;
 		for (IScriptEngine engine : ScriptEngineRegistry.getScriptEngines())
 		{
-			for (String extension : ScriptConfiguration.instance().getEngineExtensions(engine.getScriptEngineId()))
+			for (String extension : engine.getSupportedExtensions())
 			{
 				scriptExtCombo.getCombo().add("."+extension);
 				if (!selected) {

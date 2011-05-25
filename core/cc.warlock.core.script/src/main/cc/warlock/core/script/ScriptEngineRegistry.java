@@ -24,7 +24,6 @@ package cc.warlock.core.script;
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.script.internal.FilesystemScriptProvider;
 

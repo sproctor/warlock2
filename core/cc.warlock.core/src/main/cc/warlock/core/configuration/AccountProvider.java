@@ -1,7 +1,6 @@
 package cc.warlock.core.configuration;
 
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
-import cc.warlock.core.client.settings.internal.WarlockPreferences;
 
 public class AccountProvider extends ArrayConfigurationProvider<Account> {
 	private static AccountProvider instance = new AccountProvider();
