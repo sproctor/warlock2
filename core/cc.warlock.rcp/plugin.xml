@@ -283,9 +283,14 @@
             id="cc.warlock.rcp.warlockPrefs"
             name="Warlock Preferences">
          <enabledWhen>
-            <adapt
-                  type="cc.warlock.core.client.IWarlockClient">
-            </adapt>
+            <and>
+               <adapt
+                     type="cc.warlock.core.client.IWarlockClient">
+               </adapt>
+               <test
+                     property="cc.warlock.rcp.clientConnected">
+               </test>
+            </and>
          </enabledWhen>
       </page>
       <page

@@ -97,9 +97,14 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 	}
 	
 	private void setDefaultStyle(String name, String fg, String bg) {
-		IWarlockStyle style = new WarlockStyle();
+		IWarlockStyle style = new WarlockStyle(name);
 		style.setForegroundColor(fg == null ? defaultFgColor : new WarlockColor(fg));
 		style.setBackgroundColor(bg == null ? defaultBgColor : new WarlockColor(bg));
+		defaultStyles.put(name, style);
+	}
+	
+	public IWarlockStyle getDefaultStyle(String name) {
+		return defaultStyles.get(name);
 	}
 	
 	public Collection<IHighlightString> getHighlightStrings() {

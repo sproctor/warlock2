@@ -164,14 +164,17 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	protected Color getWorkingBackgroundColor (IWarlockStyle style)
 	{
-		WarlockColor color = style.getBackgroundColor();
-		if (color.isDefault())
-		{
-			if (style.getName() != null) {
-				color = settings.getNamedStyle(style.getName()).getBackgroundColor();
+		WarlockColor color = null;
+		if(style != null) {
+			color = style.getBackgroundColor();
+			if (color == null || color.isDefault())
+			{
+				if (style.getName() != null) {
+					color = settings.getNamedStyle(style.getName()).getBackgroundColor();
+				}
 			}
 		}
-		if (color.isDefault()) {
+		if (color == null || color.isDefault()) {
 			color = ColorUtil.rgbToWarlockColor(mainBGSelector.getColorValue());
 		}
 		
@@ -180,14 +183,17 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	protected Color getWorkingForegroundColor (IWarlockStyle style)
 	{
-		WarlockColor color = style.getForegroundColor();
-		if (color.isDefault())
-		{
-			if (style.getName() != null) {
-				color = settings.getNamedStyle(style.getName()).getForegroundColor();
+		WarlockColor color = null;
+		if(style != null) {
+			color = style.getForegroundColor();
+			if (color.isDefault())
+			{
+				if (style.getName() != null) {
+					color = settings.getNamedStyle(style.getName()).getForegroundColor();
+				}
 			}
 		}
-		if (color.isDefault()) {
+		if (color == null || color.isDefault()) {
 			color = ColorUtil.rgbToWarlockColor(mainFGSelector.getColorValue());
 		}
 		
@@ -477,8 +483,11 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	private void updatePresetColors (String presetName, StyleRange styleRange)
 	{
-		styleRange.background = getWorkingBackgroundColor(styles.get(presetName));
-		styleRange.foreground = getWorkingForegroundColor(styles.get(presetName));
+		WarlockStyle style = styles.get(presetName);
+		if(style == null)
+			style = new WarlockStyle(presetName);
+		styleRange.background = getWorkingBackgroundColor(style);
+		styleRange.foreground = getWorkingForegroundColor(style);
 	}
 	
 	private void updatePreview ()

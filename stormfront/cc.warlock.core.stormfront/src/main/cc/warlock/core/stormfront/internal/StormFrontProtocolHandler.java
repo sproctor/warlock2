@@ -411,7 +411,8 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	public void startBold() {
 		if (boldStyle == null) {
 			boldStyle = this.getClient().getClientSettings().getNamedStyle("bold");
-			this.addStyle(boldStyle);
+			if(boldStyle != null)
+				this.addStyle(boldStyle);
 		}
 	}
 	
