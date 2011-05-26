@@ -29,7 +29,7 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
-import cc.warlock.core.configuration.ConfigurationProvider;
+import cc.warlock.core.configuration.WarlockSetting;
 
 /**
  * Macros defined by this provider are command-based only. 
@@ -37,7 +37,7 @@ import cc.warlock.core.configuration.ConfigurationProvider;
  *  
  * @author marshall
  */
-public class MacroConfigurationProvider extends ConfigurationProvider implements IMacroProvider {
+public class MacroConfigurationProvider extends WarlockSetting implements IMacroProvider {
 
 	protected HashMap<String, MacroSetting> macros = new HashMap<String, MacroSetting>();
 	

@@ -25,10 +25,10 @@ import java.util.Collection;
 
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
-import cc.warlock.core.configuration.IConfigurationProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 
-public interface IMacroProvider extends IConfigurationProvider {
+public interface IMacroProvider extends IWarlockSetting {
 	public Collection<MacroSetting> getMacros();
 	
 	public MacroSetting getMacro (int keycode, int modifiers);

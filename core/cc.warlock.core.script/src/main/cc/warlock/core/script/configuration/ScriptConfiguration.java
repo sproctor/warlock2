@@ -29,12 +29,11 @@ import java.util.TreeSet;
 
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.internal.Property;
-import cc.warlock.core.configuration.ConfigurationProvider;
 import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.configuration.IConfigurationProvider;
 import cc.warlock.core.configuration.WarlockPreferences;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class ScriptConfiguration extends ConfigurationProvider implements IConfigurationProvider {
+public class ScriptConfiguration extends WarlockSetting {
 
 	protected TreeSet<File> scriptDirectories = new TreeSet<File>();
 	protected Property<Boolean> suppressExceptions;

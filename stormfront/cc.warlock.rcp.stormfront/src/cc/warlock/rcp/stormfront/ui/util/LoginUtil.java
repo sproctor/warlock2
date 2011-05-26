@@ -89,7 +89,7 @@ public class LoginUtil {
 		}
 	}
 	
-	public static void connectAndOpenGameView (Map<String,String> loginProperties, String characterName)
+	public static GameView connectAndOpenGameView (Map<String,String> loginProperties, String characterName)
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (!page.getPerspective().getId().equals(StormFrontPerspectiveFactory.PERSPECTIVE_ID))
@@ -116,10 +116,13 @@ public class LoginUtil {
 			
 			GameView.initializeGameView(firstEmptyView);
 			connect(firstEmptyView, loginProperties);
+			return firstEmptyView;
 		}
 		else 
 		{
-			connect((StormFrontGameView) StormFrontGameView.createNext(StormFrontGameView.VIEW_ID, characterName), loginProperties);
+			StormFrontGameView gameView = (StormFrontGameView) StormFrontGameView.createNext(StormFrontGameView.VIEW_ID, characterName);
+			connect(gameView, loginProperties);
+			return gameView;
 		}
 	}
 	

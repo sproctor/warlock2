@@ -173,7 +173,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 			
 			public Object getParent(Object element) {
 				if (element instanceof Profile) {
-					return ((Profile)element).getAccount();
+					return AccountProvider.getInstance().getAccountByProfile((Profile)element);
 				}
 				return null;
 			}
@@ -269,7 +269,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 		removeProfile.setEnabled(true);
 		
 		currentProfile = profile;
-		currentAccount = currentProfile.getAccount();
+		currentAccount = AccountProvider.getInstance().getAccountByProfile(profile);
 	}
 	
 	protected void removeProfileClicked() {

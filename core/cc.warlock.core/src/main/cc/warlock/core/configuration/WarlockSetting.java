@@ -57,4 +57,12 @@ public class WarlockSetting implements IWarlockSetting {
 	public boolean isNewSetting() {
 		return newSetting;
 	}
+	
+	public void flush() {
+		try {
+			getNode().flush();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
 }

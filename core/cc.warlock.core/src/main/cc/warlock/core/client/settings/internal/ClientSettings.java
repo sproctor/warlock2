@@ -38,7 +38,6 @@ import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
-import cc.warlock.core.configuration.IConfigurationProvider;
 import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.configuration.WarlockSetting;
 

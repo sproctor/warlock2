@@ -29,17 +29,14 @@ import org.osgi.service.prefs.Preferences;
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 
 
-public class ProfileProvider extends ArrayConfigurationProvider<Profile> implements IConfigurationProvider {
+public class ProfileProvider extends ArrayConfigurationProvider<Profile> implements IWarlockSetting {
 	
-	private Account account;
-	
-	public ProfileProvider(Preferences parentNode, Account account) {
+	public ProfileProvider(Preferences parentNode) {
 		super(parentNode, "profiles");
-		this.account = account;
 	}
 	
 	protected Profile loadSetting(String id) {
-		return new Profile(account, getNode(), id);
+		return new Profile(getNode(), id);
 	}
 	
 	public Profile createProfile (String id, String name, String gameCode, String gameName) {
@@ -49,6 +46,7 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 		profile.setGameCode(gameCode);
 		profile.setGameName(gameName);
 		
+		flush();
 		return profile;
 	}
 	

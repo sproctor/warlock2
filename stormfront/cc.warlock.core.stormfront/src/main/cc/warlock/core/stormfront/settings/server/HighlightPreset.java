@@ -24,7 +24,6 @@ package cc.warlock.core.stormfront.settings.server;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import cc.warlock.core.configuration.IConfigurationProvider;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
 @Deprecated
@@ -264,10 +263,6 @@ public class HighlightPreset extends Preset /* implements IHighlightString */ {
 	
 	public String getFullWordPattern() {
 		return pattern.pattern();
-	}
-	
-	public IConfigurationProvider getProvider() {
-		return null;
 	}
 	
 	public String getSound(){

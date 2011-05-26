@@ -32,9 +32,8 @@ import org.osgi.service.prefs.Preferences;
 public class Profile extends WarlockSetting {
 
 	protected String characterId, name, gameCode, gameName, viewId;
-	private Account account;
 	
-	public Profile (Account account, Preferences parentNode, String path) {
+	public Profile (Preferences parentNode, String path) {
 		super(parentNode, path);
 		
 		this.characterId = getNode().get("character-id", null);
@@ -42,7 +41,6 @@ public class Profile extends WarlockSetting {
 		this.gameCode = getNode().get("game-code", null);
 		this.gameName = getNode().get("game-name", null);
 		this.viewId = getNode().get("view-id", null);
-		this.account = account;
 	}
 	
 	/**
@@ -97,9 +95,5 @@ public class Profile extends WarlockSetting {
 	public void setViewId(String viewId) {
 		getNode().put("view-id", viewId);
 		this.viewId = viewId;
-	}
-	
-	public Account getAccount() {
-		return account;
 	}
 }

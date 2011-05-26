@@ -27,10 +27,9 @@ import java.util.HashMap;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.configuration.ConfigurationProvider;
-import cc.warlock.core.configuration.IConfigurationProvider;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class PresetSettingsConfigurationProvider extends ConfigurationProvider implements IConfigurationProvider {
+public class PresetSettingsConfigurationProvider extends WarlockSetting {
 
 	protected HashMap<String, IWarlockStyle> styleSettings = new HashMap<String, IWarlockStyle>();
 	

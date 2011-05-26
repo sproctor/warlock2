@@ -25,10 +25,9 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.configuration.ConfigurationProvider;
-import cc.warlock.core.configuration.IConfigurationProvider;
+import cc.warlock.core.configuration.WarlockSetting;
 
-public class GameViewConfiguration extends ConfigurationProvider implements IConfigurationProvider {
+public class GameViewConfiguration extends WarlockSetting {
 
 	public static final WarlockColor defaultDefaultBgColor = new WarlockColor(25, 25, 50);
 	public static final WarlockColor defaultDefaultFgColor = new WarlockColor(240, 240, 255);

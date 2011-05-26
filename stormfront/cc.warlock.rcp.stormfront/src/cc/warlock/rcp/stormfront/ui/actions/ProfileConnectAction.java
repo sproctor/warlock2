@@ -31,10 +31,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 
+import cc.warlock.core.configuration.Account;
+import cc.warlock.core.configuration.AccountProvider;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.network.IConnection;
-import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.network.IConnection.ErrorType;
+import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
@@ -97,7 +99,8 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		monitor.worked(1);
 		
 		if (!monitor.isCanceled()) {
-			connection.login(profile.getAccount().getAccountName(), profile.getAccount().getPassword());
+			Account account = AccountProvider.getInstance().getAccountByProfile(profile);
+			connection.login(account.getAccountName(), account.getPassword());
 		} else {
 			status = Status.CANCEL_STATUS;
 			finished = true;
@@ -143,7 +146,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 			if (gameView == null || !(gameView instanceof StormFrontGameView) 
 					|| gameView.getWarlockClient() == null || gameView.getWarlockClient().getConnection() == null 
 					|| gameView.getWarlockClient().getConnection().isConnected()) {
-				LoginUtil.connectAndOpenGameView(loginProperties, profile.getName());
+				gameView = LoginUtil.connectAndOpenGameView(loginProperties, profile.getName());
 				gameView.setProfile(profile);
 			} else {
 				LoginUtil.connect((StormFrontGameView) gameView, loginProperties);

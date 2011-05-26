@@ -24,4 +24,12 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 		}
 		return null;
 	}
+	
+	public Account getAccountByProfile(Profile profile) {
+		for(Account account : this.getSettings()) {
+			if(account.getProfiles().getSettings().contains(profile))
+				return account;
+		}
+		return null;
+	}
 }

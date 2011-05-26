@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.stormfront.settings;
 
-import cc.warlock.core.configuration.ConfigurationProvider;
 
 
 /**

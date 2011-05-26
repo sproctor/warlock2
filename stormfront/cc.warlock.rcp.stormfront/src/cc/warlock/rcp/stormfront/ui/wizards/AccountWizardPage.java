@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Text;
 
 import cc.warlock.core.configuration.Account;
 import cc.warlock.core.configuration.AccountProvider;
+import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.ILineConnectionListener;
@@ -143,6 +144,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 					savedAccount = AccountProvider.getInstance().createSetting();
 					savedAccount.setAccountName(account.getText());
 					savedAccount.setPassword(password.getText());
+					WarlockPreferences.getInstance().flush();
 				}
 			}
 			

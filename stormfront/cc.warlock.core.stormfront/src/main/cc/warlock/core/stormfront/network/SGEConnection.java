@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import cc.warlock.core.configuration.Account;
+import cc.warlock.core.configuration.AccountProvider;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.ILineConnectionListener;
@@ -434,7 +436,8 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 		public Map <String,String> properties = null;
 		
 		public void loginReady(SGEConnection connection) {
-			connection.login(profile.getAccount().getAccountName(), profile.getAccount().getPassword());
+			Account account = AccountProvider.getInstance().getAccountByProfile(profile);
+			connection.login(account.getAccountName(), account.getPassword());
 		}
 		
 		public void loginFinished(SGEConnection connection, int status) {/* noop */}

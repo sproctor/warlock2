@@ -48,12 +48,16 @@ public class Account extends WarlockSetting {
 	
 	public static String decryptPassword (String encrypted)
 	{
+		if(encrypted == null)
+			return null;
 		DESEncrypter encrypter = new DESEncrypter("$warlockpassword$");
 		return encrypter.decrypt(encrypted);
 	}
 	
 	public static String encryptPassword (String password)
 	{
+		if(password == null)
+			return null;
 		DESEncrypter encrypter = new DESEncrypter("$warlockpassword$");
 		return encrypter.encrypt(password);
 	}
@@ -152,7 +156,8 @@ public class Account extends WarlockSetting {
 		
 		this.accountName = getNode().get("account-name", null);
 		this.password = decryptPassword(getNode().get("password", null));
-		profiles = new ProfileProvider(getNode(), this);
+		profiles = new ProfileProvider(getNode());
+		this.flush();
 	}
 	
 	public String getAccountName() {

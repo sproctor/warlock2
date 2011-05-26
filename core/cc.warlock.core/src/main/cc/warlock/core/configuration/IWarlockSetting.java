@@ -29,5 +29,6 @@ import org.osgi.service.prefs.Preferences;
  */
 public interface IWarlockSetting {
 	public Preferences getNode();
+	public void flush();
 	public boolean isNewSetting();
 }
