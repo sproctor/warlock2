@@ -65,10 +65,10 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.internal.HighlightSetting;
+import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.util.ColorUtil;
 
@@ -85,7 +85,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected Button addString, removeString, soundButton;
 	protected Text filterText;
 	protected Text soundText; 
-	protected IClientSettings settings;
+	protected IWarlockClient client;
 	protected HighlightSetting selectedString;
 	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
 	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();
@@ -186,7 +186,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		
 		stringTable.setLabelProvider(new StringsLabelProvider());
 		stringTable.setContentProvider(new ArrayContentProvider());
-		stringTable.setInput(settings.getHighlightStrings());
+		stringTable.setInput(client.getClientSettings().getHighlightStrings());
 		
 		int listHeight = stringTable.getTable().getItemHeight() * 8;
 		Rectangle trim = stringTable.getTable().computeTrim(0, 0, 0, listHeight);
@@ -355,15 +355,23 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		customBG.setEnabled(true);
 		customBGSelector.setEnabled(!bgIsDefault);
 		
-		IWindowSettings mainWindow = settings.getMainWindowSettings();
+		IWindowSettings mainWindow = client.getClientSettings().getMainWindowSettings();
 		if (fgIsDefault) {
-			customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(mainWindow.getForegroundColor()));
+			fgColor = mainWindow.getForegroundColor();
+			fgIsDefault = fgColor.isDefault();
+		}
+		if(fgIsDefault) {
+			customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(((GameViewConfiguration)client.getViewer().getSettings()).getDefaultForeground()));
 		} else {
 			customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(fgColor));
 		}
 		
 		if (bgIsDefault) {
-			customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(mainWindow.getBackgroundColor()));
+			bgColor = mainWindow.getBackgroundColor();
+			bgIsDefault = bgColor.isDefault();
+		}
+		if (bgIsDefault) {
+			customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(((GameViewConfiguration)client.getViewer().getSettings()).getDefaultBackground()));
 		} else {
 			customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(bgColor));
 		}
@@ -449,7 +457,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	private void defaultForegroundSelected ()
 	{
-		selectedString.getStyle().setForegroundColor(settings.getMainWindowSettings().getForegroundColor());
+		selectedString.getStyle().setForegroundColor(client.getClientSettings().getMainWindowSettings().getForegroundColor());
 		customFGSelector.setEnabled(false);
 		customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(selectedString.getStyle().getForegroundColor()));
 		stringTable.update(selectedString, null);
@@ -467,7 +475,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	private void defaultBackgroundSelected ()
 	{
-		selectedString.getStyle().setBackgroundColor(settings.getMainWindowSettings().getBackgroundColor());
+		selectedString.getStyle().setBackgroundColor(client.getClientSettings().getMainWindowSettings().getBackgroundColor());
 		customBGSelector.setEnabled(false);
 		customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(selectedString.getStyle().getBackgroundColor()));
 		stringTable.update(selectedString, null);	
@@ -506,7 +514,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	}
 
 	private void addStringSelected() {
-		HighlightSetting newString = (HighlightSetting)settings.getHighlightConfigurationProvider().createSetting();
+		HighlightSetting newString = (HighlightSetting)client.getClientSettings().getHighlightConfigurationProvider().createSetting();
 		newString.setText("<Highlight Text>");
 		
 		addedStrings.add(newString);
@@ -558,7 +566,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(),
 					ColorUtil.warlockColorToRGB(string.getStyle().getBackgroundColor().isDefault() ?
-							settings.getDefaultBackground() : string.getStyle().getBackgroundColor()));
+							client.getClientSettings().getDefaultBackground() : string.getStyle().getBackgroundColor()));
 			
 			return c;
 		}
@@ -567,7 +575,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(), 
 					ColorUtil.warlockColorToRGB(string.getStyle().getForegroundColor().isDefault() ?
-							settings.getDefaultForeground() : string.getStyle().getForegroundColor()));
+							client.getClientSettings().getDefaultForeground() : string.getStyle().getForegroundColor()));
 			
 			return c;
 		}
@@ -575,7 +583,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	@Override
 	public void setElement(IAdaptable element) {
-		settings = ((IWarlockClient)element.getAdapter(IWarlockClient.class)).getClientSettings();
+		client = ((IWarlockClient)element.getAdapter(IWarlockClient.class));
 		
 		/*if (highlightStrings.isEmpty())
 			copyHighlightStrings();*/
@@ -589,7 +597,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	@Override
 	public boolean performOk() {
-		HighlightConfigurationProvider highlightConfig = settings.getHighlightConfigurationProvider();
+		HighlightConfigurationProvider highlightConfig = client.getClientSettings().getHighlightConfigurationProvider();
 		if(highlightConfig == null)
 			return false;
 		
@@ -609,6 +617,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			highlightConfig.removeSetting(string);
 		}
 		
+		client.getClientSettings().flush();
 		return true;
 	}
 }

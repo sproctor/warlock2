@@ -82,7 +82,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 	
 	private void showPrompt(String prompt) {
-		if(!GameView.getGameViewForClient(client).getConfiguration().getSuppressPrompt()) {
+		if(!GameView.getGameViewForClient(client).getSettings().getSuppressPrompt()) {
 			WarlockString text = new WarlockString();
 			text.append(prompt);
 			append(text);
@@ -191,8 +191,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 			this.setBackground(background);
 			this.setForeground(foreground);
 
-			String defaultFontFace = GameView.getGameViewForClient(client).getConfiguration().getDefaultFontFace();
-			int defaultFontSize = GameView.getGameViewForClient(client).getConfiguration().getDefaultFontSize();
+			String defaultFontFace = GameView.getGameViewForClient(client).getSettings().getDefaultFontFace();
+			int defaultFontSize = GameView.getGameViewForClient(client).getSettings().getDefaultFontSize();
 
 			if (font.isDefaultFont()) {
 				this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));

@@ -44,7 +44,7 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 		main.setLayout(new GridLayout(1, false));
 		
 		GameView gameView = (GameView)client.getViewer();
-		boolean suppressPrompt = gameView.getConfiguration().getSuppressPrompt();
+		boolean suppressPrompt = gameView.getSettings().getSuppressPrompt();
 		promptButton = new Button(main, SWT.CHECK);
 		promptButton.setText("Supress prompts");
 		promptButton.setSelection(suppressPrompt);
@@ -71,7 +71,7 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 	@Override
 	public boolean performOk() {
 		GameView gameView = (GameView)client.getViewer();
-		gameView.getConfiguration().setSuppressPrompt(promptButton.getSelection());
+		gameView.getSettings().setSuppressPrompt(promptButton.getSelection());
 		ScriptConfiguration.instance().getSupressExceptions().set(suppressScriptExceptionsButton.getSelection());
 		return true;
 	}

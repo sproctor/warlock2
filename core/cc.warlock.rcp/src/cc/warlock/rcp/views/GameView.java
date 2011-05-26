@@ -430,7 +430,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		return false;
 	}
 	
-	public GameViewConfiguration getConfiguration() {
+	public GameViewConfiguration getSettings() {
 		return gameConfiguration;
 	}
 	

@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import cc.warlock.core.client.internal.DefaultMacro;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 
 
@@ -63,6 +64,8 @@ public interface IWarlockClientViewer {
 	public void copy();
 	
 	public void paste();
+	
+	public IWarlockSetting getSettings();
 	
 	public void playSound(InputStream soundStream);
 	
