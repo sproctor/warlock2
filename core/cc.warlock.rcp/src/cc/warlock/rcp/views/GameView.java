@@ -206,8 +206,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	protected void initColors()
 	{
-		Color background = ColorUtil.warlockColorToColor(gameConfiguration.getDefaultBackground());
-		Color foreground = ColorUtil.warlockColorToColor(gameConfiguration.getDefaultForeground());
+		Color background = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultBgColor);
+		Color foreground = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultFgColor);
 		
 		entry.getWidget().setBackground(background);
 		entry.getWidget().setForeground(foreground);
@@ -406,7 +406,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		this.client = client;
 		client.setViewer(wrapper);
 		
-		gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
+		if(client.getClientSettings() != null)
+			gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
 		
 		streamText.getTitle().addListener(new PropertyListener<String>() {
 			public void propertyChanged(String value) {
@@ -439,5 +440,10 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	public void setProfile(Profile profile) {
 		this.profile = profile;
+	}
+	
+	public void clientSettingsLoaded(IWarlockClient client) {
+		if(this.client == client)
+			gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
 	}
 }

@@ -118,8 +118,9 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		if (profile != null) {
 			setReconnectProfile(profile);
 			showPopup(reconnectPopup);
-		} else {			
-			setNoReconnectProfile(sfClient.getCharacterName().get());
+		} else {
+			String characterName = client != null ? client.getCharacterName().get() : "No Character";
+			setNoReconnectProfile(characterName);
 		}
 	}
 	
@@ -313,10 +314,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 					}
 				}
 				@Override
-				public void clientSettingsLoaded(IWarlockClient client) {
-					// TODO Auto-generated method stub
-					
-				}
+				public void clientSettingsLoaded(IWarlockClient client) { }
 			}));
 		}
 		
@@ -334,6 +332,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	private Button reconnect;
 	
 	public void clientSettingsLoaded(IWarlockClient client) {
+		super.clientSettingsLoaded(client);
 		if(client == sfClient) {
 			loadClientSettings(sfClient.getStormFrontClientSettings());
 		}
