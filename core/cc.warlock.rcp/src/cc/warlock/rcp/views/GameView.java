@@ -52,6 +52,7 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.configuration.Profile;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockEntry;
@@ -82,6 +83,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected Composite entryComposite;
 	protected IWarlockClient client;
 	protected Composite mainComposite;
+	
+	private Profile profile;
 	
 	public GameView () {
 		super();
@@ -181,7 +184,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		popupPageBook.setVisible(false);
 		
 		streamText = new StreamText(mainComposite, IWarlockClient.DEFAULT_STREAM_NAME);
-		streamText.setLineLimit(gameConfiguration.getBufferLines());
+		//streamText.setLineLimit(gameConfiguration.getBufferLines());
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streamText.setIgnoreEmptyLines(false);
 		
@@ -428,5 +431,13 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	public GameViewConfiguration getConfiguration() {
 		return gameConfiguration;
+	}
+	
+	public Profile getProfile() {
+		return profile;
+	}
+	
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 }

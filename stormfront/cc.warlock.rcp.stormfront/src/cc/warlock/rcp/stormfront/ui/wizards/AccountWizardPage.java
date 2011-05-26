@@ -45,10 +45,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import cc.warlock.core.configuration.Account;
-import cc.warlock.core.configuration.ProfileProvider;
+import cc.warlock.core.configuration.AccountProvider;
 import cc.warlock.core.network.IConnection;
-import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.network.IConnection.ErrorType;
+import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.SGEConnectionListener;
@@ -104,14 +104,14 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 		
 		setControl(controls);
 		
-		final Collection<Account> accounts = ProfileProvider.instance().getAllAccounts();
+		final Collection<Account> accounts = AccountProvider.getInstance().getSettings();
 		for (Account account : accounts) {
 			this.account.getCombo().add(account.getAccountName());
 		}
 		if (accounts.size() > 0)
 		{
 			account.getCombo().select(0);
-			password.getTextControl().setText(ProfileProvider.instance().getAccount(account.getCombo().getText()).getPassword());
+			password.getTextControl().setText(AccountProvider.getInstance().getAccount(account.getCombo().getText()).getPassword());
 			
 			account.getCombo().addSelectionListener(new SelectionListener() {
 				public void widgetDefaultSelected(SelectionEvent e) {
@@ -119,7 +119,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 				}
 				public void widgetSelected(SelectionEvent e) {
 					String accountName = account.getCombo().getText();
-					password.getTextControl().setText(ProfileProvider.instance().getAccount(accountName).getPassword());
+					password.getTextControl().setText(AccountProvider.getInstance().getAccount(accountName).getPassword());
 				}
 			});
 		}
@@ -132,7 +132,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 //		if (button == WizardWithNotification.NEXT)
 //		{	
 			accountName = account.getText();
-			savedAccount = ProfileProvider.instance().getAccount(account.getText());
+			savedAccount = AccountProvider.getInstance().getAccount(account.getText());
 			if (savedAccount == null)
 			{
 				boolean save = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
@@ -140,9 +140,9 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 				
 				if (save)
 				{
-					savedAccount = new Account(account.getText(), password.getText());
-					
-					ProfileProvider.instance().addAccount(savedAccount);
+					savedAccount = AccountProvider.getInstance().createSetting();
+					savedAccount.setAccountName(account.getText());
+					savedAccount.setPassword(password.getText());
 				}
 			}
 			

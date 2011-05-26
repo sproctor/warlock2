@@ -55,7 +55,7 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
 		
 		for(Account account : AccountProvider.getInstance().getSettings()) {
-			for (Profile profile : account.getProfiles()) {
+			for (Profile profile : account.getProfiles().getSettings()) {
 				items.add(new ActionContributionItem(new ProfileConnectAction(profile)));
 			}
 		}
@@ -67,7 +67,7 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 		ArrayList<IConnectionCommand> commands = new ArrayList<IConnectionCommand>();
 		
 		for(Account account : AccountProvider.getInstance().getSettings()) {
-			for (Profile profile : account.getProfiles()) {
+			for (Profile profile : account.getProfiles().getSettings()) {
 				commands.add(new ConnectionAction(new ProfileConnectAction(profile)));
 			}
 		}

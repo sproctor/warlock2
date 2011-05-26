@@ -446,7 +446,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 		
 		public void charactersReady(SGEConnection connection,
 				Map<String, String> characters) {
-			connection.selectCharacter(profile.getId());
+			connection.selectCharacter(profile.getCharacterId());
 		}
 		
 		@Override

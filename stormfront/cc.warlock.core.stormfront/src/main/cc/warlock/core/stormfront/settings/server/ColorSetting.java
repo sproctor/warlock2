@@ -22,9 +22,9 @@
  package cc.warlock.core.stormfront.settings.server;
 
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IColorSetting;
 import cc.warlock.core.configuration.IConfigurationProvider;
 import cc.warlock.core.stormfront.client.StormFrontColor;
+import cc.warlock.core.stormfront.settings.IColorSetting;
 import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 

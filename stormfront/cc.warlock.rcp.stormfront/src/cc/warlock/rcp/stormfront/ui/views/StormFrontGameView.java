@@ -62,7 +62,6 @@ import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
-import cc.warlock.rcp.stormfront.StormFrontGameViewConfiguration;
 import cc.warlock.rcp.stormfront.adapters.SWTStormFrontClientViewer;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.StormFrontStatus;
@@ -112,17 +111,15 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		status = new StormFrontStatus(entryComposite);
 		
 		String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
-		String characterName = StormFrontGameViewConfiguration.instance().getProfileId(fullId);
 		
-		final Profile profile = ProfileProvider.instance().getProfileByCharacterName(characterName);
+		Profile profile = getProfile();
 		createReconnectPopup();
 		
 		if (profile != null) {
 			setReconnectProfile(profile);
 			showPopup(reconnectPopup);
-		}
-		else {			
-			setNoReconnectProfile(characterName);
+		} else {			
+			setNoReconnectProfile(sfClient.getCharacterName().get());
 		}
 	}
 	
@@ -219,7 +216,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			}
 		});
 		
-		for (final Profile profile : ProfileProvider.instance().getAllProfiles())
+		for (final Profile profile : ProfileProvider.getAllProfiles())
 		{
 			MenuItem item = new MenuItem (menu, SWT.PUSH);
 			item.setText(profile.getName());
@@ -356,13 +353,10 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 				 * sfClient.getCharacterName().get() should just be replaced
 				 * by value (the parameter to this method).
 				 */
-				StormFrontGameViewConfiguration.instance().addProfileMapping(viewId,
-						sfClient.getCharacterName().get());
 				
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						Profile profile = ProfileProvider.instance()
-								.getProfileByCharacterName(sfClient.getCharacterName().get());
+						Profile profile = getProfile();
 						if (profile != null) {
 							setReconnectProfile(profile);
 						} else {

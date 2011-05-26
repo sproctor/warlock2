@@ -52,7 +52,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import cc.warlock.core.configuration.Account;
 import cc.warlock.core.configuration.AccountProvider;
 import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class AccountsPreferencePage extends PropertyPage implements
@@ -156,7 +155,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 			public Object[] getChildren(Object parentElement) {
 				if (parentElement instanceof Account)
 				{
-					return ((Account)parentElement).getProfiles().toArray();
+					return ((Account)parentElement).getProfiles().getSettings().toArray();
 				}
 				return new Object[0];
 			}
@@ -182,7 +181,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 			public boolean hasChildren(Object element) {
 				if (element instanceof Account)
 				{
-					return ((Account)element).getProfiles().size() > 0;
+					return ((Account)element).getProfiles().getSettings().size() > 0;
 				}
 				return false;
 			}

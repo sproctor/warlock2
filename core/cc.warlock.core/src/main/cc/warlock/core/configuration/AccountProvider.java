@@ -16,4 +16,12 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 	protected Account loadSetting(String id) {
 		return new Account(getNode(), id);
 	}
+	
+	public Account getAccount(String accountName) {
+		for(Account account : this.getSettings()) {
+			if(account.getAccountName().equals(accountName))
+				return account;
+		}
+		return null;
+	}
 }

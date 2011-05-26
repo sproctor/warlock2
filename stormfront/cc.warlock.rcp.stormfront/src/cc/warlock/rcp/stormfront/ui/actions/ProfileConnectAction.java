@@ -129,7 +129,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 	public void charactersReady(SGEConnection connection, Map<String, String> characters) {
 		monitor.worked(1);
 		
-		connection.selectCharacter(profile.getId());
+		connection.selectCharacter(profile.getCharacterId());
 	}
 
 	public void readyToPlay(SGEConnection connection, Map<String,String> loginProperties) {
@@ -142,10 +142,12 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 			// If it is, open a new one.
 			if (gameView == null || !(gameView instanceof StormFrontGameView) 
 					|| gameView.getWarlockClient() == null || gameView.getWarlockClient().getConnection() == null 
-					|| gameView.getWarlockClient().getConnection().isConnected())
+					|| gameView.getWarlockClient().getConnection().isConnected()) {
 				LoginUtil.connectAndOpenGameView(loginProperties, profile.getName());
-			else
+				gameView.setProfile(profile);
+			} else {
 				LoginUtil.connect((StormFrontGameView) gameView, loginProperties);
+			}
 		} else {
 			status = Status.CANCEL_STATUS;
 		}

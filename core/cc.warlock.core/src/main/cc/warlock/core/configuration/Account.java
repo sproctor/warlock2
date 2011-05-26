@@ -28,7 +28,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -45,7 +44,7 @@ import org.osgi.service.prefs.Preferences;
 public class Account extends WarlockSetting {
 
 	protected String accountName, password;
-	protected ArrayList<Profile> profiles = new ArrayList<Profile>();
+	protected ProfileProvider profiles;
 	
 	public static String decryptPassword (String encrypted)
 	{
@@ -153,6 +152,7 @@ public class Account extends WarlockSetting {
 		
 		this.accountName = getNode().get("account-name", null);
 		this.password = decryptPassword(getNode().get("password", null));
+		profiles = new ProfileProvider(getNode(), this);
 	}
 	
 	public String getAccountName() {
@@ -190,7 +190,7 @@ public class Account extends WarlockSetting {
 		return accountName.hashCode();
 	}
 
-	public ArrayList<Profile> getProfiles() {
+	public ProfileProvider getProfiles() {
 		return profiles;
 	}
 }

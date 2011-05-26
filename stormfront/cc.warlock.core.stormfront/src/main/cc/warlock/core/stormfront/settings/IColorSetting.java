@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings;
+package cc.warlock.core.stormfront.settings;
 
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.configuration.IWarlockSetting;
@@ -28,7 +28,7 @@ import cc.warlock.core.configuration.IWarlockSetting;
  * @author marshall
  *
  */
-public interface IColorSetting extends IWarlockSetting {
+public interface IColorSetting /*extends IWarlockSetting*/ {
 
 	public WarlockColor getForegroundColor();
 	public void setForegroundColor (WarlockColor foreground);

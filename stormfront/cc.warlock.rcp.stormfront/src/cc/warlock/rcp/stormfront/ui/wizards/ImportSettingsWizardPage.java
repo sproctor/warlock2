@@ -160,7 +160,7 @@ class ImportSettingsWizardPage extends WizardPageWithNotification
 			}
 		});
 		
-		profileTable.setInput(ProfileProvider.instance().getAllProfiles());
+		profileTable.setInput(ProfileProvider.getAllProfiles());
 		profileTable.getTable().setEnabled(false);
 		profileTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}

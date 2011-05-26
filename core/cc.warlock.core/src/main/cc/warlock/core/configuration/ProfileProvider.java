@@ -21,6 +21,9 @@
  */
 package cc.warlock.core.configuration;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
@@ -30,8 +33,9 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 	
 	private Account account;
 	
-	public ProfileProvider(Account account, Preferences parentNode) {
+	public ProfileProvider(Preferences parentNode, Account account) {
 		super(parentNode, "profiles");
+		this.account = account;
 	}
 	
 	protected Profile loadSetting(String id) {
@@ -40,7 +44,7 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 	
 	public Profile createProfile (String id, String name, String gameCode, String gameName) {
 		Profile profile = createSetting();
-		profile.setId(id); //character id
+		profile.setCharacterId(id); //character id
 		profile.setName(name);
 		profile.setGameCode(gameCode);
 		profile.setGameName(gameName);
@@ -56,5 +60,13 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 				return profile;
 		}
 		return null;
+	}
+	
+	public static Collection<Profile> getAllProfiles() {
+		ArrayList<Profile> profiles = new ArrayList<Profile>();
+		for(Account account : AccountProvider.getInstance().getSettings()) {
+			profiles.addAll(account.getProfiles().getSettings());
+		}
+		return profiles;
 	}
 }

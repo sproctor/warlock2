@@ -21,6 +21,7 @@
  */
 package cc.warlock.rcp.prefs;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,17 +30,21 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
-import cc.warlock.rcp.configuration.GameViewConfiguration;
+import cc.warlock.rcp.views.GameView;
 
 public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPropertyPage {
 	protected Button promptButton, suppressScriptExceptionsButton;
+	
+	protected IWarlockClient client;
 	
 	protected Control createContents(Composite parent) {
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(1, false));
 		
-		boolean suppressPrompt = GameViewConfiguration.instance().getSuppressPrompt();
+		GameView gameView = (GameView)client.getViewer();
+		boolean suppressPrompt = gameView.getConfiguration().getSuppressPrompt();
 		promptButton = new Button(main, SWT.CHECK);
 		promptButton.setText("Supress prompts");
 		promptButton.setSelection(suppressPrompt);
@@ -53,6 +58,11 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 	}
 	
 	@Override
+	public void setElement(IAdaptable element) {
+		client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
+	}
+	
+	@Override
 	public void performDefaults() {
 		//suppressPrompt = false;
 		promptButton.setSelection(false);
@@ -60,7 +70,8 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 	
 	@Override
 	public boolean performOk() {
-		GameViewConfiguration.instance().setSuppressPrompt(promptButton.getSelection());
+		GameView gameView = (GameView)client.getViewer();
+		gameView.getConfiguration().setSuppressPrompt(promptButton.getSelection());
 		ScriptConfiguration.instance().getSupressExceptions().set(suppressScriptExceptionsButton.getSelection());
 		return true;
 	}
