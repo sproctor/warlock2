@@ -71,8 +71,8 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 	
 	@Override
 	public boolean performOk() {
-		GameView gameView = (GameView)client.getViewer();
-		gameView.getSettings().setSuppressPrompt(promptButton.getSelection());
+		GameViewConfiguration viewConfig = (GameViewConfiguration)client.getViewer().getSettings();
+		viewConfig.setSuppressPrompt(promptButton.getSelection());
 		ScriptConfiguration.instance().getSupressExceptions().set(suppressScriptExceptionsButton.getSelection());
 		return true;
 	}
