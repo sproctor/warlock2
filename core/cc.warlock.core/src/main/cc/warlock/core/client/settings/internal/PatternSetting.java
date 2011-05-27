@@ -87,38 +87,30 @@ public class PatternSetting extends WarlockSetting implements IPatternSetting {
 	}
 	
 	public void setText(String text) throws PatternSyntaxException {
-		if (!text.equals(this.text)) {
-			updateDeferred = true;
-			getNode().put("text", text);
-		}
+		updateDeferred = true;
+		getNode().put("pattern", text);
 		this.text = text;
 	}
 	
 	public void setLiteral (boolean literal) throws PatternSyntaxException
 	{
-		if (literal != this.literal) {
-			updateDeferred = true;
-			getNode().putBoolean("literal", literal);
-			this.literal = literal;
-		}
+		updateDeferred = true;
+		getNode().putBoolean("literal", literal);
+		this.literal = literal;
 	}
 	
 	public void setCaseSensitive (boolean caseSensitive)
 	{
-		if (caseSensitive != this.caseSensitive) {
-			updateDeferred = true;
-			getNode().putBoolean("caseSensitive", caseSensitive);
-			this.caseSensitive = caseSensitive;
-		}
+		updateDeferred = true;
+		getNode().putBoolean("case-sensitive", caseSensitive);
+		this.caseSensitive = caseSensitive;
 	}
 	
 	public void setFullWordMatch (boolean fullWordMatch)
 	{
-		if (fullWordMatch != this.fullWord) {
-			updateDeferred = true;
-			getNode().putBoolean("fullWord", fullWordMatch);
-			this.fullWord = fullWordMatch;
-		}
+		updateDeferred = true;
+		getNode().putBoolean("full-word", fullWordMatch);
+		this.fullWord = fullWordMatch;
 	}
 	
 	public boolean isLiteral() {
