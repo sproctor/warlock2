@@ -57,9 +57,11 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 import cc.warlock.rcp.util.ColorUtil;
@@ -524,9 +526,9 @@ public class PresetsPreferencePage extends PropertyPage implements
 	@Override
 	public boolean performOk() {
 		
-	/*	boolean updateView = false;
+		boolean updateView = false;
 		
-		for (WarlockStyle style: styles.values())
+		/*for (WarlockStyle style: styles.values())
 		{
 			if (style.needsUpdate())
 			{
@@ -534,17 +536,19 @@ public class PresetsPreferencePage extends PropertyPage implements
 				settings.getHighlightConfigurationProvider().removeNamedStyle(style.getOriginalStyle().getName());
 				settings.getHighlightConfigurationProvider().addNamedStyle(style.getName(), style);
 			}
-		}
+		}*/
 		
 		IWindowSettings mainWindow = settings.getMainWindowSettings();
 		
 		if(newMainFG != null) {
 			mainWindow.setForegroundColor(newMainFG);
+			updateView = true;
 			newMainFG = null;
 		}
 		
 		if(newMainBG != null) {
 			mainWindow.setBackgroundColor(newMainBG);
+			updateView = true;
 			newMainBG = null;
 		}
 		
@@ -552,6 +556,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			IWarlockFont font = mainWindow.getFont();
 			font.setFamilyName(newMainFont.getFamilyName());
 			font.setSize(newMainFont.getSize());
+			updateView = true;
 			newMainFont = null;
 		}
 		
@@ -559,19 +564,21 @@ public class PresetsPreferencePage extends PropertyPage implements
 			IWarlockFont font = mainWindow.getColumnFont();
 			font.setFamilyName(newColumnFont.getFamilyName());
 			font.setSize(newColumnFont.getSize());
+			updateView = true;
 			newColumnFont = null;
 		}
-		*/
+		
 		/*if (mainWindow.needsUpdate())
 		{
 			updateView = true;
 			settings.getWindowSettingsProvider().removeWindowSettings(mainWindow.getOriginalWindowSettings());
 			settings.getWindowSettingsProvider().addWindowSettings(mainWindow);
 		}
+		*/
 		
 		if (updateView) {
 			WarlockClientRegistry.clientSettingsLoaded(settings.getClient());
-		}*/
+		}
 		
 		return true;
 	}
