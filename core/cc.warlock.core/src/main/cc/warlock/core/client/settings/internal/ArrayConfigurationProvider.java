@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.configuration.IArraySettingProvider;
@@ -59,9 +60,13 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 	
 	public void removeSetting (T setting) {
 		for(Entry<String, T> entry : settings.entrySet()) {
-			if(entry.getValue().equals(setting)) {
+			if(entry.getValue() == setting) {
 				settings.remove(entry.getKey());
-				getNode().remove(entry.getKey());
+				try {
+					getNode().node(entry.getKey()).removeNode();
+				} catch(BackingStoreException e) {
+					e.printStackTrace();
+				}
 				break;
 			}
 		}
