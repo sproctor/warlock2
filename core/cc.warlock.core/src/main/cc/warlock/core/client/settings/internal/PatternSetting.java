@@ -51,7 +51,7 @@ public class PatternSetting extends WarlockSetting implements IPatternSetting {
 	}
 	
 	protected void update() throws PatternSyntaxException {
-		if (this.text != null) {
+		if (text != null && text.length() > 0) {
 			String s = this.text;
 			int flags = 0;
 			if (literal) {
