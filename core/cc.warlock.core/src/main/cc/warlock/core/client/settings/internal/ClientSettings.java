@@ -123,8 +123,8 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 		return variableConfigurationProvider.getVariables();
 	}
 	
-	public MacroSetting getMacro(int keycode, int modifiers) {
-		return macroConfigurationProvider.getMacro(keycode, modifiers);
+	public MacroSetting getMacro(String keyString) {
+		return macroConfigurationProvider.getMacro(keyString);
 	}
 	
 	public IWarlockStyle getNamedStyle(String name) {

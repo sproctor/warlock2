@@ -33,36 +33,21 @@ import cc.warlock.core.client.IWarlockClientViewer;
 
 public class WarlockMacro implements IMacro
 {
-	protected int keycode;
-	protected int modifiers;
-	protected IMacroHandler handler;
+	private String keyString;
+	private IMacroHandler handler;
 	
-	public WarlockMacro (int keycode, int modifiers, IMacroHandler handler)
+	public WarlockMacro (String keyString, IMacroHandler handler)
 	{
-		this.keycode = keycode;
-		this.modifiers = modifiers;
+		this.keyString = keyString;
 		this.handler = handler;
 	}
 	
-	public WarlockMacro (int keycode, IMacroHandler handler)
-	{
-		this(keycode, IMacro.NO_MODIFIERS, handler);
+	public String getKeyString() {
+		return keyString;
 	}
 	
-	public int getKeyCode() {
-		return this.keycode;
-	}
-	
-	public void setKeyCode(int keycode) {
-		this.keycode = keycode;
-	}
-	
-	public int getModifiers() {
-		return modifiers;
-	}
-	
-	public void setModifiers(int modifiers) {
-		this.modifiers = modifiers;
+	public void setKeyString(String keyString) {
+		this.keyString = keyString;
 	}
 	
 	public void setHandler(IMacroHandler handler) {
@@ -76,21 +61,4 @@ public class WarlockMacro implements IMacro
 	public void execute(IWarlockClientViewer viewer) {
 		handler.handleMacro(this, viewer);
 	}
-	
-	@Override
-	public String toString() {
-		String str = "Macro (keycode="+keycode+",modifiers="+modifiers+",handler="+handler.toString();
-		return str;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof IMacro) {
-			IMacro other = (IMacro)obj;
-			
-			return (keycode == other.getKeyCode() && modifiers == other.getModifiers());
-		}
-		return super.equals(obj);
-	}
-	
 }

@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IMacro;
@@ -41,54 +42,31 @@ public class MacroConfigurationProvider extends WarlockSetting implements IMacro
 
 	protected HashMap<String, MacroSetting> macros = new HashMap<String, MacroSetting>();
 	
-	private int nextID = 0;
-	
 	public MacroConfigurationProvider (Preferences parentNode)
 	{
 		super(parentNode, "macros");
 		
 		try {
 			for(String macroId : getNode().childrenNames()) {
-				try {
-					int id = Integer.parseInt(macroId);
-					if(id >= nextID)
-						nextID = id + 1;
-				} catch(NumberFormatException e) {
-					// Don't care
-				}
 				macros.put(macroId, new MacroSetting(getNode(), macroId));
 			}
-		} catch(Exception e) {
+		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public MacroSetting createMacro() {
-		MacroSetting macro = new MacroSetting(getNode(), Integer.toString(nextID));
-		nextID++;
-		macros.put(Integer.toString(nextID), macro);
+	public MacroSetting createMacro(String keyString) {
+		MacroSetting macro = macros.get(keyString);
+		if(macro == null) {
+			macro = new MacroSetting(getNode(), keyString);
+			macros.put(keyString, macro);
+		}
 		
 		return macro;
 	}
 
-	public MacroSetting getMacro(int keycode, int modifiers) {
-		for (MacroSetting macro : macros.values()) {
-			if (macro.getKeyCode() == keycode && macro.getModifiers() == modifiers) {
-				return macro;
-			}
-		}
-		return null;
-	}
-	
-	public MacroSetting getOrCreateMacro(int keycode, int modifiers) {
-		MacroSetting macro = getMacro(keycode, modifiers);
-		if(macro == null) {
-			macro = createMacro();
-			macro.setKeyCode(keycode);
-			macro.setModifiers(modifiers);
-		}
-		
-		return macro;
+	public MacroSetting getMacro(String keyString) {
+		return macros.get(keyString);
 	}
 
 	public Collection<MacroSetting> getMacros() {

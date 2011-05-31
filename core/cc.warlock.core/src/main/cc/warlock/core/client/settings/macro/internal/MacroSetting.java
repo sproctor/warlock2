@@ -38,8 +38,7 @@ import cc.warlock.core.configuration.WarlockSetting;
 
 public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSetting
 {
-	protected int keycode;
-	protected int modifiers;
+	protected String keyString;
 	private String command;
 	protected IMacroHandler handler;
 	private boolean updateDeferred;
@@ -48,30 +47,20 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 	{
 		super(parentNode, path);
 		
-		keycode = getNode().getInt("keycode", -1);
-		modifiers = getNode().getInt("modifiers", -1);
+		keyString = path;
 		command = getNode().get("command", null);
 		updateDeferred = true;
 	}
 	
-	public int getKeyCode() {
-		return this.keycode;
+	public String getKeyString() {
+		return keyString;
 	}
 	
-	public void setKeyCode(int keycode) {
-		getNode().putInt("keycode", keycode);
+	public void setKeyString(String keyString) {
+		changePath(keyString);
 		
-		this.keycode = keycode;
-	}
-	
-	public int getModifiers() {
-		return modifiers;
-	}
-	
-	public void setModifiers(int modifiers) {
-		getNode().putInt("modifiers", modifiers);
-		
-		this.modifiers = modifiers;
+		this.keyString = keyString;
+		setCommand(command);
 	}
 	
 	public void setCommand(String command) {
@@ -103,21 +92,4 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 		
 		handler.handleMacro(this, viewer);
 	}
-	
-	@Override
-	public String toString() {
-		String str = "Macro (keycode="+keycode+",modifiers="+modifiers+",handler="+handler.toString();
-		return str;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof IMacro) {
-			IMacro other = (IMacro)obj;
-			
-			return (keycode == other.getKeyCode() && modifiers == other.getModifiers());
-		}
-		return super.equals(obj);
-	}
-	
 }

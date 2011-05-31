@@ -51,6 +51,11 @@ public class WarlockSetting implements IWarlockSetting {
 	}
 	
 	protected void changePath(String path) {
+		try {
+			node.removeNode();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
 		node = parentNode.node(path);
 	}
 	

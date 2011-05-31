@@ -30,11 +30,8 @@ public interface IMacro {
 
 	public static final int NO_MODIFIERS = 0;
 	
-	public int getKeyCode ();
-	public void setKeyCode (int keycode);
-	
-	public int getModifiers ();
-	public void setModifiers (int modifiers);
+	public String getKeyString ();
+	public void setKeyString (String keyString);
 	
 	//public void setCommand (String command);
 	public IMacroHandler getHandler();

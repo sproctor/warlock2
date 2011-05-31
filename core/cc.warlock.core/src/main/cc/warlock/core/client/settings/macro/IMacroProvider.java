@@ -31,7 +31,7 @@ import cc.warlock.core.configuration.IWarlockSetting;
 public interface IMacroProvider extends IWarlockSetting {
 	public Collection<MacroSetting> getMacros();
 	
-	public MacroSetting getMacro (int keycode, int modifiers);
+	public MacroSetting getMacro (String keyString);
 	//public void addMacro (IMacro macro);
 	public boolean removeMacro (IMacro macro);
 	//public void replaceMacro (IMacro originalMacro, IMacro newMacro);

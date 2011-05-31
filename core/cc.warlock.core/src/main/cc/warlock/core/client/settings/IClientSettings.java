@@ -54,7 +54,7 @@ public interface IClientSettings extends IWarlockSetting {
 	public IWindowSettings getWindowSettings (String windowId);
 	
 	public Collection<MacroSetting> getMacros();
-	public MacroSetting getMacro (int keycode, int modifiers);
+	public MacroSetting getMacro (String keyString);
 
 	public WarlockColor getDefaultBackground();
 	public WarlockColor getDefaultForeground();
