@@ -48,7 +48,7 @@ public class MacroConfigurationProvider extends WarlockSetting implements IMacro
 		
 		try {
 			for(String macroId : getNode().childrenNames()) {
-				macros.put(macroId, new MacroSetting(getNode(), macroId));
+				macros.put(MacroSetting.decodePath(macroId), new MacroSetting(getNode(), macroId));
 			}
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
@@ -58,7 +58,7 @@ public class MacroConfigurationProvider extends WarlockSetting implements IMacro
 	public MacroSetting createMacro(String keyString) {
 		MacroSetting macro = macros.get(keyString);
 		if(macro == null) {
-			macro = new MacroSetting(getNode(), keyString);
+			macro = new MacroSetting(getNode(), MacroSetting.encodePath(keyString));
 			macros.put(keyString, macro);
 		}
 		

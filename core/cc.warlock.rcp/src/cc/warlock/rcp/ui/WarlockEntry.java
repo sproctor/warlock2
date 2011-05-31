@@ -90,7 +90,7 @@ public class WarlockEntry {
 	// returns whether we processed the key or not.
 	protected boolean processKey(int keyCode, int stateMask, char character) {
 		//System.out.println("got char \"" + e.character + "\"");
-		IMacro macro = viewer.getWarlockClient().getClientSettings().getMacro(keyCode, stateMask);
+		IMacro macro = viewer.getWarlockClient().getClientSettings().getMacro(MacroRegistry.instance().getKeyString(keyCode, stateMask));
 		if(macro == null)
 			macro = MacroRegistry.instance().getMacro(keyCode, stateMask);
 		

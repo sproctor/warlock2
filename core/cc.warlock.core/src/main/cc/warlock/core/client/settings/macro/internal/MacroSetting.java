@@ -47,9 +47,21 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 	{
 		super(parentNode, path);
 		
-		keyString = path;
+		this.keyString = decodePath(path);
 		command = getNode().get("command", null);
 		updateDeferred = true;
+	}
+	
+	public static String encodePath(String keyString) {
+		String path = keyString.replaceAll("\\\\", "\\\\");
+		path = path.replaceAll("/", "\\\\f");
+		return path;
+	}
+	
+	public static String decodePath(String path) {
+		String keyString = path.replaceAll("\\\\\\\\", "\\\\");
+		keyString = keyString.replaceAll("\\\\f", "/");
+		return keyString;
 	}
 	
 	public String getKeyString() {

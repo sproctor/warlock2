@@ -295,7 +295,9 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			} else {
 				KeyStroke stroke = keyComboText.getKeyStroke();
 				if (stroke != null && stroke.getNaturalKey() != KeyStroke.NO_KEY) {
-					return (stroke.getModifierKeys() == macro.getModifiers() && stroke.getNaturalKey() == macro.getKeyCode());
+					int modifiers = MacroRegistry.instance().getModifiers(macro.getKeyString());
+					int keycode = MacroRegistry.instance().getKeycode(macro.getKeyString());
+					return (stroke.getModifierKeys() == modifiers && stroke.getNaturalKey() == keycode);
 				}
 				return true;
 			}
@@ -305,7 +307,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected ArrayList<MacroSetting> addedMacros = new ArrayList<MacroSetting>();
 	protected void addMacroSelected ()
 	{
-		MacroSetting macro = settings.getMacroConfigurationProvider().createMacro();
+		MacroSetting macro = settings.getMacroConfigurationProvider().createMacro("");
 		macro.setCommand("");
 		
 		addedMacros.add(macro);
@@ -333,7 +335,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		// There probably is a better place to put this.
 		clearMacros();
 		for(DefaultMacro macro : MacroRegistry.instance().getDefaultMacros()) {
-			MacroSetting smacro = settings.getMacroConfigurationProvider().getOrCreateMacro(macro.getKeyCode(), macro.getModifiers());
+			MacroSetting smacro = settings.getMacroConfigurationProvider().createMacro(macro.getKeyString());
 			smacro.setCommand(macro.getCommand());
 			
 			addedMacros.add(smacro);
@@ -365,8 +367,9 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			if (columnIndex == 0) {
 				return macro.getCommand();
 			} else {
-				
-				return SWTKeySupport.getKeyFormatterForPlatform().format(KeyStroke.getInstance(macro.getModifiers(), macro.getKeyCode()));
+				int keycode = MacroRegistry.instance().getKeycode(macro.getKeyString());
+				int modifiers = MacroRegistry.instance().getModifiers(macro.getKeyString());
+				return SWTKeySupport.getKeyFormatterForPlatform().format(KeyStroke.getInstance(modifiers, keycode));
 			}
 		}
 		public boolean isLabelProperty(Object element, String property) {
@@ -479,15 +482,16 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 
 		protected Object getValue(Object element) {
 			MacroSetting macro = (MacroSetting) element;
-			return KeyStroke.getInstance(macro.getModifiers(), macro.getKeyCode());
+			int modifiers = MacroRegistry.instance().getModifiers(macro.getKeyString());
+			int keycode = MacroRegistry.instance().getKeycode(macro.getKeyString());
+			return KeyStroke.getInstance(modifiers, keycode);
 		}
 
 		protected void setValue(Object element, Object value) {
 			MacroSetting macro = (MacroSetting) element;
 			KeyStroke stroke = (KeyStroke) value;
 			
-			macro.setModifiers(stroke.getModifierKeys());
-			macro.setKeyCode(stroke.getNaturalKey());
+			macro.setKeyString(MacroRegistry.instance().getKeyString(stroke.getNaturalKey(), stroke.getModifierKeys()));
 			
 			macroTableView.update(macro, null);
 		}	

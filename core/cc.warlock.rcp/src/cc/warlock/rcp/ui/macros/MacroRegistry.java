@@ -57,7 +57,7 @@ import cc.warlock.rcp.ui.macros.internal.ReturnMacroHandler;
 public class MacroRegistry {
 	private static MacroRegistry instance = new MacroRegistry();
 	
-	private ArrayList<IMacro> macros = new ArrayList<IMacro>();
+	private HashMap<String, IMacro> macros = new HashMap<String, IMacro>();
 	
 	// TODO - determine if variables and commands should be synchronized
 	private HashMap<String, IMacroVariable> variables = new HashMap<String, IMacroVariable>();
@@ -67,21 +67,16 @@ public class MacroRegistry {
 	public HashMap<String, Integer> mods = new HashMap<String, Integer>();
 	
 	MacroRegistry () {
+		loadKeys();
 		loadMacros();
 		loadVariables();
 		loadCommands();
 		loadDefaultMacros();
-		loadKeys();
 	}
 	
 	public static MacroRegistry instance ()
 	{	
 		return instance;
-	}
-	
-	public Collection<IMacro> getMacros ()
-	{
-		return macros;
 	}
 	
 	public Collection<IMacroVariable> getMacroVariables ()
@@ -93,25 +88,14 @@ public class MacroRegistry {
 		return commands.values();
 	}
 	
-	public void addMacro (IMacro macro)
+	private void addMacro (IMacro macro)
 	{
-		macros.add(macro);
-	}
-	
-	public void removeMacro(IMacro macro) {
-		macros.remove(macro);
-	}
-	
-	public void replaceMacro(IMacro originalMacro, IMacro newMacro) {
-		int index = macros.indexOf(originalMacro);
-		if (index > -1) {
-			macros.set(index, newMacro);
-		}
+		macros.put(macro.getKeyString(), macro);
 	}
 	
 	private void loadMacros () {
-		macros.add(new WarlockMacro(SWT.CR, new ReturnMacroHandler()));
-		macros.add(new WarlockMacro(SWT.ESC, new EscapeMacroHandler()));
+		addMacro(new WarlockMacro(getKeyString(SWT.CR, 0), new ReturnMacroHandler()));
+		addMacro(new WarlockMacro(getKeyString(SWT.ESC, 0), new EscapeMacroHandler()));
 	}
 	
 	private void loadDefaultMacros() {
@@ -217,7 +201,7 @@ public class MacroRegistry {
 	}
 	
 	private DefaultMacro createDefaultMacro(String command, int keycode, int modifier) {
-		DefaultMacro macro = new DefaultMacro(command, keycode, modifier);
+		DefaultMacro macro = new DefaultMacro(command, getKeyString(keycode, modifier));
 		defaultMacros.add(macro);
 		return macro;
 	}
@@ -227,13 +211,7 @@ public class MacroRegistry {
 	}
 	
 	public IMacro getMacro(int keycode, int modifiers) {
-		for (IMacro macro : macros)
-		{
-			if (macro.getKeyCode() == keycode && macro.getModifiers() == modifiers) {
-				return macro;
-			}
-		}
-		return null;
+		return macros.get(getKeyString(keycode, modifiers));
 	}
 	
 	public void setMacroVariable(String id, IMacroVariable variable) {
@@ -306,6 +284,30 @@ public class MacroRegistry {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getKeycode(String keyString) {
+		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
+			if(keyString.startsWith(entry.getKey() + "-")) {
+				keyString = keyString.substring(entry.getKey().length() + 1);
+			}
+		}
+		Integer keycode = keys.get(keyString);
+		if(keycode != null)
+			return keycode;
+		return keyString.charAt(0);
+	}
+	
+	public int getModifiers(String keyString) {
+		int modifiers = 0;
+		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
+			if(keyString.startsWith(entry.getKey() + "-")) {
+				keyString = keyString.substring(entry.getKey().length() + 1);
+				modifiers |= entry.getValue();
+			}
+				
+		}
+		return modifiers;
 	}
 	
 	public String getKeyString(int keycode, int modifiers) {
