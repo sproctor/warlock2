@@ -806,6 +806,11 @@ public class WSLScriptCommands {
 			double newValue = value % operand;
 			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
 		}
+		else if ("log".equalsIgnoreCase(operator))
+		{
+			double newValue = Math.log10(value);
+			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+		}
 		else
 		{
 			script.scriptError("Unrecognized math command \"" + operator + "\"");
