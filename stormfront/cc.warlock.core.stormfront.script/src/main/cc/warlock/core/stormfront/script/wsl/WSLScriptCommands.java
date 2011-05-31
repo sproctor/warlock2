@@ -808,7 +808,16 @@ public class WSLScriptCommands {
 		}
 		else if ("log".equalsIgnoreCase(operator))
 		{
-			double newValue = Math.log10(value);
+			double newValue;
+			if(operand != 1 && operand != 10)
+				newValue = Math.log(value) / Math.log(operand);
+			else
+				newValue = Math.log10(value);
+			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+		}
+		else if ("ln".equalsIgnoreCase(operator))
+		{
+			double newValue = Math.log(value);
 			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
 		}
 		else
