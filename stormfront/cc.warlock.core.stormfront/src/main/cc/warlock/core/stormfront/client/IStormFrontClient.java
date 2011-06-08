@@ -44,11 +44,6 @@ import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
  */
 public interface IStormFrontClient extends IWarlockClient, IRoomListener {
 	
-	public static final String COMPONENT_ROOM_PLAYERS = "room players";
-	public static final String COMPONENT_ROOM_OBJECTS = "room objs";
-	public static final String COMPONENT_ROOM_EXITS = "room exits";
-	public static final String COMPONENT_ROOM_DESCRIPTION = "room desc";
-	
 	/**
 	 * The server settings for this client
 	 * @return

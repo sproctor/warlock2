@@ -89,10 +89,10 @@ public class WSLScript extends AbstractScript {
 		setSpecialVariable("lhand", new WSLLeftHand());
 		setSpecialVariable("rhand", new WSLRightHand());
 		setSpecialVariable("spell", new WSLSpell());
-		setSpecialVariable("roomdesc", new WSLComponent(IStormFrontClient.COMPONENT_ROOM_DESCRIPTION));
-		setSpecialVariable("roomexits", new WSLComponent(IStormFrontClient.COMPONENT_ROOM_EXITS));
-		setSpecialVariable("roomplayers", new WSLComponent(IStormFrontClient.COMPONENT_ROOM_PLAYERS));
-		setSpecialVariable("roomobjects", new WSLComponent(IStormFrontClient.COMPONENT_ROOM_OBJECTS));
+		setSpecialVariable("roomdesc", new WSLComponent("room desc"));
+		setSpecialVariable("roomexits", new WSLComponent("room exits"));
+		setSpecialVariable("roomplayers", new WSLComponent("room players"));
+		setSpecialVariable("roomobjects", new WSLComponent("room objs"));
 		setSpecialVariable("roomtitle", new WSLRoomTitle());
 		setSpecialVariable("lastcommand", new WSLLastCommand());
 		setSpecialVariable("character", new WSLCharacter());
