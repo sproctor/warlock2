@@ -173,8 +173,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 		
 		if(settings != null) {
 			// Set to defaults first, then try window settings later
-			Color background = ColorUtil.warlockColorToColor(settings.getMainWindowSettings().getBackgroundColor());
-			Color foreground = ColorUtil.warlockColorToColor(settings.getMainWindowSettings().getBackgroundColor());
+			Color background = ColorUtil.warlockColorToColor(settings.getDefaultBackground());
+			Color foreground = ColorUtil.warlockColorToColor(settings.getDefaultForeground());
 			IWarlockFont font = settings.getMainWindowSettings().getFont();
 			
 			if (!streamName.equals(IWarlockClient.DEFAULT_STREAM_NAME)) {
