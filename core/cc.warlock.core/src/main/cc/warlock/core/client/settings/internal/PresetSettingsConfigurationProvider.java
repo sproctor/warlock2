@@ -57,7 +57,7 @@ public class PresetSettingsConfigurationProvider extends WarlockSetting {
 	public IWarlockStyle getOrCreateStyle(String id) {
 		IWarlockStyle style = styleSettings.get(id);
 		if(style == null) {
-			style = new StyleSetting(getNode(), id);
+			style = new StyleSetting(getNode(), id, true);
 			styleSettings.put(id, style);
 		}
 		return style;

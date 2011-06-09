@@ -118,7 +118,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 	private StyleRange whisperStyleRange, thoughtStyleRange;
 	
 	private ClientSettings settings;
-	private HashMap<String, WarlockStyle> styles = new HashMap<String, WarlockStyle>();
+	private HashMap<String, IWarlockStyle> styles = new HashMap<String, IWarlockStyle>();
 	
 	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
 	static {
@@ -423,9 +423,16 @@ public class PresetsPreferencePage extends PropertyPage implements
 	{
 		if (settings != null)
 		{	
-			for (IWarlockStyle style: settings.getPresetConfigurationProvider().getStyles())
+			for (String styleName: presetDescriptions.keySet())
 			{
-				styles.put(style.getName(), new WarlockStyle(style));
+				IWarlockStyle style = settings.getPresetConfigurationProvider().getStyle(styleName);
+				if(style == null) {
+					style = settings.getPresetConfigurationProvider().getOrCreateStyle(styleName);
+					IWarlockStyle defaultStyle = settings.getDefaultStyle(styleName);
+					style.setBackgroundColor(defaultStyle.getBackgroundColor());
+					style.setForegroundColor(defaultStyle.getForegroundColor());
+				}
+				styles.put(styleName, style);
 			}
 			
 			mainBGSelector.setColorValue(
@@ -485,7 +492,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	private void updatePresetColors (String presetName, StyleRange styleRange)
 	{
-		WarlockStyle style = styles.get(presetName);
+		IWarlockStyle style = styles.get(presetName);
 		if(style == null)
 			style = new WarlockStyle(presetName);
 		styleRange.background = getWorkingBackgroundColor(style);
