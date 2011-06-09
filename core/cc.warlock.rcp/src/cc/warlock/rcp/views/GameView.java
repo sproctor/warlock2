@@ -455,6 +455,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		if(!customViews.containsKey(name)) {
 			StreamView view = StreamView.getViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
 			view.setClient(client);
+			customViews.put(name, view);
 		}
 	}
 	

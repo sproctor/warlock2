@@ -724,15 +724,15 @@ public class WSLScriptCommands {
 	}
 	
 	protected class WSLCommandPrint implements IWSLCommandDefinition {
-		private Pattern format = Pattern.compile("^([^\\s]+)(\\s+([^\\s]+))?");
+		private Pattern format = Pattern.compile("^([^\\s]+)(\\s+(.+))?");
 		
 		public void execute(WSLScript script, String arguments) {
 			Matcher m = format.matcher(arguments);
 
 			if(m.find()) {
 				String name = m.group(1);
-				String text = m.groupCount() > 1 ? m.group(2) : "";
-				script.getCommands().printToWindow(name, text);
+				String text = m.groupCount() > 2 ? m.group(3) : "";
+				script.getCommands().printToWindow(name, text + "\n");
 			} else {
 				script.scriptError("Invalid arguments to print.");
 			}

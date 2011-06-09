@@ -336,10 +336,10 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	}
 	
 	public void openWindow(String name) {
-		getClient().getViewer().openCustomStream(name);
+		getClient().getViewer().openCustomStream("script" + name);
 	}
 	
 	public void printToWindow(String name, String text) {
-		getClient().getViewer().printToCustomStream(name, new WarlockString(text));
+		getClient().getViewer().printToCustomStream("script" + name, new WarlockString(text));
 	}
 }
