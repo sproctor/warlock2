@@ -63,4 +63,7 @@ public interface IScriptCommands extends IRoomListener {
 	public void waitForResume() throws InterruptedException;
 	
 	public void playSound (InputStream stream);
+	
+	public void openWindow(String name);
+	public void printToWindow(String name, String text);
 }

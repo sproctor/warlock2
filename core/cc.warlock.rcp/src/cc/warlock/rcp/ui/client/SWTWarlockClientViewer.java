@@ -36,6 +36,7 @@ import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.configuration.IWarlockSetting;
 
@@ -64,6 +65,7 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 			viewer.setCurrentCommand(command);
 		}
 	}
+	
 	
 	private class NextCommandWrapper implements Runnable {
 		public void run () {
@@ -134,6 +136,32 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	private class PasteWrapper implements Runnable {
 		public void run () {
 			viewer.paste();
+		}
+	}
+	
+	private class OpenCustomStreamWrapper implements Runnable {
+		public String name;
+		
+		public OpenCustomStreamWrapper(String name) {
+			this.name = name;
+		}
+		
+		public void run () {
+			viewer.openCustomStream(name);
+		}
+	}
+	
+	private class PrintToCustomStreamWrapper implements Runnable {
+		private String name;
+		private WarlockString text;
+		
+		public PrintToCustomStreamWrapper(String name, WarlockString text) {
+			this.name = name;
+			this.text = text;
+		}
+		
+		public void run () {
+			viewer.printToCustomStream(name, text);
 		}
 	}
 	
@@ -213,5 +241,13 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	
 	public IWarlockSetting getSettings() {
 		return viewer.getSettings();
+	}
+	
+	public void openCustomStream(String name) {
+		run(new OpenCustomStreamWrapper(name));
+	}
+	
+	public void printToCustomStream(String name, WarlockString text) {
+		run(new PrintToCustomStreamWrapper(name, text));
 	}
 }

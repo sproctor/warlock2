@@ -76,4 +76,7 @@ public interface IWarlockClientViewer {
 	public Collection<DefaultMacro> getDefaultMacros();
 	
 	public boolean isStreamOpen(String streamName);
+	
+	public void openCustomStream(String name);
+	public void printToCustomStream(String name, WarlockString text);
 }

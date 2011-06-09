@@ -26,6 +26,7 @@ package cc.warlock.rcp.views;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -52,6 +53,7 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
@@ -85,6 +87,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected Composite mainComposite;
 	
 	private Profile profile;
+	
+	private HashMap<String, StreamView> customViews = new HashMap<String, StreamView>();
 	
 	public GameView () {
 		super();
@@ -445,5 +449,22 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public void clientSettingsLoaded(IWarlockClient client) {
 		if(this.client == client)
 			gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
+	}
+	
+	public void openCustomStream(String name) {
+		if(!customViews.containsKey(name)) {
+			StreamView view = StreamView.getViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
+			view.setClient(client);
+		}
+	}
+	
+	public void printToCustomStream(String name, WarlockString text) {
+		StreamView view = customViews.get(name);
+		if(view == null)
+			return;
+		StreamText stream = view.getStreamTextForClient(client);
+		if(stream == null)
+			return;
+		stream.append(text);
 	}
 }

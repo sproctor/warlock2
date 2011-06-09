@@ -60,9 +60,11 @@ public class WSLScriptCommands {
 		addCommandDefinition("math", new WSLCommandMath());
 		addCommandDefinition("move", new WSLCommandMove());
 		addCommandDefinition("nextroom", new WSLCommandNextRoom());
+		addCommandDefinition("openwindow", new WSLCommandOpenWindow());
 		addCommandDefinition("pause", new WSLCommandPause());
-		addCommandDefinition("put", new WSLCommandPut());
 		addCommandDefinition("playsound", new WSLCommandPlaySound());
+		addCommandDefinition("print", new WSLCommandPrint());
+		addCommandDefinition("put", new WSLCommandPut());
 		addCommandDefinition("random", new WSLCommandRandom());
 		addCommandDefinition("return", new WSLCommandReturn());
 		addCommandDefinition("run", new WSLCommandRun());
@@ -712,6 +714,31 @@ public class WSLScriptCommands {
 		}
 	}
 
+	protected class WSLCommandOpenWindow implements IWSLCommandDefinition {
+		public void execute(WSLScript script, String arguments) {
+			String[] windows = arguments.split("\\s+");
+			for(String name : windows) {
+				script.getCommands().openWindow(name);
+			}
+		}
+	}
+	
+	protected class WSLCommandPrint implements IWSLCommandDefinition {
+		private Pattern format = Pattern.compile("^([^\\s]+)(\\s+([^\\s]+))?");
+		
+		public void execute(WSLScript script, String arguments) {
+			Matcher m = format.matcher(arguments);
+
+			if(m.find()) {
+				String name = m.group(1);
+				String text = m.groupCount() > 1 ? m.group(2) : "";
+				script.getCommands().printToWindow(name, text);
+			} else {
+				script.scriptError("Invalid arguments to print.");
+			}
+		}
+	}
+	
 	private class ScriptTimer extends WSLAbstractNumber {
 		private long timerStart = -1L;
 		private long timePast = 0L;

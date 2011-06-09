@@ -334,4 +334,12 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void openWindow(String name) {
+		getClient().getViewer().openCustomStream(name);
+	}
+	
+	public void printToWindow(String name, String text) {
+		getClient().getViewer().printToCustomStream(name, new WarlockString(text));
+	}
 }

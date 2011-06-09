@@ -275,4 +275,8 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		this.setBackground(client, ColorUtil.warlockColorToColor(bg));
 		this.setForeground(client, ColorUtil.warlockColorToColor(fg));
 	}
+	
+	public StreamText getStreamTextForClient(IWarlockClient client) {
+		return streams.get(client);
+	}
 }
