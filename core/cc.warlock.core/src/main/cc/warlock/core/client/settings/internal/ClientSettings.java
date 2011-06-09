@@ -27,6 +27,7 @@ import java.util.HashMap;
 import org.osgi.service.prefs.BackingStoreException;
 
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockStyle;
@@ -148,37 +149,56 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 	}
 	
 	public WarlockColor getDefaultBackground() {
-		WarlockColor bg = this.getMainWindowSettings().getBackgroundColor();
+		WarlockColor bg = null;
+		IWindowSettings mainWindow = getMainWindowSettings();
+		if(mainWindow != null)
+			bg = mainWindow.getBackgroundColor();
 		if(bg == null || bg.isDefault())
 			bg = defaultBgColor;
 		return bg;
 	}
 	
 	public WarlockColor getDefaultForeground() {
-		WarlockColor fg = this.getMainWindowSettings().getForegroundColor();
+		WarlockColor fg = null;
+		IWindowSettings mainWindow = getMainWindowSettings();
+		if(mainWindow != null)
+			fg = mainWindow.getForegroundColor();
 		if(fg == null || fg.isDefault())
 			fg = defaultFgColor;
 		return fg;
 	}
 	
 	public WarlockColor getWindowBackground(String windowId) {
-		WarlockColor bg = getWindowSettings(windowId).getBackgroundColor();
-		if(bg == null || bg.isDefault()) {
-			bg = this.getMainWindowSettings().getBackgroundColor();
-			if(bg == null || bg.isDefault())
-				bg = defaultBgColor;
-		}
+		WarlockColor bg = null;
+		IWindowSettings wsettings = getWindowSettings(windowId);
+		if(wsettings != null)
+			bg = wsettings.getBackgroundColor();
+		if(bg == null || bg.isDefault())
+			bg = getDefaultBackground();
 		return bg;
 	}
 	
 	public WarlockColor getWindowForeground(String windowId) {
-		WarlockColor fg = getWindowSettings(windowId).getForegroundColor();
-		if(fg == null || fg.isDefault()) {
-			fg = this.getMainWindowSettings().getForegroundColor();
-			if(fg == null || fg.isDefault())
-				fg = defaultFgColor;
-		}
+		WarlockColor fg = null;
+		IWindowSettings wsettings = getWindowSettings(windowId);
+		if(wsettings != null)
+			fg = wsettings.getForegroundColor();
+		if(fg == null || fg.isDefault())
+			fg = getDefaultForeground();
 		return fg;
+	}
+	
+	public IWarlockFont getWindowFont(String windowId) {
+		IWarlockFont font = null;
+		IWindowSettings wsettings = getWindowSettings(windowId);
+		if(wsettings != null)
+			font = wsettings.getFont();
+		if(font == null || font.isDefaultFont()) {
+			IWindowSettings mainWindow = getMainWindowSettings();
+			if(mainWindow != null)
+				font = mainWindow.getFont();
+		}
+		return font;
 	}
 	
 	public IVariable getVariable(String identifier) {

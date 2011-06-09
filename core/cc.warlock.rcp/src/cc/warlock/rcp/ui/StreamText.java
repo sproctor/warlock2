@@ -15,7 +15,6 @@ import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
@@ -173,21 +172,10 @@ public class StreamText extends WarlockText implements IStreamListener {
 		
 		if(settings != null) {
 			// Set to defaults first, then try window settings later
-			Color background = ColorUtil.warlockColorToColor(settings.getDefaultBackground());
-			Color foreground = ColorUtil.warlockColorToColor(settings.getDefaultForeground());
-			IWarlockFont font = settings.getMainWindowSettings().getFont();
+			Color background = ColorUtil.warlockColorToColor(settings.getWindowBackground(streamName));
+			Color foreground = ColorUtil.warlockColorToColor(settings.getWindowForeground(streamName));
+			IWarlockFont font = settings.getWindowFont(streamName);
 			
-			if (!streamName.equals(IWarlockClient.DEFAULT_STREAM_NAME)) {
-				IWindowSettings wsettings = settings.getWindowSettings(streamName);
-				if (wsettings != null) {
-					if (!wsettings.getBackgroundColor().isDefault())
-						background = ColorUtil.warlockColorToColor(wsettings.getBackgroundColor());
-					if (!wsettings.getForegroundColor().isDefault())
-						foreground = ColorUtil.warlockColorToColor(wsettings.getForegroundColor());
-					if (!wsettings.getFont().isDefaultFont())
-						font = wsettings.getFont();
-				}
-			}
 			this.setBackground(background);
 			this.setForeground(foreground);
 

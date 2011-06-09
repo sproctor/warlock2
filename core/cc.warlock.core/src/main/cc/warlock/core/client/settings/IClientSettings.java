@@ -24,6 +24,7 @@ package cc.warlock.core.client.settings;
 import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.logging.LoggingConfiguration;
@@ -58,6 +59,10 @@ public interface IClientSettings extends IWarlockSetting {
 
 	public WarlockColor getDefaultBackground();
 	public WarlockColor getDefaultForeground();
+	
+	public WarlockColor getWindowBackground(String windowId);
+	public WarlockColor getWindowForeground(String windowId);
+	public IWarlockFont getWindowFont(String windowId);
 	
 	public IWindowSettings getMainWindowSettings();
 	public HighlightConfigurationProvider getHighlightConfigurationProvider();
