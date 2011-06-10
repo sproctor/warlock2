@@ -342,4 +342,8 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void printToWindow(String name, String text) {
 		getClient().getViewer().printToCustomStream("script" + name, new WarlockString(text));
 	}
+	
+	public void clearWindow(String name) {
+		getClient().getViewer().clearCustomStream("script" + name);
+	}
 }

@@ -79,4 +79,5 @@ public interface IWarlockClientViewer {
 	
 	public void openCustomStream(String name);
 	public void printToCustomStream(String name, WarlockString text);
+	public void clearCustomStream(String name);
 }

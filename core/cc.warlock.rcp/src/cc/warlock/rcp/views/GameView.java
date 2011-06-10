@@ -88,7 +88,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	private Profile profile;
 	
-	private HashMap<String, StreamView> customViews = new HashMap<String, StreamView>();
+	private HashMap<String, StreamText> customStreams = new HashMap<String, StreamText>();
 	
 	public GameView () {
 		super();
@@ -452,20 +452,22 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	}
 	
 	public void openCustomStream(String name) {
-		if(!customViews.containsKey(name)) {
-			StreamView view = StreamView.getViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
-			view.setClient(client);
-			customViews.put(name, view);
-		}
+		StreamView view = StreamView.getViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
+		view.setClient(client);
+		customStreams.put(name, view.getStreamTextForClient(client));
 	}
 	
 	public void printToCustomStream(String name, WarlockString text) {
-		StreamView view = customViews.get(name);
-		if(view == null)
-			return;
-		StreamText stream = view.getStreamTextForClient(client);
+		StreamText stream = customStreams.get(name);
 		if(stream == null)
 			return;
 		stream.append(text);
+	}
+	
+	public void clearCustomStream(String name) {
+		StreamText stream = customStreams.get(name);
+		if(stream == null)
+			return;
+		stream.clearText();
 	}
 }

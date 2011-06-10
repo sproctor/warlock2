@@ -165,6 +165,18 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 		}
 	}
 	
+	private class ClearCustomStreamWrapper implements Runnable {
+		public String name;
+		
+		public ClearCustomStreamWrapper(String name) {
+			this.name = name;
+		}
+		
+		public void run () {
+			viewer.clearCustomStream(name);
+		}
+	}
+	
 	protected void run(Runnable runnable)
 	{
 		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
@@ -249,5 +261,9 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	
 	public void printToCustomStream(String name, WarlockString text) {
 		run(new PrintToCustomStreamWrapper(name, text));
+	}
+	
+	public void clearCustomStream(String name) {
+		run(new ClearCustomStreamWrapper(name));
 	}
 }

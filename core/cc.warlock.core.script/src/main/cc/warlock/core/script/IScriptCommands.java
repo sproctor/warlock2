@@ -66,4 +66,5 @@ public interface IScriptCommands extends IRoomListener {
 	
 	public void openWindow(String name);
 	public void printToWindow(String name, String text);
+	public void clearWindow(String name);
 }

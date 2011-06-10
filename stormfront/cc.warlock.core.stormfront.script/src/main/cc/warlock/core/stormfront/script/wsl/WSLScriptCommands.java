@@ -36,9 +36,10 @@ public class WSLScriptCommands {
 	
 	private WSLScriptCommands() {
 		// add command handlers
+		addCommandDefinition("clearwindow", new WSLCommandClearWindow());
 		addCommandDefinition("counter", new WSLCommandCounter());
-		addCommandDefinition("deletevariable", new WSLCommandDeleteVariable());
 		addCommandDefinition("deletelocalvariable", new WSLCommandDeleteLocalVariable());
+		addCommandDefinition("deletevariable", new WSLCommandDeleteVariable());
 		addCommandDefinition("debug", new WSLCommandDebug());
 		addCommandDefinition("delay", new WSLCommandDelay());
 		addCommandDefinition("echo", new WSLCommandEcho());
@@ -735,6 +736,15 @@ public class WSLScriptCommands {
 				script.getCommands().printToWindow(name, text + "\n");
 			} else {
 				script.scriptError("Invalid arguments to print.");
+			}
+		}
+	}
+	
+	protected class WSLCommandClearWindow implements IWSLCommandDefinition {
+		public void execute(WSLScript script, String arguments) {
+			String[] windows = arguments.split("\\s+");
+			for(String name : windows) {
+				script.getCommands().clearWindow(name);
 			}
 		}
 	}
