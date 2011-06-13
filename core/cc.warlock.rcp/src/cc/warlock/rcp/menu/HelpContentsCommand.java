@@ -19,23 +19,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.help;
+package cc.warlock.rcp.menu;
+
+import java.net.URL;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.browser.IWebBrowser;
 
-import cc.warlock.rcp.menu.SimpleCommandHandler;
 
 public class HelpContentsCommand extends SimpleCommandHandler {
 
 	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchAction action = ActionFactory.HELP_CONTENTS.create(
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-		action.run();
+		try {
+			final IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null);
+			browser.openURL(new URL("http://warlock.cc/wiki/index.php/Main_Page"));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
