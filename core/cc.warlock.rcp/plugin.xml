@@ -271,7 +271,7 @@
             name="Scripts Window">
       </command>
       <command
-            defaultHandler="cc.warlock.rcp.help.HelpContentsCommand"
+            defaultHandler="cc.warlock.rcp.menu.HelpContentsCommand"
             id="cc.warlock.rcp.command.helpContents"
             name="Help Contents">
       </command>
