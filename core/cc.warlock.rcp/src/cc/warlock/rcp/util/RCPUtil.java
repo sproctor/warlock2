@@ -45,7 +45,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.client.WarlockClientAdaptable;
 import cc.warlock.rcp.views.GameView;
 
@@ -144,20 +143,20 @@ public class RCPUtil {
 	public static int openPreferences (String pageId)
 	{
 		GameView inFocus = GameView.getGameViewInFocus();
-		// FIXME: handle the case where we don't have a GameView
-		if (inFocus != null)
-		{
-			// FIXME: the GameView may not be connected, so... no preferences?
-			IWarlockClient activeClient = inFocus.getWarlockClient();
-
-			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(Display.getDefault().getActiveShell(),
-					new WarlockClientAdaptable(activeClient), pageId, null, null);
-
-			dialog.getTreeViewer().expandToLevel(2);
-
-			return dialog.open();
-		}
 		
-		return 0;
+		WarlockClientAdaptable clientAdapter = null;
+		
+		if (inFocus != null)
+			clientAdapter = new WarlockClientAdaptable(inFocus.getWarlockClient());
+
+		PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(Display.getDefault().getActiveShell(),
+					clientAdapter, pageId, null, null);
+
+		if(dialog == null)
+			return 0;
+		
+		dialog.getTreeViewer().expandToLevel(2);
+
+		return dialog.open();
 	}
 }
