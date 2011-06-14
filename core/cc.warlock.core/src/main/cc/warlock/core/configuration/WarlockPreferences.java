@@ -14,7 +14,7 @@ public class WarlockPreferences {
 	private IEclipsePreferences topLevel = scope.getNode("cc.warlock");
 	
 	protected WarlockPreferences() {
-		System.out.print(scope.getLocation().toString());
+		System.out.println("Configuration location: " + scope.getLocation().toString());
 	}
 	
 	public static WarlockPreferences getInstance() {
