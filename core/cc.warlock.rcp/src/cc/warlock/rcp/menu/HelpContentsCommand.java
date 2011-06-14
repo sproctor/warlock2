@@ -21,24 +21,17 @@
  */
 package cc.warlock.rcp.menu;
 
-import java.net.URL;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
+
+import cc.warlock.rcp.util.RCPUtil;
 
 
 public class HelpContentsCommand extends SimpleCommandHandler {
 
 	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		try {
-			final IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null);
-			browser.openURL(new URL("http://warlock.cc/wiki/index.php/Main_Page"));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		RCPUtil.openURL("http://warlock.cc/wiki/index.php/Main_Page");
 		
 		return null;
 	}
