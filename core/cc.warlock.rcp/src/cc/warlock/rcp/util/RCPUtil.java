@@ -141,7 +141,7 @@ public class RCPUtil {
 		}
 	}
 	
-	public static void openPreferences (String pageId)
+	public static int openPreferences (String pageId)
 	{
 		GameView inFocus = GameView.getGameViewInFocus();
 		// FIXME: handle the case where we don't have a GameView
@@ -155,7 +155,9 @@ public class RCPUtil {
 
 			dialog.getTreeViewer().expandToLevel(2);
 
-			int response = dialog.open();
+			return dialog.open();
 		}
+		
+		return 0;
 	}
 }
