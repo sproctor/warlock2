@@ -46,7 +46,7 @@ public class Account extends WarlockSetting {
 	protected String accountName, password;
 	protected ProfileProvider profiles;
 	
-	public static String decryptPassword (String encrypted)
+	public static String decryptPassword (byte[] encrypted)
 	{
 		if(encrypted == null)
 			return null;
@@ -54,7 +54,7 @@ public class Account extends WarlockSetting {
 		return encrypter.decrypt(encrypted);
 	}
 	
-	public static String encryptPassword (String password)
+	public static byte[] encryptPassword (String password)
 	{
 		if(password == null)
 			return null;
@@ -101,14 +101,14 @@ public class Account extends WarlockSetting {
 			}
 		}
 		
-		public String encrypt (String text)
+		public byte[] encrypt (String text)
 		{
 			if (eCipher != null)
 			{
 				try {
 					byte[] utf8 = text.getBytes("UTF8");
 					byte[] encoded = eCipher.doFinal(utf8);
-					return new String(Base64.encodeBase64(encoded));
+					return Base64.encodeBase64(encoded);
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -121,16 +121,16 @@ public class Account extends WarlockSetting {
 				}
 				return null;
 			} else {
-				return text;
+				return text.getBytes();
 			}
 		}
 		
-		public String decrypt (String text)
+		public String decrypt (byte[] password)
 		{
 			if (dCipher != null)
 			{
 				try {
-					byte[] encoded = Base64.decodeBase64(text.getBytes());
+					byte[] encoded = Base64.decodeBase64(password);
 					byte[] utf8 = dCipher.doFinal(encoded);
 					
 					return new String(utf8, "UTF8");
@@ -146,7 +146,7 @@ public class Account extends WarlockSetting {
 				}
 				return null;
 			} else {
-				return text;
+				return password.toString();
 			}
 		}
 	}
@@ -155,7 +155,7 @@ public class Account extends WarlockSetting {
 		super(parentNode, path);
 		
 		this.accountName = getNode().get("account-name", null);
-		this.password = decryptPassword(getNode().get("password", null));
+		this.password = decryptPassword(getNode().getByteArray("password", null));
 		profiles = new ProfileProvider(getNode());
 		this.flush();
 	}
@@ -175,7 +175,7 @@ public class Account extends WarlockSetting {
 	}
 
 	public void setPassword(String password) {
-		getNode().put("password", encryptPassword(password));
+		getNode().putByteArray("password", encryptPassword(password));
 		
 		this.password = password;
 	}
