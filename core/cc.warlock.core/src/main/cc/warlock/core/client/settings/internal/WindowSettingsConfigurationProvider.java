@@ -22,6 +22,7 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.osgi.service.prefs.Preferences;
@@ -48,7 +49,7 @@ public class WindowSettingsConfigurationProvider extends WarlockSetting implemen
 	}
 
 	public Collection<IWindowSettings> getWindowSettings() {
-		return windowSettings.values();
+		return Collections.unmodifiableCollection(windowSettings.values());
 	}
 
 	public IWindowSettings getWindowSettings(String windowId) {

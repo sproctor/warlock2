@@ -22,6 +22,7 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.osgi.service.prefs.Preferences;
@@ -64,7 +65,7 @@ public class VariableConfigurationProvider extends WarlockSetting implements IVa
 	}
 
 	public Collection<IVariable> getVariables() {
-		return variables.values();
+		return Collections.unmodifiableCollection(variables.values());
 	}
 
 	public IVariable removeVariable(String identifier) {

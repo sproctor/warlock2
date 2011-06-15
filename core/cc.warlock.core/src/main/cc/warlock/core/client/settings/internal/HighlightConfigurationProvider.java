@@ -35,19 +35,4 @@ public class HighlightConfigurationProvider extends ArrayConfigurationProvider<I
 	protected HighlightSetting loadSetting(String id) {
 		return new HighlightSetting(getNode(), id);
 	}
-	
-	/*public void replaceHighlightString(IHighlightString originalString,
-			IHighlightString newString) {
-		for(Entry<String, IHighlightString> entry : highlights.entrySet()) {
-			if(entry.getValue().equals(originalString)) {
-				highlights.put(entry.getKey(), newString);
-				getNode().put(entry.getKey(), newString)
-				break;
-			}
-		}
-		int index = highlights.indexOf(originalString);
-		if (index > -1) {
-			highlights.set(index, newString);
-		}
-	}*/
 }

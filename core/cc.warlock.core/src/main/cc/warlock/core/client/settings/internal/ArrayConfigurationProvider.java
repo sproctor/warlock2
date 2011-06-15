@@ -1,6 +1,7 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -45,7 +46,7 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 	protected abstract T loadSetting(String id);
 	
 	public Collection<T> getSettings() {
-		return settings.values();
+		return Collections.unmodifiableCollection(settings.values());
 	}
 	
 	public void insertSetting(int index, T string) {
