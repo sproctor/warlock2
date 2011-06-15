@@ -54,7 +54,7 @@ public class StormFrontDocument implements IStormFrontXMLHandler {
 	
 	public void startElement(String name, StormFrontAttributeList attributes, String rawXML) {
 		StormFrontElement currentElement = new StormFrontElement(name);
-		for (StormFrontAttribute attribute : attributes.getList())
+		for (StormFrontAttribute attribute : attributes)
 		{
 			currentElement.addAttribute(attribute);
 		}

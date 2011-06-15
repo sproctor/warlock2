@@ -33,7 +33,7 @@ public class StormFrontProtocolParser {
 		attribute.setName(name);
 		attribute.setValue(value);
 		
-		currentAttributes.addAttribute(attribute);
+		currentAttributes.add(attribute);
 	}
 	
 	protected void endElement (String name)

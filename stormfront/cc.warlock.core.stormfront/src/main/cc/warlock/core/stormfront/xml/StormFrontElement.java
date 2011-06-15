@@ -22,9 +22,9 @@
 package cc.warlock.core.stormfront.xml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -44,10 +44,10 @@ public class StormFrontElement {
 	
 	public StormFrontElement (StormFrontElement other, boolean deepCopy)
 	{
-		this.name = new String(other.name);
-		for (StormFrontAttribute attribute : other.attributes.getList())
+		this.name = other.name;
+		for (StormFrontAttribute attribute : other.attributes)
 		{
-			attributes.addAttribute(new StormFrontAttribute(attribute));
+			attributes.add(new StormFrontAttribute(attribute));
 		}
 		
 		if (deepCopy)
@@ -67,7 +67,7 @@ public class StormFrontElement {
 		if (attr == null)
 		{
 			attr = new StormFrontAttribute();
-			attributes.addAttribute(attr);
+			attributes.add(attr);
 		}
 		
 		attr.setName(name);
@@ -76,14 +76,14 @@ public class StormFrontElement {
 	
 	public void addAttribute (StormFrontAttribute attribute)
 	{
-		attributes.addAttribute(attribute);
+		attributes.add(attribute);
 	}
 	
 	public String removeAttribute (StormFrontAttribute attribute)
 	{
-		if (attribute != null && attributes.getList().contains(attribute))
+		if (attribute != null && attributes.contains(attribute))
 		{
-			attributes.removeAttribute(attribute);
+			attributes.remove(attribute);
 		}
 		return null;
 	}
@@ -103,14 +103,14 @@ public class StormFrontElement {
 		return attributes.getAttribute(name);
 	}
 	
-	public List<StormFrontAttribute> attributes ()
+	public Collection<StormFrontAttribute> attributes ()
 	{
-		return Collections.unmodifiableList(attributes.getList());
+		return Collections.unmodifiableCollection(attributes);
 	}
 	
-	public List<StormFrontElement> elements ()
+	public Collection<StormFrontElement> elements ()
 	{
-		return Collections.unmodifiableList(elements);
+		return Collections.unmodifiableCollection(elements);
 	}
 	
 	public StormFrontElement element(String name)
@@ -190,10 +190,10 @@ public class StormFrontElement {
 		StringBuffer xml = new StringBuffer();
 		
 		xml.append(prefix + "<" + name);
-		if (attributes.getList().size() > 0)
+		if (attributes.size() > 0)
 		{
 			xml.append(" ");
-			for (Iterator<StormFrontAttribute> iter = attributes.getList().iterator(); iter.hasNext();)
+			for (Iterator<StormFrontAttribute> iter = attributes.iterator(); iter.hasNext();)
 			{
 				StormFrontAttribute attribute = iter.next();
 				
