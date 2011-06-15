@@ -24,23 +24,23 @@ package cc.warlock.rcp.ui.client;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 
-	protected IWarlockClient client;
+	protected Preferences prefs;
 	
-	public WarlockClientAdaptable (IWarlockClient client)
+	public WarlockClientAdaptable (Preferences prefs)
 	{
-		this.client = client;
+		this.prefs = prefs;
 	}
 	
 	public Object getAdapter(Class adapter) {
-		if (IWarlockClient.class.isAssignableFrom(adapter))
+		if (Preferences.class.isAssignableFrom(adapter))
 		{
-			return this.client;
+			return prefs;
 		}
 		
 		return null;
@@ -55,10 +55,7 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 	}
 	
 	public String getLabel(Object o) {
-		if(client == null)
-			return null;
-		
-		return client.getDefaultStream().getFullTitle();
+		return prefs.name();
 	}
 	
 	public Object getParent(Object o) {
