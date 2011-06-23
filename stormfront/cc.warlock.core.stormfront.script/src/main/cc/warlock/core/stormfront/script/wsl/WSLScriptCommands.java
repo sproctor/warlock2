@@ -786,15 +786,19 @@ public class WSLScriptCommands {
 		String operator = args[0].trim().toLowerCase();
 
 		double operand;
+		boolean operandIsDefault;
 		if (args.length > 1) {
 			try {
 				operand = Double.parseDouble(args[1].trim());
+				operandIsDefault = false;
 			} catch (NumberFormatException e) {
 				script.scriptError("Operand must be a number");
 				return;
 			}
-		} else
+		} else {
 			operand = 1;
+			operandIsDefault = true;
+		}
 
 		if ("set".equalsIgnoreCase(operator))
 		{
@@ -813,21 +817,18 @@ public class WSLScriptCommands {
 		} else
 			value = 0;
 
-
+		double newValue;
 		if ("add".equalsIgnoreCase(operator))
 		{	
-			double newValue = value + operand;
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+			newValue = value + operand;
 		}
 		else if ("subtract".equalsIgnoreCase(operator))
 		{
-			double newValue = value - operand;
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+			newValue = value - operand;
 		}
 		else if ("multiply".equalsIgnoreCase(operator))
 		{
-			double newValue = value * operand;
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+			newValue = value * operand;
 		}
 		else if ("divide".equalsIgnoreCase(operator))
 		{
@@ -835,32 +836,39 @@ public class WSLScriptCommands {
 				script.scriptError("Cannot divide by zero");
 				return;
 			}
-			double newValue = value / operand;
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+			newValue = value / operand;
 		}
 		else if ("modulus".equalsIgnoreCase(operator))
 		{
-			double newValue = value % operand;
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+			newValue = value % operand;
 		}
 		else if ("log".equalsIgnoreCase(operator))
 		{
-			double newValue;
 			if(operand != 1 && operand != 10)
 				newValue = Math.log(value) / Math.log(operand);
 			else
 				newValue = Math.log10(value);
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
 		}
 		else if ("ln".equalsIgnoreCase(operator))
 		{
-			double newValue = Math.log(value);
-			script.setGlobalVariable(targetVar, new WSLNumber(newValue));
+			newValue = Math.log(value);
+		}
+		else if("truncate".equalsIgnoreCase(operator))
+		{
+			if(operandIsDefault || (long)operand == 0) {
+				long temp = (long)value;
+				newValue = (double)temp;
+			} else {
+				long temp = (long)(value * (10 ^ (long)operand));
+				newValue = temp / (10 ^ (long)operand);
+			}
 		}
 		else
 		{
 			script.scriptError("Unrecognized math command \"" + operator + "\"");
+			return;
 		}
+		script.setGlobalVariable(targetVar, new WSLNumber(newValue));
 	}
 
 }
