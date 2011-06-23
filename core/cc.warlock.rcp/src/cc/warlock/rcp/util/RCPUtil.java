@@ -44,9 +44,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.rcp.prefs.HighlightStringsPreferencePage;
 import cc.warlock.rcp.ui.client.WarlockClientAdaptable;
 import cc.warlock.rcp.views.GameView;
 
@@ -142,19 +140,14 @@ public class RCPUtil {
 		}
 	}
 	
-	public static int openHighlightPreferences() {
+	public static int openPreferences (String pageId)
+	{
 		GameView inFocus = GameView.getGameViewInFocus();
 		
-		if (inFocus != null) {
-			return openPreferences(HighlightStringsPreferencePage.PAGE_ID,
-					inFocus.getWarlockClient().getClientSettings().getHighlightConfigurationProvider().getNode());
-		}
-		return 0;
-	}
-	
-	public static int openPreferences (String pageId, Preferences prefs)
-	{	
-		WarlockClientAdaptable clientAdapter  = new WarlockClientAdaptable(prefs);
+		WarlockClientAdaptable clientAdapter = null;
+		
+		if (inFocus != null)
+			clientAdapter = new WarlockClientAdaptable(inFocus.getWarlockClient());
 
 		PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(Display.getDefault().getActiveShell(),
 					clientAdapter, pageId, null, null);

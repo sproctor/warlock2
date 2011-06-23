@@ -22,6 +22,7 @@
 package cc.warlock.rcp.ui.macros.internal.commands;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.rcp.prefs.HighlightStringsPreferencePage;
 import cc.warlock.rcp.util.RCPUtil;
 
 /**
@@ -32,7 +33,7 @@ import cc.warlock.rcp.util.RCPUtil;
 public class HighlightsDialogMacroCommand implements IMacroCommand {
 
 	public void execute(IWarlockClientViewer context) {
-		RCPUtil.openHighlightPreferences();
+		RCPUtil.openPreferences(HighlightStringsPreferencePage.PAGE_ID);
 	}
 
 	public String getIdentifier() {
