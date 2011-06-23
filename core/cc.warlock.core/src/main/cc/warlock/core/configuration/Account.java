@@ -134,17 +134,10 @@ public class Account extends WarlockSetting {
 					byte[] utf8 = dCipher.doFinal(encoded);
 					
 					return new String(utf8, "UTF8");
-				} catch (IllegalBlockSizeException e) {
-					// TODO Auto-generated catch block
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (BadPaddingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					return null;
 				}
-				return null;
 			} else {
 				return password.toString();
 			}

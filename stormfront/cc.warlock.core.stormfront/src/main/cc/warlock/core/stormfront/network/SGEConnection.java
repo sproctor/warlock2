@@ -123,6 +123,13 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	
 	public void login (String username, String password)
 	{
+		if(username == null || password == null) {
+			resetState();
+			errorCode = INVALID_PASSWORD;
+			fireEvent(SGE_ERROR);
+			return;
+		}
+		
 		state = SGE_ACCOUNT;
 		
 		// This is an ugly hack. If we try to append the encrypted password as a "String", the java language String will
@@ -138,11 +145,11 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 			System.arraycopy(usernameBytes, 0, bytes, 2, usernameBytes.length);
 			bytes[usernameBytes.length + 2] = (byte)'\t';
 			
-			char encrypted[] = encryptPassword(password, passwordHash);
+			byte encrypted[] = encryptPassword(password, passwordHash);
 			for (int i = 0; i < password.length(); i++)
 			{
 				int index = usernameBytes.length + 3 + i;
-				bytes[index] = (byte) encrypted[i];
+				bytes[index] = encrypted[i];
 			}
 			
 			bytes[bytes.length - 1] = (byte) '\n';
@@ -150,15 +157,17 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+			resetState();
+			fireEvent(SGE_ERROR);
 		}
 	}
 	
-	protected char[] encryptPassword (String password, String hash)
+	protected byte[] encryptPassword (String password, String hash)
 	{
-		char encrypted[] = new char[33];
+		byte encrypted[] = new byte[33];
 		for (int i = 0; i < 32 && password.length() > i  && hash.length() > i; i++)
 		{
-			encrypted[i] = (char) ((hash.charAt(i)  ^ (password.charAt(i) - 32)) + 32);
+			encrypted[i] = (byte) ((hash.charAt(i)  ^ (password.charAt(i) - 32)) + 32);
 		}
 		
 		String encryptedString = "";
@@ -439,8 +448,6 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 			Account account = AccountProvider.getInstance().getAccountByProfile(profile);
 			connection.login(account.getAccountName(), account.getPassword());
 		}
-		
-		public void loginFinished(SGEConnection connection, int status) {/* noop */}
 		
 		public void gamesReady(SGEConnection connection,
 				List<? extends ISGEGame> games) {

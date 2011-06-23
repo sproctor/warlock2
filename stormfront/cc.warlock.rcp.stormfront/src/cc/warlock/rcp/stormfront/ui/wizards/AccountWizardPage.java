@@ -112,7 +112,12 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 		if (accounts.size() > 0)
 		{
 			account.getCombo().select(0);
-			password.getTextControl().setText(AccountProvider.getInstance().getAccount(account.getCombo().getText()).getPassword());
+			Account selectedAccount = AccountProvider.getInstance().getAccount(account.getCombo().getText());
+			if(selectedAccount != null) {
+				String passwdString = selectedAccount.getPassword();
+				if(passwdString != null)
+					password.getTextControl().setText(passwdString);
+			}
 			
 			account.getCombo().addSelectionListener(new SelectionListener() {
 				public void widgetDefaultSelected(SelectionEvent e) {
