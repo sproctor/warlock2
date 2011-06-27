@@ -32,6 +32,7 @@ public interface IConnectionListener {
 
 	public void connected (IConnection connection);
 	public void dataReady (IConnection connection, String data);
+	public void dataSent (IConnection connection, String data);
 	public void disconnected (IConnection connection);
 	
 	public void connectionError (IConnection connection, IConnection.ErrorType errorType);

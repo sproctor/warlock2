@@ -497,4 +497,10 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 
 	public void connectionError(IConnection connection, ErrorType errorType) {	
 	}
+
+	@Override
+	public void dataSent(IConnection connection, String data) {
+		// TODO Auto-generated method stub
+		
+	}
 }

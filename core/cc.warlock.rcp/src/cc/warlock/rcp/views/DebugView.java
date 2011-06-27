@@ -39,10 +39,13 @@ import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockClientListener;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.network.IConnection;
-import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.core.network.IConnection.ErrorType;
+import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.rcp.ui.WarlockText;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.network.SWTConnectionListenerAdapter;
@@ -55,10 +58,14 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	private HashMap<IWarlockClient, WarlockText> clientStreams = new HashMap<IWarlockClient, WarlockText>();
 	private IWarlockClient activeClient;
 	private WarlockText activeText;
+	private WarlockStyle sentStyle;
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.views.DebugView";
 	
 	public DebugView() {
+		sentStyle = new WarlockStyle();
+		sentStyle.setForegroundColor(new WarlockColor("#FF0000"));
+		
 		// Add listeners to existing clients
 		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
 			IConnection conn = client.getConnection();
@@ -105,6 +112,12 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	{
 		WarlockText console = getTextForClient(client);
 		console.appendRaw(message);
+	}
+	
+	private void debug (IWarlockClient client, WarlockString message)
+	{
+		WarlockText console = getTextForClient(client);
+		console.append(message);
 	}
 	
 	@Override
@@ -155,7 +168,13 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	}
 	
 	public void connected(IConnection connection) {
-		debug (connection.getClient(), "connected");
+		debug (connection.getClient(), "{connected}");
+	}
+	
+	public void dataSent(IConnection connection, String data) {
+		WarlockString str = new WarlockString(data);
+		str.addStyle(sentStyle);
+		debug (connection.getClient(), str);
 	}
 	
 	public void dataReady(IConnection connection, String data) {
@@ -163,7 +182,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	}
 	
 	public void disconnected(IConnection connection) {
-		debug (connection.getClient(), "disconnected");
+		debug (connection.getClient(), "{disconnected}");
 	}
 	
 	public void connectionError(IConnection connection, ErrorType errorType) {

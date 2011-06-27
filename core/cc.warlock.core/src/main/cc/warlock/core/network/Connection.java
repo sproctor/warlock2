@@ -97,13 +97,15 @@ public class Connection implements IConnection {
 	public void send (String toSend)
 		throws IOException
 	{
-		send(toSend.getBytes());
+		socket.getOutputStream().write(toSend.getBytes());
+		listenersDataSent(toSend);
 	}
 	
 	public void send (byte[] bytes)
 		throws IOException
 	{
 		socket.getOutputStream().write(bytes);
+		listenersDataSent(bytes.toString());
 	}
 	
 	public void sendLine (String line)
@@ -114,6 +116,12 @@ public class Connection implements IConnection {
 	
 	public IWarlockClient getClient() {
 		return null;
+	}
+	
+	private void listenersDataSent (String data) {
+		for (IConnectionListener listener : connectionListeners) {
+			listener.dataSent(this, data);
+		}
 	}
 	
 	protected class EventPollThread implements Runnable
@@ -160,7 +168,7 @@ public class Connection implements IConnection {
 			char cbuf[] = new char[1024];
 
 			int charsRead = reader.read(cbuf);
-			listenersGotData(cbuf, 0, charsRead);
+			listenersGotData(new String(cbuf, 0, charsRead));
 		}
 		
 		private void listenersDisconnected ()
@@ -177,9 +185,8 @@ public class Connection implements IConnection {
 			}
 		}
 		
-		private void listenersGotData (char[] cbuf, int start, int length)
+		private void listenersGotData (String data)
 		{
-			String data = new String(cbuf, start, length);
 			for (IConnectionListener listener : connectionListeners) {
 				listener.dataReady(Connection.this, data);
 			}

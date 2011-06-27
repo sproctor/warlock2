@@ -175,5 +175,8 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 	public void lineReady(IConnection connection, String line) {}
 	public void disconnected(IConnection connection) {}
 
+	@Override
+	public void dataSent(IConnection connection, String data) {}
+
 	
 }

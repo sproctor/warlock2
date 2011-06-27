@@ -58,7 +58,6 @@ public class StormFrontConnection implements IConnection
 	protected boolean connected = false;
 	
 	public StormFrontConnection (IStormFrontClient client, String key) {
-		super();
 		this.client = client;
 		this.key = key;
 		this.handler = new StormFrontProtocolHandler(client);
@@ -88,10 +87,18 @@ public class StormFrontConnection implements IConnection
 	
 	public void send(byte[] bytes) throws IOException {
 		socket.getOutputStream().write(bytes);
+		for (IConnectionListener listener : listeners)
+		{
+			listener.dataSent(this, bytes.toString());
+		}
 	}
 	
 	public void send(String toSend) throws IOException {
-		send(toSend.getBytes());
+		socket.getOutputStream().write(toSend.getBytes());
+		for (IConnectionListener listener : listeners)
+		{
+			listener.dataSent(this, toSend);
+		}
 	}
 	
 	public void sendLine (String line)

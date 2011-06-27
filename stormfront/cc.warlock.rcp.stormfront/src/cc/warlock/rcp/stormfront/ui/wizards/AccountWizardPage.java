@@ -233,4 +233,10 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 	public void disconnected(IConnection connection) {}
 	public void dataReady(IConnection connection, String data) {}
 	public void lineReady(IConnection connection, String line) {}
+
+	@Override
+	public void dataSent(IConnection connection, String data) {
+		// TODO Auto-generated method stub
+		
+	}
 }
