@@ -59,22 +59,20 @@ public class SWTConnectionListenerAdapter implements IConnectionListener {
 	
 	private class DataReadyRunnable implements Runnable
 	{
-		public IConnection connection;
-		public char[] data;
-		public int start, length;
+		private IConnection connection;
+		private String data;
 		
+		public DataReadyRunnable(IConnection connection, String data) {
+			this.connection = connection;
+			this.data = data;
+		}
 		public void run () {
-			listener.dataReady(connection, data, start, length);
+			listener.dataReady(connection, data);
 		}
 	}
 	
-	public void dataReady(IConnection connection, char[] data, int start, int length) {
-		DataReadyRunnable dataReadyRunnable = new DataReadyRunnable();
-		dataReadyRunnable.connection = connection;
-		dataReadyRunnable.data = data;
-		dataReadyRunnable.start = start;
-		dataReadyRunnable.length = length;
-		Display.getDefault().asyncExec(dataReadyRunnable);
+	public void dataReady(IConnection connection, String data) {
+		Display.getDefault().asyncExec(new DataReadyRunnable(connection, data));
 	}
 
 	private class DisconnectedRunnable implements Runnable

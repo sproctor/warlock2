@@ -249,8 +249,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	protected SGEGame currentGame;
 	protected boolean retrievingGames = false;
 
-	public void dataReady(IConnection connection, char[] data, int start,
-			int length) {
+	public void dataReady(IConnection connection, String data) {
 		// TODO Auto-generated method stub
 		
 	}

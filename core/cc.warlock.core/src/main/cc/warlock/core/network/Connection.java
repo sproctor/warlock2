@@ -37,33 +37,19 @@ import cc.warlock.core.client.IWarlockClient;
 public class Connection implements IConnection {
 
 	protected Socket socket;
-	protected ArrayList<IConnectionListener> connectionListeners;
-	protected boolean connected;
-	protected Reader reader;
+	protected ArrayList<IConnectionListener> connectionListeners = new ArrayList<IConnectionListener>();
+	protected boolean connected = false;
+	
 	protected String host = null;
 	protected int port = -1;
-	
-	public Connection (String host, int port)
-		throws IOException
-	{
-		this();
-		connect (host, port);
-	}
-	
-	public Connection ()
-	{
-		connected = false;
-		connectionListeners = new ArrayList<IConnectionListener>();
-	}
 	
 	public void connect (String host, int port)
 		throws IOException
 	{
 		try {
 			socket = new Socket(host, port);
-			reader = createReader(socket);
 			
-			new Thread(createPollingRunnable()).start();
+			new Thread(createPollingRunnable(socket)).start();
 		} catch (IOException e) {
 			if (e instanceof ConnectException && e.getMessage().contains("refused")) {
 				connectionError(ErrorType.ConnectionRefused);
@@ -73,14 +59,8 @@ public class Connection implements IConnection {
 		}
 	}
 	
-	protected Reader createReader (Socket socket)
-		throws IOException
-	{
-		return new InputStreamReader(socket.getInputStream());
-	}
-	
-	protected Runnable createPollingRunnable () {
-		return new EventPollThread();
+	protected Runnable createPollingRunnable (Socket socket) throws IOException {
+		return new EventPollThread(socket);
 	}
 	
 	protected void connectionError (ErrorType errorType)
@@ -138,6 +118,11 @@ public class Connection implements IConnection {
 	
 	protected class EventPollThread implements Runnable
 	{
+		protected Reader reader;
+		
+		public EventPollThread(Socket socket) throws IOException {
+			reader = createReader(socket);
+		}
 		
 		public void run ()
 		{
@@ -165,6 +150,12 @@ public class Connection implements IConnection {
 			}
 		}
 		
+		protected Reader createReader (Socket socket)
+		throws IOException
+		{
+			return new InputStreamReader(socket.getInputStream());
+		}
+
 		protected void readData (Reader reader) throws IOException {
 			char cbuf[] = new char[1024];
 
@@ -188,16 +179,21 @@ public class Connection implements IConnection {
 		
 		private void listenersGotData (char[] cbuf, int start, int length)
 		{
+			String data = new String(cbuf, start, length);
 			for (IConnectionListener listener : connectionListeners) {
-				listener.dataReady(Connection.this, cbuf, start, length);
+				listener.dataReady(Connection.this, data);
 			}
 		}
 		
 		private boolean isSocketActive() {
-			if (!socket.isConnected()) return false;
-			if (socket.isClosed()) return false;
-			if (socket.isInputShutdown()) return false;
-			if (socket.isOutputShutdown()) return false;
+			if (!socket.isConnected())
+				return false;
+			if (socket.isClosed())
+				return false;
+			if (socket.isInputShutdown())
+				return false;
+			if (socket.isOutputShutdown())
+				return false;
 			
 			return true; // If we reach here... we're most likely still connected
 		}

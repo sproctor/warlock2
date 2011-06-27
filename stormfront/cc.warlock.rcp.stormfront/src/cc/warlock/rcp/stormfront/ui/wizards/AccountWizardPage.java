@@ -231,6 +231,6 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 	
 	public void connected(IConnection connection) {}
 	public void disconnected(IConnection connection) {}
-	public void dataReady(IConnection connection, char[] data, int start, int length) {}
+	public void dataReady(IConnection connection, String data) {}
 	public void lineReady(IConnection connection, String line) {}
 }

@@ -158,8 +158,8 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		debug (connection.getClient(), "connected");
 	}
 	
-	public void dataReady(IConnection connection, char[] data, int start, int length) {
-		debug (connection.getClient(), new String(data, start, length));
+	public void dataReady(IConnection connection, String data) {
+		debug (connection.getClient(), data);
 	}
 	
 	public void disconnected(IConnection connection) {

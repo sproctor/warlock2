@@ -35,20 +35,24 @@ import java.net.Socket;
  */
 public class LineConnection extends Connection {
 	
-	protected BufferedReader bufferedReader;
-	
 	@Override
-	protected Reader createReader(Socket socket) throws IOException {
-		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		return bufferedReader;
-	}
-	
-	@Override
-	protected Runnable createPollingRunnable() {
-		return new LineEventPollThread();
+	protected Runnable createPollingRunnable(Socket socket) throws IOException {
+		return new LineEventPollThread(socket);
 	}
 	
 	protected class LineEventPollThread extends Connection.EventPollThread {
+		protected BufferedReader bufferedReader;
+		
+		public LineEventPollThread(Socket socket) throws IOException {
+			super(socket);
+		}
+		
+		@Override
+		protected Reader createReader(Socket socket) throws IOException {
+			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			return bufferedReader;
+		}
+		
 		@Override
 		protected void readData(Reader reader) throws IOException {
 			String line = bufferedReader.readLine();
