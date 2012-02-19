@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
+import cc.warlock.core.client.CommandMacroHandler;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
 import cc.warlock.core.stormfront.settings.IStormFrontMacroImporter;

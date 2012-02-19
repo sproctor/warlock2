@@ -75,6 +75,7 @@ import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.ui.style.CompassThemes;
 import cc.warlock.rcp.ui.style.StyleProviders;
@@ -478,7 +479,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 
 	@Override
 	public Collection<DefaultMacro> getDefaultMacros() {
-		return MacroRegistry.instance().getDefaultMacros();
+		return DefaultMacros.instance().getCollection();
 	}
 	
 }

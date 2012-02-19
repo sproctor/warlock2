@@ -62,19 +62,20 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.part.PageBook;
 
+import cc.warlock.core.client.CommandMacroHandler;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeText;
-import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.KeyStrokeText.KeyStrokeLockListener;
+import cc.warlock.rcp.ui.WarlockSharedImages;
+import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 
 /**
@@ -334,7 +335,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected void setupDefaultMacros() {
 		// There probably is a better place to put this.
 		clearMacros();
-		for(DefaultMacro macro : MacroRegistry.instance().getDefaultMacros()) {
+		for(DefaultMacro macro : DefaultMacros.instance().getCollection()) {
 			MacroSetting smacro = settings.getMacroConfigurationProvider().createMacro(macro.getKeyString());
 			smacro.setCommand(macro.getCommand());
 			

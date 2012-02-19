@@ -29,10 +29,10 @@ package cc.warlock.core.client.settings.macro.internal;
 
 import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.CommandMacroHandler;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
 import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 

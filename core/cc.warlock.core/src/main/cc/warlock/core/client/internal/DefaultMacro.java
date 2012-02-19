@@ -1,6 +1,6 @@
 package cc.warlock.core.client.internal;
 
-import cc.warlock.core.client.settings.macro.CommandMacroHandler;
+import cc.warlock.core.client.CommandMacroHandler;
 
 public class DefaultMacro extends WarlockMacro {
 	private String command;
