@@ -89,92 +89,75 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 		this.bgColor = backgroundColor;
 	}
 
-	@Override
 	public Runnable getAction() {
 		return null;
 	}
 
-	@Override
 	public boolean isFullLine() {
 		return fullLine;
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
 	public String getComponentName() {
 		return "";
 	}
 
-	@Override
 	public void setAction(Runnable action) {
 		// FIXME: this should probably throw an exception
 	}
 
-	@Override
 	public void setFullLine(boolean fullLine) {
 		getNode().putBoolean("full-line", fullLine);
 		this.fullLine = fullLine;
 	}
 
-	@Override
 	public String getSound() {
 		return sound;
 	}
 
-	@Override
 	public void setComponentName(String name) {
 		// No component allow
 	}
 	
-	@Override
 	public void setSound(String sound) {
 		getNode().put("sound", sound);
 		this.sound = sound;
 	}
 
-	@Override
 	public boolean isBold() {
 		return bold;
 	}
 
-	@Override
 	public boolean isItalic() {
 		return italic;
 	}
 
-	@Override
 	public boolean isUnderline() {
 		return underline;
 	}
 
-	@Override
 	public boolean isMonospace() {
 		return monospace;
 	}
 
-	@Override
 	public void setBold(boolean bold) {
 		getNode().putBoolean("bold", bold);
 		this.bold = bold;
 	}
 
-	@Override
 	public void setItalic(boolean italic) {
 		getNode().putBoolean("italic", italic);
 		this.italic = italic;
 	}
 
-	@Override
 	public void setUnderline(boolean underline) {
 		getNode().putBoolean("underline", underline);
 		this.underline = underline;
 	}
 
-	@Override
 	public void setMonospace(boolean monospace) {
 		getNode().putBoolean("monospace", monospace);
 		this.monospace = monospace;

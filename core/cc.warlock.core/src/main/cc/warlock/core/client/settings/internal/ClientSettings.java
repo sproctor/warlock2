@@ -249,7 +249,6 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 		}
 	}
 	
-	@Override
 	public IWarlockClient getClient() {
 		return client;
 	}
