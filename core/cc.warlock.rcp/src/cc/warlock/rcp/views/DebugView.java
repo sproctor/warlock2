@@ -200,7 +200,6 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 			text = new WarlockText(book);
 			
 			clientStreams.put(client, text);
-			return text;
 		}
 		
 		return text;
