@@ -43,7 +43,6 @@ import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
-import cc.warlock.rcp.ui.macros.internal.EscapeMacroHandler;
 
 
 /**

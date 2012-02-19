@@ -19,34 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-/*
- * Created on Mar 27, 2005
- */
-package cc.warlock.rcp.ui.macros.internal.variables;
+package cc.warlock.rcp.ui.macros.commands;
 
-import cc.warlock.core.client.ICommand;
-import cc.warlock.core.client.IMacroVariable;
-import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
 
+public class CopyMacroCommand implements IMacroCommand {
 
-/**
- * @author Marshall
- */
-public class NextCommandMacroVariable implements IMacroVariable {
+	public void execute(IWarlockClientViewer context) {
+		context.copy();
+	}
 
 	public String getIdentifier() {
-		return "$nextCommand";
+		return "Copy";
+	}
+	
+	public String getDescription() {
+		return "Copy the currently selected text onto the clipboard";
 	}
 
-	public String getValue(IWarlockClientViewer context) {
-		IWarlockClient client = context.getWarlockClient();
-		ICommand command = client.getCommandHistory().next();
-		
-		if(command != null) {
-			return command.getCommand();
-		}
-		
-		return null;
-	}
 }

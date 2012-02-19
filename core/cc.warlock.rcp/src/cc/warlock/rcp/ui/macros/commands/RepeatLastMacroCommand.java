@@ -19,29 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
+
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.rcp.prefs.HighlightStringsPreferencePage;
-import cc.warlock.rcp.util.RCPUtil;
 
-/**
- * 
- * @author Marshall Culpepper
- *
- */
-public class HighlightsDialogMacroCommand implements IMacroCommand {
-
-	public void execute(IWarlockClientViewer context) {
-		RCPUtil.openPreferences(HighlightStringsPreferencePage.PAGE_ID);
-	}
-
+public class RepeatLastMacroCommand implements IMacroCommand {
+	
 	public String getIdentifier() {
-		return "HighlightsDialog";
-	}
-
-	public String getDescription() {
-		return "Open the Highlights preference page";
+		return "RepeatLast";
 	}
 	
+	public void execute(IWarlockClientViewer viewer) {
+		viewer.repeatLastCommand();
+	}
+	
+	public String getDescription() {
+		return "Repeat the last command in the command history";
+	}
 }

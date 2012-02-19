@@ -19,29 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
+
+import java.util.List;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.rcp.prefs.VariablesPreferencePage;
-import cc.warlock.rcp.util.RCPUtil;
+import cc.warlock.core.script.IScript;
+import cc.warlock.core.script.ScriptEngineRegistry;
 
-/**
- * 
- * @author Marshall Culpepper
- *
- */
-public class VariablesDialogMacroCommand implements IMacroCommand {
-
-	public void execute(IWarlockClientViewer context) {
-		RCPUtil.openPreferences(VariablesPreferencePage.PAGE_ID);
-	}
+public class StopScriptMacroCommand implements IMacroCommand {
 	
 	public String getIdentifier() {
-		return "VariablesDialog";
+		return "StopScript";
+	}
+	
+	public void execute(IWarlockClientViewer viewer) {
+		List<IScript> runningScripts = ScriptEngineRegistry.getRunningScripts(viewer);
+		for(IScript currentScript : runningScripts)
+		{
+			currentScript.stop();
+		}
 	}
 	
 	public String getDescription() {
-		return "Open the Variables preference page";
+		return "Stop running scripts";
 	}
 }

@@ -19,23 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.rcp.prefs.VariablesPreferencePage;
+import cc.warlock.rcp.util.RCPUtil;
 
-public class CopyMacroCommand implements IMacroCommand {
+/**
+ * 
+ * @author Marshall Culpepper
+ *
+ */
+public class VariablesDialogMacroCommand implements IMacroCommand {
 
 	public void execute(IWarlockClientViewer context) {
-		context.copy();
+		RCPUtil.openPreferences(VariablesPreferencePage.PAGE_ID);
 	}
-
+	
 	public String getIdentifier() {
-		return "Copy";
+		return "VariablesDialog";
 	}
 	
 	public String getDescription() {
-		return "Copy the currently selected text onto the clipboard";
+		return "Open the Variables preference page";
 	}
-
 }

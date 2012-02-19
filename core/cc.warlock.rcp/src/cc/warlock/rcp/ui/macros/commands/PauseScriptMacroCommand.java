@@ -19,22 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
+
+import java.util.List;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.script.IScript;
+import cc.warlock.core.script.ScriptEngineRegistry;
 
-public class RepeatLastMacroCommand implements IMacroCommand {
+public class PauseScriptMacroCommand implements IMacroCommand {
+	
+	boolean paused = false;
 	
 	public String getIdentifier() {
-		return "RepeatLast";
+		return "PauseScript";
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		viewer.repeatLastCommand();
+		List<IScript> runningScripts = ScriptEngineRegistry.getRunningScripts(viewer);
+		for(IScript currentScript : runningScripts)
+		{
+			if(paused)
+				currentScript.resume();
+			else
+				currentScript.suspend();
+		}
+		paused = !paused;
 	}
 	
 	public String getDescription() {
-		return "Repeat the last command in the command history";
+		return "Suspend/resume running scripts";
 	}
 }

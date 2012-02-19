@@ -19,22 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.rcp.prefs.MacrosPreferencePage;
+import cc.warlock.rcp.util.RCPUtil;
 
-public class ReturnMacroCommand implements IMacroCommand {
-	
-	public String getIdentifier() {
-		return "Return";
+/**
+ * 
+ * @author Marshall Culpepper
+ *
+ */
+public class MacrosDialogMacroCommand implements IMacroCommand {
+
+	public void execute(IWarlockClientViewer context) {
+		RCPUtil.openPreferences(MacrosPreferencePage.PAGE_ID);
 	}
 	
-	public void execute(IWarlockClientViewer viewer) {
-		viewer.submit();
+	public String getIdentifier() {
+		return "MacrosDialog";
 	}
 	
 	public String getDescription() {
-		return "Send the current command.";
+		return "Open the Macros preference page";
 	}
 }

@@ -19,30 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
-
-import java.util.List;
+package cc.warlock.rcp.ui.macros.commands;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.script.IScript;
-import cc.warlock.core.script.ScriptEngineRegistry;
+import cc.warlock.rcp.views.WarlockView;
 
-public class StopScriptMacroCommand implements IMacroCommand {
-	
-	public String getIdentifier() {
-		return "StopScript";
+/**
+ * @author Will Robertson
+ *
+ * Handles PageUp Macro (normally assigned to the PageUp Key)
+ */
+public class PageUpCommand implements IMacroCommand {
+
+	/* (non-Javadoc)
+	 * @see cc.warlock.rcp.ui.macros.IMacroCommand#execute(cc.warlock.core.client.IWarlockClientViewer)
+	 */
+	public void execute(IWarlockClientViewer context) {
+		if (WarlockView.getViewInFocus() != null)
+			WarlockView.getViewInFocus().pageUp();
 	}
-	
-	public void execute(IWarlockClientViewer viewer) {
-		List<IScript> runningScripts = ScriptEngineRegistry.getRunningScripts(viewer);
-		for(IScript currentScript : runningScripts)
-		{
-			currentScript.stop();
-		}
+
+	/* (non-Javadoc)
+	 * @see cc.warlock.rcp.ui.macros.IMacroCommand#getIdentifier()
+	 */
+	public String getIdentifier() {
+		return "PageUp";
 	}
 	
 	public String getDescription() {
-		return "Stop running scripts";
+		return "Scroll a page up in the current game view";
 	}
+
 }

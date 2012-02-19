@@ -19,36 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.rcp.views.WarlockView;
 
-/**
- * @author Will Robertson
- *
- * Handles PageUp Macro (normally assigned to the PageUp Key)
- */
-public class PageUpCommand implements IMacroCommand {
-
-	/* (non-Javadoc)
-	 * @see cc.warlock.rcp.ui.macros.IMacroCommand#execute(cc.warlock.core.client.IWarlockClientViewer)
-	 */
-	public void execute(IWarlockClientViewer context) {
-		if (WarlockView.getViewInFocus() != null)
-			WarlockView.getViewInFocus().pageUp();
-	}
-
-	/* (non-Javadoc)
-	 * @see cc.warlock.rcp.ui.macros.IMacroCommand#getIdentifier()
-	 */
+public class HistoryNextMacroCommand implements IMacroCommand {
+	
 	public String getIdentifier() {
-		return "PageUp";
+		return "HistoryNext";
+	}
+	
+	public void execute(IWarlockClientViewer viewer) {
+		viewer.nextCommand();
 	}
 	
 	public String getDescription() {
-		return "Scroll a page up in the current game view";
+		return "Show the next command from the command history";
 	}
-
 }

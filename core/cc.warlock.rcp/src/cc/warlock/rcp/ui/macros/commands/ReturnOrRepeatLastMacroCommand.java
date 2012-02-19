@@ -1,7 +1,7 @@
 /**
  * Warlock, the open-source cross-platform game client
  *  
- * Copyright 2011, Warlock LLC, and individual contributors as indicated
+ * Copyright 2008, Warlock LLC, and individual contributors as indicated
  * by the @authors tag. 
  *
  * This is free software; you can redistribute it and/or modify it
@@ -19,20 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal;
+package cc.warlock.rcp.ui.macros.commands;
 
-import cc.warlock.core.client.IMacro;
-import cc.warlock.core.client.IMacroHandler;
+import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
 
-/**
- * @author Sean Proctor
- */
-public class ReturnMacroHandler implements IMacroHandler {
-
-	public boolean handleMacro(IMacro macro, IWarlockClientViewer viewer) {
-		viewer.submit();
-		return true;
+public class ReturnOrRepeatLastMacroCommand implements IMacroCommand {
+	
+	public String getIdentifier() {
+		return "ReturnOrRepeatLast";
 	}
-
+	
+	public void execute(IWarlockClientViewer viewer) {
+		if(viewer.getCurrentCommand().length() > 0)
+			viewer.submit();
+		else
+			viewer.repeatLastCommand();
+	}
+	
+	public String getDescription() {
+		return "Send the current command, or repeat the last command in the command history";
+	}
 }

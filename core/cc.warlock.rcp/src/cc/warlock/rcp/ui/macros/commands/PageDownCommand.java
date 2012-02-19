@@ -19,29 +19,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.rcp.prefs.MacrosPreferencePage;
-import cc.warlock.rcp.util.RCPUtil;
+import cc.warlock.rcp.views.WarlockView;
 
 /**
- * 
- * @author Marshall Culpepper
+ * @author Will Robertson
  *
+ * Handles PageDown Macro (normally assigned to the PageDown Key)
  */
-public class MacrosDialogMacroCommand implements IMacroCommand {
+public class PageDownCommand implements IMacroCommand {
 
+	/* (non-Javadoc)
+	 * @see cc.warlock.rcp.ui.macros.IMacroCommand#execute(cc.warlock.core.client.IWarlockClientViewer)
+	 */
 	public void execute(IWarlockClientViewer context) {
-		RCPUtil.openPreferences(MacrosPreferencePage.PAGE_ID);
+		if (WarlockView.getViewInFocus() != null)
+			WarlockView.getViewInFocus().pageDown();
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see cc.warlock.rcp.ui.macros.IMacroCommand#getIdentifier()
+	 */
 	public String getIdentifier() {
-		return "MacrosDialog";
+		return "PageDown";
 	}
-	
+
 	public String getDescription() {
-		return "Open the Macros preference page";
+		return "Scroll a page down in the current game view";
 	}
 }

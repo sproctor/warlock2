@@ -19,22 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.ui.macros.internal.commands;
+package cc.warlock.rcp.ui.macros.commands;
 
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IWarlockClientViewer;
 
-public class HistoryNextMacroCommand implements IMacroCommand {
+public class ReturnMacroCommand implements IMacroCommand {
 	
 	public String getIdentifier() {
-		return "HistoryNext";
+		return "Return";
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		viewer.nextCommand();
+		viewer.submit();
 	}
 	
 	public String getDescription() {
-		return "Show the next command from the command history";
+		return "Send the current command.";
 	}
 }
