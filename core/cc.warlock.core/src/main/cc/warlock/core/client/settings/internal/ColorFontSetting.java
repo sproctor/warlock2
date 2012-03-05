@@ -61,6 +61,7 @@ public abstract class ColorFontSetting extends WarlockSetting implements IFontSe
 		this.getNode().put("fgcolor", foregroundColor.toString());
 		
 		this.foregroundColor = foregroundColor;
+		this.notifyListenersChanged();
 	}
 
 	public WarlockColor getBackgroundColor() {
@@ -71,6 +72,7 @@ public abstract class ColorFontSetting extends WarlockSetting implements IFontSe
 		this.getNode().put("bgcolor", backgroundColor.toString());
 		
 		this.backgroundColor = backgroundColor;
+		this.notifyListenersChanged();
 	}
 
 	public IWarlockFont getFont() {

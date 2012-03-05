@@ -77,6 +77,7 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 		this.getNode().put("fgcolor", foregroundColor.toString());
 		
 		this.fgColor = foregroundColor;
+		this.notifyListenersChanged();
 	}
 
 	public WarlockColor getBackgroundColor() {
@@ -87,6 +88,7 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 		this.getNode().put("bgcolor", backgroundColor.toString());
 		
 		this.bgColor = backgroundColor;
+		this.notifyListenersChanged();
 	}
 
 	public Runnable getAction() {
@@ -112,6 +114,7 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 	public void setFullLine(boolean fullLine) {
 		getNode().putBoolean("full-line", fullLine);
 		this.fullLine = fullLine;
+		this.notifyListenersChanged();
 	}
 
 	public String getSound() {
@@ -125,6 +128,7 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 	public void setSound(String sound) {
 		getNode().put("sound", sound);
 		this.sound = sound;
+		this.notifyListenersChanged();
 	}
 
 	public boolean isBold() {
@@ -146,21 +150,25 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 	public void setBold(boolean bold) {
 		getNode().putBoolean("bold", bold);
 		this.bold = bold;
+		this.notifyListenersChanged();
 	}
 
 	public void setItalic(boolean italic) {
 		getNode().putBoolean("italic", italic);
 		this.italic = italic;
+		this.notifyListenersChanged();
 	}
 
 	public void setUnderline(boolean underline) {
 		getNode().putBoolean("underline", underline);
 		this.underline = underline;
+		this.notifyListenersChanged();
 	}
 
 	public void setMonospace(boolean monospace) {
 		getNode().putBoolean("monospace", monospace);
 		this.monospace = monospace;
+		this.notifyListenersChanged();
 	}
 	
 }

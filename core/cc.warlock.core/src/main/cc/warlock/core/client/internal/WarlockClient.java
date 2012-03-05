@@ -46,6 +46,9 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.IHighlightString;
+import cc.warlock.core.client.settings.IWarlockSettingListener;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.util.Pair;
 
@@ -53,7 +56,7 @@ import cc.warlock.core.util.Pair;
 /**
  * @author Marshall
  */
-public abstract class WarlockClient implements IWarlockClient {
+public abstract class WarlockClient implements IWarlockClient, IWarlockSettingListener {
 
 	protected IConnection connection;
 	protected IWarlockClientViewer viewer;
@@ -66,6 +69,8 @@ public abstract class WarlockClient implements IWarlockClient {
 	protected IClientLogger logger;
 	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	protected ArrayList<Pair<String, IStreamListener>> potentialListeners = new ArrayList<Pair<String, IStreamListener>>();
+	private ArrayList<IHighlightString> temporaryHighlights = null; // Highlights from scripts
+	private ArrayList<IHighlightString> cachedHighlights = null;
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
@@ -196,6 +201,22 @@ public abstract class WarlockClient implements IWarlockClient {
 	}
 	
 	public abstract IClientSettings getClientSettings();
+	
+	private void reloadHighlights() {
+		cachedHighlights = new ArrayList<IHighlightString>();
+		cachedHighlights.addAll(getClientSettings().getHighlightStrings());
+		if(temporaryHighlights != null) {
+			cachedHighlights.addAll(temporaryHighlights);
+		}
+	}
+	public Collection<IHighlightString> getHighlightStrings() {
+		// Highlights from settings are cached. Cache is rebuilt whenever settings are changed
+		if(cachedHighlights == null) {
+			reloadHighlights();
+			getClientSettings().getHighlightConfigurationProvider().addListener(this);
+		}
+		return Collections.unmodifiableCollection(cachedHighlights);
+	}
 
 	public IClientLogger getLogger() {
 		return logger;
@@ -230,5 +251,9 @@ public abstract class WarlockClient implements IWarlockClient {
 				}
 			}
 		}
+	}
+	
+	public void settingChanged(IWarlockSetting setting) {
+		reloadHighlights();
 	}
 }

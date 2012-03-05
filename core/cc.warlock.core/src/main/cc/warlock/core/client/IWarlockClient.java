@@ -30,6 +30,7 @@ import java.util.Collection;
 
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.network.IConnection;
 
 /**
@@ -118,6 +119,8 @@ public interface IWarlockClient extends IRoomListener {
 	 * @return the settings for this client 
 	 */
 	public IClientSettings getClientSettings();
+	
+	public Collection<IHighlightString> getHighlightStrings();
 	
 	/**
 	 * @return A unique string identifying this client (this string should be a constant that can be restored from at a later time)

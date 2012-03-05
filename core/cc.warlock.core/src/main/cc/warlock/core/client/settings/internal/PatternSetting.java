@@ -90,6 +90,7 @@ public class PatternSetting extends WarlockSetting implements IPatternSetting {
 		updateDeferred = true;
 		getNode().put("pattern", text);
 		this.text = text;
+		this.notifyListenersChanged();
 	}
 	
 	public void setLiteral (boolean literal) throws PatternSyntaxException
@@ -97,6 +98,7 @@ public class PatternSetting extends WarlockSetting implements IPatternSetting {
 		updateDeferred = true;
 		getNode().putBoolean("literal", literal);
 		this.literal = literal;
+		this.notifyListenersChanged();
 	}
 	
 	public void setCaseSensitive (boolean caseSensitive)
@@ -104,6 +106,7 @@ public class PatternSetting extends WarlockSetting implements IPatternSetting {
 		updateDeferred = true;
 		getNode().putBoolean("case-sensitive", caseSensitive);
 		this.caseSensitive = caseSensitive;
+		this.notifyListenersChanged();
 	}
 	
 	public void setFullWordMatch (boolean fullWordMatch)
@@ -111,6 +114,7 @@ public class PatternSetting extends WarlockSetting implements IPatternSetting {
 		updateDeferred = true;
 		getNode().putBoolean("full-word", fullWordMatch);
 		this.fullWord = fullWordMatch;
+		this.notifyListenersChanged();
 	}
 	
 	public boolean isLiteral() {

@@ -54,6 +54,7 @@ public class Variable extends WarlockSetting implements IVariable {
 		this.identifier = identifier;
 		changePath(identifier);
 		getNode().put("value", this.value);
+		this.notifyListenersChanged();
 	}
 	
 	public String getValue() {
@@ -64,5 +65,6 @@ public class Variable extends WarlockSetting implements IVariable {
 		getNode().put("value", value);
 		
 		this.value = value;
+		this.notifyListenersChanged();
 	}
 }

@@ -382,7 +382,7 @@ public class WarlockText {
 		
 		String text = textWidget.getTextRange(start, end - start);
 		
-		for (IHighlightString highlight : client.getClientSettings().getHighlightStrings())
+		for (IHighlightString highlight : client.getHighlightStrings())
 		{
 			Pattern p;
 			try {

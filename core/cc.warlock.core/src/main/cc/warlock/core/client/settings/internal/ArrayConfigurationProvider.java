@@ -40,6 +40,7 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 		T setting = loadSetting(id);
 		settings.put(id, setting);
 		nextId++;
+		this.notifyListenersChanged();
 		return setting;
 	}
 	
@@ -57,6 +58,7 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 			insertSetting(index + 1, oldSetting);
 		}
 		settings.put(id, string);
+		this.notifyListenersChanged();
 	}
 	
 	public void removeSetting (T setting) {
@@ -71,6 +73,7 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 				break;
 			}
 		}
+		this.notifyListenersChanged();
 	}
 	
 }

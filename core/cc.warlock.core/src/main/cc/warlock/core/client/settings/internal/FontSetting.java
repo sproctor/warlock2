@@ -54,12 +54,14 @@ public class FontSetting extends WarlockSetting implements IWarlockFont {
 		this.getNode().put("family-name", familyName);
 		
 		this.familyName = familyName;
+		this.notifyListenersChanged();
 	}
 
 	public void setSize(int size) {
 		this.getNode().putInt("size", size);
 		
 		this.size = size;
+		this.notifyListenersChanged();
 	}
 	
 	public boolean equals(Object obj) {

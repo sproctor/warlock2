@@ -21,8 +21,12 @@
  */
 package cc.warlock.core.configuration;
 
+import java.util.ArrayList;
+
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
+
+import cc.warlock.core.client.settings.IWarlockSettingListener;
 
 
 /**
@@ -34,6 +38,7 @@ public class WarlockSetting implements IWarlockSetting {
 	private Preferences parentNode;
 	private Preferences node;
 	private boolean newSetting;
+	private ArrayList<IWarlockSettingListener> listeners = null;
 	
 	public WarlockSetting (Preferences parentNode, String path)
 	{
@@ -69,5 +74,28 @@ public class WarlockSetting implements IWarlockSetting {
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void notifyListenersChanged() {
+		if(listeners == null)
+			return;
+		
+		for(IWarlockSettingListener listener: listeners) {
+			listener.settingChanged(this);
+		}
+	}
+	
+	public void addListener(IWarlockSettingListener listener) {
+		if(listeners == null)
+			listeners = new ArrayList<IWarlockSettingListener>();
+		
+		listeners.add(listener);
+	}
+	
+	public boolean removeListener(IWarlockSettingListener listener) {
+		if(listeners == null)
+			return false;
+		
+		return listeners.remove(listener);
 	}
 }
