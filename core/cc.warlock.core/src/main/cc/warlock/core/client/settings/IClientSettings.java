@@ -23,6 +23,8 @@ package cc.warlock.core.client.settings;
 
 import java.util.Collection;
 
+import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
@@ -43,13 +45,13 @@ public interface IClientSettings extends IWarlockSetting {
 	
 	public int getVersion();
 	
-	public Collection<IHighlightString> getHighlightStrings();
+	public Collection<IWarlockHighlight> getHighlightStrings();
 	public IWarlockStyle getNamedStyle(String name);
 	
 	public Collection<IVariable> getVariables();
 	public IVariable getVariable(String identifier);
 	
-	public Collection<IPatternSetting> getIgnores();
+	public Collection<IWarlockPattern> getIgnores();
 	
 	public Collection<IWindowSettings> getWindowSettings();
 	public IWindowSettings getWindowSettings (String windowId);

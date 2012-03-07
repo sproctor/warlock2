@@ -23,16 +23,16 @@ package cc.warlock.core.client.settings.internal;
 
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.settings.IPatternSetting;
+import cc.warlock.core.client.IWarlockPattern;
 
-public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IPatternSetting> {
+public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern> {
 
 	public TriggerConfigurationProvider (Preferences parentNode)
 	{
 		super(parentNode, "triggers");
 	}
 	
-	public IPatternSetting loadSetting(String id) {
+	public IWarlockPattern loadSetting(String id) {
 		return new PatternSetting(getNode(), id);
 	}
 }

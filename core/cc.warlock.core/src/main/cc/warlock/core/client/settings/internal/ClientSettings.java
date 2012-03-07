@@ -26,6 +26,8 @@ import java.util.HashMap;
 
 import org.osgi.service.prefs.BackingStoreException;
 
+import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
@@ -33,8 +35,6 @@ import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IHighlightString;
-import cc.warlock.core.client.settings.IPatternSetting;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
@@ -108,11 +108,11 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 		return defaultStyles.get(name);
 	}
 	
-	public Collection<IHighlightString> getHighlightStrings() {
+	public Collection<IWarlockHighlight> getHighlightStrings() {
 		return highlightConfigurationProvider.getSettings();
 	}
 	
-	public Collection<IPatternSetting> getIgnores() {
+	public Collection<IWarlockPattern> getIgnores() {
 		return ignoreConfigurationProvider.getSettings();
 	}
 	

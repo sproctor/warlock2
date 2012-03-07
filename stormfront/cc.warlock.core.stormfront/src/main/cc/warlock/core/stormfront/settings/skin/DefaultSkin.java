@@ -23,9 +23,9 @@ package cc.warlock.core.stormfront.settings.skin;
 
 import java.util.HashMap;
 
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 
 /**
@@ -151,7 +151,7 @@ public class DefaultSkin implements IWarlockSkin {
 		return defaultWindowForeground;
 	}
 	
-	public WarlockColor getBackgroundColor(IHighlightString string) {
+	public WarlockColor getBackgroundColor(IWarlockHighlight string) {
 		WarlockColor background = string.getStyle().getBackgroundColor();
 		if (background.isDefault()) {
 			background = getDefaultWindowBackground();
@@ -159,7 +159,7 @@ public class DefaultSkin implements IWarlockSkin {
 		return background;
 	}
 	
-	public WarlockColor getForegroundColor(IHighlightString string) {
+	public WarlockColor getForegroundColor(IWarlockHighlight string) {
 		WarlockColor foreground = string.getStyle().getForegroundColor();
 		if (foreground.isDefault()) {
 			foreground = getDefaultWindowForeground();

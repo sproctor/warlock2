@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +39,7 @@ import org.antlr.runtime.RecognitionException;
 
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.script.AbstractScript;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.IScriptCommands;
@@ -60,6 +62,7 @@ public class WSLScript extends AbstractScript {
 	private HashMap<String, IWSLValue> specialVariables = new HashMap<String, IWSLValue>();
 	private HashMap<String, IWSLValue> localVariables = new HashMap<String, IWSLValue>();
 	private Stack<WSLFrame> callstack = new Stack<WSLFrame>();
+	private ArrayList<IWarlockHighlight> highlights = null;
 	
 	private Thread scriptThread;
 	private Pattern commandPattern = Pattern.compile("^([\\w]+)(\\s+(.*))?");
@@ -279,6 +282,9 @@ public class WSLScript extends AbstractScript {
 			
 			if(isRunning())
 				stop();
+			
+			if(highlights != null)
+				getClient().removeHighlights(highlights);
 		}
 	}
 	
@@ -629,4 +635,37 @@ public class WSLScript extends AbstractScript {
 	protected IStormFrontClient getSFClient() {
 		return (IStormFrontClient)getClient();
 	}
+	
+	public void addHighlight(IWarlockHighlight highlight) {
+		if(highlights == null) {
+			highlights = new ArrayList<IWarlockHighlight>();
+		} else {
+			// remove to reload highlights
+			getClient().removeHighlights(highlights);
+		}
+		
+		highlights.add(highlight);
+		
+		// add or re-add to reload client highlights
+		getClient().addHighlights(highlights);
+	}
+	
+	public boolean removeHighlight(String text) {
+		if(highlights == null)
+			return false;
+		
+		Iterator<IWarlockHighlight> iter = highlights.iterator();
+		while(iter.hasNext()) {
+			IWarlockHighlight highlight = iter.next();
+			if(highlight.getText().equalsIgnoreCase(text)) {
+				iter.remove();
+				// remove and add to rebuild cache
+				getClient().removeHighlights(highlights);
+				getClient().addHighlights(highlights);
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

@@ -21,10 +21,11 @@
  */
 package cc.warlock.core.client.settings;
 
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.configuration.IArraySettingProvider;
 
 
-public interface IHighlightProvider extends IArraySettingProvider<IHighlightString> {
+public interface IHighlightProvider extends IArraySettingProvider<IWarlockHighlight> {
 	//public Collection<? extends IHighlightString> getHighlightStrings();
 	
 	//public void addHighlightString (IHighlightString string);

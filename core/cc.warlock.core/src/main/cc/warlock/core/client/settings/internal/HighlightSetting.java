@@ -23,21 +23,29 @@ package cc.warlock.core.client.settings.internal;
 
 import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.settings.IHighlightString;
+import cc.warlock.core.client.internal.WarlockHighlight;
+import cc.warlock.core.configuration.IWarlockSetting;
 
-public class HighlightSetting extends PatternSetting implements IHighlightString {
-
-	protected StyleSetting style;
+public class HighlightSetting extends AbstractPatternSetting<WarlockHighlight> implements IWarlockSetting, IWarlockHighlight {
 
 	public HighlightSetting (Preferences parentNode, String path)
 	{
 		super(parentNode, path);
-		this.style = new StyleSetting(getNode(), "style");
+	}
+	
+	protected WarlockHighlight createPattern(String text, boolean literal, boolean caseSensitive, boolean fullWord) {
+		StyleSetting style = new StyleSetting(getNode(), "style");
+		return new WarlockHighlight(text, literal, caseSensitive, fullWord, style);
 	}
 	
 	public IWarlockStyle getStyle() {
-		return style;
+		return this.pattern.getStyle();
+	}
+	
+	public void setStyle(IWarlockStyle style) {
+		// Not supported
 	}
 }
 

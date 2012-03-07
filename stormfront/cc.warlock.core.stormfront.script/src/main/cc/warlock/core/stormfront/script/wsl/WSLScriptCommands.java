@@ -9,9 +9,12 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cc.warlock.core.client.ICharacterStatus.StatusType;
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IStream;
-import cc.warlock.core.client.ICharacterStatus.StatusType;
+import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.internal.WarlockHighlight;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.internal.RegexMatch;
@@ -36,6 +39,8 @@ public class WSLScriptCommands {
 	
 	private WSLScriptCommands() {
 		// add command handlers
+		addCommandDefinition("addtohighlightstrings", new WSLCommandAddHighlight());
+		addCommandDefinition("deletefromhighlightstrings", new WSLCommandDeleteHighlight());
 		addCommandDefinition("clearwindow", new WSLCommandClearWindow());
 		addCommandDefinition("counter", new WSLCommandCounter());
 		addCommandDefinition("deletelocalvariable", new WSLCommandDeleteLocalVariable());
@@ -668,35 +673,6 @@ public class WSLScriptCommands {
 			}
 		}
 	}
-
-	/*protected class WSLCommandAddHighlightString implements IWSLCommandDefinition {
-
-		private Pattern format = Pattern.compile("^\"([^\"])\"(\\s*(.*))?");
-		private Pattern optionFormat = Pattern.compile("(\\w+)=(.*)");
-
-		public void execute (WSLScript script, String arguments)
-		{
-			Matcher m = format.matcher(arguments);
-			if(m.find()) {
-				String text = m.group(1);
-				String optionString = m.group(3);
-				String[] options = optionString.split(argSeparator);
-
-				WarlockStyle style = new WarlockStyle();
-				for(String option : options) {
-					Matcher optionMatcher = optionFormat.matcher(option);
-					if(optionMatcher.find()) {
-						String key = optionMatcher.group(1);
-						String value = optionMatcher.group(2);
-
-						if(key.equalsIgnoreCase("forecolor")) {
-
-						}
-					}
-				}
-			}
-		}
-	}*/
 	
 	private class WSLCommandElse implements IWSLCommandDefinition {
 
@@ -773,6 +749,115 @@ public class WSLScriptCommands {
 		public void clear() {
 			timerStart = -1L;
 			timePast = 0L;
+		}
+	}
+	
+	protected class WSLCommandAddHighlight implements IWSLCommandDefinition {
+		private Pattern format = Pattern.compile("(\\S+)=(\"([^\"]*)\"|(\\S*))");
+		
+		public void execute(WSLScript script, String arguments) {
+			Matcher m = format.matcher(arguments);
+			String string = null;
+			String fgcolor = null;
+			String bgcolor = null;
+			boolean fullLine = false;
+			boolean literal = true;
+			boolean fullWord = false;
+			boolean caseSensitive = false;
+			
+			while(m.find()) {
+				String key = m.group(1);
+				
+				// value in parens
+				String value = m.group(3);
+				if(value == null) {
+					// value is a single word
+					value = m.group(4);
+					
+					// weird match
+					if(value == null) {
+						script.scriptError("Unexpected result in AddHighlight.");
+						return;
+					}
+				}
+				
+				if(key.equalsIgnoreCase("string")) {
+					string = value;
+				} else if(key.equalsIgnoreCase("foreColor")) {
+					fgcolor = value;
+				} else if(key.equalsIgnoreCase("backColor")) {
+					bgcolor = value;
+				} else if(key.equalsIgnoreCase("highlightEntireLine")) {
+					if(value.equalsIgnoreCase("true"))
+						fullLine = true;
+				} else if(key.equalsIgnoreCase("regex") || key.equalsIgnoreCase("regexp")) {
+					if(value.equalsIgnoreCase("true"))
+						literal = false;
+				} else if(key.equalsIgnoreCase("notOnWordBoundary") || key.equalsIgnoreCase("matchPartialWord")) {
+					if(value.equalsIgnoreCase("false"))
+						fullWord = true;
+				} else if(key.equalsIgnoreCase("caseInsensitive") || key.equalsIgnoreCase("ignoreCase")) {
+					if(value.equalsIgnoreCase("false"))
+						caseSensitive = true;
+				}
+			}
+			
+			if(string == null) {
+				script.scriptError("No \"string\" given.");
+				return;
+			}
+			
+			WarlockStyle style = new WarlockStyle();
+			if(fgcolor != null)
+				style.setForegroundColor(new WarlockColor(fgcolor));
+			if(bgcolor != null)
+				style.setBackgroundColor(new WarlockColor(bgcolor));
+			style.setFullLine(fullLine);
+			
+			WarlockHighlight highlight = new WarlockHighlight(string);
+			highlight.setLiteral(literal);
+			highlight.setFullWordMatch(fullWord);
+			highlight.setCaseSensitive(caseSensitive);
+			highlight.setStyle(style);
+			
+			script.addHighlight(highlight);
+		}
+	}
+	
+	protected class WSLCommandDeleteHighlight implements IWSLCommandDefinition {
+		private Pattern format = Pattern.compile("(\\S+)=(\"([^\"]*)\"|(\\S*))");
+		
+		public void execute(WSLScript script, String arguments) {
+			Matcher m = format.matcher(arguments);
+			String string = null;
+			
+			while(m.find()) {
+				String key = m.group(1);
+				
+				// value in parens
+				String value = m.group(3);
+				if(value == null) {
+					// value is a single word
+					value = m.group(4);
+					
+					// weird match
+					if(value == null) {
+						script.scriptError("Unexpected result in DeleteHighlight.");
+						return;
+					}
+				}
+				
+				if(key.equalsIgnoreCase("string")) {
+					string = value;
+				}
+			}
+			
+			if(string == null) {
+				script.scriptError("No \"string\" given.");
+				return;
+			}
+			
+			script.removeHighlight(string);
 		}
 	}
 	
@@ -870,5 +955,4 @@ public class WSLScriptCommands {
 		}
 		script.setGlobalVariable(targetVar, new WSLNumber(newValue));
 	}
-
 }

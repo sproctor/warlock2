@@ -24,7 +24,7 @@ package cc.warlock.core.configuration;
 import org.osgi.service.prefs.Preferences;
 
 /**
- * @author marshall
+ * @author Sean Proctor
  *
  */
 public interface IWarlockSetting {

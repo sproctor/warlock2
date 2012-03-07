@@ -35,6 +35,7 @@ import java.util.Iterator;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.ICompass;
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.IStream;
@@ -46,7 +47,6 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.core.client.settings.IWarlockSettingListener;
 import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.network.IConnection;
@@ -69,8 +69,8 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	protected IClientLogger logger;
 	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	protected ArrayList<Pair<String, IStreamListener>> potentialListeners = new ArrayList<Pair<String, IStreamListener>>();
-	private ArrayList<IHighlightString> temporaryHighlights = null; // Highlights from scripts
-	private ArrayList<IHighlightString> cachedHighlights = null;
+	private ArrayList<Collection<IWarlockHighlight>> highlightLists = null; // Highlights from scripts
+	private ArrayList<IWarlockHighlight> cachedHighlights = null;
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
@@ -203,13 +203,16 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	public abstract IClientSettings getClientSettings();
 	
 	private void reloadHighlights() {
-		cachedHighlights = new ArrayList<IHighlightString>();
+		cachedHighlights = new ArrayList<IWarlockHighlight>();
 		cachedHighlights.addAll(getClientSettings().getHighlightStrings());
-		if(temporaryHighlights != null) {
-			cachedHighlights.addAll(temporaryHighlights);
+		if(highlightLists != null) {
+			for(Collection<IWarlockHighlight> collection : highlightLists) {
+				cachedHighlights.addAll(collection);
+			}
 		}
 	}
-	public Collection<IHighlightString> getHighlightStrings() {
+	
+	public Collection<IWarlockHighlight> getHighlightStrings() {
 		// Highlights from settings are cached. Cache is rebuilt whenever settings are changed
 		if(cachedHighlights == null) {
 			reloadHighlights();
@@ -217,7 +220,24 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 		}
 		return Collections.unmodifiableCollection(cachedHighlights);
 	}
-
+	
+	public void addHighlights(Collection<IWarlockHighlight> highlights) {
+		if(highlightLists == null)
+			highlightLists = new ArrayList<Collection<IWarlockHighlight>>();
+		
+		highlightLists.add(highlights);
+		reloadHighlights();
+	}
+	
+	public boolean removeHighlights(Collection<IWarlockHighlight> highlights) {
+		if(highlightLists == null)
+			return false;
+		
+		boolean rv = highlightLists.remove(highlights);
+		reloadHighlights();
+		return rv;
+	}
+	
 	public IClientLogger getLogger() {
 		return logger;
 	}

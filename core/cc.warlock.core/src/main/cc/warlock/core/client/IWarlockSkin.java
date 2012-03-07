@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.client;
 
-import cc.warlock.core.client.settings.IHighlightString;
 
 
 public interface IWarlockSkin {
@@ -49,6 +48,6 @@ public interface IWarlockSkin {
 	public WarlockColor getDefaultBackgroundColor (String styleName);
 	
 
-	public WarlockColor getBackgroundColor(IHighlightString string);
-	public WarlockColor getForegroundColor(IHighlightString string);
+	public WarlockColor getBackgroundColor(IWarlockHighlight string);
+	public WarlockColor getForegroundColor(IWarlockHighlight string);
 }

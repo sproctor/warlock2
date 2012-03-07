@@ -23,10 +23,10 @@ package cc.warlock.core.client.settings.internal;
 
 import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.settings.IHighlightProvider;
-import cc.warlock.core.client.settings.IHighlightString;
 
-public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IHighlightString> implements IHighlightProvider
+public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IWarlockHighlight> implements IHighlightProvider
 {
 	public HighlightConfigurationProvider (Preferences parentNode) {
 		super(parentNode, "highlights");

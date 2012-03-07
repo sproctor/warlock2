@@ -52,13 +52,13 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
 import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IHighlightString;
 import cc.warlock.rcp.ui.style.StyleProviders;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.SoundPlayer;
@@ -382,7 +382,7 @@ public class WarlockText {
 		
 		String text = textWidget.getTextRange(start, end - start);
 		
-		for (IHighlightString highlight : client.getHighlightStrings())
+		for (IWarlockHighlight highlight : client.getHighlightStrings())
 		{
 			Pattern p;
 			try {
