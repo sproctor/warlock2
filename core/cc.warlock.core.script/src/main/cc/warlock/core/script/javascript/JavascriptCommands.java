@@ -176,7 +176,7 @@ public class JavascriptCommands {
 	public void exit() throws Error {
 		commands.stop();
 		
-		throw new Error();
+		throw script.new StopException();
 	}
 	
 	public IScriptCommands getScriptCommands ()
