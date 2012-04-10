@@ -44,6 +44,17 @@ public class ConfigurationUtil {
 		return new File(System.getProperty("user.home"));
 	}
 	
+	public static File getAbsoluteDirectory (String directory, boolean lazyCreate)
+	{
+		File dirFile = new File(directory);
+		
+		if (lazyCreate && !dirFile.exists())
+		{
+			dirFile.mkdirs();
+		}
+		return dirFile;
+	}
+	
 	public static File getConfigurationDirectory (String directory, boolean lazyCreate)
 	{
 		File dirFile = new File(getAppConfigDirectory(), directory);

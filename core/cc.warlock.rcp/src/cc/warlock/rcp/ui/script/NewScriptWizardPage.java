@@ -21,8 +21,6 @@
  */
 package cc.warlock.rcp.ui.script;
 
-import java.io.File;
-
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -30,6 +28,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
@@ -61,9 +60,9 @@ public class NewScriptWizardPage extends WizardPage {
 		
 		scriptDirCombo = new ComboField(main, SWT.BORDER | SWT.DROP_DOWN);
 		boolean selected = false;
-		for (File dir : ScriptConfiguration.instance().getScriptDirectories())
+		for (DirectorySetting dir : ScriptConfiguration.instance().getScriptDirectories())
 		{
-			scriptDirCombo.getCombo().add(dir.getAbsolutePath());
+			scriptDirCombo.getCombo().add(dir.getDirectory().getAbsolutePath());
 
 			if (!selected) {
 				scriptDirCombo.getCombo().select(0);

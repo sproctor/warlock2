@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptFileInfo;
@@ -124,8 +125,9 @@ public class FilesystemScriptProvider implements IScriptProvider {
 	
 	public Collection<IScriptInfo> getScriptInfos() {
 		ArrayList<IScriptInfo> infos = new ArrayList<IScriptInfo>();
-		for (File dir : ScriptConfiguration.instance().getScriptDirectories())
+		for (DirectorySetting setting : ScriptConfiguration.instance().getScriptDirectories())
 		{
+			File dir = setting.getDirectory();
 			if (dir.exists())
 			{
 				scanDirectory(infos, dir);

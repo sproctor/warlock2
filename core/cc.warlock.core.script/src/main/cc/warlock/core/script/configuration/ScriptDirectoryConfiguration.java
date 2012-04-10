@@ -24,13 +24,14 @@ package cc.warlock.core.script.configuration;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
+import cc.warlock.core.client.settings.internal.DirectorySetting;
 
-public class ScriptDirectoryConfiguration extends ArrayConfigurationProvider<String> {
+public class ScriptDirectoryConfiguration extends ArrayConfigurationProvider<DirectorySetting> {
 	public ScriptDirectoryConfiguration (Preferences parentNode) {
 		super(parentNode, "directories");
 	}
 	
-	protected String loadSetting(String id) {
-		return getNode().get(id, null);
+	protected DirectorySetting loadSetting(String id) {
+		return new DirectorySetting(getNode(), id);
 	}
 }

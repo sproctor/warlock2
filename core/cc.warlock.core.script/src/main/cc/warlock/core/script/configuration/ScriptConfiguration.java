@@ -21,21 +21,19 @@
  */
 package cc.warlock.core.script.configuration;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
 
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.internal.Property;
-import cc.warlock.core.configuration.ConfigurationUtil;
+import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public class ScriptConfiguration extends WarlockSetting {
 
-	protected ScriptDirectoryConfiguration scriptDirectories;
+	protected ScriptDirectoryConfiguration directoryConf;
 	protected Property<Boolean> suppressExceptions;
 	protected String scriptPrefix;
 	
@@ -52,11 +50,14 @@ public class ScriptConfiguration extends WarlockSetting {
 		suppressExceptions = new Property<Boolean>(getNode().getBoolean("suppress-exceptions", true));
 		scriptPrefix = getNode().get("prefix", ".");
 		
-		scriptDirectories = new ScriptDirectoryConfiguration(this.getNode());
-		if(scriptDirectories.getSettings().isEmpty()) {
-			scriptDirectories.add(ConfigurationUtil.getUserDirectory("scripts", false));
-			scriptDirectories.add(ConfigurationUtil.getUserDirectory("warlock-scripts", false));
-			scriptDirectories.add(ConfigurationUtil.getConfigurationDirectory("scripts", false));
+		directoryConf = new ScriptDirectoryConfiguration(this.getNode());
+		if(directoryConf.getSettings().isEmpty()) {
+			DirectorySetting userScripts = directoryConf.createSetting();
+			userScripts.setDirectory("scripts", "user");
+			DirectorySetting userWarlockScripts = directoryConf.createSetting();
+			userWarlockScripts.setDirectory("warlock-scripts", "user");
+			DirectorySetting confScripts = directoryConf.createSetting();
+			confScripts.setDirectory("scripts", "config");
 		}
 	}
 	
@@ -64,11 +65,15 @@ public class ScriptConfiguration extends WarlockSetting {
 		return suppressExceptions;
 	}
 	
-	public Set<File> getScriptDirectories ()
+	public Collection<DirectorySetting> getScriptDirectories ()
 	{
-		return scriptDirectories;
+		return directoryConf.getSettings();
 	}
 
+	public ScriptDirectoryConfiguration getScriptDirectoryConfiguration() {
+		return directoryConf;
+	}
+	
 	public String getScriptPrefix() {
 		return scriptPrefix;
 	}

@@ -23,7 +23,7 @@ package cc.warlock.rcp.prefs;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -52,16 +52,18 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
+import cc.warlock.core.script.configuration.ScriptDirectoryConfiguration;
 
 public class ScriptingPreferencePage extends PropertyPage implements
 		IWorkbenchPropertyPage {
 
 	protected Text scriptPrefix;
 	protected TreeViewer scriptDirectories;
-	protected Button addScriptDir, removeScriptDir, moveUp, moveDown;
+	protected Button addScriptDir, removeScriptDir /*, moveUp, moveDown*/;
 	
-	protected ArrayList<File> directories = new ArrayList<File>();
+	// protected ArrayList<String> directories = new ArrayList<String>();
 	
 	public ScriptingPreferencePage() {
 		// TODO Auto-generated constructor stub
@@ -97,7 +99,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 				return new Object[0];
 			}
 			public Object[] getElements(Object inputElement) {
-				return ((List<File>)inputElement).toArray();
+				return ((Collection<DirectorySetting>)inputElement).toArray();
 			}
 			public Object getParent(Object element) {return null;}
 			public boolean hasChildren(Object element) { return false; }
@@ -111,7 +113,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 			}
 			public String getText(Object element) {
-				return ((File)element).getAbsolutePath();
+				return ((DirectorySetting)element).getDirectory().getAbsolutePath();
 			}
 			public boolean isLabelProperty(Object element, String property) { return true; }
 			public void removeListener(ILabelProviderListener listener) {}
@@ -121,8 +123,8 @@ public class ScriptingPreferencePage extends PropertyPage implements
 				boolean empty = scriptDirectories.getSelection().isEmpty();
 				
 				removeScriptDir.setEnabled(!empty);
-				moveUp.setEnabled(!empty);
-				moveDown.setEnabled(!empty);
+				/*moveUp.setEnabled(!empty);
+				moveDown.setEnabled(!empty);*/
 			}
 		});
 		scriptDirectories.getTree().setLinesVisible(false);
@@ -151,6 +153,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 			}
 		});
 		
+		/*
 		moveUp = new Button(dirButtonsComposite, SWT.PUSH);
 		moveUp.setText("Move Up");
 		moveUp.setEnabled(false);
@@ -171,20 +174,15 @@ public class ScriptingPreferencePage extends PropertyPage implements
 				moveDownClicked();
 			}
 		});
-		
-		updateData();
+		*/
+		scriptPrefix.setText(ScriptConfiguration.instance().getScriptPrefix());
+		refreshView();
 		
 		return main;
 	}
 	
-	protected void updateData ()
-	{
-		scriptPrefix.setText(ScriptConfiguration.instance().getScriptPrefix());
-		
-		directories.clear();
-		directories.addAll(ScriptConfiguration.instance().getScriptDirectories());
-		scriptDirectories.setInput(directories);
-		
+	protected void refreshView() {
+		scriptDirectories.setInput(ScriptConfiguration.instance().getScriptDirectories());
 	}
 	
 	protected void addDirectoryClicked ()
@@ -195,24 +193,26 @@ public class ScriptingPreferencePage extends PropertyPage implements
 		if (directory != null)
 		{
 			File dir = new File(directory);
-			directories.add(dir);
-			scriptDirectories.setInput(directories);
+			DirectorySetting setting = ScriptConfiguration.instance().getScriptDirectoryConfiguration().createSetting();
+			setting.setDirectory(dir.getAbsolutePath());
+			refreshView();
 		}
 	}
 	
 	protected void removeDirectoryClicked ()
 	{
 		IStructuredSelection selection = (IStructuredSelection) scriptDirectories.getSelection();
-		File directory = (File) selection.getFirstElement();
+		DirectorySetting directory = (DirectorySetting) selection.getFirstElement();
 		
-		directories.remove(directory);
+		ScriptConfiguration.instance().getScriptDirectoryConfiguration().removeSetting(directory);
 		scriptDirectories.remove(directory);
 	}
 	
+	/*
 	protected void moveUpClicked ()
 	{
 		IStructuredSelection selection = (IStructuredSelection) scriptDirectories.getSelection();
-		File directory = (File) selection.getFirstElement();
+		DirectorySetting directory = (DirectorySetting) selection.getFirstElement();
 		
 		int index = directories.indexOf(directory);
 		if (index > 0)
@@ -231,7 +231,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 	protected void moveDownClicked ()
 	{
 		IStructuredSelection selection = (IStructuredSelection) scriptDirectories.getSelection();
-		File directory = (File) selection.getFirstElement();
+		String directory = (String) selection.getFirstElement();
 		
 		int index = directories.indexOf(directory);
 		if (index < directories.size() - 1)
@@ -246,14 +246,20 @@ public class ScriptingPreferencePage extends PropertyPage implements
 			scriptDirectories.refresh();
 		}
 	}
+	*/
 	
 	@Override
 	public boolean performOk() {
 		ScriptConfiguration.instance().setScriptPrefix(scriptPrefix.getText());
 
-		ScriptConfiguration.instance().getScriptDirectories().clear();
-		ScriptConfiguration.instance().getScriptDirectories().addAll(directories);
-		
+		/*
+		ScriptDirectoryConfiguration dirConf = ScriptConfiguration.instance().getScriptDirectoryConfiguration();
+		dirConf.clear();
+		for(String dir : directories) {
+			DirectorySetting setting = dirConf.createSetting();
+			setting.setDirectory(dir);
+		}
+		*/
 		return true;
 	}
 }

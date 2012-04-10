@@ -76,4 +76,14 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 		this.notifyListenersChanged();
 	}
 	
+	public void clear() {
+		for(Entry<String, T> entry : settings.entrySet()) {
+			settings.remove(entry.getKey());
+			try {
+				getNode().node(entry.getKey()).removeNode();
+			} catch(BackingStoreException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
