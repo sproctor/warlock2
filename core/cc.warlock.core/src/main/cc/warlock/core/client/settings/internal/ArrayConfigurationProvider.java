@@ -50,14 +50,14 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 		return Collections.unmodifiableCollection(settings.values());
 	}
 	
-	public void insertSetting(int index, T string) {
+	public void insertSetting(int index, T setting) {
 		String id = Integer.toString(index);
 		T oldSetting = settings.remove(id);
 		if(oldSetting != null) {
 			getNode().remove(id);
 			insertSetting(index + 1, oldSetting);
 		}
-		settings.put(id, string);
+		settings.put(id, setting);
 		this.notifyListenersChanged();
 	}
 	

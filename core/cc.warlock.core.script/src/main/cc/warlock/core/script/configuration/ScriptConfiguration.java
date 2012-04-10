@@ -35,7 +35,7 @@ import cc.warlock.core.configuration.WarlockSetting;
 
 public class ScriptConfiguration extends WarlockSetting {
 
-	protected TreeSet<File> scriptDirectories = new TreeSet<File>();
+	protected ScriptDirectoryConfiguration scriptDirectories;
 	protected Property<Boolean> suppressExceptions;
 	protected String scriptPrefix;
 	
@@ -52,10 +52,12 @@ public class ScriptConfiguration extends WarlockSetting {
 		suppressExceptions = new Property<Boolean>(getNode().getBoolean("suppress-exceptions", true));
 		scriptPrefix = getNode().get("prefix", ".");
 		
-		// TODO: load these instead
-		scriptDirectories.add(ConfigurationUtil.getUserDirectory("scripts", false));
-		scriptDirectories.add(ConfigurationUtil.getUserDirectory("warlock-scripts", false));
-		scriptDirectories.add(ConfigurationUtil.getConfigurationDirectory("scripts", false));
+		scriptDirectories = new ScriptDirectoryConfiguration(this.getNode());
+		if(scriptDirectories.getSettings().isEmpty()) {
+			scriptDirectories.add(ConfigurationUtil.getUserDirectory("scripts", false));
+			scriptDirectories.add(ConfigurationUtil.getUserDirectory("warlock-scripts", false));
+			scriptDirectories.add(ConfigurationUtil.getConfigurationDirectory("scripts", false));
+		}
 	}
 	
 	public IProperty<Boolean> getSupressExceptions() {
