@@ -109,17 +109,11 @@ public class Account extends WarlockSetting {
 					byte[] utf8 = text.getBytes("UTF8");
 					byte[] encoded = eCipher.doFinal(utf8);
 					return Base64.encodeBase64(encoded);
-				} catch (UnsupportedEncodingException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (IllegalBlockSizeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (BadPaddingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					return null;
 				}
-				return null;
 			} else {
 				return text.getBytes();
 			}
