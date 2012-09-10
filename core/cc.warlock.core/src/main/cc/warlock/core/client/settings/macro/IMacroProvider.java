@@ -25,15 +25,15 @@ import java.util.Collection;
 
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
-import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.IArraySettingProvider;
 
 
-public interface IMacroProvider extends IWarlockSetting {
-	public Collection<MacroSetting> getMacros();
+public interface IMacroProvider extends IArraySettingProvider<MacroSetting> {
+	//public Collection<MacroSetting> getMacros();
 	
-	public MacroSetting getMacro (String keyString);
+	//public MacroSetting getMacro (String keyString);
 	//public void addMacro (IMacro macro);
-	public boolean removeMacro (IMacro macro);
+	//public boolean removeMacro (IMacro macro);
 	//public void replaceMacro (IMacro originalMacro, IMacro newMacro);
 	
 }

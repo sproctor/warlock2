@@ -27,7 +27,9 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 				} catch(NumberFormatException e) {
 					// Don't care
 				}
-				settings.put(id, loadSetting(id));
+				T setting = loadSetting(id);
+				if (setting != null)
+					settings.put(id, loadSetting(id));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -38,6 +40,8 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 	{
 		String id = Integer.toString(nextId);
 		T setting = loadSetting(id);
+		if (setting == null)
+			return null;
 		settings.put(id, setting);
 		nextId++;
 		this.notifyListenersChanged();
@@ -77,13 +81,14 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 	}
 	
 	public void clear() {
+		// Remove children
 		for(Entry<String, T> entry : settings.entrySet()) {
-			settings.remove(entry.getKey());
 			try {
 				getNode().node(entry.getKey()).removeNode();
 			} catch(BackingStoreException e) {
 				e.printStackTrace();
 			}
 		}
+		settings.clear();
 	}
 }

@@ -21,16 +21,10 @@
  */
 package cc.warlock.core.client.settings.macro.internal;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
-import cc.warlock.core.configuration.WarlockSetting;
 
 /**
  * Macros defined by this provider are command-based only. 
@@ -38,49 +32,37 @@ import cc.warlock.core.configuration.WarlockSetting;
  *  
  * @author marshall
  */
-public class MacroConfigurationProvider extends WarlockSetting implements IMacroProvider {
-
-	protected HashMap<String, MacroSetting> macros = new HashMap<String, MacroSetting>();
+public class MacroConfigurationProvider extends ArrayConfigurationProvider<MacroSetting> implements IMacroProvider {
 	
 	public MacroConfigurationProvider (Preferences parentNode)
 	{
 		super(parentNode, "macros");
-		
-		try {
-			for(String macroId : getNode().childrenNames()) {
-				macros.put(MacroSetting.decodePath(macroId), new MacroSetting(getNode(), macroId));
-			}
-		} catch(BackingStoreException e) {
-			e.printStackTrace();
-		}
 	}
 	
-	public MacroSetting createMacro(String keyString) {
-		MacroSetting macro = macros.get(keyString);
-		if(macro == null) {
-			macro = new MacroSetting(getNode(), MacroSetting.encodePath(keyString));
-			macros.put(keyString, macro);
+	protected MacroSetting loadSetting(String id) {
+		boolean loading = false;
+		try {
+			loading = getNode().nodeExists(id);
+		} catch(Exception e) {
+			// don't need to do anything
+		}
+		MacroSetting macro = new MacroSetting(getNode(), id);
+		
+		// Old macros had no keyString. Remove them if we come across them
+		if (loading && macro.getKeyString() == null) {
+			this.removeSetting(macro);
+			return null;
 		}
 		
 		return macro;
 	}
-
+	
 	public MacroSetting getMacro(String keyString) {
-		return macros.get(keyString);
-	}
-
-	public Collection<MacroSetting> getMacros() {
-		return macros.values();
-	}
-
-	public boolean removeMacro(IMacro macro) {
-		for(Entry<String, MacroSetting> entry : macros.entrySet()) {
-			if(entry.getValue().equals(macro)) {
-				macros.remove(entry.getKey());
-				return true;
-			}
+		for (MacroSetting macro : settings.values()) {
+			if (macro.getKeyString().equals(keyString))
+				return macro;
 		}
-		return false;
+		return null;
 	}
 	
 	/*public void replaceMacro(IMacro originalMacro, IMacro newMacro) {

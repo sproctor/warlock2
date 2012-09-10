@@ -174,6 +174,8 @@ public class MacroRegistry {
 		Integer keycode = keys.get(keyString);
 		if(keycode != null)
 			return keycode;
+		if (keyString.length() == 0)
+			return 0;
 		return keyString.charAt(0);
 	}
 	

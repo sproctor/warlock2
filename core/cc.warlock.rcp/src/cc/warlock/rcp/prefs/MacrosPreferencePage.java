@@ -308,8 +308,9 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected ArrayList<MacroSetting> addedMacros = new ArrayList<MacroSetting>();
 	protected void addMacroSelected ()
 	{
-		MacroSetting macro = settings.getMacroConfigurationProvider().createMacro("");
+		MacroSetting macro = settings.getMacroConfigurationProvider().createSetting();
 		macro.setCommand("");
+		macro.setKeyString("");
 		
 		addedMacros.add(macro);
 		//macros.add(macro);
@@ -329,19 +330,21 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		}
 		
 		macroTableView.remove(selectedMacro);*/
-		settings.getMacroConfigurationProvider().removeMacro(selectedMacro);
+		settings.getMacroConfigurationProvider().removeSetting(selectedMacro);
 	}
 	
 	protected void setupDefaultMacros() {
 		// There probably is a better place to put this.
 		clearMacros();
 		for(DefaultMacro macro : DefaultMacros.instance().getCollection()) {
-			MacroSetting smacro = settings.getMacroConfigurationProvider().createMacro(macro.getKeyString());
+			MacroSetting smacro = settings.getMacroConfigurationProvider().createSetting();
 			smacro.setCommand(macro.getCommand());
+			smacro.setKeyString(macro.getKeyString());
 			
 			addedMacros.add(smacro);
 			//macros.add(macro);
 			macroTableView.add(smacro);
+			macroTableView.refresh();
 		}
 	}
 	
@@ -351,9 +354,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		if(macroTable != null)
 			macroTable.clearAll();
 		addedMacros.clear();
-		for (MacroSetting currentMacro: settings.getMacros()) {
-			settings.getMacroConfigurationProvider().removeMacro(currentMacro);
-		}
+		settings.getMacroConfigurationProvider().clear();
 	}
 	
 	protected class LabelProvider implements ITableLabelProvider

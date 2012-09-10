@@ -47,8 +47,8 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 	{
 		super(parentNode, path);
 		
-		this.keyString = decodePath(path);
-		command = getNode().get("command", null);
+		this.keyString = getNode().get("keystring", null);
+		this.command = getNode().get("command", null);
 		updateDeferred = true;
 	}
 	
@@ -69,10 +69,9 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 	}
 	
 	public void setKeyString(String keyString) {
-		changePath(keyString);
-		
 		this.keyString = keyString;
-		setCommand(command);
+		getNode().put("keystring", keyString);
+		updateDeferred = true;
 	}
 	
 	public void setCommand(String command) {

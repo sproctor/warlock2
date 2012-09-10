@@ -117,7 +117,7 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 	}
 	
 	public Collection<MacroSetting> getMacros() {
-		return macroConfigurationProvider.getMacros();
+		return macroConfigurationProvider.getSettings();
 	}
 	
 	public Collection<IVariable> getVariables() {
