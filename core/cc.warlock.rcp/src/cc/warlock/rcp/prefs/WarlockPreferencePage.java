@@ -33,7 +33,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
-import cc.warlock.rcp.views.GameView;
 
 public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPropertyPage {
 	protected Button promptButton, suppressScriptExceptionsButton;
@@ -41,6 +40,8 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 	protected IWarlockClient client;
 	
 	protected Control createContents(Composite parent) {
+		this.noDefaultAndApplyButton();
+		
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(1, false));
 		
@@ -61,12 +62,6 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 	@Override
 	public void setElement(IAdaptable element) {
 		client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
-	}
-	
-	@Override
-	public void performDefaults() {
-		//suppressPrompt = false;
-		promptButton.setSelection(false);
 	}
 	
 	@Override
