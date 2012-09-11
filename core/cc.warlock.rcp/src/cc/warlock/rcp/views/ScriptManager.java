@@ -127,7 +127,7 @@ public class ScriptManager extends ViewPart implements IGameViewFocusListener, I
 		stopColumn.setWidth(30);
 		stopColumn.setText("Stop");
 		scriptsTable.setLabelProvider(new ScriptsLabelProvider());
-		scriptsTable.setContentProvider(new ArrayContentProvider());
+		scriptsTable.setContentProvider(ArrayContentProvider.getInstance());
 		scriptsTable.setInput(new ScriptRow[] { 
 				new ScriptRow("sfhunter.cmd",false), 
 				new ScriptRow("train.cmd", true), 

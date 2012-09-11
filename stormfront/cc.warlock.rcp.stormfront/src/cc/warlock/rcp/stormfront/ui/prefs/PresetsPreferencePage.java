@@ -250,7 +250,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 		
 		stylesTable.setUseHashlookup(true);
 		stylesTable.setColumnProperties(new String[] { "preset" });
-		stylesTable.setContentProvider(new ArrayContentProvider());
+		stylesTable.setContentProvider(ArrayContentProvider.getInstance());
 		stylesTable.setLabelProvider(new PresetsLabelProvider());
 		data = new GridData(GridData.FILL, GridData.FILL, true, true);
 		data.horizontalSpan = 6;

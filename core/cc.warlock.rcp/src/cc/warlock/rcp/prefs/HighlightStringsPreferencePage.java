@@ -185,7 +185,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		});
 		
 		stringTable.setLabelProvider(new StringsLabelProvider());
-		stringTable.setContentProvider(new ArrayContentProvider());
+		stringTable.setContentProvider(ArrayContentProvider.getInstance());
 		stringTable.setInput(client.getClientSettings().getHighlightStrings());
 		
 		int listHeight = stringTable.getTable().getItemHeight() * 8;

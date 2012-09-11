@@ -58,7 +58,7 @@ public class ScriptsView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		scriptList = new TableViewer(parent, SWT.SINGLE | SWT.FULL_SELECTION);
-		scriptList.setContentProvider(new ArrayContentProvider());
+		scriptList.setContentProvider(ArrayContentProvider.getInstance());
 		scriptList.setLabelProvider(new ITableLabelProvider () {
 			public Image getColumnImage(Object element, int columnIndex) {
 				if (columnIndex == 0) return ScribeSharedImages.getImage(ScribeSharedImages.IMG_SCRIPT);

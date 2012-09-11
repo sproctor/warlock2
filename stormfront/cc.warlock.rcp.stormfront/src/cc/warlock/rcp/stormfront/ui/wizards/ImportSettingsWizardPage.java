@@ -141,7 +141,7 @@ class ImportSettingsWizardPage extends WizardPageWithNotification
 		new Label(profileComposite, SWT.NONE).setText("Profile to import settings into:");
 		
 		profileTable = new TableViewer(profileComposite, SWT.BORDER);
-		profileTable.setContentProvider(new ArrayContentProvider());
+		profileTable.setContentProvider(ArrayContentProvider.getInstance());
 		profileTable.setLabelProvider(new ILabelProvider () {
 			public void addListener(ILabelProviderListener listener) {	}
 			public void dispose() {}

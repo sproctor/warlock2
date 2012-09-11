@@ -111,7 +111,7 @@ public class WarlockUpdateDialog extends Dialog {
 		
 		updateTable.getTable().setHeaderVisible(true);
 		
-		updateTable.setContentProvider(new ArrayContentProvider());
+		updateTable.setContentProvider(ArrayContentProvider.getInstance());
 		updateTable.setLabelProvider(new ITableLabelProvider() {
 
 			public Image getColumnImage(Object element, int columnIndex) {

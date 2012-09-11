@@ -134,7 +134,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		variableTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
 		variableTable.getTable().setHeaderVisible(true);
 		variableTable.setUseHashlookup(true);
-		variableTable.setContentProvider(new ArrayContentProvider());
+		variableTable.setContentProvider(ArrayContentProvider.getInstance());
 		variableTable.setLabelProvider(new VariableLabelProvider());
 		variableTable.addFilter(new ViewerFilter () {
 			public boolean select(Viewer viewer, Object parentElement, Object element) {

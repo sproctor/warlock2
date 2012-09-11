@@ -99,7 +99,7 @@ public class GameSelectWizardPage extends WizardPageWithNotification {
 		games.setEnabled(false);
 		
 		gamesViewer = new TableViewer (games);
-		gamesViewer.setContentProvider(new ArrayContentProvider());
+		gamesViewer.setContentProvider(ArrayContentProvider.getInstance());
 		gamesViewer.setLabelProvider(new GameLabelProvider());
 		gamesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
