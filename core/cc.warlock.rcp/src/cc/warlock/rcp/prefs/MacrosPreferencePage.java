@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.part.PageBook;
@@ -111,6 +110,8 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	@Override
 	protected Control createContents(Composite parent) {
+		this.noDefaultAndApplyButton();
+		
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
 		
@@ -165,7 +166,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			}
 		});
 		
-		MenuItem filterByKeyCombo= new MenuItem(filterMenu, SWT.RADIO);
+		MenuItem filterByKeyCombo = new MenuItem(filterMenu, SWT.RADIO);
 		filterByKeyCombo.setText("Filter by key combo");
 		filterByKeyCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -190,7 +191,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		
 		macroTableView.setUseHashlookup(true);
 		macroTableView.setColumnProperties(new String[] {COLUMN_COMMAND, COLUMN_KEY});
-		macroTableView.setContentProvider(new ArrayContentProvider());
+		macroTableView.setContentProvider(ArrayContentProvider.getInstance());
 		macroTableView.setLabelProvider(new LabelProvider());
 		macroTableView.addFilter(new ViewerFilter() {
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
@@ -215,12 +216,6 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 				}
 			}
 		});
-		
-		/*for (IMacro macro : settings.getAllMacros()) {
-			if (macro instanceof MacroSetting) {
-				macros.add(new MacroSetting((MacroSetting)macro));
-			}
-		}*/
 		
 		macroTableView.setInput(settings.getMacros());
 		macroTableView.getTable().setHeaderVisible(true);
@@ -305,32 +300,30 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		}
 	}
 	
-	protected ArrayList<MacroSetting> addedMacros = new ArrayList<MacroSetting>();
-	protected void addMacroSelected ()
+	private ArrayList<MacroSetting> addedMacros = new ArrayList<MacroSetting>();
+	
+	private void addMacroSelected ()
 	{
 		MacroSetting macro = settings.getMacroConfigurationProvider().createSetting();
 		macro.setCommand("");
 		macro.setKeyString("");
 		
 		addedMacros.add(macro);
-		//macros.add(macro);
-		macroTableView.add(macro);
+		
+		macroTableView.refresh();
 		
 		macroTableView.editElement(macro, 0);
 	}
 	
-	protected ArrayList<MacroSetting> removedMacros = new ArrayList<MacroSetting>();
+	private ArrayList<MacroSetting> removedMacros = new ArrayList<MacroSetting>();
 
 	protected void removeMacroSelected ()
 	{
-		/*addedMacros.remove(selectedMacro);
-		
-		if (macros.remove(selectedMacro)) {
+		if (!addedMacros.remove(selectedMacro))
 			removedMacros.add(selectedMacro);
-		}
 		
-		macroTableView.remove(selectedMacro);*/
 		settings.getMacroConfigurationProvider().removeSetting(selectedMacro);
+		macroTableView.refresh();
 	}
 	
 	protected void setupDefaultMacros() {
@@ -350,10 +343,19 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	protected void clearMacros() {
 		// Clear out all exiting macros.
-		Table macroTable = macroTableView.getTable();
-		if(macroTable != null)
-			macroTable.clearAll();
+		/*Table macroTable = macroTableView.getTable();
+		if(macroTable == null)
+			macroTable.clearAll();*/
+		
+		// Save the macros to be able to restore them
+		for (MacroSetting macro : settings.getMacros()) {
+			if (!addedMacros.contains(macro))
+				removedMacros.add(macro);
+		}
+		
+		// We removed all of the added macros
 		addedMacros.clear();
+		
 		settings.getMacroConfigurationProvider().clear();
 	}
 	
@@ -506,23 +508,29 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	}
 	
 	@Override
+	public boolean performCancel() {
+		// Re-add the removed macros
+		for (MacroSetting oldMacro : removedMacros) {
+			MacroSetting macro = settings.getMacroConfigurationProvider().createSetting();
+			macro.setCommand(oldMacro.getCommand());
+			macro.setKeyString(oldMacro.getKeyString());
+		}
+		removedMacros.clear();
+		
+		// Remove the added macros
+		for (MacroSetting newMacro : addedMacros) {
+			settings.getMacroConfigurationProvider().removeSetting(newMacro);
+		}
+		addedMacros.clear();
+		
+		return true;
+	}
+	
+	@Override
 	public boolean performOk() {
-		
-		/*for (MacroSetting macro : macros) {
-			if (macro.needsUpdate() && !addedMacros.contains(macro)) {
-				IMacroProvider provider = (IMacroProvider) macro.getProvider();
-				provider.replaceMacro(macro.getOriginalMacro(), macro);
-			}
-		}
-		
-		for (MacroSetting macro : removedMacros) {
-			IMacroProvider provider = (IMacroProvider) macro.getProvider();
-			provider.removeMacro(macro.getOriginalMacro());
-		}
-		
-		for (MacroSetting macro : addedMacros) {
-			settings.getMacroConfigurationProvider().addMacro(macro);
-		}*/
+		// Changes have already been made, clear out the history
+		addedMacros.clear();
+		removedMacros.clear();
 		
 		settings.flush();
 		

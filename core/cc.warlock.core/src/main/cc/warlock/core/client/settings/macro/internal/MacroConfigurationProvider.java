@@ -27,8 +27,7 @@ import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 import cc.warlock.core.client.settings.macro.IMacroProvider;
 
 /**
- * Macros defined by this provider are command-based only. 
- * Everything else will be a system macro, probably needing special configuration, or more foresight in this class.
+ * Macros defined by this provider are command-based only.
  *  
  * @author marshall
  */
@@ -64,12 +63,4 @@ public class MacroConfigurationProvider extends ArrayConfigurationProvider<Macro
 		}
 		return null;
 	}
-	
-	/*public void replaceMacro(IMacro originalMacro, IMacro newMacro) {
-		int index = macros.indexOf(originalMacro);
-		if (index > -1) {
-			macros.set(index, newMacro);
-		}
-	}*/
-
 }
