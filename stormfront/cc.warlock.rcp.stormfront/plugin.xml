@@ -129,7 +129,6 @@
          </enabledWhen>
       </page>
       <page
-            category="cc.warlock.rcp.warlockPrefs"
             class="cc.warlock.rcp.stormfront.ui.prefs.AccountsPreferencePage"
             id="cc.warlock.rcp.stormfront.ui.prefs.accountsAndProfiles"
             name="Accounts and Profiles">

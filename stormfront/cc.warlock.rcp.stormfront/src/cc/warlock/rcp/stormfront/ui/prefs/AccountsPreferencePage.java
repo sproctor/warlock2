@@ -64,18 +64,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 	protected HashMap<Account, ArrayList<Profile>> removedProfiles = new HashMap<Account, ArrayList<Profile>>();
 	
 	protected TreeViewer accountViewer;
-	protected Button addAccount, removeAccount, editAccount, addProfile, removeProfile;
-	
-	public AccountsPreferencePage ()
-	{
-		/* FIXME
-		for (Account account : ProfileProvider.instance().getAllAccounts())
-		{
-			Account copy = new Account(account);
-			accounts.add(copy);
-		}
-		*/
-	}
+	protected Button removeAccount, editAccount, addProfile, removeProfile;
 	
 	@Override
 	protected Control createContents(Composite parent) {
@@ -94,7 +83,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 		buttonsComposite.setLayout(new FillLayout(SWT.VERTICAL));
 		buttonsComposite.setLayoutData(new GridData(GridData.CENTER, GridData.BEGINNING, false, false));
 		
-		addAccount = new Button(buttonsComposite, SWT.PUSH);
+		Button addAccount = new Button(buttonsComposite, SWT.PUSH);
 		addAccount.setText("Add Account");
 		addAccount.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_ADD));
 		addAccount.addSelectionListener(new SelectionAdapter () {
@@ -161,9 +150,9 @@ public class AccountsPreferencePage extends PropertyPage implements
 			}
 			
 			public Object[] getElements(Object inputElement) {
-				if (inputElement instanceof Collection)
+				if (inputElement instanceof Collection<?>)
 				{
-					return ((Collection)inputElement).toArray();
+					return ((Collection<?>)inputElement).toArray();
 				} else if (inputElement instanceof Object[]){
 					return (Object[]) inputElement;
 				} else {
@@ -273,23 +262,19 @@ public class AccountsPreferencePage extends PropertyPage implements
 	}
 	
 	protected void removeProfileClicked() {
-		if (currentProfile != null)
-		{
-			removedProfiles.get(currentAccount).add(currentProfile);
-			accountViewer.remove(currentProfile);
-		}
+		if (currentProfile == null)
+			return;
+		
+		removedProfiles.get(currentAccount).add(currentProfile);
+		accountViewer.remove(currentProfile);
 	}
 
 	protected void addProfileClicked() {
 		if (currentAccount != null)
-		{
-			ProfileEditDialog dialog = new ProfileEditDialog(getShell(), currentAccount);
-			int response = dialog.open();
-			if (response == Dialog.OK)
-			{
-				
-			}
-		}
+			return;
+		
+		ProfileEditDialog dialog = new ProfileEditDialog(getShell(), currentAccount);
+		dialog.open();
 	}
 
 	protected void editAccountClicked() {
@@ -308,13 +293,15 @@ public class AccountsPreferencePage extends PropertyPage implements
 	}
 
 	protected void removeAccountClicked() {
-		if (currentAccount != null)
-		{
-			accountViewer.remove(currentAccount);
-			removedAccounts.add(currentAccount);
-			AccountProvider.getInstance().removeSetting(currentAccount);
-			//accounts.remove(currentAccount);
-		}
+		if (currentAccount == null)
+			return;
+		
+		//accountViewer.remove(currentAccount);
+		removedAccounts.add(currentAccount);
+		AccountProvider.getInstance().removeSetting(currentAccount);
+		currentAccount = null;
+		//accounts.remove(currentAccount);
+		accountViewer.refresh();
 	}
 
 	protected void addAccountClicked() {
