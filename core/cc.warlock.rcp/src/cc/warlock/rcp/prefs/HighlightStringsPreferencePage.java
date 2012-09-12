@@ -85,7 +85,6 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected Button addString, removeString, soundButton;
 	protected Text filterText;
 	protected Text soundText; 
-	protected IWarlockClient client;
 	protected HighlightSetting selectedString;
 	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
 	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();

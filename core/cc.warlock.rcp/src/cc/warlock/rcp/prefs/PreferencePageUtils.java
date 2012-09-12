@@ -7,12 +7,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.rcp.util.FontSelector;
 
 public abstract class PreferencePageUtils extends PropertyPage implements SelectionListener, IPropertyChangeListener {
+	
 	
 	public Button createButton(Composite parent, int flags)
 	{
@@ -108,5 +110,11 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 	
 	protected void fontSelectorChanged(FontSelector selector) {
 		
+	}
+	
+	protected Combo createProfileDropDown (Composite parent) {
+		Combo dropDown = new Combo(parent, SWT.DROP_DOWN);
+		
+		return dropDown;
 	}
 }

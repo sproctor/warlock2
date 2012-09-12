@@ -22,14 +22,15 @@
 package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockPattern;
-import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockStyle;
@@ -39,6 +40,8 @@ import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.macro.internal.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.macro.internal.MacroSetting;
+import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.IWarlockSettingFactory;
 import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.configuration.WarlockSetting;
 
@@ -51,39 +54,20 @@ import cc.warlock.core.configuration.WarlockSetting;
 public class ClientSettings extends WarlockSetting implements IClientSettings {
 	
 	public static final String WINDOW_MAIN = "main";
+	private static HashMap<String, IWarlockStyle> defaultStyles = new HashMap<String, IWarlockStyle>();
+	private static HashMap<String, ClientSettings> clients = new HashMap<String, ClientSettings>();
+	private static Preferences topNode = WarlockPreferences.getInstance().getNode().node("clients");
+	private static HashMap<String, IWarlockSettingFactory> providerFactories = new HashMap<String, IWarlockSettingFactory>();
 	
-	private IWarlockClient client;
 	protected int version;
-	private HashMap<String, IWarlockStyle> defaultStyles = new HashMap<String, IWarlockStyle>();
-
-	protected HighlightConfigurationProvider highlightConfigurationProvider;
-	protected IgnoreConfigurationProvider ignoreConfigurationProvider;
-	protected TriggerConfigurationProvider triggerConfigurationProvider;
-	protected VariableConfigurationProvider variableConfigurationProvider;
-	protected MacroConfigurationProvider macroConfigurationProvider;
-	protected WindowSettingsConfigurationProvider windowSettingsProvider;
-	private PresetSettingsConfigurationProvider presetSettingsProvider;
-	private LoggingConfiguration loggingSettings;
+	
+	private HashMap<String, IWarlockSetting> providers = new HashMap<String, IWarlockSetting>();
 	
 	// TODO: store these in settings
-	private WarlockColor defaultBgColor, defaultFgColor;
+	private static WarlockColor defaultBgColor = new WarlockColor("191932");
+	private static WarlockColor defaultFgColor = new WarlockColor("#F0F0FF");
 	
-	public ClientSettings (IWarlockClient client, String clientId) {
-		super(WarlockPreferences.getInstance().getNode(), "clients/" + clientId);
-		this.client = client;
-		
-		highlightConfigurationProvider = new HighlightConfigurationProvider(getNode());
-		ignoreConfigurationProvider = new IgnoreConfigurationProvider(getNode());
-		triggerConfigurationProvider = new TriggerConfigurationProvider(getNode());
-		variableConfigurationProvider = new VariableConfigurationProvider(getNode());
-		macroConfigurationProvider = new MacroConfigurationProvider(getNode());
-		windowSettingsProvider = new WindowSettingsConfigurationProvider(getNode());
-		presetSettingsProvider = new PresetSettingsConfigurationProvider(getNode());
-		loggingSettings = new LoggingConfiguration(getNode());
-		
-		defaultFgColor = new WarlockColor("#F0F0FF");
-		defaultBgColor = new WarlockColor("191932");
-		
+	static {
 		setDefaultStyle("bold", "#FFFF00", null);
 		setDefaultStyle("roomName", "#FFFFFF", "#0000FF");
 		setDefaultStyle("speech", "#80FF80", null);
@@ -95,16 +79,104 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 		setDefaultStyle("selectedLink", "#000000", "#62B0FF");
 		setDefaultStyle("command", "#FFFFFF", "#404040");
 		
+		try {
+			for (String clientId : topNode.childrenNames()) {
+				new ClientSettings(clientId);
+			}
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+		
+		registerProviderFactory("highlights", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new HighlightConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("ignores", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new IgnoreConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("triggers", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new TriggerConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("variables", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new VariableConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("macros", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new MacroConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("windows", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new WindowSettingsConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("presets", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new PresetSettingsConfigurationProvider(parentNode);
+			}
+		});
+		
+		registerProviderFactory("logs", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new LoggingConfiguration(parentNode);
+			}
+		});
 	}
 	
-	private void setDefaultStyle(String name, String fg, String bg) {
+	
+	public IWarlockSetting getProvider (String providerId) {
+		IWarlockSetting provider = providers.get(providerId);
+		if (provider == null) {
+			IWarlockSettingFactory factory = providerFactories.get(providerId);
+			if (factory == null)
+				return null;
+			provider = factory.createSetting(topNode);
+		}
+		return provider;
+	}
+	
+	public static void registerProviderFactory (String providerId, IWarlockSettingFactory factory) {
+		providerFactories.put(providerId, factory);
+	}
+	
+	private ClientSettings (String clientId) {
+		super(topNode, clientId);
+	}
+	
+	public static ClientSettings getClientSettings (String clientId) {
+		ClientSettings client = clients.get(clientId);
+		if (client == null) {
+			client = new ClientSettings (clientId);
+			clients.put(clientId, client);
+		}
+		return client;
+	}
+	
+	public static Collection<ClientSettings> getAllClientSettings () {
+		return Collections.unmodifiableCollection(clients.values());
+	}
+	
+	private static void setDefaultStyle(String name, String fg, String bg) {
 		IWarlockStyle style = new WarlockStyle(name);
 		style.setForegroundColor(fg == null ? defaultFgColor : new WarlockColor(fg));
 		style.setBackgroundColor(bg == null ? defaultBgColor : new WarlockColor(bg));
 		defaultStyles.put(name, style);
 	}
 	
-	public IWarlockStyle getDefaultStyle(String name) {
+	public static IWarlockStyle getDefaultStyle(String name) {
 		return defaultStyles.get(name);
 	}
 	
@@ -247,9 +319,5 @@ public class ClientSettings extends WarlockSetting implements IClientSettings {
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public IWarlockClient getClient() {
-		return client;
 	}
 }

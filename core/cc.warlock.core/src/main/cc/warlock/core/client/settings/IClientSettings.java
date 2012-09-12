@@ -23,10 +23,9 @@ package cc.warlock.core.client.settings;
 
 import java.util.Collection;
 
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockPattern;
-import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.logging.LoggingConfiguration;
@@ -40,8 +39,6 @@ import cc.warlock.core.configuration.IWarlockSetting;
  *
  */
 public interface IClientSettings extends IWarlockSetting {
-
-	public IWarlockClient getClient();
 	
 	public int getVersion();
 	

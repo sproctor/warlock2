@@ -396,7 +396,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	public void setPlayerId(String playerId) {
 		this.playerId = playerId;
 		
-		clientSettings = new StormFrontClientSettings(this, playerId);
+		clientSettings = new StormFrontClientSettings(playerId);
 		
 		if(clientSettings.isNewSetting()) {
 			for(DefaultMacro macro : viewer.getDefaultMacros()) {

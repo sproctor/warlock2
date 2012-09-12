@@ -22,7 +22,6 @@
 package cc.warlock.core.stormfront.settings;
 
 import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 
 /**
  * @author marshall
@@ -30,7 +29,5 @@ import cc.warlock.core.stormfront.client.IStormFrontClient;
  */
 public interface IStormFrontClientSettings extends IClientSettings {
 
-	public IStormFrontClient getStormFrontClient();
-	
 	public ICommandLineSettings getCommandLineSettings();
 }
