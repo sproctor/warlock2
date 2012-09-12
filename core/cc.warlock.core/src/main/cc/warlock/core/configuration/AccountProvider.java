@@ -27,7 +27,7 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 	
 	public Account getAccountByProfile(Profile profile) {
 		for(Account account : this.getSettings()) {
-			if(account.getProfiles().getSettings().contains(profile))
+			if(account.getProfiles().contains(profile))
 				return account;
 		}
 		return null;

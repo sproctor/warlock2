@@ -27,7 +27,6 @@
  */
 package cc.warlock.rcp.stormfront.ui.wizards;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -216,16 +215,12 @@ public class CharacterSelectWizardPage extends WizardPage {
 			Account account = accountPage.getSavedAccount();
 			if (account != null && !getSelectedCharacterCode().equals(SGEConnection.NEW_CHARACTER_CODE))
 			{
-				Collection<Profile> savedProfiles = account.getProfiles().getSettings();
-
 				boolean exists = false;
-				if (savedProfiles != null && savedProfiles.size() > 0)
+				for (Profile profile : account.getProfiles())
 				{
-					for (Profile profile : savedProfiles)
-					{
-						if (getSelectedCharacterName().equals(profile.getName())) {
-							exists = true; break;
-						}
+					if (getSelectedCharacterName().equals(profile.getName())) {
+						exists = true;
+						break;
 					}
 				}
 					
@@ -236,8 +231,8 @@ public class CharacterSelectWizardPage extends WizardPage {
 					
 					if (response)
 					{
-						account.getProfiles().createProfile(getSelectedCharacterCode(), getSelectedCharacterName(), gameSelectPage.getSelectedGameCode(), gameSelectPage.getSelectedGameName());
-						account.getProfiles().flush();
+						account.getProfileProvider().createProfile(getSelectedCharacterCode(), getSelectedCharacterName(), gameSelectPage.getSelectedGameCode(), gameSelectPage.getSelectedGameName());
+						account.getProfileProvider().flush();
 					}
 				}
 			}

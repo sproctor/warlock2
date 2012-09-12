@@ -63,7 +63,7 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 	public static Collection<Profile> getAllProfiles() {
 		ArrayList<Profile> profiles = new ArrayList<Profile>();
 		for(Account account : AccountProvider.getInstance().getSettings()) {
-			profiles.addAll(account.getProfiles().getSettings());
+			profiles.addAll(account.getProfiles());
 		}
 		return profiles;
 	}

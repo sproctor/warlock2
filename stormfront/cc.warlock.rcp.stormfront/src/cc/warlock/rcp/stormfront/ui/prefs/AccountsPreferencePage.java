@@ -60,8 +60,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 	public static final String PAGE_ID = "cc.warlock.rcp.stormfront.ui.prefs.accountsAndProfiles";
 	protected ArrayList<Account> addedAccounts = new ArrayList<Account>();
 	protected ArrayList<Account> removedAccounts = new ArrayList<Account>();
-	protected HashMap<Account, ArrayList<Profile>> addedProfiles = new HashMap<Account, ArrayList<Profile>>();
-	protected HashMap<Account, ArrayList<Profile>> removedProfiles = new HashMap<Account, ArrayList<Profile>>();
+	protected HashMap<Profile, Account> addedProfiles = new HashMap<Profile, Account>();
+	protected HashMap<Profile, Account> removedProfiles = new HashMap<Profile, Account>();
 	
 	protected TreeViewer accountViewer;
 	protected Button removeAccount, editAccount, addProfile, removeProfile;
@@ -144,7 +144,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 			public Object[] getChildren(Object parentElement) {
 				if (parentElement instanceof Account)
 				{
-					return ((Account)parentElement).getProfiles().getSettings().toArray();
+					return ((Account)parentElement).getProfiles().toArray();
 				}
 				return new Object[0];
 			}
@@ -170,7 +170,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 			public boolean hasChildren(Object element) {
 				if (element instanceof Account)
 				{
-					return ((Account)element).getProfiles().getSettings().size() > 0;
+					return ((Account)element).getProfiles().size() > 0;
 				}
 				return false;
 			}
@@ -199,21 +199,14 @@ public class AccountsPreferencePage extends PropertyPage implements
 		
 		viewer.addFilter(new ViewerFilter() {
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (element instanceof Account)
-				{
+				if (element instanceof Account) {
 					Account account = (Account) element;
-					if (removedAccounts.contains(account)) {
+					if (removedAccounts.contains(account))
 						return false;
-					}
-				}
-				else if (element instanceof Profile) {
+				} else if (element instanceof Profile) {
 					Profile profile = (Profile) element;
-					
-					if (removedProfiles.containsKey(parentElement) &&
-						removedProfiles.get(parentElement).contains(profile))
-					{
+					if (removedProfiles.containsKey(profile))
 						return false;
-					}
 				}
 				return true;
 			}
@@ -250,12 +243,14 @@ public class AccountsPreferencePage extends PropertyPage implements
 		addProfile.setEnabled(true);
 		
 		currentAccount = account;
+		currentProfile = null;
 	}
 	
 	protected Profile currentProfile;
 	protected void profileSelected (Profile profile)
 	{
 		removeProfile.setEnabled(true);
+		removeAccount.setEnabled(true);
 		
 		currentProfile = profile;
 		currentAccount = AccountProvider.getInstance().getAccountByProfile(profile);
@@ -265,12 +260,13 @@ public class AccountsPreferencePage extends PropertyPage implements
 		if (currentProfile == null)
 			return;
 		
-		removedProfiles.get(currentAccount).add(currentProfile);
-		accountViewer.remove(currentProfile);
+		removedProfiles.put(currentProfile, currentAccount);
+		currentAccount.getProfileProvider().removeSetting(currentProfile);
+		accountViewer.refresh();
 	}
 
 	protected void addProfileClicked() {
-		if (currentAccount != null)
+		if (currentAccount == null)
 			return;
 		
 		ProfileEditDialog dialog = new ProfileEditDialog(getShell(), currentAccount);
@@ -278,17 +274,17 @@ public class AccountsPreferencePage extends PropertyPage implements
 	}
 
 	protected void editAccountClicked() {
-		if (currentAccount != null)
+		if (currentAccount == null)
+			return;
+		
+		AccountEditDialog dialog = new AccountEditDialog(getShell(), currentAccount.getAccountName(), currentAccount.getPassword());
+		int response = dialog.open();
+		if (response == Dialog.OK)
 		{
-			AccountEditDialog dialog = new AccountEditDialog(getShell(), currentAccount.getAccountName(), currentAccount.getPassword());
-			int response = dialog.open();
-			if (response == Dialog.OK)
-			{
-				currentAccount.setAccountName(dialog.getUsername());
-				currentAccount.setPassword(dialog.getPassword());
-				
-				accountViewer.update(currentAccount, new String[0]);
-			}	
+			currentAccount.setAccountName(dialog.getUsername());
+			currentAccount.setPassword(dialog.getPassword());
+
+			accountViewer.update(currentAccount, new String[0]);
 		}
 	}
 
@@ -296,11 +292,15 @@ public class AccountsPreferencePage extends PropertyPage implements
 		if (currentAccount == null)
 			return;
 		
-		//accountViewer.remove(currentAccount);
 		removedAccounts.add(currentAccount);
 		AccountProvider.getInstance().removeSetting(currentAccount);
+		
 		currentAccount = null;
-		//accounts.remove(currentAccount);
+		currentProfile = null;
+		
+		removeAccount.setEnabled(false);
+		removeProfile.setEnabled(false);
+		
 		accountViewer.refresh();
 	}
 
@@ -315,9 +315,10 @@ public class AccountsPreferencePage extends PropertyPage implements
 			Account account = AccountProvider.getInstance().createSetting();
 			account.setAccountName(username);
 			account.setPassword(password);
-			//	new Account(username, password);
-			accountViewer.add(account, new Object[0]);
-			addedAccounts.add(account);
+			
+			//accountViewer.add(account, new Object[0]);
+			//addedAccounts.add(account);
+			accountViewer.refresh();
 		}
 	}
 
@@ -351,11 +352,5 @@ public class AccountsPreferencePage extends PropertyPage implements
 		
 		AccountProvider.getInstance().flush();
 		return true;
-	}
-	
-	@Override
-	protected void performDefaults() {
-		// TODO Auto-generated method stub
-		super.performDefaults();
 	}
 }

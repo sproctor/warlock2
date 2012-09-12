@@ -21,17 +21,15 @@
  */
 package cc.warlock.core.configuration;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Collection;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -44,7 +42,7 @@ import org.osgi.service.prefs.Preferences;
 public class Account extends WarlockSetting {
 
 	protected String accountName, password;
-	protected ProfileProvider profiles;
+	protected ProfileProvider profileProvider;
 	
 	public static String decryptPassword (byte[] encrypted)
 	{
@@ -143,7 +141,7 @@ public class Account extends WarlockSetting {
 		
 		this.accountName = getNode().get("account-name", null);
 		this.password = decryptPassword(getNode().getByteArray("password", null));
-		profiles = new ProfileProvider(getNode());
+		profileProvider = new ProfileProvider(getNode());
 		this.flush();
 	}
 	
@@ -182,7 +180,11 @@ public class Account extends WarlockSetting {
 		return accountName.hashCode();
 	}
 
-	public ProfileProvider getProfiles() {
-		return profiles;
+	public ProfileProvider getProfileProvider() {
+		return profileProvider;
+	}
+	
+	public Collection<Profile> getProfiles() {
+		return profileProvider.getSettings();
 	}
 }
