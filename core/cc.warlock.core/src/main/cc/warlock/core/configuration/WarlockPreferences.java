@@ -6,10 +6,11 @@ import org.osgi.service.prefs.Preferences;
 
 public class WarlockPreferences {
 	private static WarlockPreferences instance = new WarlockPreferences();
-	private Preferences preferences = ConfigurationScope.INSTANCE.getNode("cc.warlock");
+	protected ConfigurationScope scope = new ConfigurationScope();
+	private Preferences preferences = scope.getNode("cc.warlock");
 	
 	protected WarlockPreferences() {
-		System.out.println("Configuration location: " + ConfigurationScope.INSTANCE.getLocation().toString());
+		System.out.println("Configuration location: " + scope.getLocation().toString());
 	}
 	
 	public static WarlockPreferences getInstance() {
