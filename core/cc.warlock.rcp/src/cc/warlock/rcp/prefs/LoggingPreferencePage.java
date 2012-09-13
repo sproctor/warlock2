@@ -40,6 +40,7 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.ClientSettings;
 
 /**
  * @author Will Robertson
@@ -62,6 +63,8 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
 		
+		createProfileDropDown(main);
+		
 		// Logging Output Type (text/html)
 		Label loggingTypeLabel = new Label(main, SWT.NONE);
 		loggingTypeLabel.setText("Logging Output Type: ");
@@ -70,14 +73,13 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			LoggingConfiguration.LOG_FORMAT_TEXT,
 			LoggingConfiguration.LOG_FORMAT_HTML
 		});
-		loggingType.setText(settings.getLoggingSettings().getLogFormat());
 		
 		// Log To Directory
 		new Label(main, SWT.NONE).setText("Log Directory:");
 		Composite logDirComposite = new Composite(main, SWT.NONE);
 		logDirComposite.setLayout(new GridLayout(2, false));
 		logDir = new Text(logDirComposite, SWT.BORDER | SWT.SINGLE);
-		logDir.setText(settings.getLoggingSettings().getLogDirectory().getAbsolutePath());
+		
 		Button logDirButton = new Button(logDirComposite, SWT.PUSH);
 		logDirButton.setText("Browse");
 		logDirButton.addSelectionListener(new SelectionAdapter() {
@@ -86,8 +88,16 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			}
 		});
 		
+		setData(getDefaultSettings());
+		
 		// Return the main composite
 		return main;
+	}
+	
+	protected void setData (ClientSettings settings) {
+		this.settings = settings;
+		loggingType.setText(LoggingConfiguration.getProvider(settings).getLogFormat());
+		logDir.setText(LoggingConfiguration.getProvider(settings).getLogDirectory().getAbsolutePath());
 	}
 	
 	/*
@@ -117,8 +127,8 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 
 	@Override
 	public boolean performOk() {
-		settings.getLoggingSettings().setLogFormat(loggingType.getText());
-		settings.getLoggingSettings().setLogDirectory(new File(logDir.getText()));
+		LoggingConfiguration.getProvider(settings).setLogFormat(loggingType.getText());
+		LoggingConfiguration.getProvider(settings).setLogDirectory(new File(logDir.getText()));
 		return true;
 	}
 }

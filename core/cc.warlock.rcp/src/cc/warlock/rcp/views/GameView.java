@@ -76,7 +76,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected static ArrayList<IGameViewFocusListener> focusListeners = new ArrayList<IGameViewFocusListener>();
 	protected static GameView gameInFocus;
 	
-	private GameViewConfiguration gameConfiguration;
 	protected PageBook popupPageBook;
 	protected Label emptyPopup;
 	protected StreamText streamText;
@@ -410,9 +409,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		this.client = client;
 		client.setViewer(wrapper);
 		
-		if(client.getClientSettings() != null)
-			gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
-		
 		streamText.getTitle().addListener(new PropertyListener<String>() {
 			public void propertyChanged(String value) {
 				setViewTitle(value);
@@ -434,21 +430,12 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		return false;
 	}
 	
-	public GameViewConfiguration getSettings() {
-		return gameConfiguration;
-	}
-	
 	public Profile getProfile() {
 		return profile;
 	}
 	
 	public void setProfile(Profile profile) {
 		this.profile = profile;
-	}
-	
-	public void clientSettingsLoaded(IWarlockClient client) {
-		if(this.client == client)
-			gameConfiguration = new GameViewConfiguration(client.getClientSettings().getNode());
 	}
 	
 	public void openCustomStream(String name) {

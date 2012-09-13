@@ -23,7 +23,7 @@ package cc.warlock.rcp.stormfront.ui.style;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.rcp.ui.StyleRangeWithData;
 import cc.warlock.rcp.ui.style.DefaultStyleProvider;
@@ -31,7 +31,7 @@ import cc.warlock.rcp.util.ColorUtil;
 
 public class StormFrontStyleProvider extends DefaultStyleProvider {
 
-	public StormFrontStyleProvider (IStormFrontClientSettings settings)
+	public StormFrontStyleProvider (IClientSettings settings)
 	{
 		super(settings);
 	}

@@ -25,7 +25,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package cc.warlock.core.client.settings.macro.internal;
+package cc.warlock.core.client.settings.internal;
 
 import org.osgi.service.prefs.Preferences;
 

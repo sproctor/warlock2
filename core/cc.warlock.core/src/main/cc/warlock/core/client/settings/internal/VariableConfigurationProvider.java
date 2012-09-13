@@ -27,17 +27,20 @@ import java.util.HashMap;
 
 import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
 import cc.warlock.core.configuration.WarlockSetting;
 
-public class VariableConfigurationProvider extends WarlockSetting implements IVariableProvider {
-
+public class VariableConfigurationProvider extends WarlockSetting implements IVariableProvider
+{
+	public static final String ID = "variables";
+	
 	protected HashMap<String, IVariable> variables = new HashMap<String, IVariable>();
 	
 	public VariableConfigurationProvider (Preferences parentNode)
 	{
-		super(parentNode, "variables");
+		super(parentNode, ID);
 		
 		try {
 			for(String id : getNode().childrenNames()) {
@@ -70,5 +73,9 @@ public class VariableConfigurationProvider extends WarlockSetting implements IVa
 
 	public IVariable removeVariable(String identifier) {
 		return variables.remove(identifier);
+	}
+	
+	public static VariableConfigurationProvider getProvider(IClientSettings clientSettings) {
+		return (VariableConfigurationProvider)clientSettings.getProvider(ID);
 	}
 }

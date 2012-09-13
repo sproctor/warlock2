@@ -52,18 +52,18 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPropertyPage;
-import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
+import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.rcp.prefs.PreferencePageUtils;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontSelector;
 
@@ -71,7 +71,7 @@ import cc.warlock.rcp.util.FontSelector;
  * 
  * @author marshall
  */
-public class PresetsPreferencePage extends PropertyPage implements
+public class PresetsPreferencePage extends PreferencePageUtils implements
 		IWorkbenchPropertyPage {
 
 	public static final String PAGE_ID = "cc.warlock.rcp.stormfront.ui.prefs.presets";
@@ -86,6 +86,8 @@ public class PresetsPreferencePage extends PropertyPage implements
 	private ColorSelector bgSelector, fgSelector;
 	private StyledText preview;
 	private TableViewer stylesTable;
+	
+	private ClientSettings settings;
 	
 	private static String roomNamePreview = "[Riverhaven, Crescent Way]";
 	private static String boldPreview = "You also see a Sir Robyn.";
@@ -117,20 +119,19 @@ public class PresetsPreferencePage extends PropertyPage implements
 	private StyleRange commandStyleRange, speechStyleRange;
 	private StyleRange whisperStyleRange, thoughtStyleRange;
 	
-	private ClientSettings settings;
 	private HashMap<String, IWarlockStyle> styles = new HashMap<String, IWarlockStyle>();
 	
 	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
 	static {
-		presetDescriptions.put(StormFrontClientSettings.PRESET_BOLD, "Bold text");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_COMMAND, "Sent commands");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_LINK, "Hyperlinks");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_ROOM_NAME, "Room names");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_SELECTED_LINK, "Selected Hyperlinks");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_SPEECH, "Speech");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_THOUGHT, "Thoughts");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_WATCHING, "Watching");
-		presetDescriptions.put(StormFrontClientSettings.PRESET_WHISPER, "Whispers");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_BOLD, "Bold text");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_COMMAND, "Sent commands");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_LINK, "Hyperlinks");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_ROOM_NAME, "Room names");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_SELECTED_LINK, "Selected Hyperlinks");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_SPEECH, "Speech");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_THOUGHT, "Thoughts");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_WATCHING, "Watching");
+		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_WHISPER, "Whispers");
 	}
 	
 	@Override
@@ -138,6 +139,8 @@ public class PresetsPreferencePage extends PropertyPage implements
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(3, false));
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		createProfileDropDown(main);
 		
 		mainBGSelector = colorSelectorWithLabel(main, "Main window background color:");
 		mainFGSelector = colorSelectorWithLabel(main, "Main window foreground color:");
@@ -159,9 +162,37 @@ public class PresetsPreferencePage extends PropertyPage implements
 		preview = new StyledText(previewGroup, SWT.BORDER);
 		preview.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		initValues();
+		setData(getDefaultSettings());
 		initPreview();
+		
 		return main;
+	}
+	
+	protected void setData (ClientSettings settings) {
+		this.settings = settings;
+
+		for (String styleName: presetDescriptions.keySet()) {
+			IWarlockStyle style = PresetStyleConfigurationProvider.getProvider(settings).getStyle(styleName);
+			if(style == null) {
+				style = PresetStyleConfigurationProvider.getProvider(settings).getOrCreateStyle(styleName);
+				IWarlockStyle defaultStyle = PresetStyleConfigurationProvider.getDefaultStyle(styleName);
+				style.setBackgroundColor(defaultStyle.getBackgroundColor());
+				style.setForegroundColor(defaultStyle.getForegroundColor());
+			}
+			styles.put(styleName, style);
+		}
+
+		mainBGSelector.setColorValue(
+				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultBackground()));
+
+		mainFGSelector.setColorValue(
+				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultForeground()));
+
+		mainFontSelector.setFontData(getDefaultFont());
+		columnFontSelector.setFontData(getDefaultColumnFont());
+
+		stylesTable.setInput(styles.values());
+		stylesTable.getTable().setBackground(new Color(getShell().getDisplay(), getColor(mainBGSelector)));
 	}
 	
 	protected Color getWorkingBackgroundColor (IWarlockStyle style)
@@ -172,7 +203,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			if (color == null || color.isDefault())
 			{
 				if (style.getName() != null) {
-					color = settings.getNamedStyle(style.getName()).getBackgroundColor();
+					color = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName()).getBackgroundColor();
 				}
 			}
 		}
@@ -191,7 +222,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			if (color.isDefault())
 			{
 				if (style.getName() != null) {
-					color = settings.getNamedStyle(style.getName()).getForegroundColor();
+					color = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName()).getForegroundColor();
 				}
 			}
 		}
@@ -367,12 +398,12 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	private FontData getDefaultFont ()
 	{
-		if (settings.getMainWindowSettings().getFont().isDefaultFont())
+		if (WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont().isDefaultFont())
 		{
 			return JFaceResources.getDefaultFont().getFontData()[0];
 		}
 
-		IWarlockFont font = settings.getMainWindowSettings().getFont();
+		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont();
 		FontData datas[] = new FontData[0];
 		
 		if (font.getFamilyName() != null)
@@ -394,12 +425,13 @@ public class PresetsPreferencePage extends PropertyPage implements
 	
 	private FontData getDefaultColumnFont ()
 	{
-		if (settings.getMainWindowSettings().getColumnFont().isDefaultFont())
+		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getColumnFont();
+		
+		if (font.isDefaultFont())
 		{
 			return JFaceResources.getTextFont().getFontData()[0];
 		}
 
-		IWarlockFont font = settings.getMainWindowSettings().getColumnFont();
 		FontData datas[] = new FontData[0];
 		
 		if (font.getFamilyName() != null)
@@ -416,36 +448,6 @@ public class PresetsPreferencePage extends PropertyPage implements
 			data.setHeight(font.getSize());
 			
 			return data;
-		}
-	}
-	
-	private void initValues ()
-	{
-		if (settings != null)
-		{	
-			for (String styleName: presetDescriptions.keySet())
-			{
-				IWarlockStyle style = settings.getPresetConfigurationProvider().getStyle(styleName);
-				if(style == null) {
-					style = settings.getPresetConfigurationProvider().getOrCreateStyle(styleName);
-					IWarlockStyle defaultStyle = settings.getDefaultStyle(styleName);
-					style.setBackgroundColor(defaultStyle.getBackgroundColor());
-					style.setForegroundColor(defaultStyle.getForegroundColor());
-				}
-				styles.put(styleName, style);
-			}
-			
-			mainBGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(settings.getDefaultBackground()));
-			
-			mainFGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(settings.getDefaultForeground()));
-			
-			mainFontSelector.setFontData(getDefaultFont());
-			columnFontSelector.setFontData(getDefaultColumnFont());
-			
-			stylesTable.setInput(styles.values());
-			stylesTable.getTable().setBackground(new Color(getShell().getDisplay(), getColor(mainBGSelector)));
 		}
 	}
 	
@@ -511,15 +513,15 @@ public class PresetsPreferencePage extends PropertyPage implements
 		preview.setForeground(mainFG);
 		preview.setFont(new Font(getShell().getDisplay(), mainFontSelector.getFontData()));
 		
-		updatePresetColors(StormFrontClientSettings.PRESET_ROOM_NAME, roomNameStyleRange);
-		updatePresetColors(StormFrontClientSettings.PRESET_BOLD, boldStyleRange);
-		updatePresetColors(StormFrontClientSettings.PRESET_COMMAND, commandStyleRange);
-		updatePresetColors(StormFrontClientSettings.PRESET_SPEECH, speechStyleRange);
-		updatePresetColors(StormFrontClientSettings.PRESET_WHISPER, whisperStyleRange);
-		updatePresetColors(StormFrontClientSettings.PRESET_THOUGHT, thoughtStyleRange);
+		updatePresetColors(PresetStyleConfigurationProvider.PRESET_ROOM_NAME, roomNameStyleRange);
+		updatePresetColors(PresetStyleConfigurationProvider.PRESET_BOLD, boldStyleRange);
+		updatePresetColors(PresetStyleConfigurationProvider.PRESET_COMMAND, commandStyleRange);
+		updatePresetColors(PresetStyleConfigurationProvider.PRESET_SPEECH, speechStyleRange);
+		updatePresetColors(PresetStyleConfigurationProvider.PRESET_WHISPER, whisperStyleRange);
+		updatePresetColors(PresetStyleConfigurationProvider.PRESET_THOUGHT, thoughtStyleRange);
 		
-//		roomNameStyleRange.background = ColorUtil.warlockColorToColor(styles.get(StormFrontClientSettings.PRESET_ROOM_NAME).getBackgroundColor());
-//		roomNameStyleRange.foreground = ColorUtil.warlockColorToColor(styles.get(StormFrontClientSettings.PRESET_ROOM_NAME).getForegroundColor());
+//		roomNameStyleRange.background = ColorUtil.warlockColorToColor(styles.get(PresetStyleConfigurationProvider.PRESET_ROOM_NAME).getBackgroundColor());
+//		roomNameStyleRange.foreground = ColorUtil.warlockColorToColor(styles.get(PresetStyleConfigurationProvider.PRESET_ROOM_NAME).getForegroundColor());
 		
 		columnStyleRange.background = mainBG;
 		columnStyleRange.foreground = mainFG;
@@ -545,7 +547,7 @@ public class PresetsPreferencePage extends PropertyPage implements
 			}
 		}*/
 		
-		IWindowSettings mainWindow = settings.getMainWindowSettings();
+		IWindowSettings mainWindow = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings();
 		
 		if(newMainFG != null) {
 			mainWindow.setForegroundColor(newMainFG);
@@ -584,7 +586,8 @@ public class PresetsPreferencePage extends PropertyPage implements
 		*/
 		
 		if (updateView) {
-			WarlockClientRegistry.clientSettingsLoaded(settings.getClient());
+			// FIXME: What to do here?
+			//WarlockClientRegistry.clientSettingsLoaded(settings.getClient());
 		}
 		
 		return true;

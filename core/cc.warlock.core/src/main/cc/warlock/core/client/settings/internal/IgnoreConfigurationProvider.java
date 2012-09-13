@@ -21,19 +21,31 @@
  */
 package cc.warlock.core.client.settings.internal;
 
+import java.util.Collection;
+
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockPattern;
+import cc.warlock.core.client.settings.IClientSettings;
 
-public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern> {
+public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern>
+{
+	public static final String ID = "ignores";
 	
 	public IgnoreConfigurationProvider (Preferences parentNode)
 	{
-		super(parentNode, "ignores");
+		super(parentNode, ID);
 	}
 	
 	public IWarlockPattern loadSetting(String id) {
 		return new PatternSetting(getNode(), id);
 	}
 
+	public static IgnoreConfigurationProvider getProvider(IClientSettings clientSettings) {
+		return (IgnoreConfigurationProvider)clientSettings.getProvider(ID);
+	}
+	
+	public static Collection<IWarlockPattern> getIgnores(IClientSettings clientSettings) {
+		return getProvider(clientSettings).getSettings();
+	}
 }

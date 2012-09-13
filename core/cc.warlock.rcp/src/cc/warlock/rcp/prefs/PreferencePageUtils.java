@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.rcp.util.FontSelector;
 
 public abstract class PreferencePageUtils extends PropertyPage implements SelectionListener, IPropertyChangeListener {
@@ -113,8 +114,39 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 	}
 	
 	protected Combo createProfileDropDown (Composite parent) {
-		Combo dropDown = new Combo(parent, SWT.DROP_DOWN);
+		Combo dropDown = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
+		for (ClientSettings settings : ClientSettings.getAllClientSettings()) {
+			String name = settings.getName();
+			if (name == null)
+				name = settings.getCliendId();
+			dropDown.add(name);
+		}
+		
+		dropDown.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected (SelectionEvent e) { nameChanged (e.text); }
+			public void widgetSelected (SelectionEvent e) { nameChanged (e.text); }
+		});
 		
 		return dropDown;
 	}
+	
+	
+	private void nameChanged (String name) {
+		if (name == null)
+			return;
+		
+		for (ClientSettings s : ClientSettings.getAllClientSettings()) {
+			if (name.equals(s.getName()) || name.equals(s.getCliendId())) {
+				setData(s);
+				break;
+			}
+		}
+		
+	}
+	
+	protected ClientSettings getDefaultSettings () {
+		return ClientSettings.getAllClientSettings().iterator().next();
+	}
+	
+	abstract protected void setData (ClientSettings settings);
 }

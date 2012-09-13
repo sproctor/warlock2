@@ -29,6 +29,7 @@ import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
 import cc.warlock.rcp.ui.IStyleProvider;
 import cc.warlock.rcp.ui.StyleRangeWithData;
 import cc.warlock.rcp.util.ColorUtil;
@@ -56,7 +57,7 @@ public class DefaultStyleProvider implements IStyleProvider {
 		
 		if (style.isMonospace()) {
 			// FIXME: this will cause it to ignore bold/italic
-			IWarlockFont font = clientSettings.getMainWindowSettings().getColumnFont();
+			IWarlockFont font = WindowConfigurationProvider.getProvider(clientSettings).getMainWindowSettings().getColumnFont();
 			if (!font.isDefaultFont() && Display.getDefault().getFontList(font.getFamilyName(), true).length > 0)
 			{
 				range.font = FontUtil.warlockFontToFont(font);

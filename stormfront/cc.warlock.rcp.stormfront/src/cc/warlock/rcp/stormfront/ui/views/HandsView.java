@@ -37,9 +37,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IPropertyListener;
-import cc.warlock.core.client.settings.IWindowSettings;
+import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
@@ -214,7 +214,7 @@ public class HandsView extends ViewPart
 			leftHandInfo.setText(client.getLeftHand().get());
 			rightHandInfo.setText(client.getRightHand().get());
 			spellInfo.setText(client.getCurrentSpell().get());
-			loadSettings(client.getStormFrontClientSettings());
+			loadSettings(client.getClientSettings());
 		}
 	}
 
@@ -230,16 +230,16 @@ public class HandsView extends ViewPart
 		spellInfo.setForeground(fg);
 	}
 	
-	public void loadSettings (IStormFrontClientSettings settings)
+	public void loadSettings (IClientSettings settings)
 	{
 		if(settings == null)
 			return;
-		IWindowSettings mainSettings = settings.getMainWindowSettings();
-		if(mainSettings == null)
-			return;
+		//IWindowSettings mainSettings = settings.getMainWindowSettings();
+		//if(mainSettings == null)
+			//return;
 		
-		Color bg = ColorUtil.warlockColorToColor(settings.getDefaultBackground());
-		Color fg = ColorUtil.warlockColorToColor(settings.getDefaultForeground());
+		Color bg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultBackground());
+		Color fg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultForeground());
 		
 		setColors(fg, bg);
 	}

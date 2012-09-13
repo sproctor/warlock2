@@ -52,9 +52,10 @@ import cc.warlock.core.client.internal.Stream;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
-import cc.warlock.core.client.settings.macro.internal.MacroSetting;
+import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.client.settings.internal.MacroConfigurationProvider;
+import cc.warlock.core.client.settings.internal.MacroSetting;
+import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
 import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.script.IScript;
@@ -65,8 +66,6 @@ import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.client.IStormFrontDialogMessage;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
-import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
-import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 import cc.warlock.core.util.Pair;
@@ -92,7 +91,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	protected Property<String> characterName = new Property<String>();
 	protected Property<String> roomDescription = new Property<String>();
 	protected String gameCode, playerId;
-	protected StormFrontClientSettings clientSettings;
+	protected ClientSettings clientSettings;
 	//protected StormFrontServerSettings serverSettings;
 	protected long timeDelta;
 	protected Long roundtimeEnd, casttimeEnd;
@@ -396,11 +395,11 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	public void setPlayerId(String playerId) {
 		this.playerId = playerId;
 		
-		clientSettings = new StormFrontClientSettings(playerId);
+		clientSettings = ClientSettings.getClientSettings(playerId);
 		
 		if(clientSettings.isNewSetting()) {
 			for(DefaultMacro macro : viewer.getDefaultMacros()) {
-				MacroSetting smacro = clientSettings.getMacroConfigurationProvider().createSetting();
+				MacroSetting smacro = MacroConfigurationProvider.getProvider(clientSettings).createSetting();
 				smacro.setCommand(macro.getCommand());
 				smacro.setKeyString(macro.getKeyString());
 			}
@@ -418,10 +417,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	}
 	
 	public IClientSettings getClientSettings() {
-		return clientSettings;
-	}
-	
-	public IStormFrontClientSettings getStormFrontClientSettings() {
 		return clientSettings;
 	}
 	
@@ -520,7 +515,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	}
 	
 	public IWarlockStyle getCommandStyle() {
-		IWarlockStyle style = clientSettings.getNamedStyle(StormFrontClientSettings.PRESET_COMMAND);
+		IWarlockStyle style = getNamedStyle(PresetStyleConfigurationProvider.PRESET_COMMAND);
 		if (style == null) {
 			return new WarlockStyle();
 		}
@@ -642,32 +637,5 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 			}
 			return stream;
 		}
-	}
-	
-	public String getVariable(String id) {
-		if(clientSettings == null)
-			return null;
-		IVariable var = clientSettings.getVariable(id);
-		if(var == null)
-			return null;
-		return var.getValue();
-	}
-	
-	public void setVariable(String id, String value) {
-		if(clientSettings == null)
-			return;
-		VariableConfigurationProvider varProvider = clientSettings.getVariableConfigurationProvider();
-		if(varProvider == null)
-			return;
-		varProvider.addVariable(id, value);
-	}
-	
-	public void removeVariable(String id) {
-		if(clientSettings == null)
-			return;
-		VariableConfigurationProvider varProvider = clientSettings.getVariableConfigurationProvider();
-		if(varProvider == null)
-			return;
-		varProvider.removeVariable(id);
 	}
 }

@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
-import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 

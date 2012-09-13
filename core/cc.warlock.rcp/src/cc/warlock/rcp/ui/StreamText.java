@@ -15,6 +15,8 @@ import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
@@ -81,7 +83,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 	
 	private void showPrompt(String prompt) {
-		if(!GameView.getGameViewForClient(client).getSettings().getSuppressPrompt()) {
+		if(!GameViewConfiguration.getProvider(client.getClientSettings()).getSuppressPrompt()) {
 			WarlockString text = new WarlockString();
 			text.append(prompt);
 			append(text);
@@ -171,16 +173,18 @@ public class StreamText extends WarlockText implements IStreamListener {
 		IClientSettings settings = client.getClientSettings();
 		
 		if(settings != null) {
+			WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+			
 			// Set to defaults first, then try window settings later
-			Color background = ColorUtil.warlockColorToColor(settings.getWindowBackground(streamName));
-			Color foreground = ColorUtil.warlockColorToColor(settings.getWindowForeground(streamName));
-			IWarlockFont font = settings.getWindowFont(streamName);
+			Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
+			Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
+			IWarlockFont font = provider.getWindowFont(streamName);
 			
 			this.setBackground(background);
 			this.setForeground(foreground);
 
-			String defaultFontFace = GameView.getGameViewForClient(client).getSettings().getDefaultFontFace();
-			int defaultFontSize = GameView.getGameViewForClient(client).getSettings().getDefaultFontSize();
+			String defaultFontFace = GameViewConfiguration.getProvider(client.getClientSettings()).getDefaultFontFace();
+			int defaultFontSize = GameViewConfiguration.getProvider(client.getClientSettings()).getDefaultFontSize();
 
 			if (font.isDefaultFont()) {
 				this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));

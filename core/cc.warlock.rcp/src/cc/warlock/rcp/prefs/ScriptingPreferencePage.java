@@ -22,7 +22,6 @@
 package cc.warlock.rcp.prefs;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -54,7 +53,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
-import cc.warlock.core.script.configuration.ScriptDirectoryConfiguration;
 
 public class ScriptingPreferencePage extends PropertyPage implements
 		IWorkbenchPropertyPage {

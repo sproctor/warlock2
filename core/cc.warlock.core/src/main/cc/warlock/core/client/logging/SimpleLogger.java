@@ -91,7 +91,7 @@ public class SimpleLogger implements IClientLogger {
 			characterName = client.getCharacterName().get();
 		}
 		
-		return new File(client.getClientSettings().getLoggingSettings().getLogDirectory(),
+		return new File(LoggingConfiguration.getProvider(client.getClientSettings()).getLogDirectory(),
 			characterName + "-" + dateFormat.format(Calendar.getInstance().getTime()) + ".txt");
 	}
 	

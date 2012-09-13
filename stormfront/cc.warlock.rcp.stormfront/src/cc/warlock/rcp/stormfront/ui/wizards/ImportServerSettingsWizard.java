@@ -10,11 +10,11 @@ import org.eclipse.ui.IWorkbench;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
-import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
 import cc.warlock.rcp.wizards.WizardWithNotification;
 
 public class ImportServerSettingsWizard extends WizardWithNotification implements IImportWizard {
@@ -32,7 +32,7 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 		Profile profile = page1.getTargetProfile();
 		
 		StormFrontServerSettings serverSettings = null;
-		StormFrontClientSettings clientSettings = null;
+		ClientSettings clientSettings = null;
 		StormFrontClient profileClient = null;
 		
 		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) 
@@ -41,7 +41,7 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 				StormFrontClient sfClient = (StormFrontClient) client;
 				
 				if (sfClient.getCharacterName().get().equals(profile.getName())) {
-					clientSettings = (StormFrontClientSettings) sfClient.getStormFrontClientSettings();
+					//clientSettings = (StormFrontClientSettings) sfClient.getStormFrontClientSettings();
 					//serverSettings = sfClient.getServerSettings();
 					profileClient = sfClient;
 				}

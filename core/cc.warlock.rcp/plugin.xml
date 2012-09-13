@@ -284,86 +284,42 @@
             class="cc.warlock.rcp.prefs.WarlockPreferencePage"
             id="cc.warlock.rcp.warlockPrefs"
             name="Warlock Preferences">
-         <enabledWhen>
-            <and>
-               <adapt
-                     type="cc.warlock.core.client.IWarlockClient">
-               </adapt>
-               <test
-                     property="cc.warlock.rcp.clientConnected">
-               </test>
-            </and>
-         </enabledWhen>
+         
       </page>
       <page
             category="cc.warlock.rcp.warlockPrefs"
             class="cc.warlock.rcp.prefs.HighlightStringsPreferencePage"
             id="cc.warlock.rcp.prefs.highlightStrings"
             name="Highlight Strings">
-         <enabledWhen>
-            <and>
-               <adapt
-                     type="cc.warlock.core.client.IWarlockClient">
-               </adapt>
-               <test
-                     property="cc.warlock.rcp.clientConnected">
-               </test>
-            </and>
-         </enabledWhen>
+         
       </page>
       <page
             category="cc.warlock.rcp.warlockPrefs"
             class="cc.warlock.rcp.prefs.ScriptingPreferencePage"
             id="cc.warlock.rcp.prefs.scriptingPrefs"
             name="Scripting">
-         <enabledWhen>
-            <adapt
-                  type="cc.warlock.core.client.IWarlockClient">
-            </adapt>
-         </enabledWhen>
+         
       </page>
       <page
             category="cc.warlock.rcp.warlockPrefs"
             class="cc.warlock.rcp.prefs.MacrosPreferencePage"
             id="cc.warlock.rcp.prefs.macros"
             name="Macros">
-         <enabledWhen>
-            <and>
-               <adapt
-                     type="cc.warlock.core.client.IWarlockClient">
-               </adapt>
-               <test
-                     property="cc.warlock.rcp.clientConnected">
-               </test>
-            </and>
-         </enabledWhen>
+         
       </page>
       <page
             category="cc.warlock.rcp.warlockPrefs"
             class="cc.warlock.rcp.prefs.VariablesPreferencePage"
             id="cc.warlock.rcp.prefs.variables"
             name="Variables">
-         <enabledWhen>
-            <and>
-               <adapt
-                     type="cc.warlock.core.client.IWarlockClient">
-               </adapt>
-               <test
-                     property="cc.warlock.rcp.clientConnected">
-               </test>
-            </and>
-         </enabledWhen>
+         
       </page>
       <page
             category="cc.warlock.rcp.warlockPrefs"
             class="cc.warlock.rcp.prefs.LoggingPreferencePage"
             id="cc.warlock.rcp.prefs.logging"
             name="Logging">
-         <enabledWhen>
-            <adapt
-                  type="cc.warlock.core.client.IWarlockClient">
-            </adapt>
-         </enabledWhen>
+         
       </page>
    </extension>
    <extension

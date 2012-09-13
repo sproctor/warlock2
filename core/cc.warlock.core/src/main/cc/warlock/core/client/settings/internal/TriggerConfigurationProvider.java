@@ -21,18 +21,31 @@
  */
 package cc.warlock.core.client.settings.internal;
 
+import java.util.Collection;
+
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IWarlockPattern;
+import cc.warlock.core.client.settings.IClientSettings;
 
-public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern> {
-
+public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern>
+{
+	public static final String ID = "triggers";
+	
 	public TriggerConfigurationProvider (Preferences parentNode)
 	{
-		super(parentNode, "triggers");
+		super(parentNode, ID);
 	}
 	
 	public IWarlockPattern loadSetting(String id) {
 		return new PatternSetting(getNode(), id);
+	}
+	
+	public static TriggerConfigurationProvider getProvider(IClientSettings clientSettings) {
+		return (TriggerConfigurationProvider)clientSettings.getProvider(ID);
+	}
+	
+	public static Collection<IWarlockPattern> getTriggers(IClientSettings clientSettings) {
+		return getProvider(clientSettings).getSettings();
 	}
 }

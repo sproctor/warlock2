@@ -53,10 +53,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.Variable;
+import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 /**
@@ -68,7 +68,6 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 
 	public static final String PAGE_ID = "cc.warlock.rcp.prefs.variables";
 	
-	protected IWarlockClient client;
 	protected ClientSettings settings;
 	
 	protected Text filterText;
@@ -87,6 +86,8 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 	protected Control createContents(Composite parent) {
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
+		
+		createProfileDropDown(main);
 		
 		Composite filterComposite = new Composite(main, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -205,14 +206,21 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 			}
 		}*/
 		
-		variableTable.setInput(settings.getVariables());
+		setData(getDefaultSettings());
 		
 		return main;
 	}
 	
+	protected void setData (ClientSettings settings) {
+		this.settings = settings;
+		
+		variableTable.setInput(VariableConfigurationProvider.getProvider(settings).getVariables());
+		variableTable.refresh();
+	}
+	
 	protected void addVariableSelected ()
 	{
-		IVariable var = settings.getVariableConfigurationProvider().addVariable("", "");
+		IVariable var = VariableConfigurationProvider.getProvider(settings).addVariable("", "");
 		//addedVariables.add(var);
 		//variables.add(var);
 		// FIXME: do we need the following?
@@ -227,7 +235,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		
 		//if (variables.remove(currentVariable))
 			//removedVariables.add(currentVariable);
-		settings.getVariableConfigurationProvider().removeVariable(currentVariable.getIdentifier());
+		VariableConfigurationProvider.getProvider(settings).removeVariable(currentVariable.getIdentifier());
 		
 		variableTable.remove(currentVariable);
 	}
@@ -277,8 +285,9 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 	
 	@Override
 	public void setElement(IAdaptable element) {
-		client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
-		settings = (ClientSettings)client.getClientSettings();
+		// TODO Switch the character selector here.
+		//client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
+		//settings = (ClientSettings)client.getClientSettings();
 	}
 	
 	@Override

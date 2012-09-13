@@ -6,7 +6,7 @@ Bundle-Version: 2.0.246.snapshot
 Bundle-Activator: cc.warlock.core.Activator
 Bundle-Vendor: Warlock Team
 Require-Bundle: org.eclipse.core.runtime
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/commons-lang-2.6.jar,
  lib/commons-codec-1.5.jar,
  warlock2-core.jar,
@@ -34,15 +34,8 @@ Export-Package: cc.warlock.core;uses:="org.eclipse.core.runtime,org.osgi.framewo
   uses:="cc.warlock.core.client.settings,
    cc.warlock.core.configuration,
    org.osgi.service.prefs,
-   cc.warlock.core.client.settings.macro.internal,
    cc.warlock.core.client.logging,
    cc.warlock.core.client",
- cc.warlock.core.client.settings.macro;uses:="cc.warlock.core.configuration,cc.warlock.core.client.settings.macro.internal,cc.warlock.core.client",
- cc.warlock.core.client.settings.macro.internal;
-  uses:="cc.warlock.core.configuration,
-   org.osgi.service.prefs,
-   cc.warlock.core.client,
-   cc.warlock.core.client.settings.macro",
  cc.warlock.core.configuration;
   uses:="cc.warlock.core.client.settings.internal,
    org.osgi.service.prefs,

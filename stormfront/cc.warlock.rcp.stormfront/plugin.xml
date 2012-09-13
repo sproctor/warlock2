@@ -132,11 +132,6 @@
             class="cc.warlock.rcp.stormfront.ui.prefs.AccountsPreferencePage"
             id="cc.warlock.rcp.stormfront.ui.prefs.accountsAndProfiles"
             name="Accounts and Profiles">
-         <enabledWhen>
-            <adapt
-                  type="cc.warlock.core.stormfront.client.IStormFrontClient">
-            </adapt>
-         </enabledWhen>
       </page>
    </extension>
    <extension

@@ -171,5 +171,7 @@ public interface IWarlockClient extends IRoomListener {
 	
 	public void removeVariable(String id);
 	
+	public IWarlockStyle getNamedStyle(String id);
+	
 	public void dispose();
 }

@@ -29,8 +29,6 @@ import java.util.Collection;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 
-import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.internal.RegexMatch;
 import cc.warlock.core.script.javascript.JavascriptCommands;
@@ -135,10 +133,7 @@ public class StormFrontJavascriptCommands extends JavascriptCommands
 	}
 	
 	public String getVariable(String name) {
-		IVariable var = sfCommands.getStormFrontClient().getClientSettings().getVariable(name);
-		if(var == null)
-			return null;
-		return var.getValue();
+		return sfCommands.getStormFrontClient().getVariable(name);
 	}
 	
 	public String getVital(String name) {
@@ -146,6 +141,6 @@ public class StormFrontJavascriptCommands extends JavascriptCommands
 	}
 	
 	public void setVariable(String name, String value) {
-		((ClientSettings)sfCommands.getClient().getClientSettings()).getVariableConfigurationProvider().addVariable(name, value);
+		sfCommands.getClient().setVariable(name, value);
 	}
 }

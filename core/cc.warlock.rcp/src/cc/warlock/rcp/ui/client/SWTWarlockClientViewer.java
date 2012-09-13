@@ -251,10 +251,6 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 		return viewer.getDefaultMacros();
 	}
 	
-	public IWarlockSetting getSettings() {
-		return viewer.getSettings();
-	}
-	
 	public void openCustomStream(String name) {
 		run(new OpenCustomStreamWrapper(name));
 	}

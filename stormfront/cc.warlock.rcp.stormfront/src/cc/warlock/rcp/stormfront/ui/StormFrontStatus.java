@@ -35,8 +35,9 @@ import org.eclipse.swt.widgets.Label;
 
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IPropertyListener;
+import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
 
@@ -192,12 +193,10 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		}
 	}
 	
-	public void loadSettings (IStormFrontClientSettings settings)
-	{
-		if (settings.getMainWindowSettings() == null) return;
-		
-		Color bg = ColorUtil.warlockColorToColor(settings.getDefaultBackground());
-		Color fg = ColorUtil.warlockColorToColor(settings.getDefaultForeground());
+	public void loadSettings (IClientSettings settings)
+	{	
+		Color bg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultBackground());
+		Color fg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultForeground());
 		
 		setColors(fg, bg);
 	}
@@ -218,7 +217,7 @@ public class StormFrontStatus implements IPropertyListener<String> {
 			propertyChanged(client.getCharacterStatus().get());
 		}
 		
-		IStormFrontClientSettings settings = client.getStormFrontClientSettings();
+		IClientSettings settings = client.getClientSettings();
 		if(settings != null)
 			loadSettings(settings);
 	}

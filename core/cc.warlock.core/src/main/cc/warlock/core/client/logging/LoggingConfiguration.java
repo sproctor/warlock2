@@ -25,12 +25,14 @@ import java.io.File;
 
 import org.osgi.service.prefs.Preferences;
 
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.configuration.ConfigurationUtil;
 import cc.warlock.core.configuration.WarlockSetting;
 
 
-public class LoggingConfiguration extends WarlockSetting {
-
+public class LoggingConfiguration extends WarlockSetting
+{
+	public static final String ID = "logs";
 	public static final String LOG_FORMAT_TEXT = "text";
 	public static final String LOG_FORMAT_HTML = "html";
 	
@@ -39,7 +41,7 @@ public class LoggingConfiguration extends WarlockSetting {
 	protected File logDirectory;
 	
 	public LoggingConfiguration (Preferences parentNode) {
-		super(parentNode, "logs");
+		super(parentNode, ID);
 		logFormat = getNode().get("format", LOG_FORMAT_TEXT);
 		enableLogging = getNode().getBoolean("enabled", true);
 		String dirName = getNode().get("dir", null);
@@ -76,4 +78,7 @@ public class LoggingConfiguration extends WarlockSetting {
 		this.logDirectory = logDirectory;
 	}
 
+	public static LoggingConfiguration getProvider(IClientSettings clientSettings) {
+		return (LoggingConfiguration)clientSettings.getProvider(ID);
+	}
 }

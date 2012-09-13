@@ -25,10 +25,16 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.IWarlockSettingFactory;
 import cc.warlock.core.configuration.WarlockSetting;
 
-public class GameViewConfiguration extends WarlockSetting {
-
+public class GameViewConfiguration extends WarlockSetting
+{
+	public static final String ID = "view";
+	
 	public static final WarlockColor defaultDefaultBgColor = new WarlockColor(25, 25, 50);
 	public static final WarlockColor defaultDefaultFgColor = new WarlockColor(240, 240, 255);
 
@@ -39,9 +45,17 @@ public class GameViewConfiguration extends WarlockSetting {
 	protected int defaultFontSize;
 	protected boolean suppressPrompt;
 	
-	public GameViewConfiguration (Preferences parentNode)
+	static {
+		ClientSettings.registerProviderFactory(ID, new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting (Preferences parentNode) {
+				return new GameViewConfiguration(parentNode);
+			}
+		});
+	}
+	
+	private GameViewConfiguration (Preferences parentNode)
 	{
-		super(parentNode, "view");
+		super(parentNode, ID);
 		
 		String bgString = getNode().get("background", null);
 		if(bgString != null)
@@ -58,7 +72,7 @@ public class GameViewConfiguration extends WarlockSetting {
 		
 		// WarlockConfiguration.getMainConfiguration().addConfigurationProvider(this);
 	}
-
+	
 	public int getBufferLines() {
 		return bufferLines;
 	}
@@ -111,5 +125,9 @@ public class GameViewConfiguration extends WarlockSetting {
 	public void setSuppressPrompt(boolean suppressPrompt) {
 		getNode().putBoolean("suppress-prompt", suppressPrompt);
 		this.suppressPrompt = suppressPrompt;
+	}
+	
+	public static GameViewConfiguration getProvider(IClientSettings clientSettings) {
+		return (GameViewConfiguration)clientSettings.getProvider(ID);
 	}
 }

@@ -41,7 +41,7 @@ public class BTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
-		style = handler.getClient().getClientSettings().getNamedStyle("bold");
+		style = handler.getClient().getNamedStyle("bold");
 		if(style != null)
 			handler.addStyle(style);
 	}

@@ -21,50 +21,13 @@
  */
 package cc.warlock.core.client.settings;
 
-import java.util.Collection;
-
-import cc.warlock.core.client.IWarlockFont;
-import cc.warlock.core.client.IWarlockHighlight;
-import cc.warlock.core.client.IWarlockPattern;
-import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.logging.LoggingConfiguration;
-import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
-import cc.warlock.core.client.settings.internal.PresetSettingsConfigurationProvider;
-import cc.warlock.core.client.settings.macro.internal.MacroSetting;
 import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author marshall
  *
  */
-public interface IClientSettings extends IWarlockSetting {
-	
-	public int getVersion();
-	
-	public Collection<IWarlockHighlight> getHighlightStrings();
-	public IWarlockStyle getNamedStyle(String name);
-	
-	public Collection<IVariable> getVariables();
-	public IVariable getVariable(String identifier);
-	
-	public Collection<IWarlockPattern> getIgnores();
-	
-	public Collection<IWindowSettings> getWindowSettings();
-	public IWindowSettings getWindowSettings (String windowId);
-	
-	public Collection<MacroSetting> getMacros();
-	public MacroSetting getMacro (String keyString);
-
-	public WarlockColor getDefaultBackground();
-	public WarlockColor getDefaultForeground();
-	
-	public WarlockColor getWindowBackground(String windowId);
-	public WarlockColor getWindowForeground(String windowId);
-	public IWarlockFont getWindowFont(String windowId);
-	
-	public IWindowSettings getMainWindowSettings();
-	public HighlightConfigurationProvider getHighlightConfigurationProvider();
-	public PresetSettingsConfigurationProvider getPresetConfigurationProvider();
-	public LoggingConfiguration getLoggingSettings();
+public interface IClientSettings extends IWarlockSetting
+{	
+	public IWarlockSetting getProvider (String providerId);
 }

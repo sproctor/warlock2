@@ -28,16 +28,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
-import org.eclipse.ui.dialogs.PropertyPage;
 
-import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 
-public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPropertyPage {
+public class WarlockPreferencePage extends PreferencePageUtils implements IWorkbenchPropertyPage {
 	protected Button promptButton, suppressScriptExceptionsButton;
 	
-	protected IWarlockClient client;
+	private ClientSettings settings;
 	
 	protected Control createContents(Composite parent) {
 		this.noDefaultAndApplyButton();
@@ -45,29 +44,35 @@ public class WarlockPreferencePage extends PropertyPage implements IWorkbenchPro
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(1, false));
 		
-		GameViewConfiguration viewConfig = (GameViewConfiguration)client.getViewer().getSettings();
-		boolean suppressPrompt = viewConfig.getSuppressPrompt();
+		createProfileDropDown(main);
+		
 		promptButton = new Button(main, SWT.CHECK);
 		promptButton.setText("Supress prompts");
-		promptButton.setSelection(suppressPrompt);
 		
-		boolean suppressScriptExceptions = ScriptConfiguration.instance().getSupressExceptions().get();
+		
 		suppressScriptExceptionsButton = new Button(main, SWT.CHECK);
 		suppressScriptExceptionsButton.setText("Suppress Script Exceptions");
-		suppressScriptExceptionsButton.setSelection(suppressScriptExceptions);
+		
+		setData(getDefaultSettings());
 		
 		return main;
 	}
 	
+	protected void setData (ClientSettings settings) {
+		this.settings = settings;
+		promptButton.setSelection(GameViewConfiguration.getProvider(settings).getSuppressPrompt());
+		suppressScriptExceptionsButton.setSelection(ScriptConfiguration.instance().getSupressExceptions().get());
+	}
+	
 	@Override
 	public void setElement(IAdaptable element) {
-		client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
+		// TODO switch profile here
+		//client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
 	}
 	
 	@Override
 	public boolean performOk() {
-		GameViewConfiguration viewConfig = (GameViewConfiguration)client.getViewer().getSettings();
-		viewConfig.setSuppressPrompt(promptButton.getSelection());
+		GameViewConfiguration.getProvider(settings).setSuppressPrompt(promptButton.getSelection());
 		ScriptConfiguration.instance().getSupressExceptions().set(suppressScriptExceptionsButton.getSelection());
 		return true;
 	}

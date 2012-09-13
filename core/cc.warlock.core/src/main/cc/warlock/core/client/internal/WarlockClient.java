@@ -35,7 +35,6 @@ import java.util.Iterator;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.ICompass;
-import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.IStream;
@@ -43,11 +42,17 @@ import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IWarlockSettingListener;
+import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
+import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
+import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
 import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.util.Pair;
@@ -204,7 +209,7 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	
 	private void reloadHighlights() {
 		cachedHighlights = new ArrayList<IWarlockHighlight>();
-		cachedHighlights.addAll(getClientSettings().getHighlightStrings());
+		cachedHighlights.addAll(HighlightConfigurationProvider.getHighlights(getClientSettings()));
 		if(highlightLists != null) {
 			for(Collection<IWarlockHighlight> collection : highlightLists) {
 				cachedHighlights.addAll(collection);
@@ -216,7 +221,7 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 		// Highlights from settings are cached. Cache is rebuilt whenever settings are changed
 		if(cachedHighlights == null) {
 			reloadHighlights();
-			getClientSettings().getHighlightConfigurationProvider().addListener(this);
+			HighlightConfigurationProvider.getProvider(getClientSettings()).addListener(this);
 		}
 		return Collections.unmodifiableCollection(cachedHighlights);
 	}
@@ -275,5 +280,34 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	
 	public void settingChanged(IWarlockSetting setting) {
 		reloadHighlights();
+	}
+	
+	
+	public String getVariable(String id) {
+		IClientSettings clientSettings = getClientSettings();
+		if(clientSettings == null)
+			return null;
+		IVariable var = VariableConfigurationProvider.getProvider(clientSettings).getVariable(id);
+		if(var == null)
+			return null;
+		return var.getValue();
+	}
+	
+	public void setVariable(String id, String value) {
+		IClientSettings clientSettings = getClientSettings();
+		if(clientSettings == null)
+			return;
+		VariableConfigurationProvider.getProvider(clientSettings).addVariable(id, value);
+	}
+	
+	public void removeVariable(String id) {
+		IClientSettings clientSettings = getClientSettings();
+		if(clientSettings == null)
+			return;
+		VariableConfigurationProvider.getProvider(clientSettings).removeVariable(id);
+	}
+	
+	public IWarlockStyle getNamedStyle(String id) {
+		return PresetStyleConfigurationProvider.getProvider(getClientSettings()).getStyle(id);
 	}
 }

@@ -19,23 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.settings.macro.internal;
+package cc.warlock.core.client.settings.internal;
+
+import java.util.Collection;
 
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
-import cc.warlock.core.client.settings.macro.IMacroProvider;
+import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.IMacroProvider;
 
 /**
  * Macros defined by this provider are command-based only.
  *  
  * @author marshall
  */
-public class MacroConfigurationProvider extends ArrayConfigurationProvider<MacroSetting> implements IMacroProvider {
+public class MacroConfigurationProvider extends ArrayConfigurationProvider<MacroSetting> implements IMacroProvider
+{
+	public static final String ID = "macros";
 	
 	public MacroConfigurationProvider (Preferences parentNode)
 	{
-		super(parentNode, "macros");
+		super(parentNode, ID);
 	}
 	
 	protected MacroSetting loadSetting(String id) {
@@ -62,5 +66,13 @@ public class MacroConfigurationProvider extends ArrayConfigurationProvider<Macro
 				return macro;
 		}
 		return null;
+	}
+	
+	public static MacroConfigurationProvider getProvider(IClientSettings clientSettings) {
+		return (MacroConfigurationProvider)clientSettings.getProvider(ID);
+	}
+	
+	public static Collection<MacroSetting> getMacros(IClientSettings clientSettings) {
+		return getProvider(clientSettings).getSettings();
 	}
 }

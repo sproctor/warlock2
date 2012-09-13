@@ -57,11 +57,13 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.internal.WarlockClientListener;
+import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
 import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.configuration.ProfileProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
-import cc.warlock.core.stormfront.settings.IStormFrontClientSettings;
+import cc.warlock.core.stormfront.settings.internal.CommandLineSettings;
 import cc.warlock.rcp.stormfront.adapters.SWTStormFrontClientViewer;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.StormFrontStatus;
@@ -293,7 +295,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 				// textBorder.setActiveClient(sfClient);
 			}
 			
-			IStormFrontClientSettings settings = sfClient.getStormFrontClientSettings();
+			IClientSettings settings = sfClient.getClientSettings();
 			if(settings != null)
 				loadClientSettings(settings);
 			
@@ -333,13 +335,12 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	private Button reconnect;
 	
 	public void clientSettingsLoaded(IWarlockClient client) {
-		super.clientSettingsLoaded(client);
 		if(client == sfClient) {
-			loadClientSettings(sfClient.getStormFrontClientSettings());
+			loadClientSettings(sfClient.getClientSettings());
 		}
 	}
 	
-	public void loadClientSettings(IStormFrontClientSettings settings)
+	public void loadClientSettings(IClientSettings settings)
 	{	
 		IStyleProvider styleProvider = new StormFrontStyleProvider(settings);
 		
@@ -367,10 +368,10 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			}
 		});
 		
-		WarlockColor bg = sfClient.getStormFrontClientSettings().getDefaultBackground();
-		WarlockColor fg = sfClient.getStormFrontClientSettings().getDefaultForeground();
+		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
+		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
 		
-		IWarlockFont mainFont = settings.getMainWindowSettings().getFont();
+		IWarlockFont mainFont = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont();
 		String fontFace = mainFont.getFamilyName();
 		int fontSize = mainFont.getSize();
 //		if (Platform.getOS().equals(Platform.OS_MACOSX)) {
@@ -380,9 +381,10 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		normalFont = mainFont.isDefaultFont() ? JFaceResources.getDefaultFont() : new Font(getSite().getShell().getDisplay(), fontFace, fontSize, SWT.NONE);
 		streamText.setFont(normalFont);
 		
-		WarlockColor entryBG = settings.getCommandLineSettings().getBackgroundColor();
-		WarlockColor entryFG = settings.getCommandLineSettings().getForegroundColor();
-		WarlockColor entryBarColor = settings.getCommandLineSettings().getBarColor();
+		CommandLineSettings commandLineSettings = CommandLineSettings.getProvider(settings);
+		WarlockColor entryBG = commandLineSettings.getBackgroundColor();
+		WarlockColor entryFG = commandLineSettings.getForegroundColor();
+		WarlockColor entryBarColor = commandLineSettings.getBarColor();
 		
 		entry.getWidget().setForeground(ColorUtil.warlockColorToColor(entryFG.isDefault() ? fg  : entryFG));
 		entry.getWidget().setBackground(ColorUtil.warlockColorToColor(entryBG.isDefault() ? bg : entryBG));

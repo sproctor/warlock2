@@ -19,15 +19,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.settings;
+package cc.warlock.core.client.settings;
 
-import cc.warlock.core.client.settings.IClientSettings;
+import java.util.Collection;
 
-/**
- * @author marshall
- *
- */
-public interface IStormFrontClientSettings extends IClientSettings {
+import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.settings.internal.MacroSetting;
+import cc.warlock.core.configuration.IArraySettingProvider;
 
-	public ICommandLineSettings getCommandLineSettings();
+
+public interface IMacroProvider extends IArraySettingProvider<MacroSetting> {
+	//public Collection<MacroSetting> getMacros();
+	
+	//public MacroSetting getMacro (String keyString);
+	//public void addMacro (IMacro macro);
+	//public boolean removeMacro (IMacro macro);
+	//public void replaceMacro (IMacro originalMacro, IMacro newMacro);
+	
 }

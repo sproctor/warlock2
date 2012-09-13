@@ -24,19 +24,33 @@ package cc.warlock.core.stormfront.settings.internal;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.ColorFontSetting;
+import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.IWarlockSettingFactory;
 import cc.warlock.core.stormfront.settings.ICommandLineSettings;
 
 /**
  * @author marshall
  *
  */
-public class CommandLineSettings extends ColorFontSetting implements ICommandLineSettings {
-
+public class CommandLineSettings extends ColorFontSetting implements ICommandLineSettings
+{
+	public static final String ID = "command-line";
+	
 	protected WarlockColor barColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	
-	public CommandLineSettings (Preferences parentNode) {
-		super(parentNode, "command-line");
+	static {
+		ClientSettings.registerProviderFactory(ID, new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(Preferences parentNode) {
+				return new CommandLineSettings(parentNode);
+			}
+		});
+	}
+	
+	private CommandLineSettings (Preferences parentNode) {
+		super(parentNode, ID);
 		
 		String colorString = getNode().get("bar-color", null);
 		if(colorString != null)
@@ -51,5 +65,9 @@ public class CommandLineSettings extends ColorFontSetting implements ICommandLin
 		getNode().put("bar-color", barColor.toString());
 		
 		this.barColor = barColor;
+	}
+	
+	public static CommandLineSettings getProvider(IClientSettings clientSettings) {
+		return (CommandLineSettings)clientSettings.getProvider(ID);
 	}
 }

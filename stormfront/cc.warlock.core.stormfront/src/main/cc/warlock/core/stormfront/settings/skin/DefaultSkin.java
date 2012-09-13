@@ -26,7 +26,7 @@ import java.util.HashMap;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.stormfront.settings.internal.StormFrontClientSettings;
+import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
 
 /**
  * The default skin handles any attributes who's values are "skin"
@@ -59,8 +59,8 @@ public class DefaultSkin implements IWarlockSkin {
 		fgColors.put("selectedLink", new WarlockColor("#000000"));
 		fgColors.put("command", new WarlockColor("#FFFFFF"));
 		
-		fgColors.put(StormFrontClientSettings.WINDOW_MAIN, MAIN_COLOR);
-		bgColors.put(StormFrontClientSettings.WINDOW_MAIN, MAIN_COLOR);
+		fgColors.put(WindowConfigurationProvider.WINDOW_MAIN, MAIN_COLOR);
+		bgColors.put(WindowConfigurationProvider.WINDOW_MAIN, MAIN_COLOR);
 		
 		bgColors.put("roomName", new WarlockColor("#0000FF"));
 		bgColors.put("bold", MAIN_COLOR);
@@ -85,9 +85,9 @@ public class DefaultSkin implements IWarlockSkin {
 	
 	public WarlockColor getColor(ColorType type) {
 		if (type == ColorType.MainWindow_Background)
-			return getDefaultBackgroundColor(StormFrontClientSettings.WINDOW_MAIN);
+			return getDefaultBackgroundColor(WindowConfigurationProvider.WINDOW_MAIN);
 		else if (type == ColorType.MainWindow_Foreground)
-			return getDefaultForegroundColor(StormFrontClientSettings.WINDOW_MAIN);
+			return getDefaultForegroundColor(WindowConfigurationProvider.WINDOW_MAIN);
 		else if (type == ColorType.CommandLine_Background)
 			return getDefaultBackgroundColor("command");
 		else if (type == ColorType.CommandLine_Foreground)
