@@ -110,10 +110,10 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected Control createContents(Composite parent) {
 		this.noDefaultAndApplyButton();
 		
+		createProfileDropDown(parent);
+		
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
-		
-		createProfileDropDown(main);
 		
 		Composite filterComposite = new Composite(main, SWT.NONE);
 		GridLayout layout = new GridLayout(3, false);
