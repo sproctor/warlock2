@@ -21,7 +21,6 @@
  */
 package cc.warlock.rcp.prefs;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
-import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 
@@ -52,12 +51,15 @@ public class WarlockPreferencePage extends PreferencePageUtils implements IWorkb
 		suppressScriptExceptionsButton = new Button(main, SWT.CHECK);
 		suppressScriptExceptionsButton.setText("Suppress Script Exceptions");
 		
-		setData(getDefaultSettings());
+		if (settings == null)
+			settings = getDefaultSettings();
+		
+		setData(settings);
 		
 		return main;
 	}
 	
-	protected void setData (ClientSettings settings) {
+	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 		promptButton.setSelection(GameViewConfiguration.getProvider(settings).getSuppressPrompt());
 		suppressScriptExceptionsButton.setSelection(ScriptConfiguration.instance().getSupressExceptions().get());

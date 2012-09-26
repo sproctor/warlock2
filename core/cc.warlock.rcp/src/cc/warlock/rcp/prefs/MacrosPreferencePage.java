@@ -65,7 +65,7 @@ import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.internal.DefaultMacro;
-import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.internal.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.internal.MacroSetting;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
@@ -272,12 +272,15 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		});
 		defaultMacrosButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
-		setData(getDefaultSettings());
+		if (settings == null)
+			settings = getDefaultSettings();
+		
+		setData(settings);
 		
 		return main;
 	}
 	
-	protected void setData (ClientSettings settings) {
+	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 		
 		macroTableView.setInput(MacroConfigurationProvider.getMacros(settings));

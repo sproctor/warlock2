@@ -23,7 +23,6 @@ package cc.warlock.rcp.prefs;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -53,8 +52,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.Variable;
 import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
@@ -206,12 +205,15 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 			}
 		}*/
 		
-		setData(getDefaultSettings());
+		if (settings == null)
+			settings = getDefaultSettings();
+		
+		setData(settings);
 		
 		return main;
 	}
 	
-	protected void setData (ClientSettings settings) {
+	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 		
 		variableTable.setInput(VariableConfigurationProvider.getProvider(settings).getVariables());

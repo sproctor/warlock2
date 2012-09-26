@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
 import cc.warlock.core.client.logging.LoggingConfiguration;
-import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.client.settings.IClientSettings;
 
 /**
  * @author Will Robertson
@@ -84,13 +84,16 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			}
 		});
 		
-		setData(getDefaultSettings());
+		if (settings == null)
+			settings = getDefaultSettings();
+		
+		setData(settings);
 		
 		// Return the main composite
 		return main;
 	}
 	
-	protected void setData (ClientSettings settings) {
+	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 		loggingType.setText(LoggingConfiguration.getProvider(settings).getLogFormat());
 		logDir.setText(LoggingConfiguration.getProvider(settings).getLogDirectory().getAbsolutePath());

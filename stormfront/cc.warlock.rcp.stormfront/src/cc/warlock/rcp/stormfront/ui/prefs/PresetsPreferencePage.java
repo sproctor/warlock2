@@ -57,8 +57,8 @@ import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockFont;
 import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IWindowSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
 import cc.warlock.rcp.prefs.PreferencePageUtils;
@@ -160,13 +160,16 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		preview = new StyledText(previewGroup, SWT.BORDER);
 		preview.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		setData(getDefaultSettings());
+		if (settings == null)
+			settings = getDefaultSettings();
+		
+		setData(settings);
 		initPreview();
 		
 		return main;
 	}
 	
-	protected void setData (ClientSettings settings) {
+	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 
 		for (String styleName: presetDescriptions.keySet()) {

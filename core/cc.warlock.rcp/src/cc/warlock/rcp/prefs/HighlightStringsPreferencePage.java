@@ -63,8 +63,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IWindowSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.internal.HighlightSetting;
 import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
@@ -221,10 +221,13 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		removeString.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_REMOVE));
 		removeString.setEnabled(false);
 		
-		setData (getDefaultSettings());
+		if (settings == null)
+			settings = getDefaultSettings();
+		
+		setData (settings);
 	}
 	
-	protected void setData (ClientSettings settings) {
+	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 		
 		stringTable.setInput(HighlightConfigurationProvider.getHighlights(settings));

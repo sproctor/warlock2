@@ -145,17 +145,20 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 			selectProfile(settings.getName());
 		
 		dropDown.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected (SelectionEvent e) { nameChanged (e.text); }
-			public void widgetSelected (SelectionEvent e) { nameChanged (e.text); }
+			public void widgetDefaultSelected (SelectionEvent e) {
+				nameChanged ();
+			}
+			public void widgetSelected (SelectionEvent e) {
+				nameChanged ();
+			}
 		});
 		
 		return dropDown;
 	}
 	
 	
-	private void nameChanged (String name) {
-		if (name == null)
-			return;
+	private void nameChanged () {
+		String name = dropDown.getItem(dropDown.getSelectionIndex());
 		
 		for (ClientSettings s : ClientSettings.getAllClientSettings()) {
 			if (name.equals(s.getName()) || name.equals(s.getCliendId())) {
@@ -180,5 +183,5 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 		return ClientSettings.getAllClientSettings().iterator().next();
 	}
 	
-	abstract protected void setData (ClientSettings settings);
+	abstract protected void setData (IClientSettings settings);
 }
