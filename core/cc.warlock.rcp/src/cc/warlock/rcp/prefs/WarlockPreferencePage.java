@@ -40,11 +40,10 @@ public class WarlockPreferencePage extends PreferencePageUtils implements IWorkb
 	
 	protected Control createContents(Composite parent) {
 		this.noDefaultAndApplyButton();
+		createProfileDropDown(parent);
 		
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(1, false));
-		
-		createProfileDropDown(main);
 		
 		promptButton = new Button(main, SWT.CHECK);
 		promptButton.setText("Supress prompts");

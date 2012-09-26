@@ -84,10 +84,10 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 	
 	@Override
 	protected Control createContents(Composite parent) {
+		createProfileDropDown(parent);
+		
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
-		
-		createProfileDropDown(main);
 		
 		Composite filterComposite = new Composite(main, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);

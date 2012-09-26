@@ -60,10 +60,10 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
+		createProfileDropDown(parent);
+		
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
-		
-		createProfileDropDown(main);
 		
 		// Logging Output Type (text/html)
 		Label loggingTypeLabel = new Label(main, SWT.NONE);
@@ -117,7 +117,9 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 	
 	@Override
 	public void setElement(IAdaptable element) {
-		settings = ((IWarlockClient)element.getAdapter(IWarlockClient.class)).getClientSettings();
+		IWarlockClient client = ((IWarlockClient)element.getAdapter(IWarlockClient.class));
+		if (client != null)
+			settings = client.getClientSettings();
 	}
 	
 	protected void performDefaults() {

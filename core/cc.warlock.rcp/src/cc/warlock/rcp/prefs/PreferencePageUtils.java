@@ -115,12 +115,15 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 	
 	protected Combo createProfileDropDown (Composite parent) {
 		Combo dropDown = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
+		
 		for (ClientSettings settings : ClientSettings.getAllClientSettings()) {
 			String name = settings.getName();
 			if (name == null)
 				name = settings.getCliendId();
 			dropDown.add(name);
 		}
+		
+		dropDown.select(0);
 		
 		dropDown.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected (SelectionEvent e) { nameChanged (e.text); }

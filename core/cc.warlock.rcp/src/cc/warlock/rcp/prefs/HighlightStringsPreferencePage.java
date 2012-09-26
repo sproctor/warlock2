@@ -105,10 +105,11 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	@Override
 	protected Control createContents(Composite parent) {
+		createProfileDropDown(parent);
+		
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(1, false));
 		
-		createProfileDropDown(main);
 		createStringsTable(main);
 		createOptions(main);
 		
