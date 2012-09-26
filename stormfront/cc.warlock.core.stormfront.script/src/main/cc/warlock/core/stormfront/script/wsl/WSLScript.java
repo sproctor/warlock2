@@ -207,7 +207,7 @@ public class WSLScript extends AbstractScript {
 	
 	private class WSLCharacter extends WSLAbstractString {
 		public String toString() {
-			return getClient().getCharacterName().get();
+			return getClient().getCharacterName();
 		}
 	}
 	

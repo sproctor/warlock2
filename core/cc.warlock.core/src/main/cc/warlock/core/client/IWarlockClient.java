@@ -129,9 +129,14 @@ public interface IWarlockClient extends IRoomListener {
 	public String getClientId();
 	
 	/**
-	 * @return The current character's name (this is used in various places)
+	 * @return The character's name (display name for character)
 	 */
-	public IProperty<String> getCharacterName();
+	public String getCharacterName ();
+	
+	/**
+	 * Set the character's name (this is used in various places)
+	 */
+	public void setCharacterName (String name);
 	
 	/**
 	 * @return The last command sent

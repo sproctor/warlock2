@@ -88,7 +88,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	protected Property<String> rightHand = new Property<String>();
 	protected Property<String> currentSpell = new Property<String>();
 	protected StringBuffer buffer = new StringBuffer();
-	protected Property<String> characterName = new Property<String>();
 	protected Property<String> roomDescription = new Property<String>();
 	protected String gameCode, playerId;
 	protected ClientSettings clientSettings;
@@ -420,8 +419,15 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		return clientSettings;
 	}
 	
-	public IProperty<String> getCharacterName() {
-		return characterName;
+	public String getCharacterName() {
+		if (clientSettings == null)
+			return null;
+		return clientSettings.getName();
+	}
+	
+	public void setCharacterName(String name) {
+		if (clientSettings != null)
+			clientSettings.setName(name);
 	}
 	
 	public String getGameCode() {

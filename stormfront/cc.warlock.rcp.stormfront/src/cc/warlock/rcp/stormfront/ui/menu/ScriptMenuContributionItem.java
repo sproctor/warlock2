@@ -19,7 +19,7 @@ public class ScriptMenuContributionItem extends CompoundContributionItem {
 		private cc.warlock.core.stormfront.client.IStormFrontClient m_Client = null;
 		
 		public CharacterContributionItem(IStormFrontClient client) {
-			super(client.getCharacterName().get());
+			super(client.getCharacterName());
 			m_Client = client;
 		}
 		

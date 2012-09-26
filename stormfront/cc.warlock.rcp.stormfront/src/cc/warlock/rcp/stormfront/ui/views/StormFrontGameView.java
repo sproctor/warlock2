@@ -122,7 +122,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			setReconnectProfile(profile);
 			showPopup(reconnectPopup);
 		} else {
-			String characterName = client != null ? client.getCharacterName().get() : "No Character";
+			String characterName = client != null ? client.getCharacterName() : "No Character";
 			setNoReconnectProfile(characterName);
 		}
 	}
@@ -346,14 +346,14 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		
 		StyleProviders.setStyleProvider(client, styleProvider);
 		
-		sfClient.getCharacterName().addListener(new IPropertyListener<String>() {
+		/*sfClient.getCharacterName().addListener(new IPropertyListener<String>() {
 			public void propertyChanged(String value) {
 				String viewId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 				
 				/* FIXME: Marshall, can you look the following. I _think_
 				 * sfClient.getCharacterName().get() should just be replaced
 				 * by value (the parameter to this method).
-				 */
+				 *//*
 				
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
@@ -366,7 +366,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 					}
 				});
 			}
-		});
+		});*/
 		
 		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
 		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
@@ -463,7 +463,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		String game = sfClient.getGameCode();
 		if(game != null)
 			prefix += "[" + game + "] ";
-		String name = client.getCharacterName().get();
+		String name = client.getCharacterName();
 		if(name != null)
 			prefix += name + " - ";
 		this.setPartName(prefix + title);

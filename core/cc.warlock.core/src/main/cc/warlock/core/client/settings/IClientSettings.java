@@ -30,4 +30,7 @@ import cc.warlock.core.configuration.IWarlockSetting;
 public interface IClientSettings extends IWarlockSetting
 {	
 	public IWarlockSetting getProvider (String providerId);
+	public String getName ();
+	public void setName (String name);
+	public String getCliendId ();
 }
