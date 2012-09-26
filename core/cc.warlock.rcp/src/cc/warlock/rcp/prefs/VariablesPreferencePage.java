@@ -68,7 +68,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 
 	public static final String PAGE_ID = "cc.warlock.rcp.prefs.variables";
 	
-	protected ClientSettings settings;
+	//protected ClientSettings settings;
 	
 	protected Text filterText;
 	protected TableViewer variableTable;
@@ -281,13 +281,6 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		protected CellEditor getCellEditor(Object element) {
 			return editor;
 		}
-	}
-	
-	@Override
-	public void setElement(IAdaptable element) {
-		// TODO Switch the character selector here.
-		//client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
-		//settings = (ClientSettings)client.getClientSettings();
 	}
 	
 	@Override

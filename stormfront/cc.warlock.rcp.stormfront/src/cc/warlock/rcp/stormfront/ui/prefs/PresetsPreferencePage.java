@@ -23,7 +23,6 @@ package cc.warlock.rcp.stormfront.ui.prefs;
 
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -53,7 +52,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
@@ -87,7 +85,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	private StyledText preview;
 	private TableViewer stylesTable;
 	
-	private ClientSettings settings;
+	//private ClientSettings settings;
 	
 	private static String roomNamePreview = "[Riverhaven, Crescent Way]";
 	private static String boldPreview = "You also see a Sir Robyn.";
@@ -136,11 +134,11 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	
 	@Override
 	protected Control createContents(Composite parent) {
+		createProfileDropDown(parent);
+		
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(3, false));
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		createProfileDropDown(main);
 		
 		mainBGSelector = colorSelectorWithLabel(main, "Main window background color:");
 		mainFGSelector = colorSelectorWithLabel(main, "Main window foreground color:");
@@ -384,16 +382,6 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		}
 		
 		updatePreview();
-	}
-	
-	@Override
-	public void setElement(IAdaptable element) {
-		IWarlockClient client = (IWarlockClient) element.getAdapter(IWarlockClient.class);
-		if (client != null)
-		{
-			this.settings = (ClientSettings) client.getClientSettings();
-			// this.skin = client.getSkin();
-		}
 	}
 	
 	private FontData getDefaultFont ()

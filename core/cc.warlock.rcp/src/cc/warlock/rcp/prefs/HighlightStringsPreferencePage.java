@@ -89,7 +89,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
 	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();
 	//protected ArrayList<HighlightString> highlightStrings = new ArrayList<HighlightString>();
-	private ClientSettings settings;
+	//private ClientSettings settings;
 	
 	/*private void copyHighlightStrings ()
 	{

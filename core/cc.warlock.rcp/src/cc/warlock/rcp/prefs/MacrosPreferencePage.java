@@ -89,7 +89,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected static String COLUMN_KEY = "key";
 	
 	protected TableViewer macroTableView;
-	protected ClientSettings settings;
+	//protected ClientSettings settings;
 	
 	//protected ArrayList<MacroSetting> macros = new ArrayList<MacroSetting>();
 

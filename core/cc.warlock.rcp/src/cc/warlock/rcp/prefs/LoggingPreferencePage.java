@@ -23,7 +23,6 @@ package cc.warlock.rcp.prefs;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,9 +36,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.logging.LoggingConfiguration;
-import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 
 /**
@@ -51,7 +48,6 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 
 	public static final String PAGE_ID = "cc.warlock.rcp.prefs.logging";
 	
-	protected IClientSettings settings;
 	protected Combo loggingType;
 	protected Text logDir;
 	
@@ -113,13 +109,6 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			File dir = new File(directory);
 			logDir.setText(dir.getAbsolutePath());
 		}
-	}
-	
-	@Override
-	public void setElement(IAdaptable element) {
-		IWarlockClient client = ((IWarlockClient)element.getAdapter(IWarlockClient.class));
-		if (client != null)
-			settings = client.getClientSettings();
 	}
 	
 	protected void performDefaults() {

@@ -1,5 +1,6 @@
 package cc.warlock.rcp.prefs;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -11,11 +12,15 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
 import cc.warlock.rcp.util.FontSelector;
 
-public abstract class PreferencePageUtils extends PropertyPage implements SelectionListener, IPropertyChangeListener {
-	
+public abstract class PreferencePageUtils extends PropertyPage implements SelectionListener, IPropertyChangeListener
+{
+	protected IClientSettings settings;
+	protected Combo dropDown;
 	
 	public Button createButton(Composite parent, int flags)
 	{
@@ -113,8 +118,19 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 		
 	}
 	
+	protected void selectProfile (String name) {
+		int i = 0;
+		for (String cur_name : dropDown.getItems()) {
+			if (cur_name.equals(name)) {
+				dropDown.select(i);
+				break;
+			}
+			i++;
+		}
+	}
+	
 	protected Combo createProfileDropDown (Composite parent) {
-		Combo dropDown = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
+		dropDown = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
 		
 		for (ClientSettings settings : ClientSettings.getAllClientSettings()) {
 			String name = settings.getName();
@@ -123,7 +139,10 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 			dropDown.add(name);
 		}
 		
-		dropDown.select(0);
+		if (settings == null)
+			dropDown.select(0);
+		else
+			selectProfile(settings.getName());
 		
 		dropDown.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected (SelectionEvent e) { nameChanged (e.text); }
@@ -145,6 +164,16 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 			}
 		}
 		
+	}
+	
+	@Override
+	public void setElement(IAdaptable element) {
+		IWarlockClient client = ((IWarlockClient)element.getAdapter(IWarlockClient.class));
+		if (client != null) {
+			settings = client.getClientSettings();
+			if (dropDown != null)
+				selectProfile(settings.getName());
+		}
 	}
 	
 	protected ClientSettings getDefaultSettings () {

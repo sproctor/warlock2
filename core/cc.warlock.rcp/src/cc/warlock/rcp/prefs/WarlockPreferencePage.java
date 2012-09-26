@@ -36,7 +36,7 @@ import cc.warlock.rcp.configuration.GameViewConfiguration;
 public class WarlockPreferencePage extends PreferencePageUtils implements IWorkbenchPropertyPage {
 	protected Button promptButton, suppressScriptExceptionsButton;
 	
-	private ClientSettings settings;
+	//private ClientSettings settings;
 	
 	protected Control createContents(Composite parent) {
 		this.noDefaultAndApplyButton();
@@ -61,12 +61,6 @@ public class WarlockPreferencePage extends PreferencePageUtils implements IWorkb
 		this.settings = settings;
 		promptButton.setSelection(GameViewConfiguration.getProvider(settings).getSuppressPrompt());
 		suppressScriptExceptionsButton.setSelection(ScriptConfiguration.instance().getSupressExceptions().get());
-	}
-	
-	@Override
-	public void setElement(IAdaptable element) {
-		// TODO switch profile here
-		//client = (IWarlockClient)element.getAdapter(IWarlockClient.class);
 	}
 	
 	@Override
