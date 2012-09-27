@@ -30,7 +30,6 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.IWarlockStyle.StyleType;
 import cc.warlock.core.client.internal.Stream;
 import cc.warlock.core.client.internal.WarlockStyle;
 
@@ -110,7 +109,7 @@ public class StreamTest {
 	protected static Stream stream;
 	protected static final String STREAM_NAME = "testStream";
 	protected static final String TEST_STRING= "testing stream send--\n";
-	protected static final WarlockStyle TEST_STYLE = new WarlockStyle(new StyleType[] { StyleType.BOLD });
+	protected static WarlockStyle TEST_STYLE = new WarlockStyle();
 	protected static Listener listener;
 	
 	@BeforeClass
@@ -118,6 +117,7 @@ public class StreamTest {
 		stream = StreamExt.createStream(STREAM_NAME);
 		listener = new Listener();
 		stream.addStreamListener(listener);
+		TEST_STYLE.setBold(true);
 	}
 
 	@AfterClass
