@@ -146,7 +146,7 @@ public class RCPUtil {
 		
 		WarlockClientAdaptable clientAdapter = null;
 		
-		if (inFocus != null)
+		if (inFocus != null && inFocus.getWarlockClient() != null)
 			clientAdapter = new WarlockClientAdaptable(inFocus.getWarlockClient());
 
 		PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(Display.getDefault().getActiveShell(),
@@ -155,6 +155,7 @@ public class RCPUtil {
 		if(dialog == null)
 			return 0;
 		
+		dialog.getShell().setText("Warlock Preferences");
 		dialog.getTreeViewer().expandToLevel(2);
 
 		return dialog.open();
