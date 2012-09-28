@@ -42,6 +42,15 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
+		//FIXME: this function is broken beyong belief. We're not dealing with server settings at all currently.
+		
+		// FIXME: the following try-block should be removed when this function is made to work again.
+		try {
+			handler.getClient().getConnection().sendLine("");
+			return;
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 		
 		if (attributes.getAttribute("space") != null
 			&& attributes.getAttribute("not") != null
