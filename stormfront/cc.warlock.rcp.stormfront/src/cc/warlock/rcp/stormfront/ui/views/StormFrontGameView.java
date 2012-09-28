@@ -50,7 +50,6 @@ import org.eclipse.ui.PlatformUI;
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
-import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
@@ -113,7 +112,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		((GridLayout)entryComposite.getLayout()).numColumns = 2;
 		status = new StormFrontStatus(entryComposite);
 		
-		String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
+		//String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 		
 		Profile profile = getProfile();
 		createReconnectPopup();
@@ -121,6 +120,17 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		if (profile != null) {
 			setReconnectProfile(profile);
 			showPopup(reconnectPopup);
+		} else {
+			String characterName = client != null ? client.getCharacterName() : "No Character";
+			setNoReconnectProfile(characterName);
+		}
+	}
+	
+	public void setProfile(Profile profile) {
+		super.setProfile(profile);
+		
+		if (profile != null) {
+			setReconnectProfile(profile);
 		} else {
 			String characterName = client != null ? client.getCharacterName() : "No Character";
 			setNoReconnectProfile(characterName);
