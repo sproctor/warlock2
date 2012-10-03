@@ -1,6 +1,11 @@
 package cc.warlock.rcp.telnet.ui.views;
 
+import java.util.Collection;
+
+import cc.warlock.core.client.IMacroCommand;
+import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.internal.DefaultMacro;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.rcp.telnet.core.client.TelnetClient;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewer;
@@ -81,5 +86,21 @@ public class TelnetGameView extends GameView {
 	public void clientSettingsLoaded(IWarlockClient client) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public IMacroCommand getMacroCommand(String id) {
+		return null;
+	}
+
+	@Override
+	public Collection<IMacroVariable> getMacroVariables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<DefaultMacro> getDefaultMacros() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

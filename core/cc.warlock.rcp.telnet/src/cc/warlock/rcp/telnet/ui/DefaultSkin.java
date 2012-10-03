@@ -21,9 +21,9 @@
  */
 package cc.warlock.rcp.telnet.ui;
 
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IHighlightString;
 
 /**
  * @author Will Robertson
@@ -34,7 +34,7 @@ public class DefaultSkin implements IWarlockSkin {
 	/* (non-Javadoc)
 	 * @see cc.warlock.core.client.IWarlockSkin#getBackgroundColor(cc.warlock.core.client.settings.IHighlightString)
 	 */
-	public WarlockColor getBackgroundColor(IHighlightString string) {
+	public WarlockColor getBackgroundColor(IWarlockHighlight string) {
 		return new WarlockColor("#191932");
 	}
 
@@ -105,7 +105,7 @@ public class DefaultSkin implements IWarlockSkin {
 	/* (non-Javadoc)
 	 * @see cc.warlock.core.client.IWarlockSkin#getForegroundColor(cc.warlock.core.client.settings.IHighlightString)
 	 */
-	public WarlockColor getForegroundColor(IHighlightString string) {
+	public WarlockColor getForegroundColor(IWarlockHighlight string) {
 		// TODO Auto-generated method stub
 		return new WarlockColor("#F0F0FF");
 	}
