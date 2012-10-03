@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.internal.WarlockMonospace;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -124,14 +124,11 @@ public class StormFrontConnection implements IConnection
 	
 	protected void disconnected ()
 	{	
-		WarlockString message = new WarlockString();
-		message.append(
+		WarlockString message = new WarlockString(
 			"******************************\n"+
 			"* Disconnected from the game *\n" +
-			"******************************\n");
-		WarlockStyle style = new WarlockStyle();
-		style.setMonospace(true);
-		message.addStyle(style);
+			"******************************\n",
+			WarlockMonospace.getInstance());
 		
 		client.getDefaultStream().put(message);
 		client.getDefaultStream().flush();
