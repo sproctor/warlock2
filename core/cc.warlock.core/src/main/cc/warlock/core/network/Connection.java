@@ -50,12 +50,12 @@ public class Connection implements IConnection {
 			socket = new Socket(host, port);
 			
 			new Thread(createPollingRunnable(socket)).start();
-		} catch (IOException e) {
-			if (e instanceof ConnectException && e.getMessage().contains("refused")) {
+		} catch (ConnectException e) {
+			if (e.getMessage().contains("refused")) {
 				connectionError(ErrorType.ConnectionRefused);
-			} else if (e instanceof UnknownHostException) {
-				connectionError(ErrorType.UnknownHost);
-			} else throw e;
+			}
+		} catch(UnknownHostException e) {
+			connectionError(ErrorType.UnknownHost);
 		}
 	}
 	
