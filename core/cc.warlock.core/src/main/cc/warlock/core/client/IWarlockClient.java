@@ -114,6 +114,11 @@ public interface IWarlockClient extends IRoomListener {
 	public IProperty<ICompass> getCompass();
 	
 	/**
+	 * @return The character status
+	 */
+	public ICharacterStatus getCharacterStatus();
+	
+	/**
 	 * see IClientSettings 
 	 * @return the settings for this client 
 	 */
@@ -177,6 +182,40 @@ public interface IWarlockClient extends IRoomListener {
 	public void removeVariable(String id);
 	
 	public IWarlockStyle getNamedStyle(String id);
+	
+	/**
+	 * @return The gameCode of the current player
+	 */
+	public String getGameCode();
+	
+	public WarlockTimer getTimer(String name);
+	
+	/**
+	 * Sync the current time as perceived by the server.
+	 * @param now Time the server thinks it is.
+	 */
+	public void syncTime(Long time);
+	
+	/**
+	 * @param componentName
+	 * @return The component with the passed in name
+	 */
+	public String getComponent(String componentName);
+	
+	public void setComponent (String componentName, String value, IStream stream);
+	
+	public void updateComponent(String name, WarlockString value);
+	
+	/**
+	 * @return The associated SFDialog
+	 */
+	public IProperty<IWarlockDialog> getDialog(String id);
+	
+	public IProperty<String> getProperty(String name);
+	
+	public void setProperty(String name, IProperty<String> property);
+	
+	public void setProperty(String name, String property);
 	
 	public void dispose();
 }

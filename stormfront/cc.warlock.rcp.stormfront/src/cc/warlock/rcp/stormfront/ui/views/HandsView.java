@@ -37,9 +37,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IPropertyListener;
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
@@ -52,8 +52,8 @@ public class HandsView extends ViewPart
 	protected static HandsView _instance;
 	
 	protected GradientInfo leftHandInfo, rightHandInfo, spellInfo;
-	protected IStormFrontClient activeClient;
-	protected ArrayList<IStormFrontClient> clients = new ArrayList<IStormFrontClient>();
+	protected IWarlockClient activeClient;
+	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
 	
 	public HandsView ()
 	{
@@ -181,9 +181,9 @@ public class HandsView extends ViewPart
 	
 	protected void gameViewFocused (StormFrontGameView gameView)
 	{
-		if (gameView.getStormFrontClient() != null)
+		if (gameView.getClient() != null)
 		{
-			setActiveClient(gameView.getStormFrontClient());
+			setActiveClient(gameView.getClient());
 		}
 	}
 	
@@ -193,7 +193,7 @@ public class HandsView extends ViewPart
 
 	}
 
-	public void setActiveClient (IStormFrontClient client)
+	public void setActiveClient (IWarlockClient client)
 	{
 		if (client == null) return;
 		
@@ -202,18 +202,18 @@ public class HandsView extends ViewPart
 		if (!clients.contains(client))
 		{
 			clear();
-			client.getLeftHand().addListener(new SWTPropertyListener<String>(
+			client.getProperty("left").addListener(new SWTPropertyListener<String>(
 					new HandListener(leftHandInfo, client, "empty")));
-			client.getRightHand().addListener(new SWTPropertyListener<String>(
+			client.getProperty("right").addListener(new SWTPropertyListener<String>(
 					new HandListener(rightHandInfo, client, "empty")));
-			client.getCurrentSpell().addListener(new SWTPropertyListener<String>(
+			client.getProperty("spell").addListener(new SWTPropertyListener<String>(
 					new HandListener(spellInfo, client, "none")));
 			
 			clients.add(client);
 		} else {
-			leftHandInfo.setText(client.getLeftHand().get());
-			rightHandInfo.setText(client.getRightHand().get());
-			spellInfo.setText(client.getCurrentSpell().get());
+			leftHandInfo.setText(client.getProperty("left").get());
+			rightHandInfo.setText(client.getProperty("right").get());
+			spellInfo.setText(client.getProperty("spell").get());
 			loadSettings(client.getClientSettings());
 		}
 	}
@@ -246,10 +246,10 @@ public class HandsView extends ViewPart
 
 	private class HandListener implements IPropertyListener<String> {
 		private GradientInfo hand;
-		private IStormFrontClient client;
+		private IWarlockClient client;
 		private String emptyText;
 		
-		public HandListener(GradientInfo hand, IStormFrontClient client, String emptyText) {
+		public HandListener(GradientInfo hand, IWarlockClient client, String emptyText) {
 			this.hand = hand;
 			this.client = client;
 			this.emptyText = emptyText;

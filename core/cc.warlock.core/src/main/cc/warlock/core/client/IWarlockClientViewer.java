@@ -40,7 +40,7 @@ import cc.warlock.core.client.internal.DefaultMacro;
  */
 public interface IWarlockClientViewer {
 
-	public IWarlockClient getWarlockClient ();
+	public IWarlockClient getClient ();
 	
 	public String getCurrentCommand ();
 	
@@ -49,6 +49,8 @@ public interface IWarlockClientViewer {
 	public void append(char c);
 	
 	public void submit();
+	
+	public void send(ICommand command);
 	
 	public void prevCommand();
 	

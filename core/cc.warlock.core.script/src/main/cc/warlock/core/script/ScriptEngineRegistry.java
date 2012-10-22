@@ -103,7 +103,7 @@ public class ScriptEngineRegistry {
 			}
 		}
 		
-		viewer.getWarlockClient().getDefaultStream().echo("Could not find script \"" + scriptName + "\"\n");
+		viewer.getClient().getDefaultStream().echo("Could not find script \"" + scriptName + "\"\n");
 		return null;
 	}
 	

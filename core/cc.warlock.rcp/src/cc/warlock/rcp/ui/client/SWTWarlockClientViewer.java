@@ -32,13 +32,13 @@ import java.util.Collection;
 
 import org.eclipse.swt.widgets.Display;
 
+import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.DefaultMacro;
-import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author Marshall
@@ -186,8 +186,8 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 		return viewer.getCurrentCommand();
 	}
 	
-	public IWarlockClient getWarlockClient() {
-		return viewer.getWarlockClient();
+	public IWarlockClient getClient() {
+		return viewer.getClient();
 	}
 	
 	public void setCurrentCommand(String command) {
@@ -261,5 +261,9 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	
 	public void clearCustomStream(String name) {
 		run(new ClearCustomStreamWrapper(name));
+	}
+	
+	public void send(ICommand command) {
+		viewer.send(command);
 	}
 }

@@ -36,8 +36,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.stormfront.client.IStormFrontDialogMessage;
-import cc.warlock.core.stormfront.client.StormFrontProgressBar;
+import cc.warlock.core.client.IWarlockDialog;
 
 /**
  * @author Marshall
@@ -50,8 +49,8 @@ public class StormFrontDialogControl extends Canvas
 	protected Font progressFont;
 	protected int width, height;
 	protected int borderWidth;
-	protected HashMap<String, StormFrontProgressBar> progressBars =
-		new HashMap<String, StormFrontProgressBar>();
+	protected HashMap<String, IWarlockDialog> progressBars =
+		new HashMap<String, IWarlockDialog>();
 	
 	protected Color healthFG, healthBG, healthBorder,
 		manaFG, manaBG, manaBorder,
@@ -108,7 +107,7 @@ public class StormFrontDialogControl extends Canvas
 				
 				e.gc.setFont (progressFont);
 				
-				for(StormFrontProgressBar progressBar : progressBars.values()) {
+				for(IWarlockDialog progressBar : progressBars.values()) {
 					int pbWidth = progressBar.getWidth();
 					int pbLeft = progressBar.getLeft();
 					int pbValue = progressBar.getValue();
@@ -121,12 +120,12 @@ public class StormFrontDialogControl extends Canvas
 					int left = pbLeft * bounds.width / 100;
 					
 					// Draw the border
-					Color borderColor = getBorderColor(progressBar.id);
+					Color borderColor = getBorderColor(progressBar.getId());
 					e.gc.setForeground(borderColor);
 					e.gc.setLineWidth(borderWidth);
 					e.gc.drawRectangle(left, 0, fullBarWidth, bounds.height);
 					
-					Color bgColor = getBgColor(progressBar.id);
+					Color bgColor = getBgColor(progressBar.getId());
 					
 					// draw the filled part of the rectangle
 					Color gradientColor = getGradientColor(25, true, bgColor);
@@ -140,10 +139,10 @@ public class StormFrontDialogControl extends Canvas
 					e.gc.fillRectangle(borderWidth + left + filledWidth,
 							borderWidth, barWidth - filledWidth, barHeight);
 					
-					Color textColor = getTextColor(progressBar.id);
+					Color textColor = getTextColor(progressBar.getId());
 					e.gc.setForeground(textColor);
 					
-					String text = progressBar.text;
+					String text = progressBar.getText();
 					Point extent = e.gc.textExtent(text);
 					
 					int text_left = left + (barWidth - extent.x) / 2;
@@ -193,11 +192,8 @@ public class StormFrontDialogControl extends Canvas
 		super.dispose();
 	}
 
-	public void sendMessage(IStormFrontDialogMessage msg) {
-		if(msg instanceof StormFrontProgressBar) {
-			StormFrontProgressBar bar = (StormFrontProgressBar) msg;
-			progressBars.put(bar.id, bar);
-		}
+	public void sendMessage(IWarlockDialog msg) {
+		progressBars.put(msg.getId(), msg);
 		redraw();
 	}
 	

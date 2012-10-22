@@ -63,6 +63,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	protected interface TextDest {
 		public void put(WarlockString text);
 		public void flush();
+		public IStream getStream();
 	}
 	
 	protected class StreamTextDest implements TextDest {
@@ -93,6 +94,10 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		
 		public void put(WarlockString text) {
 			buffer.append(text);
+		}
+		
+		public IStream getStream() {
+			return null;
 		}
 		
 		public void flush() {
@@ -199,10 +204,11 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 
 	public IStream getCurrentStream ()
 	{
-		if(textDest == null || !(textDest instanceof StreamTextDest))
-			return client.getDefaultStream();
-		else
-			return ((StreamTextDest)textDest).getStream();
+		IStream stream;
+		if(textDest == null || (stream = textDest.getStream()) == null)
+			return this.getCurrentStream();
+		
+		return stream;
 	}
 	
 	/* (non-Javadoc)

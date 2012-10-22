@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cc.warlock.core.client.ICharacterStatus.StatusType;
-import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockHighlight;
@@ -18,6 +17,7 @@ import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.internal.RegexMatch;
+import cc.warlock.core.script.internal.ScriptRegistry;
 import cc.warlock.core.script.internal.TextMatch;
 
 public class WSLScriptCommands {
@@ -428,7 +428,7 @@ public class WSLScriptCommands {
 	protected class WSLCommandRun implements IWSLCommandDefinition {
 
 		public void execute(WSLScript script, String arguments) throws InterruptedException {
-			script.getSFClient().runScript(arguments);
+			ScriptRegistry.getRegistry(script.getClient().getViewer()).runScript(arguments);
 		}
 	}
 
@@ -513,7 +513,7 @@ public class WSLScriptCommands {
 				if(vital == null)
 					vital = var;
 
-				script.setGlobalVariable(var, script.getSFClient().getVital(vital));
+				script.setGlobalVariable(var, script.getClient().getProperty(vital).get());
 			} else {
 				script.scriptError("Invalid arguments to random");
 			}
@@ -532,7 +532,7 @@ public class WSLScriptCommands {
 				if(streamName == null)
 					streamName = var;
 
-				IStream stream = script.getSFClient().getStream(streamName);
+				IStream stream = script.getClient().getStream(streamName);
 				if(stream == null)
 					script.scriptWarning("Stream \"" + streamName + "\" does not exist.");
 				else
@@ -574,7 +574,7 @@ public class WSLScriptCommands {
 				
 				boolean status = false;
 				for(Map.Entry<StatusType, Boolean> statusEntry
-						: script.getSFClient().getCharacterStatus().getStatus().entrySet()) {
+						: script.getClient().getCharacterStatus().getStatus().entrySet()) {
 					if(statusEntry.getKey().name().equalsIgnoreCase(statusName)) {
 						status = statusEntry.getValue();
 						break;
@@ -599,9 +599,9 @@ public class WSLScriptCommands {
 				if(componentName == null)
 					componentName = var;
 
-				IProperty<String> component = script.getSFClient().getComponent(componentName);
+				String component = script.getClient().getComponent(componentName);
 				if(component != null)
-					script.setGlobalVariable(var, component.get());
+					script.setGlobalVariable(var, component);
 				else
 					script.scriptDebug(0, "Component (" + componentName + ") does not exist.");
 			} else {

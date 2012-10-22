@@ -91,7 +91,7 @@ public class WarlockEntry {
 	// returns whether we processed the key or not.
 	protected boolean processKey(int keyCode, int stateMask, char character) {
 		//System.out.println("got char \"" + e.character + "\"");
-		IMacro macro = MacroConfigurationProvider.getProvider(viewer.getWarlockClient().getClientSettings()).getMacro(MacroRegistry.instance().getKeyString(keyCode, stateMask));
+		IMacro macro = MacroConfigurationProvider.getProvider(viewer.getClient().getClientSettings()).getMacro(MacroRegistry.instance().getKeyString(keyCode, stateMask));
 		if(macro == null)
 			macro = MacroRegistry.instance().getMacro(keyCode, stateMask);
 		
@@ -136,7 +136,7 @@ public class WarlockEntry {
 	
 	public class KeyEventListener implements KeyListener {
 		public void keyPressed(KeyEvent e) {
-			if(!e.doit || viewer.getWarlockClient() != GameView.getGameViewInFocus().getWarlockClient())
+			if(!e.doit || viewer.getClient() != GameView.getGameViewInFocus().getClient())
 				return;
 			if(processKey(e.keyCode, e.stateMask, e.character))
 				e.doit = false;
@@ -168,7 +168,7 @@ public class WarlockEntry {
 	}
 	
 	private void search() {
-		ICommand foundCommand = viewer.getWarlockClient().getCommandHistory().search(searchText.toString());
+		ICommand foundCommand = viewer.getClient().getCommandHistory().search(searchText.toString());
 		if(foundCommand != null) {
 			searchCommand = foundCommand.getCommand();
 		}
@@ -191,7 +191,7 @@ public class WarlockEntry {
 	}
 	
 	public void prevCommand() {
-		ICommand prevCommand = viewer.getWarlockClient().getCommandHistory().prev();
+		ICommand prevCommand = viewer.getClient().getCommandHistory().prev();
 		
 		if(prevCommand != null)
 			setText(prevCommand.getCommand());
@@ -200,7 +200,7 @@ public class WarlockEntry {
 	}
 	
 	public void nextCommand() {
-		ICommand nextCommand = viewer.getWarlockClient().getCommandHistory().next();
+		ICommand nextCommand = viewer.getClient().getCommandHistory().next();
 		if(nextCommand != null) {
 			setText(nextCommand.getCommand());
 		} else {
@@ -210,7 +210,7 @@ public class WarlockEntry {
 	
 	public void searchHistory() {
 		if(searchMode) {
-			ICommand foundCommand = viewer.getWarlockClient().getCommandHistory().searchBefore(searchText.toString());
+			ICommand foundCommand = viewer.getClient().getCommandHistory().searchBefore(searchText.toString());
 			if(foundCommand != null) {
 				searchCommand = foundCommand.getCommand();
 			}
@@ -234,24 +234,24 @@ public class WarlockEntry {
 			text = widget.getText();
 		}
 		ICommand command = new Command(text);
-		viewer.getWarlockClient().send(command);
-		viewer.getWarlockClient().getCommandHistory().addCommand(command);
-		viewer.getWarlockClient().getCommandHistory().resetPosition();
+		viewer.send(command);
+		viewer.getClient().getCommandHistory().addCommand(command);
+		viewer.getClient().getCommandHistory().resetPosition();
 		setText("");
 	}
 	
 	public void repeatLastCommand() {
-		if (viewer.getWarlockClient().getCommandHistory().size() >= 1) {
-			ICommand command = viewer.getWarlockClient().getCommandHistory().getLastCommand();
-			viewer.getWarlockClient().send(command);
+		if (viewer.getClient().getCommandHistory().size() >= 1) {
+			ICommand command = viewer.getClient().getCommandHistory().getLastCommand();
+			viewer.send(command);
 		}
 	}
 	
 	public void repeatSecondToLastCommand() {
-		if (viewer.getWarlockClient().getCommandHistory().size() >= 2)
+		if (viewer.getClient().getCommandHistory().size() >= 2)
 		{
-			ICommand command = viewer.getWarlockClient().getCommandHistory().getCommandAt(1);
-			viewer.getWarlockClient().send(command);
+			ICommand command = viewer.getClient().getCommandHistory().getCommandAt(1);
+			viewer.send(command);
 		}
 	}
 }

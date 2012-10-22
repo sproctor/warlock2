@@ -144,8 +144,8 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 			// Check to see if there is an open gameView, and if it's connected.
 			// If it is, open a new one.
 			if (gameView == null || !(gameView instanceof StormFrontGameView) 
-					|| gameView.getWarlockClient() == null || gameView.getWarlockClient().getConnection() == null 
-					|| gameView.getWarlockClient().getConnection().isConnected()) {
+					|| gameView.getClient() == null || gameView.getClient().getConnection() == null 
+					|| gameView.getClient().getConnection().isConnected()) {
 				gameView = LoginUtil.connectAndOpenGameView(loginProperties, profile.getName());
 				gameView.setProfile(profile);
 			} else {

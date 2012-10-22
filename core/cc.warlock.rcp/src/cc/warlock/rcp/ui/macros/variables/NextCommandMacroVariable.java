@@ -40,7 +40,7 @@ public class NextCommandMacroVariable implements IMacroVariable {
 	}
 
 	public String getValue(IWarlockClientViewer context) {
-		IWarlockClient client = context.getWarlockClient();
+		IWarlockClient client = context.getClient();
 		ICommand command = client.getCommandHistory().next();
 		
 		if(command != null) {

@@ -25,10 +25,10 @@
 package cc.warlock.core.stormfront.internal;
 
 import cc.warlock.core.client.IProperty;
+import cc.warlock.core.client.IWarlockDialog;
+import cc.warlock.core.client.internal.WarlockProgressBar;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.client.IStormFrontDialogMessage;
-import cc.warlock.core.stormfront.client.StormFrontProgressBar;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 
@@ -62,9 +62,9 @@ public class ProgressBarTagHandler extends BaseTagHandler {
     	String height = attributes.getValue("height");
 
 		IStormFrontClient client = handler.getClient();
-		IProperty<IStormFrontDialogMessage> dialog = client.getDialog(parent.id);
-		dialog.set(new StormFrontProgressBar(id, text, value, left, top, width, height));
+		IProperty<IWarlockDialog> dialog = client.getDialog(parent.id);
+		dialog.set(new WarlockProgressBar(id, text, value, left, top, width, height));
 		
-		client.setVital(id, value);
+		client.setProperty(id, value);
 	}
 }

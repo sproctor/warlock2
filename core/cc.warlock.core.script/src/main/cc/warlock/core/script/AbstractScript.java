@@ -111,7 +111,7 @@ public abstract class AbstractScript implements IScript {
 	}
 	
 	public IWarlockClient getClient() {
-		return viewer.getWarlockClient();
+		return viewer.getClient();
 	}
 	
 	public IWarlockClientViewer getViewer() {

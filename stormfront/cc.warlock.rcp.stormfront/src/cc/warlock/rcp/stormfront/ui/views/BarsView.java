@@ -41,8 +41,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.client.IStormFrontDialogMessage;
+import cc.warlock.core.client.IWarlockDialog;
 import cc.warlock.rcp.stormfront.ui.StormFrontDialogControl;
 import cc.warlock.rcp.ui.WarlockProgressBar;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
@@ -69,15 +68,15 @@ public class BarsView extends ViewPart {
 	protected WarlockProgressBar roundtime, roundtime2, casttime;
 	protected StormFrontDialogControl minivitals;
 	
-	protected HashMap<IStormFrontClient, SWTPropertyListener<Integer>> rtListeners =
-		new HashMap<IStormFrontClient, SWTPropertyListener<Integer>>();
-	protected HashMap<IStormFrontClient, SWTPropertyListener<Integer>> ctListeners =
-		new HashMap<IStormFrontClient, SWTPropertyListener<Integer>>();
-	protected HashMap<IStormFrontClient, SWTPropertyListener<IStormFrontDialogMessage>> mvListeners =
-		new HashMap<IStormFrontClient, SWTPropertyListener<IStormFrontDialogMessage>>();
+	protected HashMap<IWarlockClient, SWTPropertyListener<Integer>> rtListeners =
+		new HashMap<IWarlockClient, SWTPropertyListener<Integer>>();
+	protected HashMap<IWarlockClient, SWTPropertyListener<Integer>> ctListeners =
+		new HashMap<IWarlockClient, SWTPropertyListener<Integer>>();
+	protected HashMap<IWarlockClient, SWTPropertyListener<IWarlockDialog>> mvListeners =
+		new HashMap<IWarlockClient, SWTPropertyListener<IWarlockDialog>>();
 
-	protected IStormFrontClient activeClient;
-	protected ArrayList<IStormFrontClient> clients = new ArrayList<IStormFrontClient>();
+	protected IWarlockClient activeClient;
+	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
 	
 	public BarsView() {
 		instance = this;
@@ -92,7 +91,7 @@ public class BarsView extends ViewPart {
 		});
 	}
 
-	protected void setActiveClient (IStormFrontClient client)
+	protected void setActiveClient (IWarlockClient client)
 	{
 		if (client == null) return;
 		
@@ -102,16 +101,16 @@ public class BarsView extends ViewPart {
 		{
 			SWTPropertyListener<Integer> rtListener =
 				new SWTPropertyListener<Integer>(new RoundtimeListener(client));
-			client.getRoundtime().addListener(rtListener);
+			client.getTimer("roundtime").getProperty().addListener(rtListener);
 			rtListeners.put(client, rtListener);
 			
 			SWTPropertyListener<Integer> ctListener =
 				new SWTPropertyListener<Integer>(new CasttimeListener(client));
-			client.getCasttime().addListener(ctListener);
+			client.getTimer("casttime").getProperty().addListener(ctListener);
 			ctListeners.put(client, ctListener);
 			
-			SWTPropertyListener<IStormFrontDialogMessage> mvListener =
-				new SWTPropertyListener<IStormFrontDialogMessage>(
+			SWTPropertyListener<IWarlockDialog> mvListener =
+				new SWTPropertyListener<IWarlockDialog>(
 						new MinivitalsListener(minivitals, client));
 			client.getDialog("minivitals").addListener(mvListener);
 			mvListeners.put(client, mvListener);
@@ -119,8 +118,8 @@ public class BarsView extends ViewPart {
 			clients.add(client);
 			
 		} else {
-			rtListeners.get(client).propertyChanged(client.getRoundtime().get());
-			ctListeners.get(client).propertyChanged(client.getCasttime().get());
+			rtListeners.get(client).propertyChanged(client.getTimer("roundtime").getValue());
+			ctListeners.get(client).propertyChanged(client.getTimer("casttime").getValue());
 		}
 	}
 	
@@ -193,7 +192,7 @@ public class BarsView extends ViewPart {
 	
 	protected void gameViewFocused (StormFrontGameView gameView)
 	{
-		setActiveClient(gameView.getStormFrontClient());
+		setActiveClient(gameView.getClient());
 	}
 	
 	/* (non-Javadoc)
@@ -204,16 +203,16 @@ public class BarsView extends ViewPart {
 
 	}
 	
-	private class MinivitalsListener implements IPropertyListener<IStormFrontDialogMessage> {
+	private class MinivitalsListener implements IPropertyListener<IWarlockDialog> {
 		private StormFrontDialogControl control;
-		private IStormFrontClient client;
+		private IWarlockClient client;
 		
-		public MinivitalsListener(StormFrontDialogControl control, IStormFrontClient client) {
+		public MinivitalsListener(StormFrontDialogControl control, IWarlockClient client) {
 			this.control = control;
 			this.client = client;
 		}
 		
-		public void propertyChanged(IStormFrontDialogMessage msg) {
+		public void propertyChanged(IWarlockDialog msg) {
 			if(activeClient == client)
 				control.sendMessage(msg);
 		}
@@ -222,9 +221,9 @@ public class BarsView extends ViewPart {
 	
 	private class RoundtimeListener implements IPropertyListener<Integer> {
 		int roundtimeLength = -1;
-		private IStormFrontClient client;
+		private IWarlockClient client;
 
-		public RoundtimeListener(IStormFrontClient client) {
+		public RoundtimeListener(IWarlockClient client) {
 			this.client = client;
 		}
 		
@@ -239,9 +238,10 @@ public class BarsView extends ViewPart {
 				roundtime.setLabel("no roundtime");
 				roundtime2.setLabel("no roundtime");
 			} else {
-				if (roundtimeLength != activeClient.getRoundtimeLength())
+				int length = activeClient.getTimer("roundtime").getLength();
+				if (roundtimeLength != length)
 				{
-					roundtimeLength = activeClient.getRoundtimeLength();
+					roundtimeLength = length;
 					roundtime.setMaximum(roundtimeLength * 1000);
 					roundtime2.setMaximum(roundtimeLength * 1000);
 					roundtime.setMinimum(0);
@@ -257,9 +257,9 @@ public class BarsView extends ViewPart {
 	
 	private class CasttimeListener implements IPropertyListener<Integer> {
 		int casttimeLength = -1;
-		private IStormFrontClient client;
+		private IWarlockClient client;
 		
-		public CasttimeListener(IStormFrontClient client) {
+		public CasttimeListener(IWarlockClient client) {
 			this.client = client;
 		}
 
@@ -273,9 +273,10 @@ public class BarsView extends ViewPart {
 				casttime.setLabel("no casttime");
 				rtPageBook.showPage(rtBarWOCT);
 			} else {
-				if (casttimeLength != activeClient.getCasttimeLength())
+				int length = activeClient.getTimer("casttime").getLength();
+				if (casttimeLength != length)
 				{
-					casttimeLength = activeClient.getCasttimeLength();
+					casttimeLength = length;
 					casttime.setMaximum(casttimeLength * 1000);
 					casttime.setMinimum(0);
 				}

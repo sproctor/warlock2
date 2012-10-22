@@ -151,7 +151,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		entry.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 		GameView view = GameView.getGameViewInFocus();
 		if(view != null) {
-			setClient(view.getWarlockClient());
+			setClient(view.getClient());
 		}
 	}
 	
@@ -190,7 +190,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	}
 	
 	public void gameViewFocused(GameView gameView) {
-		setClient(gameView.getWarlockClient());
+		setClient(gameView.getClient());
 	}
 	
 	public WarlockText getTextForClient(IWarlockClient client) {

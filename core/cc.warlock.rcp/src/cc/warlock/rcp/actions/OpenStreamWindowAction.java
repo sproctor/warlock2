@@ -50,7 +50,7 @@ public class OpenStreamWindowAction extends Action {
 		
 		GameView inFocus = GameView.getGameViewInFocus();
 		if (inFocus != null) {
-			streamView.setClient(inFocus.getWarlockClient());
+			streamView.setClient(inFocus.getClient());
 		}
 		
 		setChecked(true);

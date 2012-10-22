@@ -93,7 +93,7 @@ public class CompDefTagHandler extends DefaultTagHandler {
 		
 		if(id.equals("room objs")) {
 			int count = handler.getMonsterCount();
-			handler.getClient().getMonsterCount().set(count);
+			handler.getClient().setProperty("monstercount", String.valueOf(count));
 		}
 		
 		handler.getClient().setComponent(id, buffer.toString(), handler.getCurrentStream());

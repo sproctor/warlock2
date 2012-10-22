@@ -141,7 +141,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		
 		GameView inFocus = GameView.getGameViewInFocus();
 		if (inFocus != null) {
-			setClient(inFocus.getWarlockClient());
+			setClient(inFocus.getClient());
 		}
 	}
 	
@@ -172,7 +172,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 
 	public void gameViewFocused(GameView gameView) {
-		setClient(gameView.getWarlockClient());
+		setClient(gameView.getClient());
 	}
 	
 	public static Collection<StreamView> getOpenViews ()

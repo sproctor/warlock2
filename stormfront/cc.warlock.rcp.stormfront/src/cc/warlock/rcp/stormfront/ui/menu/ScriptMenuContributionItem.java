@@ -1,26 +1,28 @@
 package cc.warlock.rcp.stormfront.ui.menu;
 
-import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.script.IScript;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.rcp.menu.SubMenuContributionItem;
+import java.util.ArrayList;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.actions.CompoundContributionItem;
-import java.util.ArrayList;
+
+import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.script.IScript;
+import cc.warlock.core.script.internal.ScriptRegistry;
+import cc.warlock.rcp.menu.SubMenuContributionItem;
 
 public class ScriptMenuContributionItem extends CompoundContributionItem {
 	
 	// A class to retrieve the running scripts from a client.
 	protected class CharacterContributionItem extends SubMenuContributionItem {
 	
-		private cc.warlock.core.stormfront.client.IStormFrontClient m_Client = null;
+		private IWarlockClientViewer viewer;
 		
-		public CharacterContributionItem(IStormFrontClient client) {
-			super(client.getCharacterName());
-			m_Client = client;
+		public CharacterContributionItem(IWarlockClientViewer viewer) {
+			super(viewer.getClient().getCharacterName());
+			this.viewer = viewer;
 		}
 		
 		@Override
@@ -29,7 +31,7 @@ public class ScriptMenuContributionItem extends CompoundContributionItem {
 			ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
 
 			
-			for(IScript script : m_Client.getRunningScripts()) 
+			for(IScript script : ScriptRegistry.getRegistry(viewer).getRunningScripts()) 
 			{
 				IContributionItem newItem = new ScriptContributionItem(script);
 				items.add(newItem);
@@ -53,10 +55,8 @@ public class ScriptMenuContributionItem extends CompoundContributionItem {
 		
 		java.util.List<IWarlockClient> clients = WarlockClientRegistry.getActiveClients();
 		for(IWarlockClient client : clients) {
-			if (client instanceof IStormFrontClient) {
-				CharacterContributionItem newCharItem = new CharacterContributionItem((IStormFrontClient)client);
-				items.add(newCharItem);
-			}
+			CharacterContributionItem newCharItem = new CharacterContributionItem(client.getViewer());
+			items.add(newCharItem);
 		}
 
 		return items.toArray(new IContributionItem[items.size()]); 

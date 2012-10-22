@@ -37,9 +37,7 @@ import java.util.Map;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
@@ -89,8 +87,8 @@ public class ServerSettings implements Comparable<ServerSettings>
 	{
 		this.client = client;
 		
-		scriptProvider = new ServerScriptProvider(client);
-		ScriptEngineRegistry.addScriptProvider(scriptProvider);
+		//scriptProvider = new ServerScriptProvider(client);
+		//ScriptEngineRegistry.addScriptProvider(scriptProvider);
 	}
 	
 	public static StormFrontDocument getDocument (String playerId)
@@ -284,7 +282,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 						ServerScript script = new ServerScript(this, sElement);
 						scripts.put(name, script);
 						
-						scriptProvider.scriptContentsUpdated(script);
+						//scriptProvider.scriptContentsUpdated(script);
 					}
 				}
 			}

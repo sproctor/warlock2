@@ -21,23 +21,10 @@
  */
 package cc.warlock.core.stormfront.settings.server;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.script.IScript;
-import cc.warlock.core.script.IScriptEngine;
-import cc.warlock.core.script.IScriptInfo;
-import cc.warlock.core.script.IScriptProvider;
-import cc.warlock.core.script.ScriptEngineRegistry;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
-
-public class ServerScriptProvider implements IScriptProvider
+public class ServerScriptProvider //implements IScriptProvider
 {
-	protected HashMap<String, ServerScriptInfo> scripts = new HashMap<String, ServerScriptInfo>();
+	/*protected HashMap<String, ServerScriptInfo> scripts = new HashMap<String, ServerScriptInfo>();
 	protected IStormFrontClient client;
 	
 	protected class ServerScriptInfo implements IServerScriptInfo
@@ -107,5 +94,5 @@ public class ServerScriptProvider implements IScriptProvider
 			
 			scripts.put(script.getName(), info);
 		}
-	}
+	}*/
 }

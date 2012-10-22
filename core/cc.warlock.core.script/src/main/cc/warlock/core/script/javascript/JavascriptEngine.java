@@ -182,19 +182,19 @@ public class JavascriptEngine implements IScriptEngine {
 					if (!(e.getCause() instanceof Error))
 					{
 						e.printStackTrace();
-						viewer.getWarlockClient().getDefaultStream().echo("[JS " + e.details() + "  Script: " + script.getName() + "  Line: " + e.lineNumber() + "]\n");
+						viewer.getClient().getDefaultStream().echo("[JS " + e.details() + "  Script: " + script.getName() + "  Line: " + e.lineNumber() + "]\n");
 					}
 				}
 				catch (RhinoException e) {
 					e.printStackTrace();
-					viewer.getWarlockClient().getDefaultStream().echo("[JS " + e.details() + "  Script: " + script.getName() + "  Line: " + e.lineNumber() + "]\n");
+					viewer.getClient().getDefaultStream().echo("[JS " + e.details() + "  Script: " + script.getName() + "  Line: " + e.lineNumber() + "]\n");
 				}
 				catch(StopException e) {
 					// normal exit, do nothing
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					viewer.getWarlockClient().getDefaultStream().echo("[unhandled exception in script: " + script.getName() + "]\n");
+					viewer.getClient().getDefaultStream().echo("[unhandled exception in script: " + script.getName() + "]\n");
 				}
 				finally {
 					script.getCommands().removeThread(Thread.currentThread());

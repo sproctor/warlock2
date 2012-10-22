@@ -193,7 +193,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	}
 	
 	public IWarlockClient getClient() {
-		return viewer.getWarlockClient();
+		return viewer.getClient();
 	}
 		
 	public void streamCleared(IStream stream) {}

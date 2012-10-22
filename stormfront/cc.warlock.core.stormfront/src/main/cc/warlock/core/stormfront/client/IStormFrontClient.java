@@ -27,16 +27,8 @@
  */
 package cc.warlock.core.stormfront.client;
 
-import java.util.Collection;
-
-import cc.warlock.core.client.ICharacterStatus;
-import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IRoomListener;
-import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.script.IScript;
-import cc.warlock.core.script.IScriptListener;
 
 /**
  * @author Marshall
@@ -51,118 +43,9 @@ public interface IStormFrontClient extends IWarlockClient, IRoomListener
 	
 	public void setPlayerId(String playerId);
 	
-	/**
-	 * @return The gameCode of the current player
-	 */
-	public String getGameCode();
-	
-	/**
-	 * @return The roundtime property
-	 */
-	public IProperty<Integer> getRoundtime();
-	
-	/**
-	 * @return The casttime property
-	 */
-	public IProperty<Integer> getCasttime();
-	
-	/**
-	 * Set up a roundtime to start with the next time sync.
-	 * @param roundtimeEnd The end of the roundtime as sent from the server.
-	 */
-	public void setupRoundtime(Long roundtimeEnd);
-	
-	/**
-	 * Set up a casttime to start with the next time sync.
-	 * @param casttimeEnd The end of the casttime as sent from the server.
-	 */
-	public void setupCasttime(Long casttimeEnd);
-	
-	/**
-	 * Sync the current time as perceived by the server.
-	 * @param now Time the server thinks it is.
-	 */
-	public void syncTime(Long now);
-	
-	/**
-	 * Wait out any active roundtimes.
-	 */
-	public void waitForRoundtime(double delay) throws InterruptedException;
-	
-	/**
-	 * Wait out any active casttimes.
-	 */
-	public void waitForCasttime(double delay) throws InterruptedException;
-	
-	public int getRoundtimeLength();
-	
-	public int getCasttimeLength();
-	
-	/**
-	 * @return The vital associated with id
-	 */
-	public String getVital(String id);
-	
-	public String setVital(String id, String value);
-
-	/**
-	 * @return The left hand property
-	 */
-	public IProperty<String> getLeftHand();
-	
-	/**
-	 * @return The right hand property
-	 */
-	public IProperty<String> getRightHand();
-	
-	/**
-	 * @return The current spell property
-	 */
-	public IProperty<String> getCurrentSpell();
-	
-	/**
-	 * @return The current mounter count property
-	 */
-	public IProperty<Integer> getMonsterCount();
-	
-	/**
-	 * @return The associated SFDialog
-	 */
-	public IProperty<IStormFrontDialogMessage> getDialog(String id);
-	
-	/**
-	 * @return The character status
-	 */
-	public ICharacterStatus getCharacterStatus();
-		
-	/**
-	 * @return A list of currently running scripts
-	 */
-	public Collection<IScript> getRunningScripts();
-	
-	/**
-	 * Add a script listener
-	 * @param listener
-	 */
-	public void addScriptListener (IScriptListener listener);
-	
-	public void removeScriptListener (IScriptListener listener);
-	
-	/**
-	 * @param componentName
-	 * @return The component with the passed in name
-	 */
-	public IProperty<String> getComponent(String componentName);
-	
-	public void setComponent (String componentName, String value, IStream stream);
-	
-	public void updateComponent(String name, WarlockString value);
-	
 	public void loadCmdlist();
 	
 	public String getCommand(String coord);
-	
-	public void runScript(String command);
 	
 	public void launchURL(String url);
 	

@@ -23,7 +23,6 @@ package cc.warlock.rcp.stormfront.adapters;
 
 import java.net.URL;
 
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewer;
 
@@ -89,10 +88,6 @@ public class SWTStormFrontClientViewer extends SWTWarlockClientViewer implements
 		public void run() {
 			sfViewer.appendImage(url);
 		}
-	}
-	
-	public IStormFrontClient getStormFrontClient() {
-		return sfViewer.getStormFrontClient();
 	}
 
 	public void startedDownloadingServerSettings() {

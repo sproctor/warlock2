@@ -89,7 +89,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.StormFrontGameView";
 	
-	protected IStormFrontClient sfClient;
 	protected StormFrontStatus status;
 	protected WarlockPopupAction reconnectPopup;
 	private WarlockCompass compass;
@@ -121,7 +120,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			setReconnectProfile(profile);
 			showPopup(reconnectPopup);
 		} else {
-			String characterName = client != null ? client.getCharacterName() : "No Character";
+			String characterName = getClient() != null ? getClient().getCharacterName() : "No Character";
 			setNoReconnectProfile(characterName);
 		}
 	}
@@ -132,7 +131,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		if (profile != null) {
 			setReconnectProfile(profile);
 		} else {
-			String characterName = client != null ? client.getCharacterName() : "No Character";
+			String characterName = getClient() != null ? getClient().getCharacterName() : "No Character";
 			setNoReconnectProfile(characterName);
 		}
 	}
@@ -298,14 +297,12 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 //		reconnectPopup.setVisible(false);
 		if (client instanceof IStormFrontClient)
 		{
-			sfClient = (IStormFrontClient) client;
-			
 			if (status != null) {
-				status.setActiveClient(sfClient);
+				status.setActiveClient(client);
 				// textBorder.setActiveClient(sfClient);
 			}
 			
-			IClientSettings settings = sfClient.getClientSettings();
+			IClientSettings settings = client.getClientSettings();
 			if(settings != null)
 				loadClientSettings(settings);
 			
@@ -318,7 +315,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 				public void clientRemoved(IWarlockClient client) {}
 				@Override
 				public void clientDisconnected(IWarlockClient client) {
-					if (client == StormFrontGameView.this.client) {
+					if (client == getClient()) {
 						Display.getDefault().asyncExec(new Runnable() {
 							public void run () {
 								StormFrontGameView.this.disconnected();
@@ -345,8 +342,8 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	private Button reconnect;
 	
 	public void clientSettingsLoaded(IWarlockClient client) {
-		if(client == sfClient) {
-			loadClientSettings(sfClient.getClientSettings());
+		if(client == getClient()) {
+			loadClientSettings(client.getClientSettings());
 		}
 	}
 	
@@ -354,7 +351,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	{	
 		IStyleProvider styleProvider = new StormFrontStyleProvider(settings);
 		
-		StyleProviders.setStyleProvider(client, styleProvider);
+		StyleProviders.setStyleProvider(getClient(), styleProvider);
 		
 		/*sfClient.getCharacterName().addListener(new IPropertyListener<String>() {
 			public void propertyChanged(String value) {
@@ -403,7 +400,7 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		Caret newCaret = createCaret(1, ColorUtil.warlockColorToColor(entryBarColor.isDefault() ? fg : entryBarColor));
 		entry.getWidget().setCaret(newCaret);
 		
-		streamText.setClient(sfClient);
+		streamText.setClient(getClient());
 		streamText.setBackground(ColorUtil.warlockColorToColor(bg));
 		streamText.setForeground(ColorUtil.warlockColorToColor(fg));
 		streamText.getTextWidget().redraw();
@@ -451,13 +448,9 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	public Object getAdapter(Class adapter) {
 		if (IStormFrontClient.class.equals(adapter))
 		{
-			return client;
+			return getClient();
 		}
 		return super.getAdapter(adapter);
-	}
-	
-	public IStormFrontClient getStormFrontClient() {
-		return sfClient;
 	}
 
 	public void clientActivated(IWarlockClient client) {}
@@ -470,10 +463,10 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	
 	protected void setViewTitle(String title) {
 		String prefix = "";
-		String game = sfClient.getGameCode();
+		String game = getClient().getGameCode();
 		if(game != null)
 			prefix += "[" + game + "] ";
-		String name = client.getCharacterName();
+		String name = getClient().getCharacterName();
 		if(name != null)
 			prefix += name + " - ";
 		this.setPartName(prefix + title);

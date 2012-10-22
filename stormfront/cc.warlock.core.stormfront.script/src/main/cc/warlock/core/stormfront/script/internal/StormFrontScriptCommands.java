@@ -27,12 +27,10 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import cc.warlock.core.client.IStream;
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.internal.ScriptCommands;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.script.IStormFrontScriptCommands;
 
 public class StormFrontScriptCommands extends ScriptCommands implements IStormFrontScriptCommands {
@@ -66,14 +64,6 @@ public class StormFrontScriptCommands extends ScriptCommands implements IStormFr
 		this.script = script;
 	}
 	
-	public IStormFrontClient getStormFrontClient() {
-		IWarlockClient client = viewer.getWarlockClient();
-		// TODO handle this more appropriately.
-		if(!(client instanceof IStormFrontClient))
-			return null;
-		return (IStormFrontClient)client;
-	}
-	
 	@Override
 	public void put(String text) throws InterruptedException {
 		if(typeAhead >= 2)
@@ -93,9 +83,9 @@ public class StormFrontScriptCommands extends ScriptCommands implements IStormFr
 		super.streamPrompted(stream, prompt);
 	}
 	
-	public void waitForRoundtime(double delay) throws InterruptedException
+	public void waitForRoundtime() throws InterruptedException
 	{
-		getStormFrontClient().waitForRoundtime(delay);
+		getClient().getTimer("roundtime").waitForEnd();
 	}
 	
 	private class ScriptActionThread extends Thread {

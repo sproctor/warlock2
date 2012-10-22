@@ -35,17 +35,17 @@ import org.eclipse.swt.widgets.Label;
 
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IPropertyListener;
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
 
 public class StormFrontStatus implements IPropertyListener<String> {
 
 	protected Label[] statusLabels = new Label[4];
-	protected IStormFrontClient activeClient;
-	protected ArrayList<IStormFrontClient> clients = new ArrayList<IStormFrontClient>();
+	protected IWarlockClient activeClient;
+	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
 	protected SWTPropertyListener<String> wrapper = new SWTPropertyListener<String>(this);
 	protected DecorationOverlayIcon multipleStatus;
 	protected Image multipleStatusImage;
@@ -201,7 +201,7 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		setColors(fg, bg);
 	}
 	
-	public void setActiveClient (IStormFrontClient client)
+	public void setActiveClient (IWarlockClient client)
 	{
 		if (client == null) return;
 		

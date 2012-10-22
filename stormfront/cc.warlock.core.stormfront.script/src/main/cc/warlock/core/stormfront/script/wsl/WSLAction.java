@@ -45,12 +45,13 @@ public class WSLAction extends WSLAbstractCommand {
 			script.setVariablesFromMatch(match);
 			try {
 				if(!command.isInstant())
-					script.scriptCommands.waitForRoundtime(script.delay);
+					script.scriptCommands.waitForRoundtime();
 				while(script.scriptCommands.isSuspended()) {
 					script.scriptCommands.waitForResume();
 					if(!command.isInstant())
-						script.scriptCommands.waitForRoundtime(script.delay);
+						script.scriptCommands.waitForRoundtime();
 				}
+				Thread.sleep((long)(script.delay * 1000));
 				command.execute();
 			} catch(InterruptedException e) {
 				// TODO - what to do here?

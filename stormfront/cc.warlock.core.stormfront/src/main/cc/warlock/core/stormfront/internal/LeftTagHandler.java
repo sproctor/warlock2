@@ -52,7 +52,7 @@ public class LeftTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().getLeftHand().set(leftHandText.toString());
+		handler.getClient().setProperty("left", leftHandText.toString());
 		
 		leftHandText = null;
 	}

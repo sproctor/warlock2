@@ -28,8 +28,6 @@ import cc.warlock.core.client.IWarlockClientViewer;
 
 public interface IStormFrontClientViewer extends IWarlockClientViewer {
 	
-	public IStormFrontClient getStormFrontClient ();
-	
 	public void startedDownloadingServerSettings();
 	public void receivedServerSetting(String setting);
 	public void finishedDownloadingServerSettings();

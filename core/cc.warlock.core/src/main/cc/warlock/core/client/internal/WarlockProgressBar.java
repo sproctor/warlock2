@@ -1,15 +1,18 @@
-package cc.warlock.core.stormfront.client;
+package cc.warlock.core.client.internal;
 
-public class StormFrontProgressBar implements IStormFrontDialogMessage {
-	public String id;
-	public String text;
-	public String value;
-	public String left;
-	public String top;
-	public String width;
-	public String height;
+import cc.warlock.core.client.IWarlockDialog;
+
+
+public class WarlockProgressBar implements IWarlockDialog {
+	private String id;
+	private String text;
+	private String value;
+	private String left;
+	private String top;
+	private String width;
+	private String height;
 	
-	public StormFrontProgressBar(String id, String text, String value, String left, String top,
+	public WarlockProgressBar(String id, String text, String value, String left, String top,
 			String width, String height) {
 		this.id = id;
 		this.text = text;
@@ -38,6 +41,14 @@ public class StormFrontProgressBar implements IStormFrontDialogMessage {
 	
 	public int getHeight() {
 		return percentageToInt(height);
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public String getText() {
+		return text;
 	}
 	
 	private int percentageToInt(String number) {

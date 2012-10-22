@@ -48,6 +48,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.PageBook;
 
+import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
@@ -55,6 +56,8 @@ import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.script.configuration.ScriptConfiguration;
+import cc.warlock.core.script.internal.ScriptRegistry;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockEntry;
@@ -82,8 +85,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected WarlockEntry entry;
 	protected SWTWarlockClientViewer wrapper;
 	protected Composite entryComposite;
-	protected IWarlockClient client;
+	private IWarlockClient client;
 	protected Composite mainComposite;
+	private ScriptRegistry scriptRegistry;
 	
 	private Profile profile;
 	
@@ -102,6 +106,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		wrapper = new SWTWarlockClientViewer(this);
 		
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(this));
+		
+		scriptRegistry = new ScriptRegistry(this);
 	}
 	
 	public static void addGameViewFocusListener (IGameViewFocusListener listener)
@@ -320,7 +326,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		entry.getWidget().paste();
 	}
 	
-	public IWarlockClient getWarlockClient() {
+	public IWarlockClient getClient() {
 		return client;
 	}
 	
@@ -456,5 +462,20 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		if(stream == null)
 			return;
 		stream.clearText();
+	}
+	
+	public ScriptRegistry getScriptRegistry() {
+		return scriptRegistry;
+	}
+	
+	public void send(ICommand command) {
+		String scriptPrefix = ScriptConfiguration.instance().getScriptPrefix();
+		
+		if (command.getCommand().startsWith(scriptPrefix)){
+			ScriptRegistry registry = ScriptRegistry.getRegistry(this);
+			registry.runScript(command.getCommand().substring(scriptPrefix.length()));
+		} else {
+			getClient().send(command);
+		}
 	}
 }

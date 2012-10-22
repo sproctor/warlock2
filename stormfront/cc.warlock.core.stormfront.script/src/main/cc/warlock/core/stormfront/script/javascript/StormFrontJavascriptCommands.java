@@ -102,7 +102,7 @@ public class StormFrontJavascriptCommands extends JavascriptCommands
 		checkStop();
 		
 		try {
-			sfCommands.waitForRoundtime(0.0);
+			sfCommands.waitForRoundtime();
 		} catch(InterruptedException e) {
 			checkStop();
 		}
@@ -122,22 +122,22 @@ public class StormFrontJavascriptCommands extends JavascriptCommands
 	public void pause(double seconds) {
 		super.pause(seconds);
 		try {
-			sfCommands.waitForRoundtime(0.0);
+			sfCommands.waitForRoundtime();
 		} catch(InterruptedException e) {
 			checkStop();
 		}
 	}
 	
 	public String getComponent(String component) {
-		return sfCommands.getStormFrontClient().getComponent(component).get();
+		return sfCommands.getClient().getComponent(component);
 	}
 	
 	public String getVariable(String name) {
-		return sfCommands.getStormFrontClient().getVariable(name);
+		return sfCommands.getClient().getVariable(name);
 	}
 	
 	public String getVital(String name) {
-		return sfCommands.getStormFrontClient().getVital(name);
+		return sfCommands.getClient().getProperty(name).get();
 	}
 	
 	public void setVariable(String name, String value) {

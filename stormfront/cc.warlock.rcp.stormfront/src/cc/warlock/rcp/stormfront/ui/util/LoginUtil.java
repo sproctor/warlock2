@@ -98,9 +98,9 @@ public class LoginUtil {
 			if (!(view instanceof StormFrontGameView))
 				continue;
 
-			if (view.getWarlockClient() == null
-					|| view.getWarlockClient().getConnection() == null
-					|| !view.getWarlockClient().getConnection().isConnected()) {
+			if (view.getClient() == null
+					|| view.getClient().getConnection() == null
+					|| !view.getClient().getConnection().isConnected()) {
 				firstEmptyView = (StormFrontGameView) view;
 				break;
 			}

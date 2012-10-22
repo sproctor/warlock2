@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.ICompass;
@@ -42,9 +43,12 @@ import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockDialog;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.WarlockString;
+import cc.warlock.core.client.WarlockTimer;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.IClientSettings;
@@ -76,9 +80,18 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	protected ArrayList<Pair<String, IStreamListener>> potentialListeners = new ArrayList<Pair<String, IStreamListener>>();
 	private ArrayList<Collection<IWarlockHighlight>> highlightLists = null; // Highlights from scripts
 	private ArrayList<IWarlockHighlight> cachedHighlights = null;
+	private ICharacterStatus status;
+	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
+	private HashMap<String, String> components = new HashMap<String, String>();
+	private HashMap<String, IStream> componentStreams = new HashMap<String, IStream>();
+	private HashMap<String, Property<IWarlockDialog>> dialogs =
+			new HashMap<String, Property<IWarlockDialog>>();
+	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
+		
+		status = new CharacterStatus(this);
 		
 		listener = new WarlockClientListener() {
 			@Override
@@ -310,4 +323,77 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	public IWarlockStyle getNamedStyle(String id) {
 		return PresetStyleConfigurationProvider.getProvider(getClientSettings()).getStyle(id);
 	}
+	
+	public ICharacterStatus getCharacterStatus() {
+		return status;
+	}
+	
+	public WarlockTimer getTimer(String name) {
+		WarlockTimer timer = timers.get(name);
+		if(timer == null) {
+			timer = new WarlockTimer();
+			timers.put(name, timer);
+		}
+		
+		return timer;
+	}
+	
+	public void syncTime(Long time) {
+		for(WarlockTimer timer : timers.values()) {
+			timer.sync(time);
+		}
+	}
+	
+	public void setComponent (String componentName, String value, IStream stream) {
+		String name = componentName.toLowerCase();
+
+		components.put(name, value);
+		componentStreams.put(name, stream);
+	}
+	
+	public void updateComponent(String componentName, WarlockString value) {
+		String name = componentName.toLowerCase();
+
+		components.put(name, value.toString());
+		
+		IStream stream = componentStreams.get(name);
+		// FIXME: The streams store them in a case-senstive fashion.
+		if(stream != null)
+			stream.updateComponent(componentName, value);
+	}
+	
+	public String getComponent(String name) {
+		return components.get(name.toLowerCase());
+	}
+	
+	public Property<IWarlockDialog> getDialog(String id) {
+		Property<IWarlockDialog> dialog = dialogs.get(id);
+		
+		if(dialog == null) {
+			dialog = new Property<IWarlockDialog>();
+			dialogs.put(id, dialog);
+		}
+		
+		return dialog;
+	}
+	
+	public IProperty<String> getProperty(String name) {
+		IProperty<String> property = properties.get(name);
+		if(property == null) {
+			property = new Property<String>();
+			properties.put(name, property);
+		}
+		return property;
+	}
+	
+	public void setProperty(String name, IProperty<String> property) {
+		properties.put(name, property);
+	}
+	
+	public void setProperty(String name, String value) {
+		IProperty<String> property = getProperty(name);
+		property.set(value);
+	}
+	
+	abstract public String getGameCode();
 }

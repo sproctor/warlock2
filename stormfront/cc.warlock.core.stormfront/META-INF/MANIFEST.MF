@@ -5,8 +5,7 @@ Bundle-SymbolicName: cc.warlock.core.stormfront
 Bundle-Version: 2.0.0
 Bundle-Activator: cc.warlock.core.stormfront.StormFrontCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
- cc.warlock.core,
- cc.warlock.core.script
+ cc.warlock.core
 Eclipse-LazyStart: true
 Bundle-ClassPath: warlock2-stormfront-core.jar,
  warlock2-stormfront-core-eclipse.jar

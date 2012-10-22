@@ -57,7 +57,7 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(DebugView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
 				GameView inFocus = GameView.getGameViewInFocus();
 				if (inFocus != null) {
-					view.setClient(inFocus.getWarlockClient());
+					view.setClient(inFocus.getClient());
 				}
 				
 			} catch(Exception e) {
@@ -100,7 +100,7 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
 		try {
 			GameView gameView = GameView.getGameViewInFocus();
-			IWarlockClient client = gameView.getWarlockClient();
+			IWarlockClient client = gameView.getClient();
 			Collection<IStream> streams = client.getStreams();
 			for (IStream stream: streams) {
 				String location = StreamView.RIGHT_STREAM_PREFIX;

@@ -25,11 +25,11 @@ import java.util.HashMap;
 
 import org.mozilla.javascript.Scriptable;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.javascript.IJavascriptVariableProvider;
 import cc.warlock.core.script.javascript.JavascriptEngine;
 import cc.warlock.core.script.javascript.JavascriptScript;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.script.IStormFrontScriptCommands;
 
 public class StormFrontJavascriptVars implements IJavascriptVariableProvider {
@@ -46,25 +46,22 @@ public class StormFrontJavascriptVars implements IJavascriptVariableProvider {
 	}
 	
 	public void loadVariables(JavascriptScript script, Scriptable scope) {
-		if (script.getClient() instanceof IStormFrontClient)
-		{
-			IStormFrontClient sfClient = (IStormFrontClient) script.getClient();
-			
-			//overwrite the "script" variable with our big delegator
-			StormFrontJavascriptCommands commands = new StormFrontJavascriptCommands((IStormFrontScriptCommands)script.getCommands(), script);
-			scriptCommands.put(script, commands);
-			
-			scope.put("script", scope, commands);
-			scope.put("compass", scope, sfClient.getCompass());
-			scope.put("commandHistory", scope, sfClient.getCommandHistory());
-			
-			scope.put("roundtime", scope, new JavascriptProperty<Integer>(scope, sfClient.getRoundtime()));
-			scope.put("casttime", scope, new JavascriptProperty<Integer>(scope, sfClient.getCasttime()));
-			scope.put("leftHand", scope, new JavascriptProperty<String>(scope, sfClient.getLeftHand()));
-			scope.put("rightHand", scope, new JavascriptProperty<String>(scope, sfClient.getRightHand()));
-			scope.put("spell", scope, new JavascriptProperty<String>(scope, sfClient.getCurrentSpell()));
-			scope.put("monstercount", scope, new JavascriptProperty<Integer>(scope, sfClient.getMonsterCount()));
-		}
+		IWarlockClient client = script.getClient();
+
+		//overwrite the "script" variable with our big delegator
+		StormFrontJavascriptCommands commands = new StormFrontJavascriptCommands((IStormFrontScriptCommands)script.getCommands(), script);
+		scriptCommands.put(script, commands);
+
+		scope.put("script", scope, commands);
+		scope.put("compass", scope, client.getCompass());
+		scope.put("commandHistory", scope, client.getCommandHistory());
+
+		scope.put("roundtime", scope, new JavascriptProperty<Integer>(scope, client.getTimer("roundtime").getProperty()));
+		scope.put("casttime", scope, new JavascriptProperty<Integer>(scope, client.getTimer("casttime").getProperty()));
+		scope.put("leftHand", scope, new JavascriptProperty<String>(scope, client.getProperty("left")));
+		scope.put("rightHand", scope, new JavascriptProperty<String>(scope, client.getProperty("right")));
+		scope.put("spell", scope, new JavascriptProperty<String>(scope, client.getProperty("spell")));
+		scope.put("monstercount", scope, new JavascriptProperty<String>(scope, client.getProperty("monstercount")));
 	}
 	
 }
