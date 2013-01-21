@@ -80,7 +80,7 @@ public class WarlockTimer {
 		//}
 	}
 	
-	public void sync(long time) {
+	public synchronized void sync(long time) {
 		if(end == null)
 			return;
 		
