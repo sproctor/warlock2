@@ -28,6 +28,8 @@ import org.eclipse.jface.bindings.keys.SWTKeySupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -37,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Marshall Culpepper
  *
  */
-public class KeyStrokeText implements KeyListener {
+public class KeyStrokeText {
 	
 	protected Text keyText;
 	protected KeyStroke keyStroke;
@@ -51,7 +53,12 @@ public class KeyStrokeText implements KeyListener {
 	public KeyStrokeText (Composite parent, int style) {
 		keyText = new Text(parent, style);
 		keyText.setBackground(new Color(Display.getDefault(), 255, 255, 164));
-		keyText.addKeyListener(this);
+		keyText.addKeyListener(new KeyPressListener());
+		keyText.addTraverseListener(new TraverseListener() {
+			public void keyTraversed(TraverseEvent e) {
+				e.doit = false;
+			}
+		});
 	}
 	
 	protected void fireKeyStrokeLockEvent ()
@@ -66,40 +73,45 @@ public class KeyStrokeText implements KeyListener {
 	}
 	
 	protected boolean keyStrokeLocked = false;
-	public void keyPressed(KeyEvent e) {
-		KeyStroke keyStroke = KeyStroke.getInstance(e.stateMask, e.keyCode);
-		
-		String description = SWTKeySupport.getKeyFormatterForPlatform().format(keyStroke);
-		keyText.setText(description);
-		if (e.keyCode != SWT.CTRL && e.keyCode != SWT.ALT
-			&& e.keyCode != SWT.SHIFT && e.keyCode != SWT.COMMAND) {
-			
-			keyStrokeLocked = true;
-			this.keyStroke = keyStroke;
-			
-			fireKeyStrokeLockEvent();
-			
-		} else {
-			keyStrokeLocked = false;
-			
-			fireKeyStrokeLockEvent();
-		}
-	}
 	
-	public void keyReleased(KeyEvent e) {
-		if (!keyStrokeLocked) {
+	private class KeyPressListener implements KeyListener {
+		public void keyPressed(KeyEvent e) {
+			e.doit = false;
 			KeyStroke keyStroke = KeyStroke.getInstance(e.stateMask, e.keyCode);
-			if (e.keyCode == e.stateMask) {
-				keyStroke = this.keyStroke;
-			} else if ((e.stateMask & e.keyCode) > 0) {
-				int stateMask = e.stateMask;
-				stateMask ^= e.keyCode;
-				
-				keyStroke = KeyStroke.getInstance(stateMask, KeyStroke.NO_KEY);
-			}
-			
+
 			String description = SWTKeySupport.getKeyFormatterForPlatform().format(keyStroke);
 			keyText.setText(description);
+			if (e.keyCode != SWT.CTRL && e.keyCode != SWT.ALT
+					&& e.keyCode != SWT.SHIFT && e.keyCode != SWT.COMMAND) {
+
+				keyStrokeLocked = true;
+				KeyStrokeText.this.keyStroke = keyStroke;
+
+				fireKeyStrokeLockEvent();
+
+			} else {
+				keyStrokeLocked = false;
+
+				fireKeyStrokeLockEvent();
+			}
+		}
+
+		public void keyReleased(KeyEvent e) {
+			e.doit = false;
+			if (!keyStrokeLocked) {
+				KeyStroke keyStroke = KeyStroke.getInstance(e.stateMask, e.keyCode);
+				if (e.keyCode == e.stateMask) {
+					keyStroke = KeyStrokeText.this.keyStroke;
+				} else if ((e.stateMask & e.keyCode) > 0) {
+					int stateMask = e.stateMask;
+					stateMask ^= e.keyCode;
+
+					keyStroke = KeyStroke.getInstance(stateMask, KeyStroke.NO_KEY);
+				}
+
+				String description = SWTKeySupport.getKeyFormatterForPlatform().format(keyStroke);
+				keyText.setText(description);
+			}
 		}
 	}
 
