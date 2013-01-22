@@ -31,7 +31,7 @@ public class WarlockTimer {
 	static private Timer timer = new Timer();
 	
 	private WarlockTimerTask task;
-	private Property<Integer> value = new Property<Integer>();
+	private Property<Integer> value = new Property<Integer>(0);
 	private int length;
 	private long timeDelta;
 	private Long end;
@@ -52,12 +52,9 @@ public class WarlockTimer {
 			useconds = end * 1000L + timeDelta - now;
 
 		if (useconds <= 0) {
-			end = null;
-			length = 0;
-			value.set(0);
 			task.cancel();
 			task = null;
-			this.notifyAll();
+			clear();
 			return;
 		}
 		
@@ -67,17 +64,15 @@ public class WarlockTimer {
 		if (value.get() != newValue)
 			value.set(newValue);
 
-		//if(task == null) {
-			// Compute how long until next roundtime update
-			long waitTime = useconds % 1000;
-			if (waitTime == 0)
-				waitTime = 1000;
+		// Compute how long until next roundtime update
+		long waitTime = useconds % 1000;
+		if (waitTime == 0)
+			waitTime = 1000;
 
-			if(task != null)
-				task.cancel();
-			task = new WarlockTimerTask();
-			timer.scheduleAtFixedRate(task, waitTime, 1000);
-		//}
+		if(task != null)
+			task.cancel();
+		task = new WarlockTimerTask();
+		timer.scheduleAtFixedRate(task, waitTime, 1000);
 	}
 	
 	public synchronized void sync(long time) {
@@ -101,11 +96,15 @@ public class WarlockTimer {
 			value.set(length);
 			update();
 		} else {
-			value.set(0);
-			end = null;
-			length = 0;
-			this.notifyAll();
+			clear();
 		}
+	}
+	
+	private void clear() {
+		value.set(0);
+		end = null;
+		length = 0;
+		this.notifyAll();
 	}
 	
 	public Property<Integer> getProperty() {
