@@ -120,7 +120,7 @@ public class WarlockTimer {
 	}
 	
 	
-	public void waitForEnd() throws InterruptedException {
+	public synchronized void waitForEnd() throws InterruptedException {
 		while (end != null) {
 			wait();
 		}
