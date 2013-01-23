@@ -45,6 +45,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.client.WarlockClientAdaptable;
 import cc.warlock.rcp.views.GameView;
 
@@ -144,7 +145,8 @@ public class RCPUtil {
 	{
 		GameView inFocus = GameView.getGameViewInFocus();
 		
-		WarlockClientAdaptable clientAdapter = new WarlockClientAdaptable(inFocus.getClient());
+		IWarlockClient client = inFocus == null ? null : inFocus.getClient();
+		WarlockClientAdaptable clientAdapter = new WarlockClientAdaptable(client);
 
 		PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(Display.getDefault().getActiveShell(),
 					clientAdapter, pageId, null, null);
