@@ -25,6 +25,7 @@ import org.eclipse.ui.IPageLayout;
 
 import cc.warlock.rcp.application.WarlockPerspectiveFactory;
 import cc.warlock.rcp.stormfront.ui.views.BarsView;
+import cc.warlock.rcp.stormfront.ui.views.CompassView;
 import cc.warlock.rcp.stormfront.ui.views.HandsView;
 
 public class StormFrontPerspectiveFactory extends WarlockPerspectiveFactory {
@@ -37,6 +38,7 @@ public class StormFrontPerspectiveFactory extends WarlockPerspectiveFactory {
 		
 		layout.addStandaloneViewPlaceholder(HandsView.VIEW_ID, IPageLayout.TOP, 0.05f, MAIN_FOLDER_ID, false);
 		layout.addStandaloneViewPlaceholder(BarsView.VIEW_ID, IPageLayout.BOTTOM, 0.95f, MAIN_FOLDER_ID, false);
+		layout.addStandaloneViewPlaceholder(CompassView.VIEW_ID, IPageLayout.RIGHT, 0.15f, BarsView.VIEW_ID, false);
 		
 //		layout.addPlaceholder(StatusView.VIEW_ID, IPageLayout.RIGHT, 0.8f, HandsView.VIEW_ID);
 	}

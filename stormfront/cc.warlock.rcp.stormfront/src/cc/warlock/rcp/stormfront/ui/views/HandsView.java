@@ -61,10 +61,7 @@ public class HandsView extends ViewPart
 		
 		GameView.addGameViewFocusListener(new IGameViewFocusListener() {
 			public void gameViewFocused(GameView gameView) {
-				if (gameView instanceof StormFrontGameView)
-				{
-					HandsView.this.gameViewFocused((StormFrontGameView)gameView);
-				}
+				setActiveClient(gameView.getClient());
 			}
 		});
 	}
@@ -179,14 +176,6 @@ public class HandsView extends ViewPart
 		clear();
 	}
 	
-	protected void gameViewFocused (StormFrontGameView gameView)
-	{
-		if (gameView.getClient() != null)
-		{
-			setActiveClient(gameView.getClient());
-		}
-	}
-	
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
@@ -195,12 +184,13 @@ public class HandsView extends ViewPart
 
 	public void setActiveClient (IWarlockClient client)
 	{
-		if (client == null) return;
+		if (client == null || activeClient == client)
+			return;
 		
-		this.activeClient = client;
+		activeClient = client;
 		
-		if (!clients.contains(client))
-		{
+		if (!clients.contains(client)) {
+			// This probably shouldn't happen
 			clear();
 			client.getProperty("left").addListener(new SWTPropertyListener<String>(
 					new HandListener(leftHandInfo, client, "empty")));

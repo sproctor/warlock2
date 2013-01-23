@@ -83,22 +83,19 @@ public class BarsView extends ViewPart {
 		
 		GameView.addGameViewFocusListener(new IGameViewFocusListener () {
 			public void gameViewFocused(GameView gameView) {
-				if (gameView instanceof StormFrontGameView)
-				{
-					BarsView.this.gameViewFocused((StormFrontGameView)gameView);
-				}
+				setActiveClient(gameView.getClient());
 			}
 		});
 	}
 
 	protected void setActiveClient (IWarlockClient client)
 	{
-		if (client == null) return;
+		if (client == null || activeClient == client)
+			return;
 		
-		this.activeClient = client;
+		activeClient = client;
 		
-		if (!clients.contains(client))
-		{
+		if (!clients.contains(client)) {
 			SWTPropertyListener<Integer> rtListener =
 				new SWTPropertyListener<Integer>(new RoundtimeListener(client));
 			client.getTimer("roundtime").getProperty().addListener(rtListener);
@@ -144,7 +141,6 @@ public class BarsView extends ViewPart {
 		minivitals = new StormFrontDialogControl(top, SWT.NONE);
 		minivitals.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
-		
 		initBarColors();
 		
 		rtBarWOCT = new Composite(rtPageBook, SWT.NONE);
@@ -188,11 +184,6 @@ public class BarsView extends ViewPart {
 		casttimeBG = new Color(display, 0, 0, 151);
 		casttimeFG = new Color(display, 255, 255, 255);
 		casttimeBorder = new Color(display, 130, 130, 151);
-	}
-	
-	protected void gameViewFocused (StormFrontGameView gameView)
-	{
-		setActiveClient(gameView.getClient());
 	}
 	
 	/* (non-Javadoc)

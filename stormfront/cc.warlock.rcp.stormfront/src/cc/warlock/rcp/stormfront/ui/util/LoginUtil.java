@@ -37,6 +37,7 @@ import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.rcp.stormfront.ui.StormFrontPerspectiveFactory;
 import cc.warlock.rcp.stormfront.ui.views.BarsView;
+import cc.warlock.rcp.stormfront.ui.views.CompassView;
 import cc.warlock.rcp.stormfront.ui.views.HandsView;
 import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
 import cc.warlock.rcp.util.RCPUtil;
@@ -64,6 +65,10 @@ public class LoginUtil {
 			if (page.findView(BarsView.VIEW_ID) == null)
 			{
 				page.showView(BarsView.VIEW_ID);
+			}
+			if (page.findView(CompassView.VIEW_ID) == null)
+			{
+				page.showView(CompassView.VIEW_ID);
 			}
 		} catch (PartInitException e1) {
 			// TODO Auto-generated catch block

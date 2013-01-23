@@ -18,6 +18,12 @@
       </view>
       <view
             allowMultiple="false"
+            class="cc.warlock.rcp.stormfront.ui.views.CompassView"
+            id="cc.warlock.rcp.stormfront.ui.views.CompassView"
+            name="Compass">
+      </view>
+      <view
+            allowMultiple="false"
             class="cc.warlock.rcp.stormfront.ui.views.HandsView"
             icon="images/handview.gif"
             id="cc.warlock.rcp.stormfront.ui.views.HandsView"
@@ -33,13 +39,13 @@
             allowMultiple="true"
             class="cc.warlock.rcp.views.StreamView"
             id="cc.warlock.rcp.views.stream.leftStream"
-            name="Familiar">
+            name="Left View">
       </view>
       <view
             allowMultiple="true"
             class="cc.warlock.rcp.views.StreamView"
             id="cc.warlock.rcp.views.stream.topStream"
-            name="My Bag">
+            name="Top View">
       </view>
    </extension>
    <extension

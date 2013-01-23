@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
@@ -70,15 +69,12 @@ import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.stormfront.ui.style.StormFrontStyleProvider;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
 import cc.warlock.rcp.ui.IStyleProvider;
-import cc.warlock.rcp.ui.WarlockCompass;
 import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
-import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
-import cc.warlock.rcp.ui.style.CompassThemes;
 import cc.warlock.rcp.ui.style.StyleProviders;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.RCPUtil;
@@ -91,7 +87,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	
 	protected StormFrontStatus status;
 	protected WarlockPopupAction reconnectPopup;
-	private WarlockCompass compass;
 	//protected StormFrontTextBorder textBorder;
 	
 	public StormFrontGameView ()
@@ -105,7 +100,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		
-		compass = new WarlockCompass(streamText.getTextWidget(), CompassThemes.getCompassTheme("small"));
 		//textBorder = new StormFrontTextBorder(text);
 		
 		((GridLayout)entryComposite.getLayout()).numColumns = 2;
@@ -291,8 +285,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	
 	@Override
 	public void setClient(IWarlockClient client) {
-		client.getCompass().addListener(new SWTPropertyListener<ICompass>(compass));
-		
 		hidePopup(reconnectPopup);
 //		reconnectPopup.setVisible(false);
 		if (client instanceof IStormFrontClient)
