@@ -38,28 +38,31 @@ import org.eclipse.swt.widgets.Composite;
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.ICompass.DirectionType;
 import cc.warlock.core.client.IPropertyListener;
+import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.internal.Command;
 import cc.warlock.rcp.ui.style.CompassTheme;
 
 /**
  * This is our custom compass that is drawn on top of the text widget and is movable like a normal window (within the text area for now).
  * @author marshall
  */
-public class WarlockCompass extends Canvas implements MouseListener, IPropertyListener<ICompass> {
+public class WarlockCompass extends Canvas implements IPropertyListener<ICompass> {
 
-	//private Point originalPosition = new Point(-1,-1);
 	private Cursor moveCursor;
 	private CompassTheme theme;
 	private ICompass compass;
+	private IWarlockClient client;
 	
 	private Image compassImage = WarlockSharedImages.getImage(WarlockSharedImages.IMG_COMPASS_SMALL_MAIN);
 	
-	public WarlockCompass (Composite parent, int style, CompassTheme theme)
+	public WarlockCompass (Composite parent, int style, CompassTheme theme, IWarlockClient client)
 	{
 		super(parent, style);
 		this.theme = theme;
 		
 		moveCursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
 		compassImage = theme.getMainImage();
+		this.client = client;
 		
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -72,18 +75,21 @@ public class WarlockCompass extends Canvas implements MouseListener, IPropertyLi
 				drawCompass(e.gc);
 			}
 		});
-		
+		addMouseListener(new MouseListener() {
+			public void mouseDoubleClick(MouseEvent e) {}
+			
+			public void mouseDown(MouseEvent e) {
+				// Should we use this to check the mouse wasn't moved while clicked?
+			}
+			
+			public void mouseUp(MouseEvent e) {
+				click(new Point(e.x, e.y));
+			}
+		});
 	}
 	
 	private void drawCompass (GC gc)
-	{
-		/* From old compass embedded in text widget
-		if (x == -1)
-			setX(text.getClientArea().width - compassBounds.width - 5);
-		if (y == -1)
-			setY(text.getClientArea().height - compassBounds.height - 5);
-		*/
-		
+	{	
 		gc.drawImage(compassImage, 0, 0);
 		if (compass != null)
 		{
@@ -108,15 +114,17 @@ public class WarlockCompass extends Canvas implements MouseListener, IPropertyLi
 		}
 	}
 	
-	
-	public void mouseDoubleClick(MouseEvent e) {}
-	
-	public void mouseDown(MouseEvent e) {
-		// store position
-	}
-	
-	public void mouseUp(MouseEvent e) {
-		// make sure position is equal to down, then active the appropriate direction
+	protected void click(Point c) {
+		for (DirectionType direction : DirectionType.values()) {
+			if (direction != DirectionType.None && compass.getDirections().contains(direction)) {
+				Point point = theme.getDirectionPosition(direction);
+				if(c.x >= point.x && c.x <= point.x + theme.getDirectionWidth(direction)
+						&& c.y >= point.y && c.y <= point.y + theme.getDirectionHeight(direction)) {
+					client.send(new Command(direction.getName()));
+					break;
+				}
+			}
+		}
 	}
 	
 	public void propertyChanged(ICompass value) {

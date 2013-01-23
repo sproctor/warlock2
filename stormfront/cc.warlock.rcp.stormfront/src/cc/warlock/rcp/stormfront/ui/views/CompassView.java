@@ -64,7 +64,7 @@ public class CompassView extends ViewPart {
 		activeClient = client;
 		
 		if (!clients.containsKey(client)) {
-			WarlockCompass compass = new WarlockCompass(book, SWT.NONE, CompassThemes.getCompassTheme("small"));
+			WarlockCompass compass = new WarlockCompass(book, SWT.NONE, CompassThemes.getCompassTheme("small"), client);
 			clients.put(client, compass);
 			client.getCompass().addListener(new SWTPropertyListener<ICompass>(compass));
 			book.showPage(compass);

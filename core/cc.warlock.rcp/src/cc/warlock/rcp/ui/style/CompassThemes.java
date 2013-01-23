@@ -84,8 +84,8 @@ public class CompassThemes {
 		{
 			if (direction != DirectionType.None)
 			{
-				theme.setDirectionImage(direction, THEME_PATH + themeName + "/" + themeProperties.getProperty(IMAGE_PREFIX + direction.getName()));
-				theme.setDirectionPosition(direction, themeProperties.getProperty(POSITION_PREFIX + direction.getName()));
+				theme.setDirection(direction, themeProperties.getProperty(POSITION_PREFIX + direction.getName()),
+						THEME_PATH + themeName + "/" + themeProperties.getProperty(IMAGE_PREFIX + direction.getName()));
 			}
 		}
 		

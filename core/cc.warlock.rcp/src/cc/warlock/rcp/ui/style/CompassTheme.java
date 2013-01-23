@@ -34,8 +34,33 @@ public class CompassTheme {
 
 	private String name, title, description;
 	private Image mainImage;
-	private HashMap<DirectionType, Image> directionImages = new HashMap<DirectionType, Image>();
-	private HashMap<DirectionType, Point> directionPositions = new HashMap<DirectionType, Point>();
+	private HashMap<DirectionType, CompassDirection> directions = new HashMap<DirectionType, CompassDirection>();
+	
+	public class CompassDirection {
+		private Point position;
+		private Image image;
+		
+		public CompassDirection(Point position, Image image) {
+			this.position = position;
+			this.image = image;
+		}
+		
+		public Point getPosition() {
+			return position;
+		}
+		
+		public Image getImage() {
+			return image;
+		}
+		
+		public int getWidth() {
+			return image.getImageData().width;
+		}
+		
+		public int getHeight() {
+			return image.getImageData().height;
+		}
+	}
 	
 	public String getName() {
 		return name;
@@ -65,27 +90,26 @@ public class CompassTheme {
 	
 	public Image getDirectionImage (DirectionType direction)
 	{
-		return directionImages.get(direction);
+		return directions.get(direction).getImage();
 	}
 	
-	public void setDirectionImage (DirectionType direction, String imagePath)
+	public void setDirection (DirectionType direction, String position, String imagePath)
 	{
-		directionImages.put(direction, WarlockSharedImages.getImage(imagePath));
+		String[] xy = position.split(",");
+		directions.put(direction, new CompassDirection(new Point(Integer.parseInt(xy[0]), Integer.parseInt(xy[1])),
+				WarlockSharedImages.getImage(imagePath)));
 	}
 	
 	public Point getDirectionPosition (DirectionType direction)
 	{
-		return directionPositions.get(direction);
+		return directions.get(direction).getPosition();
 	}
 	
-	public void setDirectionPosition (DirectionType direction, String position)
-	{
-		String[] xy = position.split(",");
-		setDirectionPosition(direction, new Point(Integer.parseInt(xy[0]), Integer.parseInt(xy[1])));
+	public int getDirectionWidth(DirectionType direction) {
+		return directions.get(direction).getWidth();
 	}
 	
-	public void setDirectionPosition (DirectionType direction, Point position)
-	{
-		directionPositions.put(direction, position);
+	public int getDirectionHeight(DirectionType direction) {
+		return directions.get(direction).getHeight();
 	}
 }
