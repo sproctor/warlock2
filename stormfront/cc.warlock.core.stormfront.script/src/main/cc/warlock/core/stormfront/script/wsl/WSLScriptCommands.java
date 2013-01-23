@@ -400,10 +400,12 @@ public class WSLScriptCommands {
 	protected class WSLCommandPut implements IWSLCommandDefinition {
 
 		public void execute(WSLScript script, String arguments) throws InterruptedException {
-			script.scriptCommands.put(arguments);
-			// Quit this script if we're starting another one
 			if(arguments.startsWith(ScriptConfiguration.instance().getScriptPrefix())) {
+				// Quit this script if we're starting another one
 				script.stop();
+				ScriptEngineRegistry.startScript(script.getClient(), arguments.substring(1));
+			} else {
+				script.scriptCommands.put(arguments);
 			}
 		}
 	}
