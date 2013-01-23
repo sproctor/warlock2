@@ -144,10 +144,7 @@ public class RCPUtil {
 	{
 		GameView inFocus = GameView.getGameViewInFocus();
 		
-		WarlockClientAdaptable clientAdapter = null;
-		
-		if (inFocus != null && inFocus.getClient() != null)
-			clientAdapter = new WarlockClientAdaptable(inFocus.getClient());
+		WarlockClientAdaptable clientAdapter = new WarlockClientAdaptable(inFocus.getClient());
 
 		PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(Display.getDefault().getActiveShell(),
 					clientAdapter, pageId, null, null);
