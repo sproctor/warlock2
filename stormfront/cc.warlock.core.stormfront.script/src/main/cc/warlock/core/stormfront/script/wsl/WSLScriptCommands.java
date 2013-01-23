@@ -15,9 +15,9 @@ import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockHighlight;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.script.IMatch;
+import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.internal.RegexMatch;
-import cc.warlock.core.script.internal.ScriptRegistry;
 import cc.warlock.core.script.internal.TextMatch;
 
 public class WSLScriptCommands {
@@ -428,7 +428,7 @@ public class WSLScriptCommands {
 	protected class WSLCommandRun implements IWSLCommandDefinition {
 
 		public void execute(WSLScript script, String arguments) throws InterruptedException {
-			ScriptRegistry.getRegistry(script.getClient().getViewer()).runScript(arguments);
+			ScriptEngineRegistry.startScript(script.getClient(), arguments);
 		}
 	}
 
