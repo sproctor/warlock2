@@ -67,7 +67,7 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 	
 	public void removeSetting (T setting) {
 		for(Entry<String, T> entry : settings.entrySet()) {
-			if(entry.getValue() == setting) {
+			if(setting.equals(entry.getValue())) {
 				settings.remove(entry.getKey());
 				try {
 					getNode().node(entry.getKey()).removeNode();

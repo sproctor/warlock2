@@ -98,4 +98,12 @@ public class WarlockSetting implements IWarlockSetting {
 		
 		return listeners.remove(listener);
 	}
+	
+	public boolean equals(Object o) {
+		if(o instanceof WarlockSetting) {
+			return node.equals(((WarlockSetting)o).node);
+		} else {
+			return false;
+		}
+	}
 }

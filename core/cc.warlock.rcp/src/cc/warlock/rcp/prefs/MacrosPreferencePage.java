@@ -334,6 +334,8 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			removedMacros.add(selectedMacro);
 		
 		MacroConfigurationProvider.getProvider(settings).removeSetting(selectedMacro);
+		macroTableView.setInput(MacroConfigurationProvider.getMacros(settings));
+		//macroTableView.remove(selectedMacro);
 		macroTableView.refresh();
 	}
 	
