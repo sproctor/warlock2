@@ -25,6 +25,7 @@
 package cc.warlock.rcp.views;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -121,6 +122,14 @@ public class UserStream extends StreamView {
 		streams.put(client, streamText);
 		
 		client.getDefaultStream().addStreamListener(new SWTStreamListener(streamText));
+	}
+	
+	@Override
+	public void dispose() {
+		for(Map.Entry<IWarlockClient, StreamText> entry : streams.entrySet()) {
+			entry.getKey().getDefaultStream().removeStreamListener(entry.getValue());
+		}
+		super.dispose();
 	}
 	
 	protected IStreamFilter[] getEventsFilters ()

@@ -189,4 +189,12 @@ public class SWTStreamListener implements IStreamListener {
 	public void componentUpdated(IStream stream, String id, WarlockString text) {
 		run(new ComponentUpdatedWrapper(stream, id, text));
 	}
+	
+	public boolean equals(Object obj) {
+		if(obj instanceof SWTStreamListener) {
+			return this.listener.equals(((SWTStreamListener)obj).listener);
+		} else {
+			return this.listener.equals(obj);
+		}
+	}
 }
