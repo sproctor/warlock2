@@ -35,7 +35,7 @@ public class ScriptConfiguration extends WarlockSetting {
 
 	protected ScriptDirectoryConfiguration directoryConf;
 	protected Property<Boolean> suppressExceptions;
-	protected String scriptPrefix;
+	//protected String scriptPrefix;
 	
 	protected HashMap<String, ArrayList<String>> engineExtensions = new HashMap<String, ArrayList<String>>();
 	
@@ -48,7 +48,7 @@ public class ScriptConfiguration extends WarlockSetting {
 	private ScriptConfiguration () {
 		super(WarlockPreferences.getInstance().getNode(), "scripting");
 		suppressExceptions = new Property<Boolean>(getNode().getBoolean("suppress-exceptions", true));
-		scriptPrefix = getNode().get("prefix", ".");
+		//scriptPrefix = getNode().get("prefix", ".");
 		
 		directoryConf = new ScriptDirectoryConfiguration(this.getNode());
 		if(directoryConf.getSettings().isEmpty()) {
@@ -75,10 +75,6 @@ public class ScriptConfiguration extends WarlockSetting {
 	}
 	
 	public String getScriptPrefix() {
-		return scriptPrefix;
-	}
-
-	public void setScriptPrefix(String scriptPrefix) {
-		this.scriptPrefix = scriptPrefix;
+		return ".";
 	}
 }

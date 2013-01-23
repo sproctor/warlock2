@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
@@ -57,7 +56,7 @@ import cc.warlock.core.script.configuration.ScriptConfiguration;
 public class ScriptingPreferencePage extends PropertyPage implements
 		IWorkbenchPropertyPage {
 
-	protected Text scriptPrefix;
+	//protected Text scriptPrefix;
 	protected TreeViewer scriptDirectories;
 	protected Button addScriptDir, removeScriptDir /*, moveUp, moveDown*/;
 	
@@ -73,13 +72,6 @@ public class ScriptingPreferencePage extends PropertyPage implements
 		main.setLayout(new GridLayout(3, false));
 //		main.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
-		new Label(main, SWT.NONE);
-		
-		new Label(main, SWT.NONE).setText("Prefix used for scripting commands: ");
-		scriptPrefix = new Text(main, SWT.BORDER);
-		scriptPrefix.setTextLimit(5);
-		scriptPrefix.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-
 		new Label(main, SWT.NONE);
 		
 		Group dirGroup = new Group(main, SWT.NONE);
@@ -173,7 +165,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 			}
 		});
 		*/
-		scriptPrefix.setText(ScriptConfiguration.instance().getScriptPrefix());
+		//scriptPrefix.setText(ScriptConfiguration.instance().getScriptPrefix());
 		refreshView();
 		
 		return main;
@@ -248,7 +240,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 	
 	@Override
 	public boolean performOk() {
-		ScriptConfiguration.instance().setScriptPrefix(scriptPrefix.getText());
+		//ScriptConfiguration.instance().setScriptPrefix(scriptPrefix.getText());
 
 		/*
 		ScriptDirectoryConfiguration dirConf = ScriptConfiguration.instance().getScriptDirectoryConfiguration();
