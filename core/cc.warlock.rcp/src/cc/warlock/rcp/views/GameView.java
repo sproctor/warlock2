@@ -56,8 +56,8 @@ import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
-import cc.warlock.core.script.internal.ScriptRegistry;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockEntry;
@@ -87,7 +87,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected Composite entryComposite;
 	private IWarlockClient client;
 	protected Composite mainComposite;
-	private ScriptRegistry scriptRegistry;
 	
 	private Profile profile;
 	
@@ -107,7 +106,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(this));
 		
-		scriptRegistry = new ScriptRegistry(this);
+		//scriptRegistry = new ScriptRegistry(getClient());
 	}
 	
 	public static void addGameViewFocusListener (IGameViewFocusListener listener)
@@ -464,16 +463,11 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		stream.clearText();
 	}
 	
-	public ScriptRegistry getScriptRegistry() {
-		return scriptRegistry;
-	}
-	
 	public void send(ICommand command) {
 		String scriptPrefix = ScriptConfiguration.instance().getScriptPrefix();
 		
 		if (command.getCommand().startsWith(scriptPrefix)){
-			ScriptRegistry registry = ScriptRegistry.getRegistry(this);
-			registry.runScript(command.getCommand().substring(scriptPrefix.length()));
+			ScriptEngineRegistry.startScript(client, command.getCommand().substring(scriptPrefix.length()));
 		} else {
 			getClient().send(command);
 		}

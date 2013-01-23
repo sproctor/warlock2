@@ -10,7 +10,7 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.script.IScript;
-import cc.warlock.core.script.internal.ScriptRegistry;
+import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.rcp.menu.SubMenuContributionItem;
 
 public class ScriptMenuContributionItem extends CompoundContributionItem {
@@ -31,7 +31,7 @@ public class ScriptMenuContributionItem extends CompoundContributionItem {
 			ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
 
 			
-			for(IScript script : ScriptRegistry.getRegistry(viewer).getRunningScripts()) 
+			for(IScript script : ScriptEngineRegistry.getRunningScripts(viewer.getClient())) 
 			{
 				IContributionItem newItem = new ScriptContributionItem(script);
 				items.add(newItem);

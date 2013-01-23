@@ -24,6 +24,9 @@ package cc.warlock.core.script;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.martiansoftware.jsap.CommandLineTokenizer;
+
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.script.internal.FilesystemScriptProvider;
 
@@ -89,6 +92,22 @@ public class ScriptEngineRegistry {
 		return null;
 	}
 	
+	public static IScript startScript (IWarlockClient client, String command) {
+		command = command.replaceAll("[\\r\\n]", "");
+		
+		int firstSpace = command.indexOf(" ");
+		String scriptName = command.substring(0, (firstSpace < 0 ? command.length() : firstSpace));
+		String[] arguments = new String[0];
+		
+		if (firstSpace > 0)
+		{
+			String args = command.substring(firstSpace+1);
+			arguments = CommandLineTokenizer.tokenize(args);
+		}
+		
+		return startScript(scriptName, client.getViewer(), arguments);
+	}
+	
 	public static IScript startScript (String scriptName, IWarlockClientViewer viewer, String[] arguments)
 	{
 		for (IScriptProvider provider : providers)
@@ -116,13 +135,13 @@ public class ScriptEngineRegistry {
 		return scripts;
 	}
 	
-	public static List<IScript> getRunningScripts (IWarlockClientViewer viewer) {
+	public static List<IScript> getRunningScripts (IWarlockClient client) {
 		ArrayList<IScript> scripts = new ArrayList<IScript>();
 		for (IScriptEngine engine : engines)
 		{
 			// Append only if script is apart of the client
 			for (IScript script: engine.getRunningScripts()) {
-				if (script.getViewer() == viewer) {
+				if (script.getClient() == client) {
 					scripts.add(script);
 				}
 			}
