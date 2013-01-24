@@ -27,6 +27,7 @@ package cc.warlock.core.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Iterator;
 
 import cc.warlock.core.client.internal.WarlockDialog;
 import cc.warlock.core.client.logging.IClientLogger;
@@ -125,7 +126,7 @@ public interface IWarlockClient extends IRoomListener {
 	 */
 	public IClientSettings getClientSettings();
 	
-	public Collection<IWarlockHighlight> getHighlightStrings();
+	public Iterator<IWarlockHighlight> getHighlightsIterator();
 	public void addHighlights(Collection<IWarlockHighlight> highlights);
 	public boolean removeHighlights(Collection<IWarlockHighlight> highlights);
 	

@@ -39,7 +39,7 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 		super(parentNode, path);
 		
 		String text = getNode().get("pattern", "");
-		boolean literal = getNode().getBoolean("literal", false);
+		boolean literal = getNode().getBoolean("literal", true);
 		boolean caseSensitive = getNode().getBoolean("case-sensitive", false);
 		boolean fullWord = getNode().getBoolean("full-word", true);
 		pattern = createPattern(text, literal, caseSensitive, fullWord);

@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.ICommand;
@@ -52,11 +53,9 @@ import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.IWarlockSettingListener;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
-import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.util.Pair;
 
@@ -64,7 +63,7 @@ import cc.warlock.core.util.Pair;
 /**
  * @author Marshall
  */
-public abstract class WarlockClient implements IWarlockClient, IWarlockSettingListener {
+public abstract class WarlockClient implements IWarlockClient {
 
 	protected IConnection connection;
 	protected IWarlockClientViewer viewer;
@@ -77,8 +76,7 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	protected IClientLogger logger;
 	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	protected ArrayList<Pair<String, IStreamListener>> potentialListeners = new ArrayList<Pair<String, IStreamListener>>();
-	private ArrayList<Collection<IWarlockHighlight>> highlightLists = null; // Highlights from scripts
-	private ArrayList<IWarlockHighlight> cachedHighlights = null;
+	private ArrayList<Collection<IWarlockHighlight>> highlightLists = new ArrayList<Collection<IWarlockHighlight>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
 	private HashMap<String, String> components = new HashMap<String, String>();
@@ -112,6 +110,7 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 			public void clientSettingsLoaded(IWarlockClient client) {
 				// if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
 					logger = new SimpleLogger(WarlockClient.this);
+					highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
 			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
@@ -218,40 +217,61 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	
 	public abstract IClientSettings getClientSettings();
 	
-	private void reloadHighlights() {
-		cachedHighlights = new ArrayList<IWarlockHighlight>();
-		cachedHighlights.addAll(HighlightConfigurationProvider.getHighlights(getClientSettings()));
-		if(highlightLists != null) {
-			for(Collection<IWarlockHighlight> collection : highlightLists) {
-				cachedHighlights.addAll(collection);
-			}
-		}
+	public class MultiIterator<T> implements Iterator<T> {
+		private Iterator<? extends Collection<T>> it;
+	    private Iterator<T> innerIt;
+	    private T next;
+	    private boolean hasNext = true;
+	    
+		public MultiIterator(Collection<? extends Collection<T>> collections) {
+	        it = collections.iterator();    
+	        prepareNext();
+	    }
+
+	    private void prepareNext() {
+	        do {
+	            if (innerIt == null || !innerIt.hasNext()) {
+	                if (!it.hasNext()) {
+	                    hasNext = false;
+	                    return;
+	                } else
+	                    innerIt = it.next().iterator();
+	            }
+	        } while (!innerIt.hasNext());
+
+	        next = innerIt.next();
+	    }
+
+	    @Override
+	    public boolean hasNext() {
+	        return hasNext;
+	    }
+
+	    @Override
+	    public T next() {
+	        if (!hasNext)
+	            throw new NoSuchElementException();
+	        T res = next;
+	        prepareNext();
+	        return res;
+	    }
+
+	    @Override
+	    public void remove() {
+	        //TODO
+	    }
 	}
 	
-	public Collection<IWarlockHighlight> getHighlightStrings() {
-		// Highlights from settings are cached. Cache is rebuilt whenever settings are changed
-		if(cachedHighlights == null) {
-			reloadHighlights();
-			HighlightConfigurationProvider.getProvider(getClientSettings()).addListener(this);
-		}
-		return Collections.unmodifiableCollection(cachedHighlights);
+	public Iterator<IWarlockHighlight> getHighlightsIterator() {
+		return new MultiIterator<IWarlockHighlight>(highlightLists);
 	}
 	
 	public void addHighlights(Collection<IWarlockHighlight> highlights) {
-		if(highlightLists == null)
-			highlightLists = new ArrayList<Collection<IWarlockHighlight>>();
-		
 		highlightLists.add(highlights);
-		reloadHighlights();
 	}
 	
 	public boolean removeHighlights(Collection<IWarlockHighlight> highlights) {
-		if(highlightLists == null)
-			return false;
-		
-		boolean rv = highlightLists.remove(highlights);
-		reloadHighlights();
-		return rv;
+		return highlightLists.remove(highlights);
 	}
 	
 	public IClientLogger getLogger() {
@@ -289,9 +309,9 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 		}
 	}
 	
-	public void settingChanged(IWarlockSetting setting) {
+	/*public void settingChanged(IWarlockSetting setting) {
 		reloadHighlights();
-	}
+	}*/
 	
 	
 	public String getVariable(String id) {
