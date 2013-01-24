@@ -41,10 +41,11 @@ import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockDialog;
+import cc.warlock.core.client.IWarlockDialogListener;
 import cc.warlock.rcp.stormfront.ui.StormFrontDialogControl;
 import cc.warlock.rcp.ui.WarlockProgressBar;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
+import cc.warlock.rcp.ui.client.SWTWarlockDialogListener;
 import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.IGameViewFocusListener;
 
@@ -72,8 +73,8 @@ public class BarsView extends ViewPart {
 		new HashMap<IWarlockClient, SWTPropertyListener<Integer>>();
 	protected HashMap<IWarlockClient, SWTPropertyListener<Integer>> ctListeners =
 		new HashMap<IWarlockClient, SWTPropertyListener<Integer>>();
-	protected HashMap<IWarlockClient, SWTPropertyListener<IWarlockDialog>> mvListeners =
-		new HashMap<IWarlockClient, SWTPropertyListener<IWarlockDialog>>();
+	protected HashMap<IWarlockClient, SWTWarlockDialogListener> mvListeners =
+		new HashMap<IWarlockClient, SWTWarlockDialogListener>();
 
 	protected IWarlockClient activeClient;
 	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
@@ -94,6 +95,7 @@ public class BarsView extends ViewPart {
 			return;
 		
 		activeClient = client;
+		minivitals.setDialog(client.getDialog("minivitals"));
 		
 		if (!clients.contains(client)) {
 			SWTPropertyListener<Integer> rtListener =
@@ -106,8 +108,7 @@ public class BarsView extends ViewPart {
 			client.getTimer("casttime").getProperty().addListener(ctListener);
 			ctListeners.put(client, ctListener);
 			
-			SWTPropertyListener<IWarlockDialog> mvListener =
-				new SWTPropertyListener<IWarlockDialog>(
+			SWTWarlockDialogListener mvListener = new SWTWarlockDialogListener(
 						new MinivitalsListener(minivitals, client));
 			client.getDialog("minivitals").addListener(mvListener);
 			mvListeners.put(client, mvListener);
@@ -194,7 +195,7 @@ public class BarsView extends ViewPart {
 
 	}
 	
-	private class MinivitalsListener implements IPropertyListener<IWarlockDialog> {
+	private class MinivitalsListener implements IWarlockDialogListener {
 		private StormFrontDialogControl control;
 		private IWarlockClient client;
 		
@@ -203,9 +204,9 @@ public class BarsView extends ViewPart {
 			this.client = client;
 		}
 		
-		public void propertyChanged(IWarlockDialog msg) {
+		public void dialogChanged() {
 			if(activeClient == client)
-				control.sendMessage(msg);
+				control.redraw();
 		}
 		
 	}

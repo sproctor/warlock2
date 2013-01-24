@@ -43,7 +43,6 @@ import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.IWarlockDialog;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
@@ -84,8 +83,7 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
 	private HashMap<String, String> components = new HashMap<String, String>();
 	private HashMap<String, IStream> componentStreams = new HashMap<String, IStream>();
-	private HashMap<String, Property<IWarlockDialog>> dialogs =
-			new HashMap<String, Property<IWarlockDialog>>();
+	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
 	
 	public WarlockClient () {
@@ -366,11 +364,11 @@ public abstract class WarlockClient implements IWarlockClient, IWarlockSettingLi
 		return components.get(name.toLowerCase());
 	}
 	
-	public Property<IWarlockDialog> getDialog(String id) {
-		Property<IWarlockDialog> dialog = dialogs.get(id);
+	public WarlockDialog getDialog(String id) {
+		WarlockDialog dialog = dialogs.get(id);
 		
 		if(dialog == null) {
-			dialog = new Property<IWarlockDialog>();
+			dialog = new WarlockDialog();
 			dialogs.put(id, dialog);
 		}
 		

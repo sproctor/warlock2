@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
+import cc.warlock.core.client.internal.WarlockDialog;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.network.IConnection;
@@ -209,7 +210,7 @@ public interface IWarlockClient extends IRoomListener {
 	/**
 	 * @return The associated SFDialog
 	 */
-	public IProperty<IWarlockDialog> getDialog(String id);
+	public WarlockDialog getDialog(String id);
 	
 	public IProperty<String> getProperty(String name);
 	

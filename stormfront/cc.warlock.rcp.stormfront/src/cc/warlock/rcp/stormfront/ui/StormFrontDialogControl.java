@@ -36,7 +36,10 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.client.IWarlockDialog;
+import cc.warlock.core.client.IWarlockDialogData;
+import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.client.internal.WarlockDialog;
+import cc.warlock.rcp.util.ColorUtil;
 
 /**
  * @author Marshall
@@ -46,108 +49,102 @@ import cc.warlock.core.client.IWarlockDialog;
  */
 public class StormFrontDialogControl extends Canvas
 {
-	protected Font progressFont;
-	protected int width, height;
-	protected int borderWidth;
-	protected HashMap<String, IWarlockDialog> progressBars =
-		new HashMap<String, IWarlockDialog>();
+	private Font font;
+	//protected int width, height;
+	private int borderWidth = 1;
+	private WarlockDialog dialog;
 	
-	protected Color healthFG, healthBG, healthBorder,
-		manaFG, manaBG, manaBorder,
-		fatigueFG, fatigueBG, fatigueBorder,
-		spiritFG, spiritBG, spiritBorder,
-		concentrationFG, concentrationBG, concentrationBorder,
-		defaultFG, defaultBG, defaultBorder;
+	private HashMap<String, ColorGroup> colors = new HashMap<String, ColorGroup>();
+	private ColorGroup defaultColors;
 	
-	public StormFrontDialogControl (Composite composite, int style)
-	{
+	private class ColorGroup {
+		public Color fg;
+		public Color bg;
+		public Color border;
+		
+		public ColorGroup(Display display, String fgColor, String bgColor, String borderColor) {
+			fg = new Color(display, ColorUtil.warlockColorToRGB(new WarlockColor(fgColor)));
+			bg = new Color(display, ColorUtil.warlockColorToRGB(new WarlockColor(bgColor)));
+			border = new Color(display, ColorUtil.warlockColorToRGB(new WarlockColor(borderColor)));
+		}
+	}
+	
+	public StormFrontDialogControl (Composite composite, int style) {
 		super(composite, style);
 		Display display = this.getDisplay();
 		
 		// defaults
-		width = 100;
-		height = 15;
+		//width = 100;
+		//height = 15;
 		
 		Font textFont = JFaceResources.getDefaultFont();
 		FontData textData = textFont.getFontData()[0];
-		int minHeight = 8;
+		int minHeight = 10;
 		
-		healthBG = new Color(display, 0x80, 0, 0);
-		healthFG = new Color(display, 255, 255, 255);
-		healthBorder = new Color(display, 0x79, 0x6a, 0x6a);
+		colors.put("health", new ColorGroup(display, "#FFFFFF", "#800000", "#796a6a"));
+		colors.put("mana", new ColorGroup(display, "#FFFFFF", "#0000FF", "#7272FF"));
+		colors.put("stamina", new ColorGroup(display, "#000000", "#D0982F", "#DECCAA"));
+		colors.put("spirit", new ColorGroup(display, "#000000", "#969696", "#E1E1E1"));
+		colors.put("concentration", new ColorGroup(display, "#000000", "#00FF00", "#E1E1E1"));
+		defaultColors = new ColorGroup(display, "#000000", "#969696", "#E1E1E1");
 		
-		manaBG = new Color(display, 0, 0, 0xff);
-		manaFG = new Color(display, 255, 255, 255);
-		manaBorder = new Color(display, 0x72, 0x72, 0xff);
-		
-		fatigueBG = new Color(display, 0xd0, 0x98, 0x2f);
-		fatigueFG = new Color(display, 0, 0, 0);
-		fatigueBorder = new Color(display, 0xde, 0xcc, 0xaa);
-		
-		spiritBG = new Color(display, 150, 150, 150);
-		spiritFG = new Color(display, 0, 0, 0);
-		spiritBorder = new Color(display, 225, 225, 225);
-		
-		concentrationBG = new Color(display, 0, 255, 0);
-		concentrationFG = new Color(display, 0, 0, 0);
-		concentrationBorder = new Color(display, 225, 225, 225);
-		
-		defaultBG = new Color(display, 150, 150, 150);
-		defaultFG = new Color(display, 0, 0, 0);
-		defaultBorder = new Color(display, 225, 225, 225);
-		
-		progressFont = new Font(getShell().getDisplay(),
+		font = new Font(getShell().getDisplay(),
 			textData.getName(), (int)Math.max(minHeight,textData.getHeight()), textData.getStyle());
 		
-		borderWidth = 1;
+		//borderWidth = 1;
 		
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
+				if(dialog == null)
+					return;
+				
 				Rectangle bounds = getBounds();
 				
-				e.gc.setFont (progressFont);
+				e.gc.setFont (font);
 				
-				for(IWarlockDialog progressBar : progressBars.values()) {
-					int pbWidth = progressBar.getWidth();
-					int pbLeft = progressBar.getLeft();
-					int pbValue = progressBar.getValue();
-					
-					// This should probably all be abstracted out
-					int fullBarWidth = pbWidth * bounds.width / 100;
-					int barWidth = fullBarWidth - 2 * borderWidth;
-					int barHeight = bounds.height - 2 * borderWidth;
-					int filledWidth = pbValue * barWidth / 100;
-					int left = pbLeft * bounds.width / 100;
-					
-					// Draw the border
-					Color borderColor = getBorderColor(progressBar.getId());
-					e.gc.setForeground(borderColor);
-					e.gc.setLineWidth(borderWidth);
-					e.gc.drawRectangle(left, 0, fullBarWidth, bounds.height);
-					
-					Color bgColor = getBgColor(progressBar.getId());
-					
-					// draw the filled part of the rectangle
-					Color gradientColor = getGradientColor(25, true, bgColor);
-					e.gc.setBackground(gradientColor);
-					e.gc.setForeground(bgColor);
-					e.gc.fillGradientRectangle(borderWidth + left, borderWidth,
-							filledWidth, barHeight, false);
-					
-					// draw the background
-					e.gc.setBackground(borderColor);
-					e.gc.fillRectangle(borderWidth + left + filledWidth,
-							borderWidth, barWidth - filledWidth, barHeight);
-					
-					Color textColor = getTextColor(progressBar.getId());
-					e.gc.setForeground(textColor);
-					
-					String text = progressBar.getText();
-					Point extent = e.gc.textExtent(text);
-					
-					int text_left = left + (barWidth - extent.x) / 2;
-					int text_top = (bounds.height - 2 * borderWidth - e.gc.getFontMetrics().getHeight()) / 2;
-					e.gc.drawText (text, text_left, text_top, true);
+				synchronized(dialog) {
+					for(IWarlockDialogData progressBar : dialog.getElements()) {
+						int pbWidth = progressBar.getWidth();
+						int pbLeft = progressBar.getLeft();
+						int pbValue = progressBar.getValue();
+
+						// This should probably all be abstracted out
+						int fullBarWidth = pbWidth * bounds.width / 100;
+						int barWidth = fullBarWidth - 2 * borderWidth;
+						int barHeight = bounds.height - 2 * borderWidth;
+						int filledWidth = pbValue * barWidth / 100;
+						int left = pbLeft * bounds.width / 100;
+
+						ColorGroup cg = colors.get(progressBar.getId());
+						if(cg == null)
+							cg = defaultColors;
+
+						// Draw the border
+						e.gc.setForeground(cg.border);
+						e.gc.setLineWidth(borderWidth);
+						e.gc.drawRectangle(left, 0, fullBarWidth, bounds.height);
+
+						// draw the filled part of the rectangle
+						Color gradientColor = getGradientColor(25, true, cg.bg);
+						e.gc.setBackground(gradientColor);
+						e.gc.setForeground(cg.bg);
+						e.gc.fillGradientRectangle(borderWidth + left, borderWidth,
+								filledWidth, barHeight, false);
+
+						// draw the background
+						e.gc.setBackground(cg.border);
+						e.gc.fillRectangle(borderWidth + left + filledWidth,
+								borderWidth, barWidth - filledWidth, barHeight);
+
+						e.gc.setForeground(cg.fg);
+
+						String text = progressBar.getText();
+						Point extent = e.gc.textExtent(text);
+
+						int text_left = left + (barWidth - extent.x) / 2;
+						int text_top = (bounds.height - 2 * borderWidth - e.gc.getFontMetrics().getHeight()) / 2;
+						e.gc.drawText (text, text_left, text_top, true);
+					}
 				}
 			}
 		});
@@ -174,7 +171,7 @@ public class StormFrontDialogControl extends Canvas
 		return new Color(getShell().getDisplay(), red, green, blue);
 	}
 	
-	public void setSize(int width, int height) {
+	/*public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
 		
@@ -184,15 +181,19 @@ public class StormFrontDialogControl extends Canvas
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		
 		return new Point (width, height);
-	}
+	}*/
 	
 	public void dispose() {
-		progressFont.dispose();
+		font.dispose();
 		
 		super.dispose();
 	}
+	
+	public void setDialog(WarlockDialog dialog) {
+		this.dialog = dialog;
+	}
 
-	public void sendMessage(IWarlockDialog msg) {
+	/*public void sendMessage(IWarlockDialogData msg) {
 		progressBars.put(msg.getId(), msg);
 		redraw();
 	}
@@ -255,5 +256,5 @@ public class StormFrontDialogControl extends Canvas
 			return concentrationBorder;
 		
 		return defaultBorder;
-	}
+	}*/
 }

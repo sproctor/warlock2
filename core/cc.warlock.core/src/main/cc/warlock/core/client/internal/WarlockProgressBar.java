@@ -1,9 +1,9 @@
 package cc.warlock.core.client.internal;
 
-import cc.warlock.core.client.IWarlockDialog;
+import cc.warlock.core.client.IWarlockDialogData;
 
 
-public class WarlockProgressBar implements IWarlockDialog {
+public class WarlockProgressBar implements IWarlockDialogData {
 	private String id;
 	private String text;
 	private String value;

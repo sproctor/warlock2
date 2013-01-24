@@ -1,6 +1,6 @@
 package cc.warlock.core.client;
 
-public interface IWarlockDialog {
+public interface IWarlockDialogData {
 	public String getId();
 	
 	public String getText();
