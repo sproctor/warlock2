@@ -472,7 +472,10 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	{
 		selectedString.getStyle().setForegroundColor(WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getForegroundColor());
 		customFGSelector.setEnabled(false);
-		customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(selectedString.getStyle().getForegroundColor()));
+		WarlockColor color = selectedString.getStyle().getForegroundColor();
+		if(color.isDefault())
+			color = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
+		customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(color));
 		stringTable.update(selectedString, null);
 		setValid(true);
 	}
@@ -490,7 +493,10 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	{
 		selectedString.getStyle().setBackgroundColor(WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getBackgroundColor());
 		customBGSelector.setEnabled(false);
-		customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(selectedString.getStyle().getBackgroundColor()));
+		WarlockColor color = selectedString.getStyle().getBackgroundColor();
+		if(color.isDefault())
+			color = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
+		customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(color));
 		stringTable.update(selectedString, null);	
 		setValid(true);
 	}
