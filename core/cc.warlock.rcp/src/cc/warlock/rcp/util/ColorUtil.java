@@ -21,31 +21,16 @@
  */
 package cc.warlock.rcp.util;
 
-import java.util.HashMap;
-
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import cc.warlock.core.client.WarlockColor;
 
-public class ColorUtil {
-
-	// cached associations for minimizing object overhead
-	protected static HashMap<WarlockColor, Color> cachedColors = new HashMap<WarlockColor, Color>();
-	protected static HashMap<WarlockColor, RGB> cachedRGBs = new HashMap<WarlockColor, RGB>();
-	protected static HashMap<RGB, WarlockColor> cachedRGBWarlockColors = new HashMap<RGB,WarlockColor>();
-	
+public class ColorUtil {	
 	public static WarlockColor rgbToWarlockColor (RGB rgb)
 	{
-		if (!cachedRGBWarlockColors.containsKey(rgb))
-		{
-			WarlockColor color = new WarlockColor(rgb.red, rgb.green, rgb.blue);
-			
-			cachedRGBWarlockColors.put(rgb, color);
-			cachedRGBs.put(color, rgb);
-		}
-		return cachedRGBWarlockColors.get(rgb);
+			return new WarlockColor(rgb.red, rgb.green, rgb.blue);
 	}
 	
 	public static WarlockColor colorToWarlockColor (Color color)
@@ -56,24 +41,11 @@ public class ColorUtil {
 	
 	public static RGB warlockColorToRGB (WarlockColor color)
 	{
-		if (!cachedRGBs.containsKey(color))
-		{
-			RGB rgb = new RGB(color.getRed(), color.getGreen(), color.getBlue());
-			
-			cachedRGBWarlockColors.put(rgb, color);
-			cachedRGBs.put(color, rgb);
-		}
-		return cachedRGBs.get(color);
+			return new RGB(color.getRed(), color.getGreen(), color.getBlue());
 	}
 	
 	public static Color warlockColorToColor (WarlockColor color)
 	{
-		if (!cachedColors.containsKey(color))
-		{
-			Color c2 = new Color(Display.getDefault(), warlockColorToRGB(color));
-			
-			cachedColors.put(color, c2);
-		}
-		return cachedColors.get(color);
+			return new Color(Display.getDefault(), warlockColorToRGB(color));
 	}
 }
