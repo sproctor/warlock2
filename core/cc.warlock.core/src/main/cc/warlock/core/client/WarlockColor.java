@@ -52,12 +52,15 @@ public class WarlockColor {
 	{
 		if (colorString.charAt(0) == '#')
 		{
-			colorString = colorString.substring(1);
+			if(colorString.length() >= 7) {
+				red = Integer.parseInt(colorString.substring(1, 3), 16);
+				green = Integer.parseInt(colorString.substring(3, 5), 16);
+				blue = Integer.parseInt(colorString.substring(5, 7), 16);
+			}
+		} else {
+			// Bad color
 		}
 		
-		red = Integer.parseInt(colorString.substring(0, 2), 16);
-		green = Integer.parseInt(colorString.substring(2, 4), 16);
-		blue = Integer.parseInt(colorString.substring(4, 6), 16);
 	}
 	
 	public int getRed() {
