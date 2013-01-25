@@ -88,20 +88,6 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected HighlightSetting selectedString;
 	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
 	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();
-	//protected ArrayList<HighlightString> highlightStrings = new ArrayList<HighlightString>();
-	//private ClientSettings settings;
-	
-	/*private void copyHighlightStrings ()
-	{
-		highlightStrings.clear();
-		for (IHighlightString string : client.getClientSettings().getHighlightStrings())
-		{
-			if (string instanceof HighlightString)
-			{
-				highlightStrings.add(new HighlightString((HighlightString)string));
-			}
-		}
-	}*/
 	
 	@Override
 	protected Control createContents(Composite parent) {
@@ -292,14 +278,10 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			}
 		});
 		
-		
 		soundButton = createButton(soundGroup, "Browse", SWT.PUSH);
 		
 		soundButton.setEnabled(false);
 		addBtnSoundListener(main);
-		
-		
-		
 	}
 	
 	private void addBtnSoundListener(final Composite parent){
@@ -448,11 +430,11 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		String filename = fd.open();
 		if (filename != null){
 			soundText.setText(filename);
-			try{
-				if (selectedString != null && selectedString.getStyle() != null){
+			try {
+				if (selectedString != null && selectedString.getStyle() != null) {
 					selectedString.getStyle().setSound(filename);
 				}
-			}catch(Exception e){
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
