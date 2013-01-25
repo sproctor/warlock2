@@ -36,12 +36,16 @@ public class StreamText extends WarlockText implements IStreamListener {
 	protected String prompt = null;
 	protected Property<String> title = new Property<String>();
 	private IStreamListener streamListener = new SWTStreamListener(this);
-	private IWarlockSettingListener settingListener = new SWTWarlockSettingListener(new IWarlockSettingListener() {
-		public void settingChanged(IWarlockSetting setting) {
+	private WindowSettingsListener settingListener;
+	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+		public void clientActivated(IWarlockClient client) {}
+		public void clientConnected(IWarlockClient client) {}
+		public void clientDisconnected(IWarlockClient client) {}
+		public void clientRemoved(IWarlockClient client) {}
+		public void clientSettingsLoaded(IWarlockClient client) {
 			loadSettings();
 		}
 	});
-	
 	private WarlockString textBuffer;
 	
 	public StreamText(Composite parent, String streamName) {
@@ -162,7 +166,9 @@ public class StreamText extends WarlockText implements IStreamListener {
 		
 		if(this.client != null) {
 			this.client.removeStreamListener(streamName, streamListener);
-			WindowConfigurationProvider.getProvider(client.getClientSettings()).removeListener(settingListener);
+			WarlockClientRegistry.removeWarlockClientListener(clientListener);
+			if(settingListener != null)
+				settingListener.remove();
 		}
 		
 		this.client = client;
@@ -175,40 +181,51 @@ public class StreamText extends WarlockText implements IStreamListener {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addKeyListener(game.getWarlockEntry().new KeyEventListener());
 		}
 
-		stream = client.getStream(streamName);
-		
-		if(stream != null)
-			this.title.set(stream.getFullTitle());
+		if(client != null) {
+			stream = client.getStream(streamName);
+			client.addStreamListener(streamName, streamListener);
+			WarlockClientRegistry.addWarlockClientListener(clientListener);
+			// if client already has settings, we'll unintentially load them twice
+			loadSettings();
+		} else {
+			stream = null;
+		}
 		
 		if(stream != null) {
+			this.title.set(stream.getFullTitle());
 			WarlockString history = stream.getHistory();
 			if(history != null)
 				this.streamReceivedText(stream, stream.getHistory());
 			this.flushBuffer();
 		}
-		
-		client.addStreamListener(streamName, streamListener);
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
-			public void clientActivated(IWarlockClient client) {}
-			public void clientConnected(IWarlockClient client) {}
-			public void clientDisconnected(IWarlockClient client) {}
-			public void clientRemoved(IWarlockClient client) {}
-			public void clientSettingsLoaded(IWarlockClient client) {
-				loadSettings();
-			}
-		}));
-		loadSettings();
+	}
+	
+	private class WindowSettingsListener implements IWarlockSettingListener {
+		WindowConfigurationProvider provider;
+		IWarlockSettingListener listener = new SWTWarlockSettingListener(this);
+		public WindowSettingsListener(WindowConfigurationProvider provider) {
+			this.provider = provider;
+			provider.addListener(listener);
+		}
+		public void settingChanged(IWarlockSetting setting) {
+			loadSettings();
+		}
+		public void remove() {
+			provider.removeListener(listener);
+		}
 	}
 	
 	private void loadSettings() {
+		if(settingListener != null)
+			settingListener.remove();
+		
 		IClientSettings settings = client.getClientSettings();
 		
 		if(settings == null)
 			return;
 		
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-		provider.removeListener(settingListener);
-		provider.addListener(settingListener);
+		settingListener = new WindowSettingsListener(provider);
 		
 		// Set to defaults first, then try window settings later
 		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
