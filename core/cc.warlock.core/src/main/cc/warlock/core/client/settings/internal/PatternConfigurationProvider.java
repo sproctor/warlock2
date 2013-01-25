@@ -21,9 +21,8 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockPattern;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * @author marshall
@@ -31,10 +30,8 @@ import cc.warlock.core.client.IWarlockPattern;
  */
 public abstract class PatternConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern> {
 
-	public PatternConfigurationProvider (Preferences parentNode, String path)
+	public PatternConfigurationProvider (IWarlockSetting parent, String path)
 	{
-		super(parentNode, path);
-		
-		
+		super(parent, path);
 	}
 }

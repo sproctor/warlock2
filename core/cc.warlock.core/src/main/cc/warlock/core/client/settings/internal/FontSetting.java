@@ -21,10 +21,9 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.internal.WarlockFont;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 /**
@@ -36,8 +35,8 @@ public class FontSetting extends WarlockSetting implements IWarlockFont {
 	private String familyName;
 	private int size;
 	
-	public FontSetting (Preferences parentNode, String path) {
-		super(parentNode, path);
+	public FontSetting (IWarlockSetting parent, String path) {
+		super(parent, path);
 		familyName = getNode().get("family-name", "default");
 		size = getNode().getInt("size", -1);
 	}
@@ -80,8 +79,11 @@ public class FontSetting extends WarlockSetting implements IWarlockFont {
 		return super.equals(obj);
 	}
 	
-	public boolean isDefaultFont()
-	{
+	public boolean isDefaultFont() {
 		return this.equals(WarlockFont.DEFAULT_FONT);
+	}
+	
+	public String toString() {
+		return familyName + ":" + size;
 	}
 }

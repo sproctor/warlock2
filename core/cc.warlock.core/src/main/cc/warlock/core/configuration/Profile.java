@@ -24,7 +24,6 @@
  */
 package cc.warlock.core.configuration;
 
-import org.osgi.service.prefs.Preferences;
 
 /**
  * @author Marshall
@@ -33,8 +32,8 @@ public class Profile extends WarlockSetting {
 
 	protected String characterId, name, gameCode, gameName, viewId;
 	
-	public Profile (Preferences parentNode, String path) {
-		super(parentNode, path);
+	public Profile (IWarlockSetting parent, String path) {
+		super(parent, path);
 		
 		this.characterId = getNode().get("character-id", null);
 		this.name = getNode().get("name", null);

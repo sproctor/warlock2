@@ -24,12 +24,11 @@ package cc.warlock.core.client.settings.internal;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public class PresetStyleConfigurationProvider extends WarlockSetting
@@ -63,12 +62,12 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 		setDefaultStyle("command", "#FFFFFF", "#404040");
 	}
 	
-	public PresetStyleConfigurationProvider(Preferences parentNode) {
-		super(parentNode, ID);
+	public PresetStyleConfigurationProvider(IWarlockSetting parent) {
+		super(parent, ID);
 		
 		try {
 			for(String id : getNode().childrenNames()) {
-				styleSettings.put(id, new StyleSetting(getNode(), id, true));
+				styleSettings.put(id, new StyleSetting(this, id, true));
 				
 			}
 		} catch(Exception e) {
@@ -91,7 +90,7 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 	public IWarlockStyle getOrCreateStyle(String id) {
 		IWarlockStyle style = styleSettings.get(id);
 		if(style == null) {
-			style = new StyleSetting(getNode(), id, true);
+			style = new StyleSetting(this, id, true);
 			styleSettings.put(id, style);
 		}
 		return style;

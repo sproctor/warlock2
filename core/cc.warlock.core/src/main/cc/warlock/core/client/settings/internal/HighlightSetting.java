@@ -21,8 +21,6 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.internal.WarlockHighlight;
@@ -30,13 +28,13 @@ import cc.warlock.core.configuration.IWarlockSetting;
 
 public class HighlightSetting extends AbstractPatternSetting<WarlockHighlight> implements IWarlockSetting, IWarlockHighlight {
 
-	public HighlightSetting (Preferences parentNode, String path)
+	public HighlightSetting (IWarlockSetting parent, String path)
 	{
-		super(parentNode, path);
+		super(parent, path);
 	}
 	
 	protected WarlockHighlight createPattern(String text, boolean literal, boolean caseSensitive, boolean fullWord) {
-		StyleSetting style = new StyleSetting(getNode(), "style");
+		StyleSetting style = new StyleSetting(this, "style");
 		return new WarlockHighlight(text, literal, caseSensitive, fullWord, style);
 	}
 	

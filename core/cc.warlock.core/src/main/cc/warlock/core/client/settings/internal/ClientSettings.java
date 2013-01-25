@@ -63,60 +63,65 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 		}
 		
 		registerProviderFactory("highlights", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new HighlightConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new HighlightConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("ignores", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new IgnoreConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new IgnoreConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("triggers", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new TriggerConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new TriggerConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("variables", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new VariableConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new VariableConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("macros", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new MacroConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new MacroConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("windows", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new WindowConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new WindowConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("presets", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new PresetStyleConfigurationProvider(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new PresetStyleConfigurationProvider(parent);
 			}
 		});
 		
 		registerProviderFactory("logs", new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new LoggingConfiguration(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new LoggingConfiguration(parent);
 			}
 		});
 	}
 	
 	private ClientSettings (String clientId) {
-		super(topNode, clientId);
+		super(null, clientId);
 		
 		this.clientId = clientId;
 		
 		name = getNode().get("name", null);
+	}
+	
+	@Override
+	protected Preferences getParentNode() {
+		return topNode;
 	}
 	
 	public IWarlockSetting getProvider (String providerId) {
@@ -125,7 +130,8 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 			IWarlockSettingFactory factory = providerFactories.get(providerId);
 			if (factory == null)
 				return null;
-			provider = factory.createSetting(getNode());
+			provider = factory.createSetting(this);
+			providers.put(providerId, provider);
 		}
 		return provider;
 	}

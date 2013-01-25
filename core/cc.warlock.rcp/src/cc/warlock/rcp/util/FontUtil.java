@@ -36,7 +36,7 @@ import cc.warlock.core.client.internal.WarlockFont;
  */
 public class FontUtil {
 
-	private static HashMap<IWarlockFont, Font> fonts = new HashMap<IWarlockFont, Font>();
+	private static HashMap<String, Font> fonts = new HashMap<String, Font>();
 	
 	public static FontData warlockFontToFontData (IWarlockFont font)
 	{
@@ -49,10 +49,10 @@ public class FontUtil {
 	
 	public static Font warlockFontToFont (IWarlockFont font)
 	{
-		Font f = fonts.get(font);
+		Font f = fonts.get(font.toString());
 		if(f == null) {
 			f = new Font(Display.getDefault(), warlockFontToFontData(font));
-			fonts.put(font, f);
+			fonts.put(font.toString(), f);
 		}
 		return f;
 	}

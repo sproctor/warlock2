@@ -35,20 +35,21 @@ import cc.warlock.core.client.settings.IWarlockSettingListener;
  */
 public class WarlockSetting implements IWarlockSetting {
 
-	private Preferences parentNode;
+	//private Preferences parentNode;
+	private IWarlockSetting parent;
 	private Preferences node;
 	private boolean newSetting;
 	private ArrayList<IWarlockSettingListener> listeners = null;
 	
-	public WarlockSetting (Preferences parentNode, String path)
+	public WarlockSetting (IWarlockSetting parent, String path)
 	{
-		this.parentNode = parentNode;
+		this.parent = parent;
 		try {
-			newSetting = !parentNode.nodeExists(path);
+			newSetting = !getParentNode().nodeExists(path);
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
-		node = parentNode.node(path);
+		node = getParentNode().node(path);
 	}
 	
 	public Preferences getNode() {
@@ -61,7 +62,7 @@ public class WarlockSetting implements IWarlockSetting {
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
-		node = parentNode.node(path);
+		node = getParentNode().node(path);
 	}
 	
 	public boolean isNewSetting() {
@@ -76,12 +77,14 @@ public class WarlockSetting implements IWarlockSetting {
 		}
 	}
 	
-	protected void notifyListenersChanged() {
-		if(listeners == null)
-			return;
-		
-		for(IWarlockSettingListener listener: listeners) {
-			listener.settingChanged(this);
+	public void notifyListenersChanged() {
+		if(listeners != null) {
+			for(IWarlockSettingListener listener: listeners) {
+				listener.settingChanged(this);
+			}
+		}
+		if(parent != null) {
+			parent.notifyListenersChanged();
 		}
 	}
 	
@@ -105,5 +108,12 @@ public class WarlockSetting implements IWarlockSetting {
 		} else {
 			return false;
 		}
+	}
+	
+	protected Preferences getParentNode() {
+		if(parent != null)
+			return parent.getNode();
+		else
+			return null;
 	}
 }

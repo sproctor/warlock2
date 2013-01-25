@@ -23,22 +23,21 @@ package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IHighlightProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IWarlockHighlight> implements IHighlightProvider
 {
 	public static String ID = "highlights";
 	
-	public HighlightConfigurationProvider (Preferences parentNode) {
-		super(parentNode, ID);
+	public HighlightConfigurationProvider (IWarlockSetting parent) {
+		super(parent, ID);
 	}
 	
 	protected HighlightSetting loadSetting(String id) {
-		return new HighlightSetting(getNode(), id);
+		return new HighlightSetting(this, id);
 	}
 	
 	public static HighlightConfigurationProvider getProvider(IClientSettings clientSettings) {

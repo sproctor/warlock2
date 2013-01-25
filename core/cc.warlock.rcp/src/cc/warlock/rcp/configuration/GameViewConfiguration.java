@@ -22,7 +22,6 @@
 package cc.warlock.rcp.configuration;
 
 import org.eclipse.jface.resource.JFaceResources;
-import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettings;
@@ -47,15 +46,15 @@ public class GameViewConfiguration extends WarlockSetting
 	
 	static {
 		ClientSettings.registerProviderFactory(ID, new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting (Preferences parentNode) {
-				return new GameViewConfiguration(parentNode);
+			public IWarlockSetting createSetting (IWarlockSetting parent) {
+				return new GameViewConfiguration(parent);
 			}
 		});
 	}
 	
-	private GameViewConfiguration (Preferences parentNode)
+	private GameViewConfiguration (IWarlockSetting parent)
 	{
-		super(parentNode, ID);
+		super(parent, ID);
 		
 		String bgString = getNode().get("background", null);
 		if(bgString != null)

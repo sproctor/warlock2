@@ -1,12 +1,19 @@
 package cc.warlock.core.configuration;
 
+import org.osgi.service.prefs.Preferences;
+
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 
 public class AccountProvider extends ArrayConfigurationProvider<Account> {
 	private static AccountProvider instance = new AccountProvider();
 	
 	private AccountProvider() {
-		super(WarlockPreferences.getInstance().getNode(), "accounts");
+		super(null, "accounts");
+	}
+	
+	@Override
+	protected Preferences getParentNode() {
+		return WarlockPreferences.getInstance().getNode();
 	}
 	
 	public static AccountProvider getInstance() {
@@ -14,7 +21,7 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 	}
 	
 	protected Account loadSetting(String id) {
-		return new Account(getNode(), id);
+		return new Account(this, id);
 	}
 	
 	public Account getAccount(String accountName) {

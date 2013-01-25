@@ -23,10 +23,9 @@ package cc.warlock.core.client.logging;
 
 import java.io.File;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.configuration.ConfigurationUtil;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 
@@ -40,8 +39,8 @@ public class LoggingConfiguration extends WarlockSetting
 	protected boolean enableLogging;
 	protected File logDirectory;
 	
-	public LoggingConfiguration (Preferences parentNode) {
-		super(parentNode, ID);
+	public LoggingConfiguration (IWarlockSetting parent) {
+		super(parent, ID);
 		logFormat = getNode().get("format", LOG_FORMAT_TEXT);
 		enableLogging = getNode().getBoolean("enabled", true);
 		String dirName = getNode().get("dir", null);

@@ -31,4 +31,5 @@ public interface IWarlockSetting {
 	public Preferences getNode();
 	public void flush();
 	public boolean isNewSetting();
+	public void notifyListenersChanged(); // Should only be called by its children
 }

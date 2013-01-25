@@ -24,19 +24,17 @@ package cc.warlock.core.configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 
 
 public class ProfileProvider extends ArrayConfigurationProvider<Profile> implements IWarlockSetting {
 	
-	public ProfileProvider(Preferences parentNode) {
-		super(parentNode, "profiles");
+	public ProfileProvider(IWarlockSetting parent) {
+		super(parent, "profiles");
 	}
 	
 	protected Profile loadSetting(String id) {
-		return new Profile(getNode(), id);
+		return new Profile(this, id);
 	}
 	
 	public Profile createProfile (String id, String name, String gameCode, String gameName) {

@@ -21,10 +21,9 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 /**
@@ -43,13 +42,13 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 	private boolean underline;
 	private boolean monospace;
 	
-	public StyleSetting (Preferences parentNode, String path) {
-		this(parentNode, path, false);
+	public StyleSetting (IWarlockSetting parent, String path) {
+		this(parent, path, false);
 	}
 	
-	public StyleSetting (Preferences parentNode, String path, boolean pathIsName)
+	public StyleSetting (IWarlockSetting parent, String path, boolean pathIsName)
 	{
-		super(parentNode, path);
+		super(parent, path);
 		
 		String fgString = getNode().get("fgcolor", null);
 		fgColor = fgString == null ? new WarlockColor(WarlockColor.DEFAULT_COLOR) : new WarlockColor(fgString);

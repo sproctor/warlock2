@@ -25,11 +25,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IVariable;
 import cc.warlock.core.client.settings.IVariableProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public class VariableConfigurationProvider extends WarlockSetting implements IVariableProvider
@@ -38,13 +37,13 @@ public class VariableConfigurationProvider extends WarlockSetting implements IVa
 	
 	protected HashMap<String, IVariable> variables = new HashMap<String, IVariable>();
 	
-	public VariableConfigurationProvider (Preferences parentNode)
+	public VariableConfigurationProvider (IWarlockSetting parent)
 	{
-		super(parentNode, ID);
+		super(parent, ID);
 		
 		try {
 			for(String id : getNode().childrenNames()) {
-				variables.put(id, new Variable(getNode(), id));
+				variables.put(id, new Variable(this, id));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -56,7 +55,7 @@ public class VariableConfigurationProvider extends WarlockSetting implements IVa
 	}
 	
 	public IVariable addVariable(String identifier, String value) {
-		return addVariable(new Variable(getNode(), identifier, value));
+		return addVariable(new Variable(this, identifier, value));
 	}
 	
 	public void setVariable(String id, IVariable variable) {

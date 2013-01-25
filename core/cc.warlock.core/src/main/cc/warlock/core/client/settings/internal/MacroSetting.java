@@ -27,8 +27,6 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.CommandMacroHandler;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroHandler;
@@ -43,9 +41,9 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 	protected IMacroHandler handler;
 	private boolean updateDeferred;
 	
-	public MacroSetting (Preferences parentNode, String path)
+	public MacroSetting (IWarlockSetting parent, String path)
 	{
-		super(parentNode, path);
+		super(parent, path);
 		
 		this.keyString = getNode().get("keystring", null);
 		this.command = getNode().get("command", null);

@@ -21,17 +21,16 @@
  */
 package cc.warlock.core.script.configuration;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
 import cc.warlock.core.client.settings.internal.DirectorySetting;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 public class ScriptDirectoryConfiguration extends ArrayConfigurationProvider<DirectorySetting> {
-	public ScriptDirectoryConfiguration (Preferences parentNode) {
-		super(parentNode, "directories");
+	public ScriptDirectoryConfiguration (IWarlockSetting parent) {
+		super(parent, "directories");
 	}
 	
 	protected DirectorySetting loadSetting(String id) {
-		return new DirectorySetting(getNode(), id);
+		return new DirectorySetting(this, id);
 	}
 }

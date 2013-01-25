@@ -2,9 +2,8 @@ package cc.warlock.core.client.settings.internal;
 
 import java.io.File;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.configuration.ConfigurationUtil;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public class DirectorySetting extends WarlockSetting {
@@ -13,8 +12,8 @@ public class DirectorySetting extends WarlockSetting {
 	
 	private File directory = null;
 	
-	public DirectorySetting (Preferences parentNode, String path) {
-		super(parentNode, path);
+	public DirectorySetting (IWarlockSetting parent, String path) {
+		super(parent, path);
 		name = getNode().get("name", null);
 		type = getNode().get("type", "absolute");
 	}

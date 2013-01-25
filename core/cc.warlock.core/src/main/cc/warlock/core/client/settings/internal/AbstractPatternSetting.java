@@ -24,8 +24,6 @@ package cc.warlock.core.client.settings.internal;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.internal.WarlockPattern;
 import cc.warlock.core.configuration.IWarlockSetting;
@@ -35,8 +33,8 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 
 	protected T pattern;
 	
-	public AbstractPatternSetting (Preferences parentNode, String path) {
-		super(parentNode, path);
+	public AbstractPatternSetting (IWarlockSetting parent, String path) {
+		super(parent, path);
 		
 		String text = getNode().get("pattern", "");
 		boolean literal = getNode().getBoolean("literal", true);

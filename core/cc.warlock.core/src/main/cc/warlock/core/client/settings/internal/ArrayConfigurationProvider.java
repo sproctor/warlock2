@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.osgi.service.prefs.BackingStoreException;
-import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.configuration.IArraySettingProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public abstract class ArrayConfigurationProvider<T> extends WarlockSetting implements IArraySettingProvider<T> {
 	protected HashMap<String, T> settings = new HashMap<String, T>();
 	private int nextId = 0;
 	
-	public ArrayConfigurationProvider(Preferences parentNode, String path) {
-		super(parentNode, path);
+	public ArrayConfigurationProvider(IWarlockSetting parent, String path) {
+		super(parent, path);
 		
 		try {
 			for(String id : getNode().childrenNames()) {

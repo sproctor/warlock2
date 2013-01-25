@@ -21,21 +21,20 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.settings.IWindowSettings;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 public class WindowSettings extends ColorFontSetting implements IWindowSettings {
 
 	protected String id;
 	protected FontSetting columnFont;
 	
-	public WindowSettings(Preferences parentNode, String id) {
-		super(parentNode, id);
+	public WindowSettings(IWarlockSetting parent, String id) {
+		super(parent, id);
 		
 		this.id = id;
-		columnFont = new FontSetting(parentNode, "column-font");
+		columnFont = new FontSetting(parent, "column-font");
 	}
 	
 	public IWarlockFont getColumnFont() {

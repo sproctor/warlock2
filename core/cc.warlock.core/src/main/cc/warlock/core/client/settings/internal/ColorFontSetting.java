@@ -21,11 +21,10 @@
  */
 package cc.warlock.core.client.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IFontSetting;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 /**
@@ -38,9 +37,9 @@ public abstract class ColorFontSetting extends WarlockSetting implements IFontSe
 	protected WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	protected FontSetting font;
 	
-	public ColorFontSetting (Preferences parentNode, String path)
+	public ColorFontSetting (IWarlockSetting parent, String path)
 	{
-		super(parentNode, path);
+		super(parent, path);
 		
 		String fgcolor = getNode().get("fgcolor", null);
 		if(fgcolor != null)
@@ -50,7 +49,7 @@ public abstract class ColorFontSetting extends WarlockSetting implements IFontSe
 		if(bgcolor != null)
 			backgroundColor = new WarlockColor(bgcolor);
 		
-		font = new FontSetting(parentNode, "font");
+		font = new FontSetting(parent, "font");
 	}
 
 	public WarlockColor getForegroundColor() {

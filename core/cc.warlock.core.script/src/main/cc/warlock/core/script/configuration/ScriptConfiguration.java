@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.osgi.service.prefs.Preferences;
+
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.settings.internal.DirectorySetting;
@@ -46,11 +48,11 @@ public class ScriptConfiguration extends WarlockSetting {
 	}
 	
 	private ScriptConfiguration () {
-		super(WarlockPreferences.getInstance().getNode(), "scripting");
+		super(null, "scripting");
 		suppressExceptions = new Property<Boolean>(getNode().getBoolean("suppress-exceptions", true));
 		//scriptPrefix = getNode().get("prefix", ".");
 		
-		directoryConf = new ScriptDirectoryConfiguration(this.getNode());
+		directoryConf = new ScriptDirectoryConfiguration(this);
 		if(directoryConf.getSettings().isEmpty()) {
 			DirectorySetting userScripts = directoryConf.createSetting();
 			userScripts.setDirectory("scripts", "user");
@@ -59,6 +61,11 @@ public class ScriptConfiguration extends WarlockSetting {
 			DirectorySetting confScripts = directoryConf.createSetting();
 			confScripts.setDirectory("scripts", "config");
 		}
+	}
+	
+	@Override
+	protected Preferences getParentNode() {
+		return WarlockPreferences.getInstance().getNode();
 	}
 	
 	public IProperty<Boolean> getSupressExceptions() {

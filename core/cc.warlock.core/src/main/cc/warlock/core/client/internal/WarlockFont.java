@@ -75,4 +75,8 @@ public class WarlockFont implements IWarlockFont {
 	{
 		return this.equals(DEFAULT_FONT);
 	}
+	
+	public String toString() {
+		return familyName + ":" + size;
+	}
 }

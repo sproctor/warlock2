@@ -37,7 +37,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.commons.codec.binary.Base64;
-import org.osgi.service.prefs.Preferences;
 
 public class Account extends WarlockSetting {
 
@@ -136,12 +135,12 @@ public class Account extends WarlockSetting {
 		}
 	}
 	
-	public Account (Preferences parentNode, String path) {
-		super(parentNode, path);
+	public Account (IWarlockSetting parent, String path) {
+		super(parent, path);
 		
 		this.accountName = getNode().get("account-name", null);
 		this.password = decryptPassword(getNode().getByteArray("password", null));
-		profileProvider = new ProfileProvider(getNode());
+		profileProvider = new ProfileProvider(this);
 		this.flush();
 	}
 	

@@ -11,13 +11,19 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockFont;
+import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.settings.IWarlockSettingListener;
 import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
 import cc.warlock.rcp.views.GameView;
@@ -29,7 +35,12 @@ public class StreamText extends WarlockText implements IStreamListener {
 	protected boolean isPrompting = false;
 	protected String prompt = null;
 	protected Property<String> title = new Property<String>();
-	private IStreamListener listener = new SWTStreamListener(this);
+	private IStreamListener streamListener = new SWTStreamListener(this);
+	private IWarlockSettingListener settingListener = new SWTWarlockSettingListener(new IWarlockSettingListener() {
+		public void settingChanged(IWarlockSetting setting) {
+			loadSettings();
+		}
+	});
 	
 	private WarlockString textBuffer;
 	
@@ -146,14 +157,13 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 
 	public void setClient(IWarlockClient client) {
-		
-		// No sense in updating the client if we're already using it.
-		if (this.client == client) {
+		if (this.client == client)
 			return;
-		}
 		
-		if(this.client != null)
-			this.client.removeStreamListener(streamName, listener);
+		if(this.client != null) {
+			this.client.removeStreamListener(streamName, streamListener);
+			WindowConfigurationProvider.getProvider(client.getClientSettings()).removeListener(settingListener);
+		}
 		
 		this.client = client;
 		
@@ -170,29 +180,6 @@ public class StreamText extends WarlockText implements IStreamListener {
 		if(stream != null)
 			this.title.set(stream.getFullTitle());
 		
-		IClientSettings settings = client.getClientSettings();
-		
-		if(settings != null) {
-			WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-			
-			// Set to defaults first, then try window settings later
-			Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
-			Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
-			IWarlockFont font = provider.getWindowFont(streamName);
-			
-			this.setBackground(background);
-			this.setForeground(foreground);
-
-			String defaultFontFace = GameViewConfiguration.getProvider(client.getClientSettings()).getDefaultFontFace();
-			int defaultFontSize = GameViewConfiguration.getProvider(client.getClientSettings()).getDefaultFontSize();
-
-			if (font.isDefaultFont()) {
-				this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
-			} else {
-				this.setFont(FontUtil.warlockFontToFont(font));
-			}
-		}
-		
 		if(stream != null) {
 			WarlockString history = stream.getHistory();
 			if(history != null)
@@ -200,12 +187,48 @@ public class StreamText extends WarlockText implements IStreamListener {
 			this.flushBuffer();
 		}
 		
-		client.addStreamListener(streamName, listener);
+		client.addStreamListener(streamName, streamListener);
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+			public void clientActivated(IWarlockClient client) {}
+			public void clientConnected(IWarlockClient client) {}
+			public void clientDisconnected(IWarlockClient client) {}
+			public void clientRemoved(IWarlockClient client) {}
+			public void clientSettingsLoaded(IWarlockClient client) {
+				loadSettings();
+			}
+		}));
+		loadSettings();
+	}
+	
+	private void loadSettings() {
+		IClientSettings settings = client.getClientSettings();
+		
+		if(settings == null)
+			return;
+		
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		provider.removeListener(settingListener);
+		provider.addListener(settingListener);
+		
+		// Set to defaults first, then try window settings later
+		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
+		Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
+		IWarlockFont font = provider.getWindowFont(streamName);
+		
+		this.setBackground(background);
+		this.setForeground(foreground);
+
+		String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
+		int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
+
+		if (font.isDefaultFont()) {
+			this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
+		} else {
+			this.setFont(FontUtil.warlockFontToFont(font));
+		}
 	}
 	
 	public void dispose() {
-		if(client != null) {
-			client.removeStreamListener(streamName, listener);
-		}
+		setClient(null);
 	}
 }

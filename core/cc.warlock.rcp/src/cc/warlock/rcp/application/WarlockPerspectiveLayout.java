@@ -23,6 +23,7 @@ package cc.warlock.rcp.application;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockPreferences;
@@ -37,12 +38,17 @@ public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlock
 	}
 	
 	protected WarlockPerspectiveLayout() {
-		super(WarlockPreferences.getInstance().getNode(), "window-layout");
+		super(null, "window-layout");
 		
 		bounds.x = getNode().getInt("x", 25);
 		bounds.y = getNode().getInt("y", 25);
 		bounds.width = getNode().getInt("width", 1024);
 		bounds.height = getNode().getInt("height", 768);
+	}
+	
+	@Override
+	protected Preferences getParentNode() {
+		return WarlockPreferences.getInstance().getNode();
 	}
 	
 	public void saveLayout() {

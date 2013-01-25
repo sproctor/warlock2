@@ -21,8 +21,6 @@
  */
 package cc.warlock.core.stormfront.settings.internal;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.internal.ClientSettings;
@@ -43,14 +41,14 @@ public class CommandLineSettings extends ColorFontSetting implements ICommandLin
 	
 	static {
 		ClientSettings.registerProviderFactory(ID, new IWarlockSettingFactory() {
-			public IWarlockSetting createSetting(Preferences parentNode) {
-				return new CommandLineSettings(parentNode);
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new CommandLineSettings(parent);
 			}
 		});
 	}
 	
-	private CommandLineSettings (Preferences parentNode) {
-		super(parentNode, ID);
+	private CommandLineSettings (IWarlockSetting parent) {
+		super(parent, ID);
 		
 		String colorString = getNode().get("bar-color", null);
 		if(colorString != null)

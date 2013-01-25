@@ -23,10 +23,9 @@ package cc.warlock.core.client.settings.internal;
 
 import java.util.Collection;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IMacroProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 
 /**
  * Macros defined by this provider are command-based only.
@@ -37,9 +36,9 @@ public class MacroConfigurationProvider extends ArrayConfigurationProvider<Macro
 {
 	public static final String ID = "macros";
 	
-	public MacroConfigurationProvider (Preferences parentNode)
+	public MacroConfigurationProvider (IWarlockSetting parent)
 	{
-		super(parentNode, ID);
+		super(parent, ID);
 	}
 	
 	protected MacroSetting loadSetting(String id) {
@@ -49,7 +48,7 @@ public class MacroConfigurationProvider extends ArrayConfigurationProvider<Macro
 		} catch(Exception e) {
 			// don't need to do anything
 		}
-		MacroSetting macro = new MacroSetting(getNode(), id);
+		MacroSetting macro = new MacroSetting(this, id);
 		
 		// Old macros had no keyString. Remove them if we come across them
 		if (loading && macro.getKeyString() == null) {

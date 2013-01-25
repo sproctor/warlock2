@@ -25,13 +25,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.osgi.service.prefs.Preferences;
-
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.IWindowSettingsProvider;
+import cc.warlock.core.configuration.IWarlockSetting;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public class WindowConfigurationProvider extends WarlockSetting implements IWindowSettingsProvider
@@ -45,12 +44,12 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 	
 	protected HashMap<String, IWindowSettings> windowSettings = new HashMap<String, IWindowSettings>();
 	
-	public WindowConfigurationProvider(Preferences parentNode) {
-		super(parentNode, ID);
+	public WindowConfigurationProvider(IWarlockSetting parent) {
+		super(parent, ID);
 		
 		try {
 			for(String windowId : getNode().childrenNames()) {
-				windowSettings.put(windowId, new WindowSettings(getNode(), windowId));
+				windowSettings.put(windowId, new WindowSettings(this, windowId));
 				
 			}
 		} catch(Exception e) {
@@ -69,7 +68,7 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 	public IWindowSettings getOrCreateWindowSettings(String windowId) {
 		IWindowSettings settings = windowSettings.get(windowId);
 		if(settings == null) {
-			settings = new WindowSettings(getNode(), windowId);
+			settings = new WindowSettings(this, windowId);
 			windowSettings.put(windowId, settings);
 		}
 		return settings;
