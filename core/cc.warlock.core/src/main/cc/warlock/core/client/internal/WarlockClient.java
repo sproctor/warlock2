@@ -110,7 +110,7 @@ public abstract class WarlockClient implements IWarlockClient {
 			public void clientSettingsLoaded(IWarlockClient client) {
 				// if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
 					logger = new SimpleLogger(WarlockClient.this);
-					//highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
+					highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
 			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
@@ -258,17 +258,12 @@ public abstract class WarlockClient implements IWarlockClient {
 
 	    @Override
 	    public void remove() {
-	        //TODO
+	        // Unused
 	    }
 	}
 	
 	public Iterator<IWarlockHighlight> getHighlightsIterator() {
-		Collection<IWarlockHighlight> settingsHighlights = HighlightConfigurationProvider.getHighlights(getClientSettings());
-		if(highlightLists.isEmpty())
-			return settingsHighlights.iterator();
-		ArrayList<Collection<IWarlockHighlight>> lists = (ArrayList)highlightLists.clone();
-		lists.add(settingsHighlights);
-		return new MultiIterator<IWarlockHighlight>(lists);
+		return new MultiIterator<IWarlockHighlight>(highlightLists);
 	}
 	
 	public void addHighlights(Collection<IWarlockHighlight> highlights) {
