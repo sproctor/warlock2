@@ -94,12 +94,6 @@ public class WarlockColor {
 		else return hex;
 	}
 	
-	public String toHexString () {
-		return "#" + padHexString(Integer.toHexString(red).toUpperCase()) +
-			"" + padHexString(Integer.toHexString(green).toUpperCase()) +
-			"" + padHexString(Integer.toHexString(blue).toUpperCase());
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof WarlockColor)
@@ -113,7 +107,9 @@ public class WarlockColor {
 	
 	@Override
 	public String toString() {
-		return toHexString() + " (r: " + red + ", g: " + green + ", b: " + blue +")";
+		return "#" + padHexString(Integer.toHexString(red).toUpperCase()) +
+				"" + padHexString(Integer.toHexString(green).toUpperCase()) +
+				"" + padHexString(Integer.toHexString(blue).toUpperCase());
 	}
 	
 	public boolean isDefault ()

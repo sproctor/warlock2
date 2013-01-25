@@ -74,7 +74,7 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 	}
 
 	public void setForegroundColor(WarlockColor foregroundColor) {
-		this.getNode().put("fgcolor", foregroundColor.toHexString());
+		this.getNode().put("fgcolor", foregroundColor.toString());
 		
 		this.fgColor = foregroundColor;
 		this.notifyListenersChanged();

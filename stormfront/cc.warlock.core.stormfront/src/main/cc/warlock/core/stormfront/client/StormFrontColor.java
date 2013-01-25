@@ -55,7 +55,7 @@ public class StormFrontColor extends WarlockColor {
 	{
 		if (isSkinColor()) return "skin";
 		if (getPaletteId() != null) return "@" + getPaletteId();
-		return toHexString();
+		return toString();
 	}
 	
 	public boolean isSkinColor() {

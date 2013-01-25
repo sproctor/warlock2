@@ -71,7 +71,7 @@ public class Palette extends ServerSetting {
 				needsUpdate = true;
 				StormFrontElement iElement = getIElement(id);
 				
-				setAttribute(iElement, "color", color.toHexString());
+				setAttribute(iElement, "color", color.toString());
 			}
 			
 			this.color = color;
@@ -185,7 +185,7 @@ public class Palette extends ServerSetting {
 		{
 			StormFrontElement iElement = getIElement(id);
 			
-			setAttribute(iElement, "color", palette.get(id).getColor().toHexString());
+			setAttribute(iElement, "color", palette.get(id).getColor().toString());
 		}
 	}
 	
@@ -197,8 +197,8 @@ public class Palette extends ServerSetting {
 			PaletteEntry entry = palette.get(id);
 			if (entry.needsUpdate)
 			{
-				markup += "<i id='" + id + "' color='" + entry.originalColor.toHexString() + "'/>";
-				markup += "<i id='" + id + "' color='" + entry.getColor().toHexString() + "'/>";
+				markup += "<i id='" + id + "' color='" + entry.originalColor.toString() + "'/>";
+				markup += "<i id='" + id + "' color='" + entry.getColor().toString() + "'/>";
 				entry.needsUpdate = false;
 				entry.originalColor = null;
 			}

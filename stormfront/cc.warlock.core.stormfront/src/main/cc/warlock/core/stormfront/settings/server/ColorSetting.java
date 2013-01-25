@@ -156,7 +156,7 @@ public abstract class ColorSetting extends ServerSetting implements Comparable<C
 	}
 
 	public void setForegroundColor(WarlockColor foreground) {
-		setForegroundColor(new StormFrontColor(foreground.toHexString()));
+		setForegroundColor(new StormFrontColor(foreground.toString()));
 	}
 	
 	public void setForegroundColor(StormFrontColor foregroundColor) {
@@ -164,7 +164,7 @@ public abstract class ColorSetting extends ServerSetting implements Comparable<C
 	}
 	
 	public void setBackgroundColor(WarlockColor background) {
-		setBackgroundColor(new StormFrontColor(background.toHexString()));
+		setBackgroundColor(new StormFrontColor(background.toString()));
 	}
 	
 	public void setBackgroundColor(StormFrontColor backgroundColor) {
