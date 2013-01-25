@@ -40,7 +40,7 @@ public class WarlockPattern implements IWarlockPattern {
 				flags |= Pattern.CASE_INSENSITIVE;
 			}
 			if (fullWord) {
-				s = "(^|\\b|\\s|\\p{Punct})" + s + "($|\\b|\\s|\\p{Punct})";
+				s = "(?<=^|\\b|\\s|\\p{Punct})" + s + "(?=$|\\b|\\s|\\p{Punct})";
 			}
 			
 			pattern = Pattern.compile(s, flags);
