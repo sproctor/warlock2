@@ -138,9 +138,4 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	public ICompass getCompass() {
 		return compass;
 	}
-
-	@Override
-	public void dispose() {
-		
-	}
 }
