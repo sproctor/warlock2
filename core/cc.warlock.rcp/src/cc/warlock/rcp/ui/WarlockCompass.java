@@ -40,6 +40,7 @@ import cc.warlock.core.client.ICompass.DirectionType;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.internal.Command;
+import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.ui.style.CompassTheme;
 
 /**
@@ -52,6 +53,7 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	private CompassTheme theme;
 	private ICompass compass;
 	private IWarlockClient client;
+	private IPropertyListener<ICompass> listener;
 	
 	private Image compassImage = WarlockSharedImages.getImage(WarlockSharedImages.IMG_COMPASS_SMALL_MAIN);
 	
@@ -63,11 +65,14 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		moveCursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
 		compassImage = theme.getMainImage();
 		this.client = client;
+		listener = new SWTPropertyListener<ICompass>(this);
+		client.getCompass().addListener(listener);
 		
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				moveCursor.dispose();
 				compassImage.dispose();
+				WarlockCompass.this.client.getCompass().removeListener(listener);
 			}
 		});
 		addPaintListener(new PaintListener() {
@@ -77,11 +82,9 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		});
 		addMouseListener(new MouseListener() {
 			public void mouseDoubleClick(MouseEvent e) {}
-			
 			public void mouseDown(MouseEvent e) {
 				// Should we use this to check the mouse wasn't moved while clicked?
 			}
-			
 			public void mouseUp(MouseEvent e) {
 				click(new Point(e.x, e.y));
 			}
@@ -136,4 +139,8 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		return compass;
 	}
 
+	@Override
+	public void dispose() {
+		
+	}
 }
