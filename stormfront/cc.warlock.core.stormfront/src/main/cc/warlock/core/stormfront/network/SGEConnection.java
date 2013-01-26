@@ -170,12 +170,6 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 			encrypted[i] = (byte) ((hash.charAt(i)  ^ (password.charAt(i) - 32)) + 32);
 		}
 		
-		String encryptedString = "";
-		for (int i = 0; i < password.length()+1; i++)
-		{
-			encryptedString += encrypted[i];
-		}
-		
 		return encrypted;
 	}
 	
@@ -257,7 +251,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	public void lineReady(IConnection connection, String line) {
 		try {
 			
-			System.out.println("SGE: " + line);
+			//System.out.println("SGE: " + line);
 			
 			if (state == SGE_INITIAL)
 			{
