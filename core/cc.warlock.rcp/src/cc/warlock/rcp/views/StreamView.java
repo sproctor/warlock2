@@ -65,8 +65,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	
 	protected HashMap<IWarlockClient, StreamText> streams =
 		new HashMap<IWarlockClient, StreamText>();
-
-	protected boolean streamTitled = true;
 	
 	private StyledText nullTextWidget;
 
@@ -77,10 +75,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		
 		GameView.addGameViewFocusListener(this);
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(this));
-	}
-	
-	public void setStreamTitled (boolean enabled) {
-		streamTitled = enabled;
 	}
 
 	public static StreamView getViewForStream (String prefix, String streamName) {
@@ -132,8 +126,10 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		nullTextWidget.setIndent(1);
 		book.showPage(nullTextWidget);
 		
-		streamName = getViewSite().getSecondaryId();
-		setViewTitle("(" + streamName + ")");
+		// Hacked to allow UserStream to preset the streamName
+		if(streamName == null)
+			streamName = getViewSite().getSecondaryId();
+		updateViewTitle();
 		
 		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
 			addClient(client);
@@ -146,7 +142,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 	
 	protected void addClient(IWarlockClient client) {
-		StreamText streamText = new StreamText(book, streamName);
+		StreamText streamText = createStreamText(book);
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streams.put(client, streamText);
 		streamText.setClient(client);
@@ -158,6 +154,11 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 			setClient(client);
 	}
 	
+	// Hack to allow UserStream to inject its custom StreamText
+	protected StreamText createStreamText(Composite container) {
+		return new StreamText(container, streamName);
+	}
+	
 	private class NameListener extends PropertyListener<String> {
 		private IWarlockClient client;
 		
@@ -166,8 +167,8 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		}
 		
 		public void propertyChanged(String value) {
-			if(streamTitled && activeClient == client)
-				setViewTitle(value);
+			if(activeClient == client)
+				updateViewTitle();
 		}
 	}
 
@@ -182,22 +183,24 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	
 	public synchronized void setClient (IWarlockClient client)
 	{
-		if(client == null)
-			return;
-		
 		activeClient = client;
 		activeStream = streams.get(client);
 		
-		IStream stream = client.getStream(streamName);
-		if(stream != null)
-			setViewTitle(stream.getFullTitle());
-		else
-			setViewTitle("(" + streamName + ")");
+		updateViewTitle();
 		
 		if(activeStream != null)
 			book.showPage(activeStream.getTextWidget());
 		else
 			book.showPage(nullTextWidget);
+	}
+	
+	// Allow this to be overridden for UserStreams
+	protected void updateViewTitle() {
+		IStream stream = activeClient == null ? null : activeClient.getStream(streamName);
+		if(stream != null)
+			setViewTitle(stream.getFullTitle());
+		else
+			setViewTitle("(" + streamName + ")");
 	}
 	
 	@Override

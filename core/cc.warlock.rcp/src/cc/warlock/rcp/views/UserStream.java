@@ -25,9 +25,7 @@
 package cc.warlock.rcp.views;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -38,7 +36,6 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.StreamFilter;
 import cc.warlock.rcp.ui.StreamText;
-import cc.warlock.rcp.ui.client.SWTStreamListener;
 
 /**
  * @author Will Robertson
@@ -49,7 +46,7 @@ public class UserStream extends StreamView {
 	public static final String VIEW_ID = "cc.warlock.rcp.views.rightView.userStream";
 	protected static ArrayList<UserStream> openStreams = new ArrayList<UserStream>();
 	private IStreamFilter[] filters = null;
-	private String name = "Stream";
+	private String name;
 	private ArrayList<String> styles;
 	
 	public void setFilters(IStreamFilter[] filters) {
@@ -77,7 +74,8 @@ public class UserStream extends StreamView {
 						}
 					}
 				for (IStreamFilter filter : filters) {
-					if (filter == null) continue;
+					if (filter == null)
+						continue;
 					if (filter.match(buffer)) {
 						// If a filter matches, we go ahead and display the chunk
 						ret.append(buffer);
@@ -94,42 +92,26 @@ public class UserStream extends StreamView {
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		String streamName = getViewSite().getSecondaryId().substring(getViewSite().getSecondaryId().lastIndexOf('.')+1);
-		setStreamTitled(false);
-		setName(streamName);
+		name = getViewSite().getSecondaryId().substring(getViewSite().getSecondaryId().lastIndexOf('.')+1);
 		setStreamName(IWarlockClient.DEFAULT_STREAM_NAME);
 		super.createPartControl(parent);
-		//scanClients();
-		if (streamName.equals("Events")) {
+		if (name.equals("Events")) {
 			this.filters = getEventsFilters();
-		} else if (streamName.equals("Conversations")) {
+		} else if (name.equals("Conversations")) {
 			this.filters = getConversationsFilters();
 			this.styles = new ArrayList<String>();
 			styles.add("speech");
 			styles.add("whisper");
-		} else if (streamName.equals("Healing")) {
+		} else if (name.equals("Healing")) {
 			this.filters = getHealingFilters();
 		} else {
-			System.err.println("Not a stream name we recognize! ("+streamName+")");
+			System.err.println("Not a UserStream name we recognize! ("+name+")");
 		}
 	}
 	
 	@Override
-	protected void addClient(IWarlockClient client) {
-		UserStreamText streamText = new UserStreamText(book, streamName);
-		streamText.getTextWidget().setLayout(new GridLayout(1, false));
-		streamText.setClient(client);
-		streams.put(client, streamText);
-		
-		client.getDefaultStream().addStreamListener(new SWTStreamListener(streamText));
-	}
-	
-	@Override
-	public void dispose() {
-		for(Map.Entry<IWarlockClient, StreamText> entry : streams.entrySet()) {
-			entry.getKey().getDefaultStream().removeStreamListener(entry.getValue());
-		}
-		super.dispose();
+	protected StreamText createStreamText(Composite container) {
+		return new UserStreamText(container, streamName);
 	}
 	
 	protected IStreamFilter[] getEventsFilters ()
@@ -187,6 +169,11 @@ public class UserStream extends StreamView {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public void updateViewTitle() {
+		setViewTitle(name);
 	}
 	
 	public void setName(String name) {
