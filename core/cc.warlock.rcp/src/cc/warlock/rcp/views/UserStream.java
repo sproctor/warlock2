@@ -155,7 +155,7 @@ public class UserStream extends StreamView {
 		
 		for (UserStream view : openStreams)
 		{
-			if (view.getName().equals(streamName))
+			if (view.name.equals(streamName))
 			{
 				page.activate(view);
 				return view;
@@ -173,15 +173,7 @@ public class UserStream extends StreamView {
 	
 	@Override
 	public void updateViewTitle() {
-		setViewTitle(name);
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-		this.setViewTitle(name);
-	}
-	
-	public String getName() {
-		return this.name;
+		// Title for UserStream does not change
+		//setViewTitle(name);
 	}
 }
