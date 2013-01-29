@@ -5,28 +5,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.NodeChangeEvent;
 import org.osgi.service.prefs.BackingStoreException;
 
 import cc.warlock.core.configuration.IArraySettingProvider;
 import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.core.configuration.WarlockSetting;
 
 public abstract class ArrayConfigurationProvider<T> extends WarlockSetting implements IArraySettingProvider<T> {
 	protected HashMap<String, T> settings = new HashMap<String, T>();
-	private int nextId = 0;
+	//private int nextId = 0;
 	
 	public ArrayConfigurationProvider(IWarlockSetting parent, String path) {
 		super(parent, path);
 		
 		try {
 			for(String id : getNode().childrenNames()) {
-				try {
-					int n = Integer.parseInt(id);
-					if(n >= nextId)
-						nextId = n + 1;
-				} catch(NumberFormatException e) {
-					// Don't care
-				}
 				T setting = loadSetting(id);
 				if (setting != null)
 					settings.put(id, loadSetting(id));
@@ -38,12 +34,37 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 	
 	public T createSetting ()
 	{
-		String id = Integer.toString(nextId);
+		
+		int n = 1;
+		String id = Integer.toString(n);
+		try {
+			getNode().sync();
+			while(getNode().nodeExists(id)) {
+				id = Integer.toString(n);
+				n++;
+			}
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+			return null;
+		}
 		T setting = loadSetting(id);
 		if (setting == null)
 			return null;
 		settings.put(id, setting);
-		nextId++;
+		WarlockPreferences.getInstance().addNodeChangeListener(this, new INodeChangeListener() {
+			public void added(NodeChangeEvent event) {
+				String id = event.getChild().name();
+				if(!settings.containsKey(id)) {
+					T setting = loadSetting(id);
+					settings.put(id, setting);
+				}
+			}
+			public void removed(NodeChangeEvent event) {
+				String id = event.getChild().name();
+				settings.remove(id);
+			}
+		});
+		this.flush();
 		this.notifyListenersChanged();
 		return setting;
 	}

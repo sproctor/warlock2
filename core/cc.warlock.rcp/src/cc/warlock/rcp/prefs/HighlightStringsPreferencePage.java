@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.osgi.service.prefs.BackingStoreException;
 
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.IClientSettings;
@@ -68,6 +69,7 @@ import cc.warlock.core.client.settings.IWindowSettings;
 import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.internal.HighlightSetting;
 import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.core.configuration.WarlockPreferences;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.util.ColorUtil;
@@ -124,6 +126,12 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		});
 		filterText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		new Label(stringsGroup, SWT.NONE);
+		
+		try {
+			WarlockPreferences.getInstance().getNode().sync();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
 		
 		stringTable = new TableViewer(stringsGroup, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL );
 		TableColumn column = new TableColumn(stringTable.getTable(), SWT.NONE, 0);
