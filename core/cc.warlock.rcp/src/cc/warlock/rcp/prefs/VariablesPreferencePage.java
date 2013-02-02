@@ -52,10 +52,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.internal.Variable;
-import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
+import cc.warlock.core.client.IClientSettings;
+import cc.warlock.core.client.settings.VariableConfigurationProvider;
+import cc.warlock.core.settings.IVariable;
+import cc.warlock.core.settings.Variable;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 /**

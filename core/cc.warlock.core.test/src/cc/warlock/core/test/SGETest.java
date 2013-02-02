@@ -27,8 +27,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cc.warlock.core.configuration.AccountProvider;
-import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.settings.AccountProvider;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.SGEConnectionListener;
 

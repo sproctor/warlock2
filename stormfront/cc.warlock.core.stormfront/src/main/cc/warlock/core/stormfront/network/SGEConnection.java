@@ -31,12 +31,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import cc.warlock.core.configuration.Account;
-import cc.warlock.core.configuration.AccountProvider;
-import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.network.LineConnection;
+import cc.warlock.core.settings.Account;
+import cc.warlock.core.settings.AccountProvider;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.network.ISGEGame.AccountStatus;
 import cc.warlock.core.stormfront.network.ISGEGame.GameURL;
 

@@ -31,7 +31,6 @@ import java.util.Iterator;
 
 import cc.warlock.core.client.internal.WarlockDialog;
 import cc.warlock.core.client.logging.IClientLogger;
-import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.network.IConnection;
 
 /**

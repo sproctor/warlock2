@@ -22,7 +22,7 @@
 package cc.warlock.core.stormfront.settings;
 
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSetting;
 
 /**
  * @author marshall

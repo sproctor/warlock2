@@ -38,7 +38,7 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.internal.Command;
-import cc.warlock.core.client.settings.internal.MacroConfigurationProvider;
+import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.views.GameView;
 

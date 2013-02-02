@@ -34,10 +34,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import cc.warlock.core.client.ICharacterStatus;
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
 

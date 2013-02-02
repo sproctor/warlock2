@@ -36,7 +36,7 @@ import java.util.Map;
 
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.configuration.ConfigurationUtil;
+import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;

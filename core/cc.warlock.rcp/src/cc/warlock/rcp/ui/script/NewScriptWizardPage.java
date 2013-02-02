@@ -28,10 +28,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
+import cc.warlock.core.settings.DirectorySetting;
 import cc.warlock.rcp.ui.ComboField;
 import cc.warlock.rcp.ui.TextField;
 import cc.warlock.rcp.ui.WarlockSharedImages;

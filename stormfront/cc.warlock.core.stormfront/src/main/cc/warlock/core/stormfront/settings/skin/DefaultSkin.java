@@ -26,7 +26,7 @@ import java.util.HashMap;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
 
 /**
  * The default skin handles any attributes who's values are "skin"

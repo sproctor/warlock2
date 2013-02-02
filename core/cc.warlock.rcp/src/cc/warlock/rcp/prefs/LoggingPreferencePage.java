@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.logging.LoggingConfiguration;
-import cc.warlock.core.client.settings.IClientSettings;
 
 /**
  * @author Will Robertson

@@ -4,9 +4,10 @@ Bundle-Name: Warlock Scripting Core Plug-in
 Bundle-SymbolicName: cc.warlock.core.script;singleton:=true
 Bundle-Version: 2.0.0
 Bundle-Activator: cc.warlock.core.script.WarlockCoreScriptPlugin
+Bundle-Vendor: Warlock Team
 Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: .,
  cc.warlock.core.script,
  cc.warlock.core.script.configuration,
@@ -34,3 +35,4 @@ Export-Package: .,
 Bundle-ClassPath: lib/js.jar,
  warlock2-script-core.jar,
  warlock2-script-core-eclipse.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

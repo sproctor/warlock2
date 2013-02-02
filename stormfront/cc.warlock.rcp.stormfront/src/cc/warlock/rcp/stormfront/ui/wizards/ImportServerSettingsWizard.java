@@ -10,9 +10,9 @@ import org.eclipse.ui.IWorkbench;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.settings.ConfigurationUtil;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.rcp.wizards.WizardWithNotification;

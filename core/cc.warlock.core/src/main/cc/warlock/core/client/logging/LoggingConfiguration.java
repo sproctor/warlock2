@@ -23,10 +23,10 @@ package cc.warlock.core.client.logging;
 
 import java.io.File;
 
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.configuration.IWarlockSetting;
-import cc.warlock.core.configuration.WarlockSetting;
+import cc.warlock.core.client.IClientSettings;
+import cc.warlock.core.settings.ConfigurationUtil;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.WarlockSetting;
 
 
 public class LoggingConfiguration extends WarlockSetting

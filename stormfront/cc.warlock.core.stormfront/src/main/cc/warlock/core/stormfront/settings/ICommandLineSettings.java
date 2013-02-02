@@ -22,7 +22,7 @@
 package cc.warlock.core.stormfront.settings;
 
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IFontSetting;
+import cc.warlock.core.settings.IFontSetting;
 
 /**
  * @author marshall

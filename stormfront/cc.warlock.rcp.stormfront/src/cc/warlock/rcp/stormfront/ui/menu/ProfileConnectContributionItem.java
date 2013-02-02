@@ -30,9 +30,9 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
-import cc.warlock.core.configuration.Account;
-import cc.warlock.core.configuration.AccountProvider;
-import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.settings.Account;
+import cc.warlock.core.settings.AccountProvider;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.ui.ConnectionAction;

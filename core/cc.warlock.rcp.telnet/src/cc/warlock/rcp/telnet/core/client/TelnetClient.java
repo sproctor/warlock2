@@ -23,6 +23,7 @@ package cc.warlock.rcp.telnet.core.client;
 
 import java.io.IOException;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.IWarlockStyle;
@@ -32,7 +33,6 @@ import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMonospace;
 import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IClientSettings;
 import cc.warlock.core.network.Connection;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;

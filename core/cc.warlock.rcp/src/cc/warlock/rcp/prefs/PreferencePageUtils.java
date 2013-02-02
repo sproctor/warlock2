@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
+import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.rcp.util.FontSelector;
 
 public abstract class PreferencePageUtils extends PropertyPage implements SelectionListener, IPropertyChangeListener

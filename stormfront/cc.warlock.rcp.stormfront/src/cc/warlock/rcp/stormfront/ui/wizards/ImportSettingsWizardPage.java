@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.configuration.ProfileProvider;
+import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.wizards.WizardPageWithNotification;
 

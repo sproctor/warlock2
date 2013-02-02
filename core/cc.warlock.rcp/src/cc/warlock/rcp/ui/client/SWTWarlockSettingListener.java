@@ -2,8 +2,8 @@ package cc.warlock.rcp.ui.client;
 
 import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.client.settings.IWarlockSettingListener;
-import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingListener;
 
 public class SWTWarlockSettingListener implements IWarlockSettingListener {
 	private IWarlockSettingListener listener;

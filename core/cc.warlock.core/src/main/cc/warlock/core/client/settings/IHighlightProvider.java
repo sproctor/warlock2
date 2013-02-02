@@ -22,7 +22,7 @@
 package cc.warlock.core.client.settings;
 
 import cc.warlock.core.client.IWarlockHighlight;
-import cc.warlock.core.configuration.IArraySettingProvider;
+import cc.warlock.core.settings.IArraySettingProvider;
 
 
 public interface IHighlightProvider extends IArraySettingProvider<IWarlockHighlight> {

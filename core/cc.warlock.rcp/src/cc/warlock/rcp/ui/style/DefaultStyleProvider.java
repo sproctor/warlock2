@@ -25,11 +25,11 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.rcp.ui.IStyleProvider;
 import cc.warlock.rcp.ui.StyleRangeWithData;
 import cc.warlock.rcp.util.ColorUtil;

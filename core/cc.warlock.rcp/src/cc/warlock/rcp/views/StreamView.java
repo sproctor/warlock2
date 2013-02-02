@@ -42,7 +42,7 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.internal.WindowConfigurationProvider;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.util.ColorUtil;

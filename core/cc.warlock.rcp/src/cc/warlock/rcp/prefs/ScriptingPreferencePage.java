@@ -50,8 +50,8 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
+import cc.warlock.core.settings.DirectorySetting;
 
 public class ScriptingPreferencePage extends PropertyPage implements
 		IWorkbenchPropertyPage {

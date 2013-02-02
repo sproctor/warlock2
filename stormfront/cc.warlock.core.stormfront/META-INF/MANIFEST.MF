@@ -6,7 +6,7 @@ Bundle-Version: 2.0.0
 Bundle-Activator: cc.warlock.core.stormfront.StormFrontCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: warlock2-stormfront-core.jar,
  warlock2-stormfront-core-eclipse.jar
 Export-Package: cc.warlock.core.stormfront,
@@ -19,3 +19,4 @@ Export-Package: cc.warlock.core.stormfront,
  cc.warlock.core.stormfront.settings.server,
  cc.warlock.core.stormfront.settings.skin,
  cc.warlock.core.stormfront.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

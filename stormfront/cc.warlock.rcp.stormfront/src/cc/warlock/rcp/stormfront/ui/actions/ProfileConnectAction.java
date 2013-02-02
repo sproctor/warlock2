@@ -31,12 +31,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.configuration.Account;
-import cc.warlock.core.configuration.AccountProvider;
-import cc.warlock.core.configuration.Profile;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.ILineConnectionListener;
+import cc.warlock.core.settings.Account;
+import cc.warlock.core.settings.AccountProvider;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;

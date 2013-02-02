@@ -25,9 +25,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
 
-import cc.warlock.core.configuration.IWarlockSetting;
-import cc.warlock.core.configuration.WarlockPreferences;
-import cc.warlock.core.configuration.WarlockSetting;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockSetting;
 
 public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlockSetting {
 	protected Rectangle bounds = new Rectangle(25, 25, 1024, 768);

@@ -21,12 +21,12 @@
  */
 package cc.warlock.core.stormfront.settings.internal;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.client.settings.internal.ColorFontSetting;
-import cc.warlock.core.configuration.IWarlockSetting;
-import cc.warlock.core.configuration.IWarlockSettingFactory;
+import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.settings.ColorFontSetting;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingFactory;
 import cc.warlock.core.stormfront.settings.ICommandLineSettings;
 
 /**

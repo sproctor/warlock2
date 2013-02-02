@@ -24,7 +24,7 @@ package cc.warlock.core.stormfront.internal;
 import java.io.File;
 import java.io.IOException;
 
-import cc.warlock.core.configuration.ConfigurationUtil;
+import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 

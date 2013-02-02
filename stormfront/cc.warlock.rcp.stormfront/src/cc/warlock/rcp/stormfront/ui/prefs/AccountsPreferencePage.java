@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import cc.warlock.core.configuration.Account;
-import cc.warlock.core.configuration.AccountProvider;
-import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.settings.Account;
+import cc.warlock.core.settings.AccountProvider;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class AccountsPreferencePage extends PropertyPage implements

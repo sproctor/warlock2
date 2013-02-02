@@ -23,7 +23,7 @@ package cc.warlock.core.stormfront.settings;
 
 import java.util.List;
 
-import cc.warlock.core.client.settings.IClientSettings;
+import cc.warlock.core.client.IClientSettings;
 
 /**
  * StormFrontServerSettings takes an implementation of this interface for importing macros, 

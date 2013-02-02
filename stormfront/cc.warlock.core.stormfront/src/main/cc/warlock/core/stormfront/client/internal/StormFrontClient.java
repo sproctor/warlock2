@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
@@ -44,13 +45,12 @@ import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.internal.Stream;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.client.settings.internal.MacroConfigurationProvider;
-import cc.warlock.core.client.settings.internal.MacroSetting;
-import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
-import cc.warlock.core.configuration.ConfigurationUtil;
-import cc.warlock.core.configuration.WarlockPreferences;
+import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.client.settings.MacroConfigurationProvider;
+import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
+import cc.warlock.core.settings.ConfigurationUtil;
+import cc.warlock.core.settings.MacroSetting;
+import cc.warlock.core.settings.WarlockPreferences;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
@@ -71,7 +71,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	protected String gameCode, playerId;
 	protected ClientSettings clientSettings;
 	//protected StormFrontServerSettings serverSettings;
-	
 
 	protected HashMap<String, String> commands;
 	

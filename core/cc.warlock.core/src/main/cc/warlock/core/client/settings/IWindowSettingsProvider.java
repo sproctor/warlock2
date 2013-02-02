@@ -23,7 +23,8 @@ package cc.warlock.core.client.settings;
 
 import java.util.Collection;
 
-import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWindowSettings;
 
 public interface IWindowSettingsProvider extends IWarlockSetting {
 

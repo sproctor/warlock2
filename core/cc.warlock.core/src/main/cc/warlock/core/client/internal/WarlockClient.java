@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import cc.warlock.core.client.ICharacterStatus;
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.ICompass;
@@ -51,12 +52,11 @@ import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockTimer;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.IVariable;
-import cc.warlock.core.client.settings.internal.HighlightConfigurationProvider;
-import cc.warlock.core.client.settings.internal.PresetStyleConfigurationProvider;
-import cc.warlock.core.client.settings.internal.VariableConfigurationProvider;
+import cc.warlock.core.client.settings.HighlightConfigurationProvider;
+import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
+import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.network.IConnection;
+import cc.warlock.core.settings.IVariable;
 import cc.warlock.core.util.Pair;
 
 

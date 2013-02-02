@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.settings.internal.DirectorySetting;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptFileInfo;
@@ -37,6 +36,7 @@ import cc.warlock.core.script.IScriptInfo;
 import cc.warlock.core.script.IScriptProvider;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
+import cc.warlock.core.settings.DirectorySetting;
 
 public class FilesystemScriptProvider implements IScriptProvider {
 	

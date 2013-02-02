@@ -23,12 +23,12 @@ package cc.warlock.rcp.configuration;
 
 import org.eclipse.jface.resource.JFaceResources;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.IClientSettings;
-import cc.warlock.core.client.settings.internal.ClientSettings;
-import cc.warlock.core.configuration.IWarlockSetting;
-import cc.warlock.core.configuration.IWarlockSettingFactory;
-import cc.warlock.core.configuration.WarlockSetting;
+import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingFactory;
+import cc.warlock.core.settings.WarlockSetting;
 
 public class GameViewConfiguration extends WarlockSetting
 {

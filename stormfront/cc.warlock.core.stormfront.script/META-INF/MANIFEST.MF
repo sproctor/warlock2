@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core,
  cc.warlock.core.script,
  cc.warlock.core.stormfront
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: cc.warlock.core.stormfront.script,
  cc.warlock.core.stormfront.script.internal,
  cc.warlock.core.stormfront.script.javascript,
@@ -16,3 +16,4 @@ Export-Package: cc.warlock.core.stormfront.script,
 Bundle-ClassPath: warlock2-core-stormfront-script.jar,
  warlock2-core-stormfront-script-eclipse.jar,
  lib/antlr-runtime-3.2.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

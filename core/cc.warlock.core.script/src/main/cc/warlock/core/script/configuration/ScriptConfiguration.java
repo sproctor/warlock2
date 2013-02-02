@@ -29,9 +29,9 @@ import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.internal.Property;
-import cc.warlock.core.client.settings.internal.DirectorySetting;
-import cc.warlock.core.configuration.WarlockPreferences;
-import cc.warlock.core.configuration.WarlockSetting;
+import cc.warlock.core.settings.DirectorySetting;
+import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockSetting;
 
 public class ScriptConfiguration extends WarlockSetting {
 

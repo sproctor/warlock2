@@ -1,0 +1,11 @@
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-compact-red=false
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-debug=false
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-expected-conflicts=0
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-no-positions=false
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-no-scanner=false
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-non-terms=false
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-output=src/eclipse
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-parser-class=WSLParser
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-symbols-class=WSLTokens
+//src/main/cc/warlock/core/stormfront/script/wsl/wsl.cup/cup-symbols-if=true
+eclipse.preferences.version=1

@@ -49,8 +49,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
-import cc.warlock.core.configuration.Account;
-import cc.warlock.core.configuration.Profile;
+import cc.warlock.core.settings.Account;
+import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.stormfront.adapters.SWTSGEConnectionListenerAdapter;

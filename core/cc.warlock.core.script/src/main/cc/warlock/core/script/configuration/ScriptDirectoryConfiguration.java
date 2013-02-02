@@ -21,9 +21,9 @@
  */
 package cc.warlock.core.script.configuration;
 
-import cc.warlock.core.client.settings.internal.ArrayConfigurationProvider;
-import cc.warlock.core.client.settings.internal.DirectorySetting;
-import cc.warlock.core.configuration.IWarlockSetting;
+import cc.warlock.core.settings.ArrayConfigurationProvider;
+import cc.warlock.core.settings.DirectorySetting;
+import cc.warlock.core.settings.IWarlockSetting;
 
 public class ScriptDirectoryConfiguration extends ArrayConfigurationProvider<DirectorySetting> {
 	public ScriptDirectoryConfiguration (IWarlockSetting parent) {

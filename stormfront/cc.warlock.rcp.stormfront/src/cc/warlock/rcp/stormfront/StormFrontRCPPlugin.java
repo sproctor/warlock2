@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import cc.warlock.core.configuration.Profile;
-import cc.warlock.core.configuration.ProfileProvider;
+import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.core.stormfront.script.javascript.StormFrontJavascriptVars;
 import cc.warlock.rcp.application.WarlockApplication;
 import cc.warlock.rcp.stormfront.adapters.StormFrontClientAdapterFactory;
