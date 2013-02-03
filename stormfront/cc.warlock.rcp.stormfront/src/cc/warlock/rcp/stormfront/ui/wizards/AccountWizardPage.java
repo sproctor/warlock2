@@ -49,7 +49,7 @@ import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.SGEConnectionListener;
@@ -149,7 +149,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 					savedAccount = AccountProvider.getInstance().createSetting();
 					savedAccount.setAccountName(account.getText());
 					savedAccount.setPassword(password.getText());
-					WarlockPreferences.getInstance().flush();
+					WarlockPreferencesScope.getInstance().flush();
 				}
 			}
 			

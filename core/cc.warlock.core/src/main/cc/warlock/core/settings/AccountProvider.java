@@ -12,7 +12,7 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 	
 	@Override
 	protected Preferences getParentNode() {
-		return WarlockPreferences.getInstance().getNode();
+		return WarlockPreferencesScope.getInstance().getNode();
 	}
 	
 	public static AccountProvider getInstance() {

@@ -69,7 +69,7 @@ import cc.warlock.core.client.settings.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.HighlightSetting;
 import cc.warlock.core.settings.IWindowSettings;
-import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.util.ColorUtil;
@@ -128,7 +128,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		new Label(stringsGroup, SWT.NONE);
 		
 		try {
-			WarlockPreferences.getInstance().getNode().sync();
+			WarlockPreferencesScope.getInstance().getNode().sync();
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}

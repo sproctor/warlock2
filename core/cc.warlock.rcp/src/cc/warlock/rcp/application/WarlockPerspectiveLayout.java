@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.settings.IWarlockSetting;
-import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.settings.WarlockSetting;
 
 public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlockSetting {
@@ -48,7 +48,7 @@ public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlock
 	
 	@Override
 	protected Preferences getParentNode() {
-		return WarlockPreferences.getInstance().getNode();
+		return WarlockPreferencesScope.getInstance().getNode();
 	}
 	
 	public void saveLayout() {

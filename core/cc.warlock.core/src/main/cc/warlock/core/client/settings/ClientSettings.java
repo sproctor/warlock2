@@ -32,7 +32,7 @@ import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingFactory;
-import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.settings.WarlockSetting;
 
 
@@ -44,7 +44,7 @@ import cc.warlock.core.settings.WarlockSetting;
 public class ClientSettings extends WarlockSetting implements IClientSettings
 {
 	private static HashMap<String, ClientSettings> clients = new HashMap<String, ClientSettings>();
-	private static Preferences topNode = WarlockPreferences.getInstance().getNode().node("clients");
+	private static Preferences topNode = WarlockPreferencesScope.getInstance().getNode().node("clients");
 	private static HashMap<String, IWarlockSettingFactory> providerFactories = new HashMap<String, IWarlockSettingFactory>();
 	
 	private HashMap<String, IWarlockSetting> providers = new HashMap<String, IWarlockSetting>();

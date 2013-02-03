@@ -34,7 +34,6 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 		int n = 1;
 		String id = Integer.toString(n);
 		try {
-			getNode().sync();
 			while(getNode().nodeExists(id)) {
 				id = Integer.toString(n);
 				n++;
@@ -47,7 +46,7 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 		if (setting == null)
 			return null;
 		settings.put(id, setting);
-		WarlockPreferences.getInstance().addNodeChangeListener(this, new INodeChangeListener() {
+		WarlockPreferencesScope.getInstance().addNodeChangeListener(this, new INodeChangeListener() {
 			public void added(NodeChangeEvent event) {
 				String id = event.getChild().name();
 				if(!settings.containsKey(id)) {
@@ -60,7 +59,6 @@ public abstract class ArrayConfigurationProvider<T> extends WarlockSetting imple
 				settings.remove(id);
 			}
 		});
-		this.flush();
 		this.notifyListenersChanged();
 		return setting;
 	}

@@ -30,7 +30,7 @@ import org.osgi.service.prefs.Preferences;
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.settings.DirectorySetting;
-import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.settings.WarlockSetting;
 
 public class ScriptConfiguration extends WarlockSetting {
@@ -65,7 +65,7 @@ public class ScriptConfiguration extends WarlockSetting {
 	
 	@Override
 	protected Preferences getParentNode() {
-		return WarlockPreferences.getInstance().getNode();
+		return WarlockPreferencesScope.getInstance().getNode();
 	}
 	
 	public IProperty<Boolean> getSupressExceptions() {

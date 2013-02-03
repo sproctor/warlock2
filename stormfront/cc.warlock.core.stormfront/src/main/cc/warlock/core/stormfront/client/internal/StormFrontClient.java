@@ -50,7 +50,7 @@ import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.settings.MacroSetting;
-import cc.warlock.core.settings.WarlockPreferences;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
@@ -110,7 +110,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 				smacro.setKeyString(macro.getKeyString());
 			}
 			try {
-				WarlockPreferences.getInstance().getNode().flush();
+				WarlockPreferencesScope.getInstance().getNode().flush();
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

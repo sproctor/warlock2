@@ -42,16 +42,20 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 		boolean caseSensitive = getNode().getBoolean("case-sensitive", false);
 		boolean fullWord = getNode().getBoolean("full-word", true);
 		pattern = createPattern(text, literal, caseSensitive, fullWord);
-		WarlockPreferences.getInstance().addPreferenceChangeListener(this, new IPreferenceChangeListener() {
+		WarlockPreferencesScope.getInstance().addPreferenceChangeListener(this, new IPreferenceChangeListener() {
 			public void preferenceChange(PreferenceChangeEvent event) {
 				if(event.getKey().equals("pattern")) {
-					pattern.setText(getNode().get("pattern", ""));
+					if(!pattern.getText().equals(event.getNewValue()))
+						pattern.setText((String)event.getNewValue());
 				} else if(event.getKey().equals("literal")) {
-					pattern.setLiteral(getNode().getBoolean("literal", true));
+					if(!Boolean.getBoolean((String)event.getNewValue()))
+						pattern.setLiteral(Boolean.getBoolean((String)event.getNewValue()));
 				} else if(event.getKey().equals("case-sensitive")) {
-					pattern.setCaseSensitive(getNode().getBoolean("case-sensitive", false));
+					if(!Boolean.getBoolean((String)event.getNewValue()))
+						pattern.setCaseSensitive(Boolean.getBoolean((String)event.getNewValue()));
 				} else if(event.getKey().equals("full-word")) {
-					pattern.setFullWordMatch(getNode().getBoolean("full-word", true));
+					if(!Boolean.getBoolean((String)event.getNewValue()))
+						pattern.setFullWordMatch(Boolean.getBoolean((String)event.getNewValue()));
 				}
 			}
 		});
@@ -74,7 +78,6 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 	public void setText(String text) throws PatternSyntaxException {
 		getNode().put("pattern", text);
 		pattern.setText(text);
-		this.flush();
 		this.notifyListenersChanged();
 	}
 	
@@ -82,7 +85,6 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 	{
 		getNode().putBoolean("literal", literal);
 		pattern.setLiteral(literal);
-		this.flush();
 		this.notifyListenersChanged();
 	}
 	
@@ -90,7 +92,6 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 	{
 		getNode().putBoolean("case-sensitive", caseSensitive);
 		pattern.setCaseSensitive(caseSensitive);
-		this.flush();
 		this.notifyListenersChanged();
 	}
 	
@@ -98,7 +99,6 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 	{
 		getNode().putBoolean("full-word", fullWordMatch);
 		pattern.setFullWordMatch(fullWordMatch);
-		this.flush();
 		this.notifyListenersChanged();
 	}
 	
