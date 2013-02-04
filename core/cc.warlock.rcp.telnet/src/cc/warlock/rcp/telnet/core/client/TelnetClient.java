@@ -157,4 +157,10 @@ public class TelnetClient extends WarlockClient {
 		
 	}
 
+	@Override
+	public String getGameCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
