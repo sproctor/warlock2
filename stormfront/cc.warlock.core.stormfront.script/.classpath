@@ -5,6 +5,5 @@
 	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="src/eclipse"/>
 	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="src/main"/>
 	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="src/antlr"/>
-	<classpathentry kind="var" path="CUP_RUNTIME_JAR"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
