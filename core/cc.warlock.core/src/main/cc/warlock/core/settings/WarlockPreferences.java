@@ -47,7 +47,9 @@ public class WarlockPreferences implements IEclipsePreferences {
 
 	@Override
 	public void clear() throws BackingStoreException {
+		preferences.sync();
 		preferences.clear();
+		preferences.flush();
 	}
 
 	@Override
@@ -282,4 +284,33 @@ public class WarlockPreferences implements IEclipsePreferences {
 		}
 	}
 
+	public void move(String path) {
+		try {
+			preferences.sync();
+			Preferences newPrefs = preferences.parent().node(path);
+			for(String key : preferences.keys()) {
+				newPrefs.put(key, preferences.get(key, null));
+			}
+			for(String name : preferences.childrenNames()) {
+				new WarlockPreferences(preferences.node(name)).reparent(newPrefs);
+			}
+			preferences.flush();
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void reparent(Preferences parent) {
+		try {
+			Preferences newPrefs = parent.node(preferences.name());
+			for(String key : preferences.keys()) {
+				newPrefs.put(key, preferences.get(key, null));
+			}
+			for(String name : preferences.childrenNames()) {
+				new WarlockPreferences(preferences.node(name)).reparent(newPrefs);
+			}
+		} catch(BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.client.settings;
 
-import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 
@@ -29,7 +28,7 @@ import cc.warlock.core.settings.IWarlockSetting;
  * @author marshall
  *
  */
-public abstract class PatternConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern> {
+public abstract class PatternConfigurationProvider extends ArrayConfigurationProvider<IWarlockPatternSetting> {
 
 	public PatternConfigurationProvider (IWarlockSetting parent, String path)
 	{

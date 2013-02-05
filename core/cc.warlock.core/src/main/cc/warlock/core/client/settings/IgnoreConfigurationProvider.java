@@ -29,7 +29,7 @@ import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.PatternSetting;
 
-public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWarlockPattern>
+public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWarlockPatternSetting>
 {
 	public static final String ID = "ignores";
 	
@@ -38,7 +38,7 @@ public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWar
 		super(parent, ID);
 	}
 	
-	public IWarlockPattern loadSetting(String id) {
+	public IWarlockPatternSetting loadSetting(String id) {
 		return new PatternSetting(this, id);
 	}
 
@@ -46,7 +46,7 @@ public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWar
 		return (IgnoreConfigurationProvider)clientSettings.getProvider(ID);
 	}
 	
-	public static Collection<IWarlockPattern> getIgnores(IClientSettings clientSettings) {
+	public static Collection<? extends IWarlockPattern> getIgnores(IClientSettings clientSettings) {
 		return getProvider(clientSettings).getSettings();
 	}
 }

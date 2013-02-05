@@ -29,7 +29,7 @@ import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.HighlightSetting;
 import cc.warlock.core.settings.IWarlockSetting;
 
-public class HighlightConfigurationProvider extends ArrayConfigurationProvider<IWarlockHighlight> implements IHighlightProvider
+public class HighlightConfigurationProvider extends ArrayConfigurationProvider<HighlightSetting>
 {
 	public static String ID = "highlights";
 	
@@ -45,7 +45,7 @@ public class HighlightConfigurationProvider extends ArrayConfigurationProvider<I
 		return (HighlightConfigurationProvider)clientSettings.getProvider(ID);
 	}
 	
-	public static Collection<IWarlockHighlight> getHighlights(IClientSettings clientSettings) {
+	public static Collection<? extends IWarlockHighlight> getHighlights(IClientSettings clientSettings) {
 		return getProvider(clientSettings).getSettings();
 	}
 }

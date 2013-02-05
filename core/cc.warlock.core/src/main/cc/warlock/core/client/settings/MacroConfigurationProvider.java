@@ -62,7 +62,7 @@ public class MacroConfigurationProvider extends ArrayConfigurationProvider<Macro
 	}
 	
 	public MacroSetting getMacro(String keyString) {
-		for (MacroSetting macro : settings.values()) {
+		for (MacroSetting macro : this.getSettings()) {
 			if (macro.getKeyString().equals(keyString))
 				return macro;
 		}

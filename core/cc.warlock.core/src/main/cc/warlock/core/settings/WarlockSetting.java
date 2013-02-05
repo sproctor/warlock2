@@ -56,7 +56,7 @@ public class WarlockSetting implements IWarlockSetting {
 		}
 	}
 	
-	public Preferences getNode() {
+	public WarlockPreferences getNode() {
 		return node;
 	}
 	

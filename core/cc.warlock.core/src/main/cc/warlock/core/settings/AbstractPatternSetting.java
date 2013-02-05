@@ -27,10 +27,10 @@ import java.util.regex.PatternSyntaxException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 
-import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.internal.WarlockPattern;
+import cc.warlock.core.client.settings.IWarlockPatternSetting;
 
-abstract public class AbstractPatternSetting<T extends WarlockPattern> extends WarlockSetting implements IWarlockSetting, IWarlockPattern {
+abstract public class AbstractPatternSetting<T extends WarlockPattern> extends WarlockSetting implements IWarlockPatternSetting {
 
 	protected T pattern;
 	
