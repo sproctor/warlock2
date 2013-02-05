@@ -76,7 +76,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	protected IClientLogger logger;
 	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	protected ArrayList<Pair<String, IStreamListener>> potentialListeners = new ArrayList<Pair<String, IStreamListener>>();
-	private ArrayList<Collection<IWarlockHighlight>> highlightLists = new ArrayList<Collection<IWarlockHighlight>>();
+	private ArrayList<Collection<? extends IWarlockHighlight>> highlightLists = new ArrayList<Collection<? extends IWarlockHighlight>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
 	private HashMap<String, String> components = new HashMap<String, String>();
@@ -218,12 +218,12 @@ public abstract class WarlockClient implements IWarlockClient {
 	public abstract IClientSettings getClientSettings();
 	
 	public class MultiIterator<T> implements Iterator<T> {
-		private Iterator<? extends Collection<T>> it;
-	    private Iterator<T> innerIt;
+		private Iterator<? extends Collection<? extends T>> it;
+	    private Iterator<? extends T> innerIt;
 	    private T next;
 	    private boolean hasNext = true;
 	    
-		public MultiIterator(Collection<? extends Collection<T>> collections) {
+		public MultiIterator(Collection<? extends Collection<? extends T>> collections) {
 	        it = collections.iterator();    
 	        prepareNext();
 	    }
@@ -262,7 +262,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	    }
 	}
 	
-	public Iterator<IWarlockHighlight> getHighlightsIterator() {
+	public Iterator<? extends IWarlockHighlight> getHighlightsIterator() {
 		return new MultiIterator<IWarlockHighlight>(highlightLists);
 	}
 	

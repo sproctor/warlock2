@@ -383,7 +383,7 @@ public class WarlockText {
 		String text = textWidget.getTextRange(start, end - start);
 		
 		
-		for (Iterator<IWarlockHighlight> iter = client.getHighlightsIterator();
+		for (Iterator<? extends IWarlockHighlight> iter = client.getHighlightsIterator();
 				iter.hasNext(); ) {
 			IWarlockHighlight highlight = iter.next();
 			Pattern p;

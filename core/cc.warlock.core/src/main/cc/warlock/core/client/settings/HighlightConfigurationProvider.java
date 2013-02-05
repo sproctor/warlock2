@@ -24,7 +24,6 @@ package cc.warlock.core.client.settings;
 import java.util.Collection;
 
 import cc.warlock.core.client.IClientSettings;
-import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.HighlightSetting;
 import cc.warlock.core.settings.IWarlockSetting;
@@ -45,7 +44,7 @@ public class HighlightConfigurationProvider extends ArrayConfigurationProvider<H
 		return (HighlightConfigurationProvider)clientSettings.getProvider(ID);
 	}
 	
-	public static Collection<? extends IWarlockHighlight> getHighlights(IClientSettings clientSettings) {
+	public static Collection<HighlightSetting> getHighlights(IClientSettings clientSettings) {
 		return getProvider(clientSettings).getSettings();
 	}
 }

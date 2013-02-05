@@ -125,7 +125,7 @@ public interface IWarlockClient extends IRoomListener {
 	 */
 	public IClientSettings getClientSettings();
 	
-	public Iterator<IWarlockHighlight> getHighlightsIterator();
+	public Iterator<? extends IWarlockHighlight> getHighlightsIterator();
 	public void addHighlights(Collection<IWarlockHighlight> highlights);
 	public boolean removeHighlights(Collection<IWarlockHighlight> highlights);
 	
