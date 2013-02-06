@@ -55,7 +55,7 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	private IWarlockClient client;
 	private IPropertyListener<ICompass> listener;
 	
-	private Image compassImage = WarlockSharedImages.getImage(WarlockSharedImages.IMG_COMPASS_SMALL_MAIN);
+	private Image compassImage;// = WarlockSharedImages.getImage(WarlockSharedImages.IMG_COMPASS_SMALL_MAIN);
 	
 	public WarlockCompass (Composite parent, int style, CompassTheme theme, IWarlockClient client)
 	{
@@ -71,7 +71,9 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				moveCursor.dispose();
+				moveCursor = null;
 				compassImage.dispose();
+				compassImage = null;
 				WarlockCompass.this.client.getCompass().removeListener(listener);
 			}
 		});
@@ -91,8 +93,9 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		});
 	}
 	
-	private void drawCompass (GC gc)
-	{	
+	private void drawCompass (GC gc) {
+		if(this.isDisposed() || gc.isDisposed() || compassImage.isDisposed())
+			return;
 		gc.drawImage(compassImage, 0, 0);
 		if (compass != null)
 		{

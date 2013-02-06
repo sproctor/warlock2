@@ -30,10 +30,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ViewPart;
 
-import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.WarlockCompass;
-import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.ui.style.CompassThemes;
 import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.IGameViewFocusListener;
@@ -62,6 +60,9 @@ public class CompassView extends ViewPart {
 			return;
 		
 		activeClient = client;
+		
+		if(book.isDisposed())
+			return;
 		
 		if (!clients.containsKey(client)) {
 			WarlockCompass compass = new WarlockCompass(book, SWT.NONE, CompassThemes.getCompassTheme("small"), client);
