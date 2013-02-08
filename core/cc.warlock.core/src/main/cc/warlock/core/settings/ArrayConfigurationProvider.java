@@ -44,6 +44,8 @@ public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> exte
 				if(n != id)
 					curr.getNode().move(Integer.toString(n));
 				n++;
+			} else {
+				iter.remove();
 			}
 			id++;
 		}
