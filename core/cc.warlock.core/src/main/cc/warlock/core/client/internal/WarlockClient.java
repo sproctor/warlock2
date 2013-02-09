@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
@@ -85,6 +88,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
 	protected ClientSettings clientSettings;
+	private int minCommandSize;
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
@@ -113,6 +117,14 @@ public abstract class WarlockClient implements IWarlockClient {
 				// if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
 					logger = new SimpleLogger(WarlockClient.this);
 					highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
+					minCommandSize = getClientSettings().getMinCommandSize();
+					getClientSettings().getNode().addPreferenceChangeListener(new IPreferenceChangeListener() {
+						@Override
+						public void preferenceChange(PreferenceChangeEvent event) {
+							if (event.getKey().equals("min-command-size"))
+								minCommandSize = Integer.parseInt((String)event.getNewValue());
+						}
+					});
 			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
@@ -414,6 +426,10 @@ public abstract class WarlockClient implements IWarlockClient {
 	}
 	
 	abstract public String getGameCode();
+	
+	public int getMinCommandLength() {
+		return minCommandSize;
+	}
 	
 	public IClientSettings getClientSettings() {
 		return clientSettings;

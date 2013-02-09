@@ -33,4 +33,6 @@ public interface IClientSettings extends IWarlockSetting
 	public String getName ();
 	public void setName (String name);
 	public String getCliendId ();
+	public int getMinCommandSize();
+	public void setMinCommandSize(int size);
 }

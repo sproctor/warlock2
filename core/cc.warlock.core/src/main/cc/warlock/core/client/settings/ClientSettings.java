@@ -181,4 +181,12 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 			e.printStackTrace();
 		}
 	}
+	
+	public int getMinCommandSize() {
+		return getNode().getInt("min-command-size", 1);
+	}
+	
+	public void setMinCommandSize(int size) {
+		getNode().putInt("min-command-size", size);
+	}
 }

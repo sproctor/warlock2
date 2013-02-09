@@ -235,7 +235,8 @@ public class WarlockEntry {
 		}
 		ICommand command = new Command(text);
 		viewer.send(command);
-		viewer.getClient().getCommandHistory().addCommand(command);
+		if (command.getCommand().length() > viewer.getClient().getMinCommandLength())
+			viewer.getClient().getCommandHistory().addCommand(command);
 		viewer.getClient().getCommandHistory().resetPosition();
 		setText("");
 	}

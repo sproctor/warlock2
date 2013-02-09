@@ -219,4 +219,6 @@ public interface IWarlockClient extends IRoomListener {
 	public void setProperty(String name, String property);
 	
 	public void dispose();
+	
+	public int getMinCommandLength();
 }
