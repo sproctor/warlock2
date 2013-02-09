@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import cc.warlock.core.client.internal.DefaultMacro;
+import cc.warlock.core.client.internal.WarlockMacro;
 
 public class DefaultMacros {
 	private static DefaultMacros instance = new DefaultMacros();
 	
-	private ArrayList<DefaultMacro> macros = new ArrayList<DefaultMacro>();
+	private ArrayList<WarlockMacro> macros = new ArrayList<WarlockMacro>();
 	
 	private DefaultMacros() {
 		createDefaultMacro("\\xxml toggle containers\\r",99,65536);
@@ -119,10 +119,10 @@ public class DefaultMacros {
 	}
 	
 	private void createDefaultMacro(String command, int keycode, int modifier) {
-		macros.add(new DefaultMacro(command, MacroRegistry.instance().getKeyString(keycode, modifier)));
+		macros.add(new WarlockMacro(command, MacroRegistry.instance().getKeyString(keycode, modifier)));
 	}
 	
-	public Collection<DefaultMacro> getCollection() {
+	public Collection<WarlockMacro> getCollection() {
 		return Collections.unmodifiableCollection(macros);
 	}
 }

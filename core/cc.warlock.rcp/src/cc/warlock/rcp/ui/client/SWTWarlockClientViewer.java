@@ -38,7 +38,7 @@ import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.DefaultMacro;
+import cc.warlock.core.client.internal.WarlockMacro;
 
 /**
  * @author Marshall
@@ -247,7 +247,7 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 		return viewer.getMacroCommand(id);
 	}
 
-	public Collection<DefaultMacro> getDefaultMacros() {
+	public Collection<WarlockMacro> getDefaultMacros() {
 		return viewer.getDefaultMacros();
 	}
 	

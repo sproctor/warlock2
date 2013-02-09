@@ -37,7 +37,6 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.swt.SWT;
 
-import cc.warlock.core.client.CommandMacroHandler;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
@@ -89,8 +88,8 @@ public class MacroRegistry {
 	}
 	
 	private void loadBaseMacros () {
-		addMacro(new WarlockMacro(getKeyString(SWT.CR, 0), new CommandMacroHandler("{Return}")));
-		addMacro(new WarlockMacro(getKeyString(SWT.ESC, 0), new CommandMacroHandler("{StopScript}")));
+		addMacro(new WarlockMacro(getKeyString(SWT.CR, 0), "{Return}"));
+		addMacro(new WarlockMacro(getKeyString(SWT.ESC, 0), "{StopScript}"));
 	}
 	
 	public IMacro getMacro(int keycode, int modifiers) {

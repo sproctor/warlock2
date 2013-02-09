@@ -46,6 +46,7 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 	private static HashMap<String, ClientSettings> clients = new HashMap<String, ClientSettings>();
 	private static Preferences topNode = WarlockPreferencesScope.getInstance().getNode().node("clients");
 	private static HashMap<String, IWarlockSettingFactory> providerFactories = new HashMap<String, IWarlockSettingFactory>();
+	private static ClientSettings globalSettings;
 	
 	private HashMap<String, IWarlockSetting> providers = new HashMap<String, IWarlockSetting>();
 	
@@ -147,6 +148,12 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 			clients.put(clientId, client);
 		}
 		return client;
+	}
+	
+	public static ClientSettings getGlobalClientSettings () {
+		if (globalSettings == null)
+			globalSettings = new ClientSettings ("global");
+		return globalSettings;
 	}
 	
 	public static Collection<ClientSettings> getAllClientSettings () {

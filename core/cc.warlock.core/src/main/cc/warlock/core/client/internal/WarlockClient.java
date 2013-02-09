@@ -52,6 +52,7 @@ import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockTimer;
 import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
+import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.VariableConfigurationProvider;
@@ -75,7 +76,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	protected Property<ICompass> compass = new Property<ICompass>(null);
 	protected IClientLogger logger;
 	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
-	protected ArrayList<Pair<String, IStreamListener>> potentialListeners = new ArrayList<Pair<String, IStreamListener>>();
+	protected ArrayList<Pair<String, IStreamListener>> streamListeners = new ArrayList<Pair<String, IStreamListener>>();
 	private ArrayList<Collection<? extends IWarlockHighlight>> highlightLists = new ArrayList<Collection<? extends IWarlockHighlight>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
@@ -83,6 +84,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	private HashMap<String, IStream> componentStreams = new HashMap<String, IStream>();
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
+	protected ClientSettings clientSettings;
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
@@ -215,8 +217,6 @@ public abstract class WarlockClient implements IWarlockClient {
 		return compass;
 	}
 	
-	public abstract IClientSettings getClientSettings();
-	
 	public class MultiIterator<T> implements Iterator<T> {
 		private Iterator<? extends Collection<? extends T>> it;
 	    private Iterator<? extends T> innerIt;
@@ -289,7 +289,7 @@ public abstract class WarlockClient implements IWarlockClient {
 		if(stream != null)
 			stream.addStreamListener(listener);
 		else
-			potentialListeners.add(new Pair<String, IStreamListener>(streamName, listener));
+			streamListeners.add(new Pair<String, IStreamListener>(streamName, listener));
 	}
 	
 	public void removeStreamListener(String streamName, IStreamListener listener) {
@@ -297,7 +297,7 @@ public abstract class WarlockClient implements IWarlockClient {
 		if(stream != null) {
 			stream.removeStreamListener(listener);
 		} else {
-			for(Iterator<Pair<String, IStreamListener>> iter = potentialListeners.iterator();
+			for(Iterator<Pair<String, IStreamListener>> iter = streamListeners.iterator();
 			iter.hasNext(); ) {
 				Pair<String, IStreamListener> pair = iter.next();
 				
@@ -414,4 +414,8 @@ public abstract class WarlockClient implements IWarlockClient {
 	}
 	
 	abstract public String getGameCode();
+	
+	public IClientSettings getClientSettings() {
+		return clientSettings;
+	}
 }

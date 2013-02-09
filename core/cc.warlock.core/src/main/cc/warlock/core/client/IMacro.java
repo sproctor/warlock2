@@ -33,7 +33,9 @@ public interface IMacro {
 	public String getKeyString ();
 	public void setKeyString (String keyString);
 	
-	//public void setCommand (String command);
+	public String getCommand ();
+	public void setCommand (String command);
+	
 	public IMacroHandler getHandler();
 	
 	public void execute(IWarlockClientViewer viewer);

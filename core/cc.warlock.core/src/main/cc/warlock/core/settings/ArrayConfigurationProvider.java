@@ -117,20 +117,17 @@ public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> exte
 	
 	public void removeSetting (T setting) {
 		Iterator<T> iter = settings.iterator();
-		int i = 0;
 		while(iter.hasNext()) {
 			T curr = iter.next();
 			if(setting.equals(curr)) {
 				iter.remove();
 				try {
-					String id = Integer.toString(i);
-					getNode().node(id).removeNode();
+					curr.getNode().removeNode();
 				} catch(BackingStoreException e) {
 					e.printStackTrace();
 				}
 				break;
 			}
-			i++;
 		}
 		this.compact();
 		this.notifyListenersChanged();

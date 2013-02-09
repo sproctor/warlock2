@@ -34,16 +34,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.internal.DefaultMacro;
-import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.internal.Stream;
 import cc.warlock.core.client.internal.WarlockClient;
+import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
@@ -60,16 +58,12 @@ import cc.warlock.core.util.Pair;
 
 /**
  * @author Marshall
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class StormFrontClient extends WarlockClient implements IStormFrontClient, IRoomListener {
 
-	protected StringBuffer buffer = new StringBuffer();
-	protected Property<String> roomDescription = new Property<String>();
+	//protected StringBuffer buffer = new StringBuffer();
+	//protected Property<String> roomDescription = new Property<String>();
 	protected String gameCode, playerId;
-	protected ClientSettings clientSettings;
 	//protected StormFrontServerSettings serverSettings;
 
 	protected HashMap<String, String> commands;
@@ -104,26 +98,18 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		clientSettings = ClientSettings.getClientSettings(playerId);
 		
 		if(clientSettings.isNewSetting()) {
-			for(DefaultMacro macro : viewer.getDefaultMacros()) {
+			for(WarlockMacro macro : viewer.getDefaultMacros()) {
 				MacroSetting smacro = MacroConfigurationProvider.getProvider(clientSettings).createSetting();
 				smacro.setCommand(macro.getCommand());
 				smacro.setKeyString(macro.getKeyString());
 			}
-			try {
-				WarlockPreferencesScope.getInstance().getNode().flush();
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+			WarlockPreferencesScope.getInstance().flush();
 		}
 		// TODO: import server settings
 		//serverSettings = new StormFrontServerSettings();
 		//clientSettings.addChildProvider(serverSettings);
 		
 		WarlockClientRegistry.clientSettingsLoaded(this);
-	}
-	
-	public IClientSettings getClientSettings() {
-		return clientSettings;
 	}
 	
 	public String getCharacterName() {
@@ -220,7 +206,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 			if (viewer instanceof IStormFrontClientViewer)
 				((IStormFrontClientViewer) viewer).appendImage(url);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -242,9 +227,8 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 			
 			writer.close();
 			inStream.close();
-			buffer.setLength(0);
+			//buffer.setLength(0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -274,7 +258,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 				stream = new Stream(this, streamName);
 				streams.put(streamName, stream);
 				for(Iterator<Pair<String, IStreamListener>> iter =
-						potentialListeners.iterator(); iter.hasNext(); ) {
+						streamListeners.iterator(); iter.hasNext(); ) {
 					Pair<String, IStreamListener> pair = iter.next();
 					if(pair.first().equals(streamName)) {
 						stream.addStreamListener(pair.second());

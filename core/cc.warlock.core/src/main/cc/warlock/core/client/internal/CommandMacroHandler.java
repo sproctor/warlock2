@@ -19,9 +19,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client;
+package cc.warlock.core.client.internal;
 
 import java.util.Collection;
+
+import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.IMacroCommand;
+import cc.warlock.core.client.IMacroHandler;
+import cc.warlock.core.client.IMacroVariable;
+import cc.warlock.core.client.IWarlockClientViewer;
 
 /**
  * This is the default macro handler for a command being sent to the connection.

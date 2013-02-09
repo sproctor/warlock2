@@ -34,12 +34,13 @@ import cc.warlock.core.client.IWarlockClientViewer;
 public class WarlockMacro implements IMacro
 {
 	private String keyString;
+	private String command;
 	private IMacroHandler handler;
 	
-	public WarlockMacro (String keyString, IMacroHandler handler)
-	{
+	public WarlockMacro (String keyString, String command) {
 		this.keyString = keyString;
-		this.handler = handler;
+		this.command = command;
+		this.handler = new CommandMacroHandler(command);
 	}
 	
 	public String getKeyString() {
@@ -60,5 +61,13 @@ public class WarlockMacro implements IMacro
 	
 	public void execute(IWarlockClientViewer viewer) {
 		handler.handleMacro(this, viewer);
+	}
+	
+	public String getCommand() {
+		return command;
+	}
+	
+	public void setCommand(String command) {
+		this.command = command;
 	}
 }

@@ -6,7 +6,7 @@ import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.internal.DefaultMacro;
+import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.rcp.telnet.core.client.TelnetClient;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewer;
 import cc.warlock.rcp.views.GameView;
@@ -99,7 +99,7 @@ public class TelnetGameView extends GameView {
 	}
 
 	@Override
-	public Collection<DefaultMacro> getDefaultMacros() {
+	public Collection<WarlockMacro> getDefaultMacros() {
 		// TODO Auto-generated method stub
 		return null;
 	}

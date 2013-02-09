@@ -27,10 +27,10 @@
  */
 package cc.warlock.core.settings;
 
-import cc.warlock.core.client.CommandMacroHandler;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.internal.CommandMacroHandler;
 
 public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSetting
 {
