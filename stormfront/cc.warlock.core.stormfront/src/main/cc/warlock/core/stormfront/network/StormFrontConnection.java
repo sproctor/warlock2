@@ -81,6 +81,10 @@ public class StormFrontConnection implements IConnection
 		listeners.add(listener);
 	}
 	
+	public void removeConnectionListener(IConnectionListener listener) {
+		listeners.remove(listener);
+	}
+	
 	public void disconnect() throws IOException {
 		sendLine("quit");
 	}

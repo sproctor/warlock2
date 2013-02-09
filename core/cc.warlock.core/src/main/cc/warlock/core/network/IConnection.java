@@ -46,6 +46,7 @@ public interface IConnection {
 	public void connect(String host, int port) throws IOException;
 	public void disconnect() throws IOException;
 	public void addConnectionListener(IConnectionListener listener);
+	public void removeConnectionListener(IConnectionListener listener);
 	public void send(String toSend) throws IOException;
 	public void send(byte[] bytes) throws IOException;
 	public void sendLine(String line) throws IOException;

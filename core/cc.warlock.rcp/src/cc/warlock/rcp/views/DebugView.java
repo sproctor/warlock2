@@ -59,18 +59,20 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	private IWarlockClient activeClient;
 	private WarlockText activeText;
 	private WarlockStyle sentStyle;
+	private SWTConnectionListenerAdapter listener;
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.views.DebugView";
 	
 	public DebugView() {
 		sentStyle = new WarlockStyle();
 		sentStyle.setForegroundColor(new WarlockColor("#FF0000"));
+		listener = new SWTConnectionListenerAdapter(DebugView.this);
 		
 		// Add listeners to existing clients
 		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
 			IConnection conn = client.getConnection();
 			if(conn != null)
-				conn.addConnectionListener(new SWTConnectionListenerAdapter(DebugView.this));
+				conn.addConnectionListener(listener);
 		}
 		
 		// Add listeners to future clients
@@ -80,8 +82,10 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run () {
 						IConnection conn = client.getConnection();
-						if(conn != null)
-							conn.addConnectionListener(new SWTConnectionListenerAdapter(DebugView.this));
+						if(conn != null) {
+							conn.removeConnectionListener(listener);
+							conn.addConnectionListener(listener);
+						}
 					}
 				});
 			}
@@ -162,7 +166,6 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 			activeClient.getConnection().send(toSend.getBytes());
 			entry.setText("");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -211,5 +214,15 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	
 	public void pageDown() {
 		activeText.pageDown();
+	}
+	
+	@Override
+	public void dispose() {
+		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
+			IConnection conn = client.getConnection();
+			if(conn != null)
+				conn.removeConnectionListener(listener);
+		}
+		super.dispose();
 	}
 }

@@ -94,6 +94,10 @@ public class Connection implements IConnection {
 		connectionListeners.add(listener);
 	}
 	
+	public void removeConnectionListener (IConnectionListener listener) {
+		connectionListeners.remove(listener);
+	}
+	
 	public void send (String toSend)
 		throws IOException
 	{
