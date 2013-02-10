@@ -664,4 +664,7 @@ public class WSLScript extends AbstractScript {
 		return false;
 	}
 
+	public int getLineNum () {
+		return curCommand.getLineNumber();
+	}
 }

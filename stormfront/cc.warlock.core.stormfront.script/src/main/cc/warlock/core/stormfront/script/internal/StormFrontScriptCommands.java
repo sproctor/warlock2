@@ -65,13 +65,13 @@ public class StormFrontScriptCommands extends ScriptCommands implements IStormFr
 	}
 	
 	@Override
-	public void put(String text) throws InterruptedException {
+	public void put(String text, int lineNum) throws InterruptedException {
 		if(typeAhead >= 2)
 			this.waitForPrompt();
 		synchronized(this) {
 			typeAhead++;
 		}
-		super.put(text);
+		super.put(text, lineNum);
 	}
 	
 	@Override

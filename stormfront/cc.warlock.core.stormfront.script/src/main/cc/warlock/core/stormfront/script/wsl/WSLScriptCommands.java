@@ -405,7 +405,7 @@ public class WSLScriptCommands {
 				script.stop();
 				ScriptEngineRegistry.startScript(script.getClient(), arguments.substring(1));
 			} else {
-				script.scriptCommands.put(arguments);
+				script.scriptCommands.put(arguments, script.getLineNum());
 			}
 		}
 	}
@@ -468,7 +468,7 @@ public class WSLScriptCommands {
 
 		public void execute (WSLScript script, String arguments) throws InterruptedException
 		{
-			script.scriptCommands.move(arguments);
+			script.scriptCommands.move(arguments, script.getLineNum());
 		}
 	}
 

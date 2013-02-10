@@ -131,8 +131,8 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
-	public void move(String direction) throws InterruptedException {
-		put(direction);
+	public void move(String direction, int lineNum) throws InterruptedException {
+		put(direction, lineNum);
 		waitNextRoom();
 	}
 
@@ -159,9 +159,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 	
-	public void put(String text) throws InterruptedException {
+	public void put(String text, int lineNum) throws InterruptedException {
 		Command command = new Command(text, true);
-		command.setPrefix("[" + scriptName + "]: ");
+		command.setPrefix("[" + scriptName + ":" + lineNum + "]: ");
 		getClient().send(command);
 	}
 
@@ -254,7 +254,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void nextRoom() {
 		lock.lock();
 		try {
-			atPrompt = false;
 			room++;
 			nextRoom.signalAll();
 		} finally {
