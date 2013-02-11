@@ -32,7 +32,6 @@ import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.core.client.IStream;
 import cc.warlock.rcp.actions.OpenStreamWindowAction;
-import cc.warlock.rcp.stormfront.ui.views.CompassView;
 import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.ScriptManager;
 import cc.warlock.rcp.views.StreamView;
@@ -45,7 +44,7 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 		private static final String title = "Scripts Manager";
 		
 		public ScriptManagerAction() {
-			super(title, Action.AS_CHECK_BOX);
+			super(title, Action.AS_PUSH_BUTTON);
 		}
 		
 		public void run() {
@@ -67,7 +66,6 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 	@Override
 	protected IContributionItem[] getContributionItems() {	
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
-		items.add(new ActionContributionItem(new CompassAction()));
 		GameView gameView = GameView.getGameViewInFocus();
 		if (gameView != null && gameView.getClient() != null) {
 			for (IStream stream : gameView.getClient().getStreams()) {
@@ -87,33 +85,5 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 	protected IContributionItem streamContribution(String label, String streamName, String prefix)
 	{
 		return new ActionContributionItem(new OpenStreamWindowAction(label, streamName, prefix));
-	}
-
-	private class CompassAction extends Action {
-		
-		private static final String title = "Compass";
-		
-		public CompassAction() {
-			super(title, Action.AS_CHECK_BOX);
-		}
-		
-		@Override
-		public void run() {
-			try {
-				CompassView view = (CompassView)
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(CompassView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
-				GameView inFocus = GameView.getGameViewInFocus();
-				if (inFocus != null) {
-					view.setClient(inFocus.getClient());
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public String getText() {
-	 		return title;
-		}
 	}
 }

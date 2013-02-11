@@ -25,8 +25,8 @@ import org.eclipse.ui.IPageLayout;
 
 import cc.warlock.rcp.application.WarlockPerspectiveFactory;
 import cc.warlock.rcp.stormfront.ui.views.BarsView;
-import cc.warlock.rcp.stormfront.ui.views.CompassView;
 import cc.warlock.rcp.stormfront.ui.views.HandsView;
+import cc.warlock.rcp.views.CompassView;
 
 public class StormFrontPerspectiveFactory extends WarlockPerspectiveFactory {
 

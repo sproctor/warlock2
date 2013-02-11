@@ -37,10 +37,10 @@ import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.rcp.stormfront.ui.StormFrontPerspectiveFactory;
 import cc.warlock.rcp.stormfront.ui.views.BarsView;
-import cc.warlock.rcp.stormfront.ui.views.CompassView;
 import cc.warlock.rcp.stormfront.ui.views.HandsView;
 import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
 import cc.warlock.rcp.util.RCPUtil;
+import cc.warlock.rcp.views.CompassView;
 import cc.warlock.rcp.views.GameView;
 
 public class LoginUtil {

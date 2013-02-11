@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.rcp.stormfront.ui.views;
+package cc.warlock.rcp.views;
 
 import java.util.HashMap;
 
@@ -33,26 +33,19 @@ import org.eclipse.ui.part.ViewPart;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.WarlockCompass;
 import cc.warlock.rcp.ui.style.CompassThemes;
-import cc.warlock.rcp.views.GameView;
-import cc.warlock.rcp.views.IGameViewFocusListener;
 
 public class CompassView extends ViewPart {
-	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.CompassView";
+	public static final String VIEW_ID = "cc.warlock.rcp.ui.views.CompassView";
 	
-	protected static CompassView instance;
+	//protected static CompassView instance;
 	protected IWarlockClient activeClient;
 	protected HashMap<IWarlockClient, WarlockCompass> clients = new HashMap<IWarlockClient, WarlockCompass>();
 	protected PageBook book;
-	
-	public CompassView () {
-		instance = this;
-		
-		GameView.addGameViewFocusListener(new IGameViewFocusListener () {
-			public void gameViewFocused(GameView gameView) {
-				setClient(gameView.getClient());
-			}
-		});
-	}
+	private IGameViewFocusListener listener = new IGameViewFocusListener () {
+		public void gameViewFocused(GameView gameView) {
+			setClient(gameView.getClient());
+		}
+	};
 	
 	public void setClient (IWarlockClient client) {
 		activeClient = client;
@@ -81,6 +74,16 @@ public class CompassView extends ViewPart {
 		
 		book = new PageBook(parent, SWT.NONE);
 		book.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		GameView.addGameViewFocusListener(listener);
+		GameView inFocus = GameView.getGameViewInFocus();
+		if (inFocus != null)
+			setClient(inFocus.getClient());
+	}
+	
+	@Override
+	public void dispose() {
+		GameView.removeGameViewFocusListener(listener);
 	}
 	
 	public void setFocus() {

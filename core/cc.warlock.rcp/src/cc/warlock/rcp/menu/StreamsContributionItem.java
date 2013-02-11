@@ -30,12 +30,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.rcp.actions.StreamShowAction;
+import cc.warlock.rcp.views.CompassView;
 import cc.warlock.rcp.views.DebugView;
-import cc.warlock.rcp.views.GameView;
 
 /**
  * @author Will Robertson
@@ -57,7 +58,8 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
-		items.add(new ActionContributionItem(new DebugAction()));
+		items.add(new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID)));
+		items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
 		items.add(createStreamContributionItem("Events"));
 		items.add(createStreamContributionItem("Conversations"));
 		items.add(createStreamContributionItem("Healing"));
@@ -65,25 +67,22 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 		return items.toArray(new IContributionItem[items.size()]); 
 	}
 	
-	private class DebugAction extends Action {
+	private class ShowViewAction extends Action {
 		
-		private static final String title = "Debug";
+		private String title;
+		private String viewId;
 		
-		public DebugAction() {
-			super(title, Action.AS_CHECK_BOX);
+		public ShowViewAction(String title, String viewId) {
+			super(title, Action.AS_PUSH_BUTTON);
+			this.title = title;
+			this.viewId = viewId;
 		}
 		
 		@Override
 		public void run() {
 			try {
-				DebugView view = (DebugView)
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(DebugView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
-				GameView inFocus = GameView.getGameViewInFocus();
-				if (inFocus != null) {
-					view.setClient(inFocus.getClient());
-				}
-				
-			} catch(Exception e) {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
+			} catch(PartInitException e) {
 				e.printStackTrace();
 			}
 		}
