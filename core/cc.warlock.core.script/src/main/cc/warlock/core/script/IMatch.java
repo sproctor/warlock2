@@ -24,6 +24,8 @@
  */
 package cc.warlock.core.script;
 
+import java.util.Collection;
+
 
 public interface IMatch
 {
@@ -36,5 +38,5 @@ public interface IMatch
 	public boolean matches(String text);
 	
 	public String getText();
-	
+	public Collection<String> groups();
 }

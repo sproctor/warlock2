@@ -52,6 +52,7 @@ public class Stream implements IStream {
 	protected boolean isLogging = false;
 	private String location = "right";
 	private StreamHistory history = null;
+	private final WarlockStyle echoStyle = new WarlockStyle("echo");
 	
 	public Stream (IWarlockClient client, String streamName) {
 		this.client = client;
@@ -152,29 +153,15 @@ public class Stream implements IStream {
 	}
 	
 	public synchronized void echo(String text) {
-		if (isLogging && client.getLogger() != null) {
-			client.getLogger().logEcho(text);
-		}
-		
-		WarlockString string = new WarlockString(text);
-		string.addStyle(new WarlockStyle("echo"));
-
-		for (IStreamListener listener : listeners)
-		{
-			try {
-				listener.streamReceivedText(this, string);
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
+		echo(text, echoStyle);
 	}
 	
-	public synchronized void debug(String text) {
+	public void echo(String text, WarlockStyle style) {
 		WarlockString string = new WarlockString(text);
-		string.addStyle(new WarlockStyle("debug"));
+		string.addStyle(style);
 
 		if (isLogging && client.getLogger() != null) {
-			client.getLogger().logText(string);
+			client.getLogger().logEcho(text);
 		}
 		
 		for (IStreamListener listener : listeners)

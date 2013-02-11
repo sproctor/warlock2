@@ -24,6 +24,8 @@
  */
 package cc.warlock.core.client;
 
+import cc.warlock.core.client.internal.WarlockStyle;
+
 
 /**
  * @author Marshall
@@ -53,7 +55,7 @@ public interface IStream {
 	public void setClosedStyle(String style);
 	
 	public void echo(String text);
-	public void debug(String text);
+	public void echo(String text, WarlockStyle style);
 	
 	public void addStreamListener(IStreamListener listener);
 	public void removeStreamListener(IStreamListener listener);

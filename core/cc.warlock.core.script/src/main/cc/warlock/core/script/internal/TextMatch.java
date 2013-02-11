@@ -21,6 +21,9 @@
  */
 package cc.warlock.core.script.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import cc.warlock.core.script.IMatch;
 
 public class TextMatch implements IMatch {
@@ -28,6 +31,7 @@ public class TextMatch implements IMatch {
 	private String originalText;
 	private String matchText;
 	private String matchLine;//BFisher - For getting line we matched against.
+	private String matchedText;
 	private boolean ignoreCase;
 	
 	public TextMatch(String text) {
@@ -52,26 +56,22 @@ public class TextMatch implements IMatch {
 	}
 
 	public boolean matches(String text) {
-		boolean rv = false;
-
-		if(ignoreCase) {
-			if(text.toLowerCase().contains(matchText)) {
-				rv = true;
-				//BFisher - Set text line matched.
-				this.matchLine = text;
-			}
-		} else {
-			if(text.matches(matchText)) {
-				rv = true;	
-				//BFisher - Set text line matched.
-				this.matchLine = text;
-			}
+		if((ignoreCase && text.toLowerCase().contains(matchText)) || (!ignoreCase && text.matches(matchText))) {
+			this.matchLine = text;
+			int start = ignoreCase ? text.toLowerCase().indexOf(matchText.toLowerCase()) : text.indexOf(matchText);
+			this.matchedText = text.substring(start, start + matchText.length());
+			return true;
 		}
-
-		return rv;
+		return false;
 	}
 	
 	public String getText() {
 		return originalText;
+	}
+	
+	public Collection<String> groups() {
+		ArrayList<String> groups = new ArrayList<String>();
+		groups.add(matchedText);
+		return groups;
 	}
 }

@@ -346,23 +346,23 @@ public class WSLScript extends AbstractScript {
 			scriptDebug(2, "Debug: " + line);
 			command.execute(this, arguments);
 		} else {
-			debug("Invalid command on line (" + curCommand.getLineNumber() + "): " + line);
+			scriptError("Invalid command on line (" + curCommand.getLineNumber() + "): " + line);
 		}
 	}
 	
 	protected void scriptError(String message) {
-		debug("Script error on line " + curCommand.getLineNumber() + " (" + curLine + "): " + message);
+		echo("ERROR " + this.getName() + ":" + curCommand.getLineNumber() + ": \"" + message + "\" line: (" + curLine + ")");
 		stop();
 	}
 	
 	protected void scriptWarning(String message) {
-		debug("Script warning on line " + curCommand.getLineNumber() + " (" + curLine + "): " + message);
+		echo("WARNING " + this.getName() + ":" + curCommand.getLineNumber() + ": \"" + message + "\" line: (" + curLine + ")");
 	}
 	
 	protected void scriptDebug (int level, String message)
 	{
 		if (level <= debugLevel) {
-			debug(message);
+			echo("DEBUG " + this.getName() + ":" + curCommand.getLineNumber() + ": " + message);
 		}
 	}
 	
@@ -436,14 +436,17 @@ public class WSLScript extends AbstractScript {
 					long now = System.currentTimeMillis();
 					if(timeoutEnd >= now)
 						text = myQueue.poll(timeoutEnd - now, TimeUnit.MILLISECONDS);
-					if(text == null)
+					if(text == null) {
+						scriptDebug(1, "matchwait timed out");
 						return;
+					}
 				} else {
 					text = myQueue.take();
 				}
 				// try all of our matches
 				for(WSLMatch match : matches) {
-					if(match.getMatch().matches(text)) {
+					if(match.matches(text)) {
+						scriptDebug(1, "Matched text \"" + match.groups().toArray()[0] + "\"");
 						match.run();
 						return;
 					}
@@ -553,62 +556,47 @@ public class WSLScript extends AbstractScript {
 		if(matchQueue == null)
 			matchQueue = scriptCommands.createLineQueue();
 		
-		matches.add(new WSLTextMatch(label, match));
+		matches.add(new WSLMatch(label, match));
 	}
 	
 	protected void addMatchRe(String label, RegexMatch match) {
 		if(matchQueue == null)
 			matchQueue = scriptCommands.createLineQueue();
 	
-		matches.add(new WSLRegexMatch(label, match));
+		matches.add(new WSLMatch(label, match));
 	}
 	
-	private abstract class WSLMatch {
+	private class WSLMatch implements IMatch {
 		private IMatch match;
-		
-		public WSLMatch(IMatch match) {
-			this.match = match;
-		}
-		
-		public IMatch getMatch() {
-			return match;
-		}
-		
-		public abstract void run();
-	}
-
-	private class WSLTextMatch extends WSLMatch {
-		
 		private String label;
 		
-		public WSLTextMatch(String label, IMatch match) {
-			super(match);
-			this.label = label;
-		}
-		
-		public void run() {
-			gotoLabel(label);
-		}
-	}
-	
-	private class WSLRegexMatch extends WSLMatch {
-		
-		private String label;
-		private RegexMatch match;
-		
-		public WSLRegexMatch(String label, RegexMatch match) {
-			super(match);
+		public WSLMatch(String label, IMatch match) {
 			this.label = label;
 			this.match = match;
+		}
+		
+		@Override
+		public boolean matches(String text) {
+			return match.matches(text);
 		}
 		
 		public void run() {
 			setVariablesFromMatch(match);
 			gotoLabel(label);
 		}
+
+		@Override
+		public String getText() {
+			return match.getText();
+		}
+
+		@Override
+		public Collection<String> groups() {
+			return match.groups();
+		}
 	}
 	
-	protected void setVariablesFromMatch(RegexMatch match) {
+	protected void setVariablesFromMatch(IMatch match) {
 		int i = 0;
 		for(String var : match.groups()) {
 			setLocalVariable(String.valueOf(i), var);
