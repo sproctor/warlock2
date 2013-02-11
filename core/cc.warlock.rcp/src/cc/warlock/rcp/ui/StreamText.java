@@ -168,15 +168,14 @@ public class StreamText extends WarlockText implements IStreamListener {
 		
 		this.client = client;
 		
-		GameView game = GameView.getGameViewForClient(client);
-		if (game == null) {
-			System.out.println("Couldn't find a gameview for this client! This view won't be setup to send keys over.");
-		} else {
-			this.getTextWidget().addVerifyKeyListener(game.getWarlockEntry().new KeyVerifier());
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addKeyListener(game.getWarlockEntry().new KeyEventListener());
-		}
-
 		if(client != null) {
+			GameView game = GameView.getGameViewForClient(client);
+			if (game == null) {
+				System.out.println("Couldn't find a gameview for this client! This view won't be setup to send keys over.");
+			} else {
+				this.getTextWidget().addVerifyKeyListener(game.getWarlockEntry().new KeyVerifier());
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addKeyListener(game.getWarlockEntry().new KeyEventListener());
+			}
 			stream = client.getStream(streamName);
 			client.addStreamListener(streamName, streamListener);
 			WarlockClientRegistry.addWarlockClientListener(clientListener);
