@@ -15,6 +15,12 @@
             name="Debug Console">
       </view>
       <view
+            allowMultiple="false"
+            class="cc.warlock.rcp.views.CompassView"
+            id="cc.warlock.rcp.views.CompassView"
+            name="Compass">
+      </view>
+      <view
             class="cc.warlock.rcp.views.ConnectionView"
             icon="images/connect.png"
             id="cc.warlock.rcp.views.ConnectionView"

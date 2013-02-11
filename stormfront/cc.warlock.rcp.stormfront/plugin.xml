@@ -18,12 +18,6 @@
       </view>
       <view
             allowMultiple="false"
-            class="cc.warlock.rcp.stormfront.ui.views.CompassView"
-            id="cc.warlock.rcp.stormfront.ui.views.CompassView"
-            name="Compass">
-      </view>
-      <view
-            allowMultiple="false"
             class="cc.warlock.rcp.stormfront.ui.views.HandsView"
             icon="images/handview.gif"
             id="cc.warlock.rcp.stormfront.ui.views.HandsView"

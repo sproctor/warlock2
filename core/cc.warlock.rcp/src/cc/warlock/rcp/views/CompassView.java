@@ -35,7 +35,7 @@ import cc.warlock.rcp.ui.WarlockCompass;
 import cc.warlock.rcp.ui.style.CompassThemes;
 
 public class CompassView extends ViewPart {
-	public static final String VIEW_ID = "cc.warlock.rcp.ui.views.CompassView";
+	public static final String VIEW_ID = "cc.warlock.rcp.views.CompassView";
 	
 	//protected static CompassView instance;
 	protected IWarlockClient activeClient;

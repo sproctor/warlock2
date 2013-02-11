@@ -71,8 +71,6 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 			public void widgetDisposed(DisposeEvent e) {
 				moveCursor.dispose();
 				moveCursor = null;
-				compassImage.dispose();
-				compassImage = null;
 				WarlockCompass.this.client.getCompass().removeListener(listener);
 			}
 		});
