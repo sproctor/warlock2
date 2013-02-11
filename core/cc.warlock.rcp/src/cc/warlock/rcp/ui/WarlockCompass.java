@@ -51,7 +51,6 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 
 	private Cursor moveCursor;
 	private CompassTheme theme;
-	private ICompass compass;
 	private IWarlockClient client;
 	private IPropertyListener<ICompass> listener;
 	
@@ -97,11 +96,9 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		if(this.isDisposed() || gc.isDisposed() || compassImage.isDisposed())
 			return;
 		gc.drawImage(compassImage, 0, 0);
-		if (compass != null)
-		{
-			for (DirectionType direction : DirectionType.values())
-			{
-				if (direction != DirectionType.None && compass.getDirections().contains(direction))
+		if (client != null && client.getCompass() != null && client.getCompass().get() != null) {
+			for (DirectionType direction : DirectionType.values()) {
+				if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction))
 				{
 					Point point = theme.getDirectionPosition(direction);
 					gc.drawImage(theme.getDirectionImage(direction), point.x, point.y);
@@ -109,10 +106,8 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 			}
 		} else {
 			// draw all "on" by default
-			for (DirectionType direction : DirectionType.values())
-			{
-				if (direction != DirectionType.None)
-				{
+			for (DirectionType direction : DirectionType.values()) {
+				if (direction != DirectionType.None) {
 					Point point = theme.getDirectionPosition(direction);
 					gc.drawImage(theme.getDirectionImage(direction), point.x, point.y);
 				}
@@ -121,8 +116,10 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	}
 	
 	protected void click(Point c) {
+		if (client == null || client.getCompass() == null || client.getCompass().get() == null)
+			return;
 		for (DirectionType direction : DirectionType.values()) {
-			if (direction != DirectionType.None && compass.getDirections().contains(direction)) {
+			if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction)) {
 				Point point = theme.getDirectionPosition(direction);
 				if(c.x >= point.x && c.x <= point.x + theme.getDirectionWidth(direction)
 						&& c.y >= point.y && c.y <= point.y + theme.getDirectionHeight(direction)) {
@@ -134,11 +131,6 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	}
 	
 	public void propertyChanged(ICompass value) {
-		compass = value;
 		redraw();
-	}
-
-	public ICompass getCompass() {
-		return compass;
 	}
 }

@@ -26,11 +26,16 @@ package cc.warlock.rcp.menu;
 
 import java.util.ArrayList;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.rcp.actions.StreamShowAction;
+import cc.warlock.rcp.views.DebugView;
+import cc.warlock.rcp.views.GameView;
 
 /**
  * @author Will Robertson
@@ -52,10 +57,40 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
+		items.add(new ActionContributionItem(new DebugAction()));
 		items.add(createStreamContributionItem("Events"));
 		items.add(createStreamContributionItem("Conversations"));
 		items.add(createStreamContributionItem("Healing"));
 		
 		return items.toArray(new IContributionItem[items.size()]); 
+	}
+	
+	private class DebugAction extends Action {
+		
+		private static final String title = "Debug";
+		
+		public DebugAction() {
+			super(title, Action.AS_CHECK_BOX);
+		}
+		
+		@Override
+		public void run() {
+			try {
+				DebugView view = (DebugView)
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(DebugView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
+				GameView inFocus = GameView.getGameViewInFocus();
+				if (inFocus != null) {
+					view.setClient(inFocus.getClient());
+				}
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
+		public String getText() {
+	 		return title;
+		}
 	}
 }

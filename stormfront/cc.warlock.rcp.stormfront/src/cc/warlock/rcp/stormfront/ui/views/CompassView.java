@@ -49,17 +49,15 @@ public class CompassView extends ViewPart {
 		
 		GameView.addGameViewFocusListener(new IGameViewFocusListener () {
 			public void gameViewFocused(GameView gameView) {
-				setActiveClient(gameView.getClient());
+				setClient(gameView.getClient());
 			}
 		});
 	}
 	
-	protected void setActiveClient (IWarlockClient client)
-	{
-		if (client == null || activeClient == client)
-			return;
-		
+	public void setClient (IWarlockClient client) {
 		activeClient = client;
+		if (client == null)
+			return;
 		
 		if(book.isDisposed())
 			return;
@@ -68,10 +66,12 @@ public class CompassView extends ViewPart {
 			WarlockCompass compass = new WarlockCompass(book, SWT.NONE, CompassThemes.getCompassTheme("small"), client);
 			clients.put(client, compass);
 			book.showPage(compass);
+			compass.redraw();
 		} else {
 			WarlockCompass compass = clients.get(client);
 			book.showPage(compass);
-		}
+			compass.redraw();
+		}	
 	}
 	
 	@Override

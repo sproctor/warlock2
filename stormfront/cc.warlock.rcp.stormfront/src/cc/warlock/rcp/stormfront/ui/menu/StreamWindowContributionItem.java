@@ -22,7 +22,6 @@
 package cc.warlock.rcp.stormfront.ui.menu;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -32,44 +31,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.core.client.IStream;
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.actions.OpenStreamWindowAction;
-import cc.warlock.rcp.views.DebugView;
+import cc.warlock.rcp.stormfront.ui.views.CompassView;
 import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.ScriptManager;
 import cc.warlock.rcp.views.StreamView;
 
 
 public class StreamWindowContributionItem extends CompoundContributionItem {
-
-	private class DebugAction extends Action {
-		
-		private static final String title = "Debug";
-		
-		public DebugAction() {
-			super(title, Action.AS_CHECK_BOX);
-		}
-		
-		@Override
-		public void run() {
-			try {
-				DebugView view = (DebugView)
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(DebugView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
-				GameView inFocus = GameView.getGameViewInFocus();
-				if (inFocus != null) {
-					view.setClient(inFocus.getClient());
-				}
-				
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public String getText() {
-	 		return title;
-		}
-	}
 	
 	private class ScriptManagerAction extends Action {
 		
@@ -98,11 +67,10 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 	@Override
 	protected IContributionItem[] getContributionItems() {	
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
-		try {
-			GameView gameView = GameView.getGameViewInFocus();
-			IWarlockClient client = gameView.getClient();
-			Collection<IStream> streams = client.getStreams();
-			for (IStream stream: streams) {
+		items.add(new ActionContributionItem(new CompassAction()));
+		GameView gameView = GameView.getGameViewInFocus();
+		if (gameView != null && gameView.getClient() != null) {
+			for (IStream stream : gameView.getClient().getStreams()) {
 				String location = StreamView.RIGHT_STREAM_PREFIX;
 				if (stream.getLocation().equals("center")) {
 					location = StreamView.TOP_STREAM_PREFIX;
@@ -112,11 +80,7 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 				items.add(streamContribution(stream.getTitle(),
 						stream.getName(), location));
 			}
-		} catch (NullPointerException e) {
-			// Do nothing, GameViews and Clients are often not setup.
 		}
-		items.add(new ActionContributionItem(new DebugAction()));
-		//items.add(new ActionContributionItem(new ScriptManagerAction()));
 		return items.toArray(new IContributionItem[items.size()]);
 	}
 	
@@ -125,4 +89,31 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 		return new ActionContributionItem(new OpenStreamWindowAction(label, streamName, prefix));
 	}
 
+	private class CompassAction extends Action {
+		
+		private static final String title = "Compass";
+		
+		public CompassAction() {
+			super(title, Action.AS_CHECK_BOX);
+		}
+		
+		@Override
+		public void run() {
+			try {
+				CompassView view = (CompassView)
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(CompassView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
+				GameView inFocus = GameView.getGameViewInFocus();
+				if (inFocus != null) {
+					view.setClient(inFocus.getClient());
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
+		public String getText() {
+	 		return title;
+		}
+	}
 }
