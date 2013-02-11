@@ -36,15 +36,16 @@ import org.eclipse.swt.widgets.Composite;
 
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IMacro;
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.views.GameView;
 
-public class WarlockEntry {
-
-	private StyledText widget;
+abstract public class WarlockEntry
+{
+	protected StyledText widget;
 	private IWarlockClientViewer viewer;
 	private boolean searchMode = false;
 	private StringBuffer searchText = new StringBuffer();
@@ -57,6 +58,7 @@ public class WarlockEntry {
 		widget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		widget.setEditable(true);
 		
+		// TODO: why not Mac OSX?
 		if (!Platform.getOS().equals(Platform.OS_MACOSX))
 			widget.setLineSpacing(2);
 		
@@ -255,4 +257,6 @@ public class WarlockEntry {
 			viewer.send(command);
 		}
 	}
+	
+	abstract public void setClient (IWarlockClient client);
 }

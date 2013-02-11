@@ -206,11 +206,12 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		entryComposite.setLayout(entryLayout);
 		entryComposite.setLayoutData(new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_END, true, false));
 		
-		this.entry = new WarlockEntry(entryComposite, wrapper); // Do this BEFORE getTextForClient!
+		this.entry = createEntry(); // Do this BEFORE getTextForClient!
 		
 		initColors();
 	}
 	
+	abstract protected WarlockEntry createEntry();
 	
 	protected void initColors()
 	{
@@ -420,6 +421,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 			}
 		});
 		streamText.setClient(client);
+		entry.setClient(client);
 	}
 	
 	protected abstract void setViewTitle(String title);

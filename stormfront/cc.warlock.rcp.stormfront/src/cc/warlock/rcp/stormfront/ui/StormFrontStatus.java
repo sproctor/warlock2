@@ -43,17 +43,33 @@ import cc.warlock.rcp.util.ColorUtil;
 
 public class StormFrontStatus implements IPropertyListener<String> {
 
-	protected Label[] statusLabels = new Label[4];
+	protected Label[] statusLabels = new Label[6];
 	protected IWarlockClient activeClient;
 	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
 	protected SWTPropertyListener<String> wrapper = new SWTPropertyListener<String>(this);
 	protected DecorationOverlayIcon multipleStatus;
 	protected Image multipleStatusImage;
+	private Composite main;
+	private SWTPropertyListener<Integer> rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
+		public void propertyChanged(Integer value) {
+			if (value == 0)
+				statusLabels[4].setText("");
+			else
+				statusLabels[4].setText(value.toString());
+		}
+	});
+	private SWTPropertyListener<Integer> ctListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
+		public void propertyChanged(Integer value) {
+			if (value == 0)
+				statusLabels[5].setText("");
+			else
+				statusLabels[5].setText(value.toString());
+		}
+	});
 	
-	public StormFrontStatus (Composite parent)
-	{
-		Composite main = new Composite(parent, SWT.BORDER);
-		GridLayout layout = new GridLayout(4, false);
+	public StormFrontStatus (Composite parent) {
+		main = new Composite(parent, SWT.BORDER);
+		GridLayout layout = new GridLayout(statusLabels.length, false);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		layout.marginHeight = 0;
@@ -61,11 +77,10 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		main.setLayout(layout);
 //		main.setLayoutData(new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_END, true, false, 1, 1));
 
-		for (int i = 0; i < 4; i++)
-		{
-			statusLabels[i] = new Label(main, SWT.NONE);
+		for (int i = 0; i < statusLabels.length; i++) {
+			statusLabels[i] = new Label(main, SWT.CENTER);
 			statusLabels[i].setImage(StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_STATUS_BLANK));
-			GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
+			GridData data = new GridData(GridData.FILL | SWT.CENTER, GridData.FILL | SWT.CENTER, true, true);
 			data.minimumWidth = 24;
 			statusLabels[i].setLayoutData(data);
 		}
@@ -75,22 +90,23 @@ public class StormFrontStatus implements IPropertyListener<String> {
 	
 	protected void clear ()
 	{
-		for (int i = 0; i < 4; i++)
-		{
-			statusLabels[i].setImage(StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_STATUS_BLANK));
+		for (Label label : statusLabels) {
+			label.setImage(StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_STATUS_BLANK));
 		}
 	}
 	
 	protected void setStatusImage(int place, String imageId)
 	{
-		if (statusLabels[place] == null) return;
+		if (statusLabels[place] == null)
+			return;
 		
 		statusLabels[place].setImage(StormFrontSharedImages.getImage(imageId));
 	}
 	
 	protected void handleMultipleStatus (ICharacterStatus status)
 	{
-		if (statusLabels[3] == null) return;
+		if (statusLabels[3] == null)
+			return;
 		
 		Image baseImage = StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_STATUS_BLANK);
 		ImageDescriptor overlays[] = new ImageDescriptor[] { null, null, null, null, null };
@@ -120,7 +136,8 @@ public class StormFrontStatus implements IPropertyListener<String> {
 	}
 	
 	public void propertyChanged(String value) {
-		if (activeClient == null) return;
+		if (activeClient == null)
+			return;
 
 		ICharacterStatus status = activeClient.getCharacterStatus();
 
@@ -186,24 +203,26 @@ public class StormFrontStatus implements IPropertyListener<String> {
 	
 	protected void setColors (Color fg, Color bg)
 	{
-		for (int i = 0; i < statusLabels.length; i++)
-		{
+		for (int i = 0; i < 4; i++) {
 			statusLabels[i].setForeground(fg);
 			statusLabels[i].setBackground(bg);
 		}
+		statusLabels[4].setForeground(new Color(main.getDisplay(), 225, 50, 50));
+		statusLabels[4].setBackground(bg);
+		statusLabels[5].setForeground(new Color(main.getDisplay(), 50, 50, 225));
+		statusLabels[5].setBackground(bg);
 	}
 	
-	public void loadSettings (IClientSettings settings)
-	{	
+	public void loadSettings (IClientSettings settings) {	
 		Color bg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultBackground());
 		Color fg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultForeground());
 		
 		setColors(fg, bg);
 	}
 	
-	public void setActiveClient (IWarlockClient client)
-	{
-		if (client == null) return;
+	public void setActiveClient (IWarlockClient client) {
+		if (client == null)
+			return;
 		
 		this.activeClient = client;
 		
@@ -211,6 +230,8 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		{
 			clear();
 			client.getCharacterStatus().addListener(wrapper);
+			client.getTimer("roundtime").getProperty().addListener(rtListener);
+			client.getTimer("casttime").getProperty().addListener(ctListener);
 			
 			clients.add(client);
 		} else {

@@ -69,6 +69,7 @@ import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.stormfront.ui.style.StormFrontStyleProvider;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
 import cc.warlock.rcp.ui.IStyleProvider;
+import cc.warlock.rcp.ui.WarlockEntry;
 import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
@@ -117,6 +118,10 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			String characterName = getClient() != null ? getClient().getCharacterName() : "No Character";
 			setNoReconnectProfile(characterName);
 		}
+	}
+	
+	protected WarlockEntry createEntry() {
+		return new StormFrontEntry(entryComposite, wrapper);
 	}
 	
 	public void setProfile(Profile profile) {
