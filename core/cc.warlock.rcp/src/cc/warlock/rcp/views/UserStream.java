@@ -60,8 +60,7 @@ public class UserStream extends StreamView {
 		}
 		
 		@Override
-		public void append (WarlockString string)
-		{
+		public void append (WarlockString string) {
 			// Process filters on the complete lines
 			WarlockString ret = new WarlockString();
 			bufferLoop: for (WarlockString buffer : string.split("\\r?\\n")) {
@@ -107,6 +106,7 @@ public class UserStream extends StreamView {
 		} else {
 			System.err.println("Not a UserStream name we recognize! ("+name+")");
 		}
+		setViewTitle(name);
 	}
 	
 	@Override
