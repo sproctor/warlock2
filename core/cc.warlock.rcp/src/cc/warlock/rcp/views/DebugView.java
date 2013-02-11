@@ -59,49 +59,47 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	private IWarlockClient activeClient;
 	private WarlockText activeText;
 	private WarlockStyle sentStyle;
-	private SWTConnectionListenerAdapter listener;
+	private SWTConnectionListenerAdapter connListener;
+	private SWTWarlockClientListener clientListener;
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.views.DebugView";
 	
 	public DebugView() {
 		sentStyle = new WarlockStyle();
 		sentStyle.setForegroundColor(new WarlockColor("#FF0000"));
-		listener = new SWTConnectionListenerAdapter(DebugView.this);
-		
-		// Add listeners to existing clients
-		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
-			IConnection conn = client.getConnection();
-			if(conn != null)
-				conn.addConnectionListener(listener);
-		}
-		
-		// Add listeners to future clients
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new WarlockClientListener() {
+		connListener = new SWTConnectionListenerAdapter(DebugView.this);
+		clientListener = new SWTWarlockClientListener(new WarlockClientListener() {
 			@Override
 			public void clientConnected(final IWarlockClient client) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run () {
 						IConnection conn = client.getConnection();
 						if(conn != null) {
-							conn.removeConnectionListener(listener);
-							conn.addConnectionListener(listener);
+							conn.removeConnectionListener(connListener);
+							conn.addConnectionListener(connListener);
 						}
 					}
 				});
 			}
-
 			@Override
 			public void clientActivated(IWarlockClient client) {}
-
 			@Override
 			public void clientDisconnected(IWarlockClient client) {}
-
 			@Override
 			public void clientRemoved(IWarlockClient client) {}
-
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {}
-		}));
+		});
+		
+		// Add listeners to existing clients
+		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
+			IConnection conn = client.getConnection();
+			if(conn != null)
+				conn.addConnectionListener(connListener);
+		}
+		
+		// Add listeners to future clients
+		WarlockClientRegistry.addWarlockClientListener(clientListener);
 		
 		GameView.addGameViewFocusListener(this);
 	}
@@ -221,8 +219,10 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
 			IConnection conn = client.getConnection();
 			if(conn != null)
-				conn.removeConnectionListener(listener);
+				conn.removeConnectionListener(connListener);
 		}
+		WarlockClientRegistry.removeWarlockClientListener(clientListener);
+		GameView.removeGameViewFocusListener(this);
 		super.dispose();
 	}
 }
