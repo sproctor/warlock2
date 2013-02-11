@@ -114,6 +114,7 @@ public class ConnectionView extends ViewPart {
 		closeButton.setSelection(closeAfterConnect);
 		
 		createGroups();
+		form.reflow(true);
 	}
 	
 	protected ArrayList<CommandDescription> getGroupCommands (String group)
