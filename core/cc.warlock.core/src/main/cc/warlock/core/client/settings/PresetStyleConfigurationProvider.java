@@ -51,16 +51,16 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 	public static final String PRESET_COMMAND = "command";
 	
 	static {
-		setDefaultStyle("bold", "#FFFF00", null);
-		setDefaultStyle("roomName", "#FFFFFF", "#0000FF");
-		setDefaultStyle("speech", "#80FF80", null);
-		setDefaultStyle("thought", "#FF8000", null);
-		setDefaultStyle("cmdline", "#FFFFFF", "#000000");
-		setDefaultStyle("whisper", "#80FFFF", null);
-		setDefaultStyle("watching", "#FFFF00", null);
-		setDefaultStyle("link", "#62B0FF", null);
-		setDefaultStyle("selectedLink", "#000000", "#62B0FF");
-		setDefaultStyle("command", "#FFFFFF", "#404040");
+		setDefaultStyle("bold", "#FFFF00", null, false);
+		setDefaultStyle("roomName", "#FFFFFF", "#0000FF", true);
+		setDefaultStyle("speech", "#80FF80", null, false);
+		setDefaultStyle("thought", "#FF8000", null, false);
+		setDefaultStyle("cmdline", "#FFFFFF", "#000000", false);
+		setDefaultStyle("whisper", "#80FFFF", null, false);
+		setDefaultStyle("watching", "#FFFF00", null, false);
+		setDefaultStyle("link", "#62B0FF", null, false);
+		setDefaultStyle("selectedLink", "#000000", "#62B0FF", false);
+		setDefaultStyle("command", "#FFFFFF", "#404040", false);
 	}
 	
 	public PresetStyleConfigurationProvider(IWarlockSetting parent) {
@@ -102,10 +102,11 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 		getNode().remove(id);
 	}
 	
-	private static void setDefaultStyle(String name, String fg, String bg) {
+	private static void setDefaultStyle(String name, String fg, String bg, boolean fullLine) {
 		IWarlockStyle style = new WarlockStyle(name);
 		style.setForegroundColor(fg == null ? WindowConfigurationProvider.defaultFgColor : new WarlockColor(fg));
 		style.setBackgroundColor(bg == null ? WindowConfigurationProvider.defaultBgColor : new WarlockColor(bg));
+		style.setFullLine(fullLine);
 		defaultStyles.put(name, style);
 	}
 	
