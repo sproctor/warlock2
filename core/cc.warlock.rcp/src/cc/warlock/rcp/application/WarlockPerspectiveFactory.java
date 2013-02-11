@@ -32,6 +32,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
 
+import cc.warlock.rcp.views.CompassView;
 import cc.warlock.rcp.views.ConnectionView;
 
 /**
@@ -81,7 +82,8 @@ public class WarlockPerspectiveFactory implements IPerspectiveFactory {
 //		layout.addStandaloneView(BarsView.VIEW_ID, false, IPageLayout.BOTTOM, 0.95f, GameView.VIEW_ID);
 //		folder.addView("org.eclipse.pde.runtime.LogView");
 		
-//		layout.addView(CompassView.VIEW_ID, IPageLayout.RIGHT, 0.85f, BarsView.VIEW_ID);
+		//layout.addStandaloneViewPlaceholder(CompassView.VIEW_ID, IPageLayout.RIGHT, 0.15f, BarsView.VIEW_ID, false);
+		layout.addView(CompassView.VIEW_ID, IPageLayout.RIGHT, 0.85f, BOTTOM_FOLDER_ID);
 	}
 
 }
