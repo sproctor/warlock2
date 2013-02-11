@@ -99,19 +99,14 @@ public class StreamText extends WarlockText implements IStreamListener {
 	
 	private void showPrompt(String prompt) {
 		if(!GameViewConfiguration.getProvider(client.getClientSettings()).getSuppressPrompt()) {
-			WarlockString text = new WarlockString();
-			text.append(prompt);
-			append(text);
+			append(new WarlockString(prompt));
 		}
 	}
 	
 	public void streamPrompted(IStream stream, String prompt) {
-		if(!isPrompting)
-		{
+		flushBuffer();
+		if(!isPrompting) {
 			isPrompting = true;
-			
-			flushBuffer();
-			
 			if(prompt != null)
 				showPrompt(prompt);
 		} else {
@@ -119,9 +114,9 @@ public class StreamText extends WarlockText implements IStreamListener {
 			// if the new prompt is null, just print the newline.
 			if(prompt == null) {
 				if(this.prompt != null)
-					append(new WarlockString("\n"));
+					showPrompt("\n");
 			} else if(this.prompt == null || !this.prompt.equals(prompt)) {
-				append(new WarlockString("\n" + prompt));
+				showPrompt("\n" + prompt);
 			}	
 		}
 		this.prompt = prompt;
