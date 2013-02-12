@@ -56,8 +56,8 @@ import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.views.GameView;
 
-abstract public class WarlockEntry implements IWarlockEntry
-{
+abstract public class WarlockEntry implements IWarlockEntry {
+	
 	protected StyledText widget;
 	private IWarlockClientViewer viewer;
 	private boolean searchMode = false;
@@ -102,7 +102,7 @@ abstract public class WarlockEntry implements IWarlockEntry
 		this.viewer = viewer;
 		
 		widget = new StyledText(parent, SWT.SINGLE); 
-		widget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
+		//widget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		widget.setEditable(true);
 		widget.setMargins(2, 2, 2, 2);
 		
@@ -114,7 +114,7 @@ abstract public class WarlockEntry implements IWarlockEntry
 		
 		widget.setBackground(background);
 		widget.setForeground(foreground);
-		widget.setSize(300, 30);
+		//widget.setSize(300, 30);
 		
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
 			@Override

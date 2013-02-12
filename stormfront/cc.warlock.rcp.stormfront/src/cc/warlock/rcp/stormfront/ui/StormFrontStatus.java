@@ -75,7 +75,6 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		main.setLayout(layout);
-//		main.setLayoutData(new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_END, true, false, 1, 1));
 
 		for (int i = 0; i < statusLabels.length; i++) {
 			statusLabels[i] = new Label(main, SWT.CENTER);
@@ -241,5 +240,9 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		IClientSettings settings = client.getClientSettings();
 		if(settings != null)
 			loadSettings(settings);
+	}
+	
+	public Composite getWidget() {
+		return main;
 	}
 }

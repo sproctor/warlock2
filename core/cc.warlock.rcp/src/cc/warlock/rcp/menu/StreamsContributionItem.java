@@ -35,7 +35,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.rcp.actions.StreamShowAction;
-import cc.warlock.rcp.views.CompassView;
 import cc.warlock.rcp.views.DebugView;
 
 /**
@@ -59,7 +58,7 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 		// Add Menu Items
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
 		items.add(new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID)));
-		items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
+		//items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
 		items.add(createStreamContributionItem("Events"));
 		items.add(createStreamContributionItem("Conversations"));
 		items.add(createStreamContributionItem("Healing"));

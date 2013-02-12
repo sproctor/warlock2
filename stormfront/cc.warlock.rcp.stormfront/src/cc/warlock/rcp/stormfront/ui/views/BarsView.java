@@ -27,23 +27,26 @@
  */
 package cc.warlock.rcp.stormfront.ui.views;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockDialogListener;
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.rcp.stormfront.ui.StormFrontDialogControl;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.stormfront.ui.StormFrontStatus;
+import cc.warlock.rcp.ui.WarlockCompass;
 import cc.warlock.rcp.ui.client.SWTWarlockDialogListener;
+import cc.warlock.rcp.ui.style.CompassTheme;
+import cc.warlock.rcp.ui.style.CompassThemes;
 import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.IGameViewFocusListener;
 
@@ -58,41 +61,53 @@ public class BarsView extends ViewPart {
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.BarsView";
 	
 	private PageBook book;
-	protected StormFrontDialogControl minivitals;
-	protected HashMap<IWarlockClient, SWTWarlockDialogListener> mvListeners =
-		new HashMap<IWarlockClient, SWTWarlockDialogListener>();
-	protected GameView activeView;
-	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
-	private HashMap<GameView, StormFrontEntry> entries = new HashMap<GameView, StormFrontEntry>();
-
+	//private StormFrontStatus status;
+	//private WarlockCompass compass;
+	//private StormFrontDialogControl minivitals;
+	//private HashMap<GameView, SWTWarlockDialogListener> mvListeners =
+		//new HashMap<GameView, SWTWarlockDialogListener>();
+	private GameView activeView;
+	private HashMap<GameView, Composite> pages = new HashMap<GameView, Composite>();
+	private CompassTheme theme = CompassThemes.getCompassTheme("small");
+	private Composite parent;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
-		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Composite top = new Composite (parent, SWT.NONE);
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.horizontalSpacing = 0;
-		top.setLayout(layout);
-		top.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		book = new PageBook(parent, SWT.NONE);
+		//Composite top = new Composite (parent, SWT.NONE);
+		//book.setLayout(new GridLayout(1, false));
+		book.setLayout(new FillLayout());
+		book.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				System.out.println("Resize: " + book.getSize());
+			}
+		});
 		
 		// Create page book
-		book = new PageBook(top, SWT.NONE);
-		book.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		/*book = new PageBook(top, SWT.NONE);
+		book.setLayout(new FillLayout());
+		GridData bookData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		bookData.heightHint = 25;
+		book.setLayoutData(bookData);
 		
+		status = new StormFrontStatus(top);
+		status.getWidget().setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 2));
+		
+		compass = new Warlock
 		minivitals = new StormFrontDialogControl(top, SWT.NONE);
-		minivitals.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
-		minivitals.setSize(0, 80);
-		
-		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
+		GridData mvData = new GridData(SWT.FILL, SWT.END, true, false);
+		mvData.heightHint = 20;
+		minivitals.setLayoutData(mvData);*/
+
+		/*for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
 			addClient(client);
-		}
+		}*/
 		
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+		/*WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
 			@Override
 			public void clientCreated(IWarlockClient client) {}
 			@Override
@@ -102,12 +117,10 @@ public class BarsView extends ViewPart {
 					minivitals.setDialog(client.getDialog("minivitals"));
 			}
 			@Override
-			public void clientDisconnected(IWarlockClient client) {
-				clients.remove(client);
-			}
+			public void clientDisconnected(IWarlockClient client) {}
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {}
-		}));
+		}));*/
 		
 		setView(GameView.getGameViewInFocus());
 		
@@ -124,24 +137,45 @@ public class BarsView extends ViewPart {
 		activeView = view;
 		IWarlockClient client = view.getClient();
 		
-		StormFrontEntry entry = entries.get(view);
-		if(entry == null) {
-			// create the entry
-			Composite entryComposite = new Composite(book, SWT.NONE);
-			entryComposite.setLayout(new GridLayout(1, false));
-			entryComposite.setLayoutData(new GridData(GridData.FILL,
-					GridData.FILL, true, true));
-			entry = new StormFrontEntry(entryComposite, view);
+		Composite page = pages.get(view);
+		if(page == null) {
+			page = new Composite(book, SWT.NONE);
+			page.setLayout(new GridLayout(3, false));
+			
+			StormFrontEntry entry = new StormFrontEntry(page, view);
+			entry.getWidget().setLayout(new FillLayout());
+			GridData entryData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			entryData.heightHint = 20;
+			entry.getWidget().setLayoutData(entryData);
+			
+			StormFrontStatus status = new StormFrontStatus(page);
+			status.getWidget().setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false, 1, 2));
+			
+			WarlockCompass compass = new WarlockCompass(page, SWT.NONE, theme, parent);
+			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 2);
+			compass.setLayoutData(compassData);
+			
+			StormFrontDialogControl minivitals = new StormFrontDialogControl(page, SWT.NONE);
+			GridData mvData = new GridData(SWT.FILL, SWT.END, true, false);
+			mvData.heightHint = 20;
+			minivitals.setLayoutData(mvData);
+			
 			view.setEntry(entry);
-			entries.put(view, entry);
+			pages.put(view, page);
+			
+			if(client != null) {
+				minivitals.setDialog(client.getDialog("minivitals"));
+				SWTWarlockDialogListener mvListener = new SWTWarlockDialogListener(
+						new MinivitalsListener(minivitals, client));
+				client.getDialog("minivitals").addListener(mvListener);
+				compass.setClient(client);
+				status.setActiveClient(client);
+			}
 		}
-		book.showPage(entry.getWidget().getParent());
-		
-		if(client != null)
-			minivitals.setDialog(client.getDialog("minivitals"));
+		book.showPage(page);
 	}
 	
-	private void addClient (IWarlockClient client) {
+/*	private void addClient (IWarlockClient client) {
 		if(clients.contains(client))
 			return;
 		SWTWarlockDialogListener mvListener = new SWTWarlockDialogListener(
@@ -150,7 +184,7 @@ public class BarsView extends ViewPart {
 		mvListeners.put(client, mvListener);
 
 		clients.add(client);
-	}
+	}*/
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
