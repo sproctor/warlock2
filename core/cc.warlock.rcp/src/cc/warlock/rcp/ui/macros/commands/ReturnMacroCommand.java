@@ -31,7 +31,7 @@ public class ReturnMacroCommand implements IMacroCommand {
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		viewer.submit();
+		viewer.getEntry().submit();
 	}
 	
 	public String getDescription() {

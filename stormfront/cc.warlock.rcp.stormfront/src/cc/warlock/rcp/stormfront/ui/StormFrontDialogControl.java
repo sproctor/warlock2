@@ -47,8 +47,8 @@ import cc.warlock.rcp.util.ColorUtil;
  * This is a custom progress bar that mimics the L&F of StormFront's status bars.
  * It's sort of a dirty hack, but it suffices for now. It needs to handle being in a LayoutManager better...
  */
-public class StormFrontDialogControl extends Canvas
-{
+public class StormFrontDialogControl extends Canvas {
+	
 	private Font font;
 	//protected int width, height;
 	private int borderWidth = 1;

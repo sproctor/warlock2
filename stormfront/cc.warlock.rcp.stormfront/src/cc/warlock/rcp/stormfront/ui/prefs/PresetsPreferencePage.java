@@ -85,8 +85,6 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	private StyledText preview;
 	private TableViewer stylesTable;
 	
-	//private ClientSettings settings;
-	
 	private static String roomNamePreview = "[Riverhaven, Crescent Way]";
 	private static String boldPreview = "You also see a Sir Robyn.";
 	private static String commandPreview = "say Hello.";

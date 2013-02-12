@@ -25,7 +25,7 @@ import cc.warlock.core.client.IWarlockClientViewer;
 
 public class PasteMacroCommand {
 	public void execute(IWarlockClientViewer context) {
-		context.paste();
+		context.getEntry().paste();
 	}
 
 	public String getIdentifier() {

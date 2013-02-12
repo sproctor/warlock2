@@ -95,7 +95,7 @@ public abstract class WarlockClient implements IWarlockClient {
 		
 		status = new CharacterStatus(this);
 		
-		listener = new WarlockClientListener() {
+		listener = new IWarlockClientListener() {
 			@Override
 			public void clientDisconnected(IWarlockClient client) {
 				if (client == WarlockClient.this && logger != null) {
@@ -104,13 +104,10 @@ public abstract class WarlockClient implements IWarlockClient {
 			}
 
 			@Override
-			public void clientActivated(IWarlockClient client) {}
+			public void clientCreated(IWarlockClient client) {}
 
 			@Override
 			public void clientConnected(IWarlockClient client) {}
-
-			@Override
-			public void clientRemoved(IWarlockClient client) {}
 
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {

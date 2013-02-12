@@ -34,11 +34,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockDialogListener;
+import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.rcp.stormfront.ui.StormFrontDialogControl;
+import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockDialogListener;
 import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.IGameViewFocusListener;
@@ -53,44 +57,14 @@ public class BarsView extends ViewPart {
 
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.BarsView";
 	
-	protected static BarsView instance;
-	
+	private PageBook book;
 	protected StormFrontDialogControl minivitals;
-	
 	protected HashMap<IWarlockClient, SWTWarlockDialogListener> mvListeners =
 		new HashMap<IWarlockClient, SWTWarlockDialogListener>();
-
-	protected IWarlockClient activeClient;
+	protected GameView activeView;
 	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
-	
-	public BarsView() {
-		instance = this;
-		
-		GameView.addGameViewFocusListener(new IGameViewFocusListener () {
-			public void gameViewFocused(GameView gameView) {
-				setActiveClient(gameView.getClient());
-			}
-		});
-	}
+	private HashMap<GameView, StormFrontEntry> entries = new HashMap<GameView, StormFrontEntry>();
 
-	protected void setActiveClient (IWarlockClient client)
-	{
-		if (client == null || activeClient == client)
-			return;
-		
-		activeClient = client;
-		minivitals.setDialog(client.getDialog("minivitals"));
-		
-		if (!clients.contains(client)) {
-			SWTWarlockDialogListener mvListener = new SWTWarlockDialogListener(
-						new MinivitalsListener(minivitals, client));
-			client.getDialog("minivitals").addListener(mvListener);
-			mvListeners.put(client, mvListener);
-			
-			clients.add(client);
-			
-		}
-	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -106,9 +80,76 @@ public class BarsView extends ViewPart {
 		top.setLayout(layout);
 		top.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		minivitals = new StormFrontDialogControl(top, SWT.NONE);
-		minivitals.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		// Create page book
+		book = new PageBook(top, SWT.NONE);
+		book.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
+		minivitals = new StormFrontDialogControl(top, SWT.NONE);
+		minivitals.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
+		minivitals.setSize(0, 80);
+		
+		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
+			addClient(client);
+		}
+		
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+			@Override
+			public void clientCreated(IWarlockClient client) {}
+			@Override
+			public void clientConnected(IWarlockClient client) {
+				addClient(client);
+				if(client == activeView.getClient())
+					minivitals.setDialog(client.getDialog("minivitals"));
+			}
+			@Override
+			public void clientDisconnected(IWarlockClient client) {
+				clients.remove(client);
+			}
+			@Override
+			public void clientSettingsLoaded(IWarlockClient client) {}
+		}));
+		
+		setView(GameView.getGameViewInFocus());
+		
+		GameView.addGameViewFocusListener(new IGameViewFocusListener () {
+			public void gameViewFocused(GameView gameView) {
+				setView(gameView);
+			}
+		});
+	}
+	
+	protected void setView(GameView view) {
+		if(activeView == view)
+			return;
+		activeView = view;
+		IWarlockClient client = view.getClient();
+		
+		StormFrontEntry entry = entries.get(view);
+		if(entry == null) {
+			// create the entry
+			Composite entryComposite = new Composite(book, SWT.NONE);
+			entryComposite.setLayout(new GridLayout(1, false));
+			entryComposite.setLayoutData(new GridData(GridData.FILL,
+					GridData.FILL, true, true));
+			entry = new StormFrontEntry(entryComposite, view);
+			view.setEntry(entry);
+			entries.put(view, entry);
+		}
+		book.showPage(entry.getWidget().getParent());
+		
+		if(client != null)
+			minivitals.setDialog(client.getDialog("minivitals"));
+	}
+	
+	private void addClient (IWarlockClient client) {
+		if(clients.contains(client))
+			return;
+		SWTWarlockDialogListener mvListener = new SWTWarlockDialogListener(
+				new MinivitalsListener(minivitals, client));
+		client.getDialog("minivitals").addListener(mvListener);
+		mvListeners.put(client, mvListener);
+
+		clients.add(client);
 	}
 	
 	/* (non-Javadoc)
@@ -120,6 +161,7 @@ public class BarsView extends ViewPart {
 	}
 	
 	private class MinivitalsListener implements IWarlockDialogListener {
+		
 		private StormFrontDialogControl control;
 		private IWarlockClient client;
 		
@@ -129,14 +171,9 @@ public class BarsView extends ViewPart {
 		}
 		
 		public void dialogChanged() {
-			if(activeClient == client)
+			if(activeView.getClient() == client)
 				control.redraw();
 		}
 		
-	}
-	
-	public static BarsView getDefault ()
-	{
-		return instance;
 	}
 }

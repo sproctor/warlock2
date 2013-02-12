@@ -80,7 +80,7 @@ public class ScriptControlView extends ViewPart implements IScriptListener {
 		} else {
 			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(
 			new IWarlockClientListener() {
-				public void clientActivated(IWarlockClient client) {
+				public void clientCreated(IWarlockClient client) {
 					if (client instanceof IStormFrontClient)
 					{
 						listenToClient((IStormFrontClient) client);
@@ -88,7 +88,6 @@ public class ScriptControlView extends ViewPart implements IScriptListener {
 				}
 				public void clientConnected(IWarlockClient client) {}
 				public void clientDisconnected(IWarlockClient client) {}
-				public void clientRemoved(IWarlockClient client) {}
 				public void clientSettingsLoaded(IWarlockClient client) {}
 			}));
 		}

@@ -58,9 +58,8 @@ public class ResetServerSettings {
 						//handler.setNewSettings(true);
 					}
 					
-					public void clientActivated(IWarlockClient client) {}
+					public void clientCreated(IWarlockClient client) {}
 					public void clientDisconnected(IWarlockClient client) {}
-					public void clientRemoved(IWarlockClient client) {}
 					public void clientSettingsLoaded(IWarlockClient client) {}
 				});
 				

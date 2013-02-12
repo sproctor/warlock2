@@ -28,6 +28,7 @@ import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockEntry;
 
 /**
  * This is the default macro handler for a command being sent to the connection.
@@ -47,6 +48,7 @@ public class CommandMacroHandler implements IMacroHandler {
 	public boolean handleMacro(IMacro macro, IWarlockClientViewer viewer)
 	{
 		Collection<IMacroVariable> variables = viewer.getMacroVariables();
+		IWarlockEntry entry = viewer.getEntry();
 		
 		String newCommand = new String(command);
 		String savedCommand = null;
@@ -75,7 +77,7 @@ public class CommandMacroHandler implements IMacroHandler {
 				// submit current text in entry
 				case 'n':
 				case 'r':
-					viewer.submit();
+					entry.submit();
 					break;
 					
 				// pause 1 second
@@ -85,7 +87,7 @@ public class CommandMacroHandler implements IMacroHandler {
 					
 				// clear the entry
 				case 'x':
-					viewer.setCurrentCommand("");
+					entry.setCurrentCommand("");
 					break;
 					
 				// display a dialog to get the value
@@ -95,21 +97,21 @@ public class CommandMacroHandler implements IMacroHandler {
 					
 				// save current text in entry
 				case 'S':
-					savedCommand = viewer.getCurrentCommand();
+					savedCommand = entry.getText();
 					break;
 					
 				// restore saved command
 				case 'R':
 					if(savedCommand != null)
-						viewer.setCurrentCommand(savedCommand);
+						entry.setCurrentCommand(savedCommand);
 					break;
 				default:
-					viewer.append(curChar);
+					entry.append(curChar);
 				}
 			} else if(curChar == '{') {
 				int endPos = newCommand.indexOf('}', pos);
 				if(endPos == -1) {
-					viewer.append(curChar);
+					entry.append(curChar);
 				} else {
 					String commandText = newCommand.substring(pos + 1, endPos);
 					pos = endPos + 1;
@@ -121,7 +123,7 @@ public class CommandMacroHandler implements IMacroHandler {
 			} else if(curChar == '@') {
 				// Stub... Move cursor to this char position
 			} else {
-				viewer.append(curChar);
+				entry.append(curChar);
 			}
 		}
 		return true;

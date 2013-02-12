@@ -30,17 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,30 +44,24 @@ import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.PropertyListener;
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.settings.Profile;
-import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockEntry;
 import cc.warlock.rcp.ui.WarlockPopupAction;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewer;
-import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.SoundPlayer;
 
 /**
  * @author marshall
  */
-public abstract class GameView extends WarlockView implements IWarlockClientViewer, IWarlockClientListener {
+public abstract class GameView extends WarlockView implements IWarlockClientViewer {
 	public static final String VIEW_ID = "cc.warlock.rcp.ui.views.GameView";
 	
-	protected static GameView firstInstance;
 	protected static boolean firstInstanceIsUsed = false;
 	protected static ArrayList<GameView> openViews = new ArrayList<GameView>();
 	protected static ArrayList<IGameViewFocusListener> focusListeners = new ArrayList<IGameViewFocusListener>();
@@ -84,7 +72,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected StreamText streamText;
 	protected WarlockEntry entry;
 	protected SWTWarlockClientViewer wrapper;
-	protected Composite entryComposite;
+	//protected Composite entryComposite;
 	private IWarlockClient client;
 	protected Composite mainComposite;
 	
@@ -95,18 +83,10 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public GameView () {
 		super();
 		
-		if (firstInstance == null) {
-			firstInstance = this;
-			gameInFocus = this;
-		}
-		
-		// currentCommand = "";
 		openViews.add(this);
 		wrapper = new SWTWarlockClientViewer(this);
-		
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(this));
-		
-		//scriptRegistry = new ScriptRegistry(getClient());
+		this.setFocus();
+
 	}
 	
 	public static void addGameViewFocusListener (IGameViewFocusListener listener)
@@ -197,7 +177,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		streamText.setIgnoreEmptyLines(false);
 		
 		// create the entry
-		entryComposite = new Composite(mainComposite, SWT.NONE);
+		/*entryComposite = new Composite(mainComposite, SWT.NONE);
 		GridLayout entryLayout = new GridLayout(1, false);
 		entryLayout.horizontalSpacing = 0;
 		entryLayout.verticalSpacing = 0;
@@ -206,23 +186,41 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		entryComposite.setLayout(entryLayout);
 		entryComposite.setLayoutData(new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_END, true, false));
 		
-		this.entry = createEntry(); // Do this BEFORE getTextForClient!
+		this.entry = createEntry(); // Do this BEFORE getTextForClient!*/
 		
-		initColors();
+		mainComposite.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				if (client != null) {
+					// All done with client, dispose of it so it can do whatever it needs to to be done.
+					client.dispose();
+				}
+				openViews.remove(this);
+				if (gameInFocus == GameView.this) {
+					gameInFocus = null;
+				}
+				/*if (firstInstance == this) {
+						if (openViews.isEmpty()) {
+							firstInstance = null;
+							// Show connections page since we're getting rid of the main window
+							IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+							//IViewPart part = page.findView(ConnectionView.VIEW_ID);
+							try {
+								if (page != null) 
+									page.showView(ConnectionView.VIEW_ID);
+							} catch (PartInitException e) {
+								e.printStackTrace();
+							}
+						} else {
+							firstInstance = openViews.get(0);
+						}
+					}*/
+				streamText.dispose();
+			}
+		});
 	}
 	
-	abstract protected WarlockEntry createEntry();
-	
-	protected void initColors()
-	{
-		Color background = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultBgColor);
-		Color foreground = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultFgColor);
-		
-		entry.getWidget().setBackground(background);
-		entry.getWidget().setForeground(foreground);
-		
-		//streamText.setBackgroundMode(SWT.INHERIT_DEFAULT);
-	}
+	//abstract protected WarlockEntry createEntry();
 	
 	@Override
 	public void setFocus() {
@@ -238,7 +236,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		SoundPlayer.play(soundStream);
 	}
 	
-	protected Image createCaretImage (int width, Color foreground)
+	/*protected Image createCaretImage (int width, Color foreground)
 	{
 		PaletteData caretPalette = new PaletteData(new RGB[] {
 				new RGB(0, 0, 0), new RGB(255, 255, 255) });
@@ -275,62 +273,17 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		caret.setFont(entry.getWidget().getFont());
 
 		return caret;
-	}
-	
-	public String getCurrentCommand ()
-	{
-		return entry.getText();
-	}
-	
-	public void setCurrentCommand(String command) {
-		if(command == null) {
-			command = "";
-		}
-		GameView.this.entry.setText(command);
-		GameView.this.entry.setSelection(command.length());
-	}
-	
-	public void append(char c) {
-		entry.append(c);
-	}
-	
-	public void nextCommand() {
-		entry.nextCommand();
-	}
-	
-	public void prevCommand() {
-		entry.prevCommand();
-	}
-	
-	public void searchHistory() {
-		entry.searchHistory();
-	}
-	
-	public void submit() {
-		entry.submit();
-	}
-	
-	public void repeatLastCommand() {
-		entry.repeatLastCommand();
-	}
-	
-	public void repeatSecondToLastCommand() {
-		entry.repeatSecondToLastCommand();
-	}
-	
+	}*/
+		
 	public void copy() {
 		streamText.copy();
-	}
-	
-	public void paste() {
-		entry.getWidget().paste();
 	}
 	
 	public IWarlockClient getClient() {
 		return client;
 	}
 	
-	public WarlockEntry getWarlockEntry() {
+	public WarlockEntry getEntry() {
 		return entry;
 	}
 	
@@ -368,35 +321,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		
 		if(atBottom)
 			streamText.scrollToEnd();
-	}
-	
-	@Override
-	public void dispose() {
-		if (client != null) {
-			// All done with client, dispose of it so it can do whatever it needs to to be done.
-			client.dispose();
-		}
-		openViews.remove(this);
-		if (gameInFocus == this) {
-			gameInFocus = null;
-		}
-		if (firstInstance == this) {
-			if (openViews.isEmpty()) {
-				firstInstance = null;
-				// Show connections page since we're getting rid of the main window
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				//IViewPart part = page.findView(ConnectionView.VIEW_ID);
-				try {
-					if (page != null) 
-						page.showView(ConnectionView.VIEW_ID);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
-			} else
-				firstInstance = openViews.get(0);
-		}
-		streamText.dispose();
-		super.dispose();
 	}
 	
 	public void pageDown() {
@@ -473,5 +397,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		} else {
 			getClient().send(command);
 		}
+	}
+	
+	public void setEntry(WarlockEntry entry) {
+		this.entry = entry;
 	}
 }

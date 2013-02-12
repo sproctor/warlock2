@@ -38,6 +38,6 @@ public class CurrentCommandMacroVariable implements IMacroVariable {
 	}
 	
 	public String getValue(IWarlockClientViewer context) {
-		return context.getCurrentCommand();
+		return context.getEntry().getText ();
 	}
 }

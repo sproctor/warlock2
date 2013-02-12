@@ -31,10 +31,10 @@ public class ReturnOrRepeatLastMacroCommand implements IMacroCommand {
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		if(viewer.getCurrentCommand().length() > 0)
-			viewer.submit();
+		if(viewer.getEntry().getText().length() > 0)
+			viewer.getEntry().submit();
 		else
-			viewer.repeatLastCommand();
+			viewer.getEntry().repeatLastCommand();
 	}
 	
 	public String getDescription() {

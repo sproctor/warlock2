@@ -50,7 +50,6 @@ import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.settings.MacroSetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
@@ -73,7 +72,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		
 		this.gameCode = gameCode;
 		
-		WarlockClientRegistry.activateClient(this);
+		WarlockClientRegistry.clientCreated(this);
 	}
 
 	public void connect(String server, int port, String key) throws IOException {
@@ -143,12 +142,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		return stream;
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		WarlockClientRegistry.removeClient(this);
-		super.finalize();
-	}
-	
 	public IWarlockStyle getCommandStyle() {
 		IWarlockStyle style = getNamedStyle(PresetStyleConfigurationProvider.PRESET_COMMAND);
 		if (style == null) {
@@ -189,30 +182,25 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	}
 	
 	public void launchURL(String url) {
-		if (viewer instanceof IStormFrontClientViewer)
-		{
-			try {
-				((IStormFrontClientViewer)viewer).launchURL(new URL(url));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
+		try {
+			viewer.launchURL(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		}
 	}
 	
 	public void appendImage(String pictureId) {
 		try {
 			URL url = new URL("http://www.play.net/bfe/DR-art/" + pictureId + "_t.jpg");
-			
-			if (viewer instanceof IStormFrontClientViewer)
-				((IStormFrontClientViewer) viewer).appendImage(url);
+			viewer.appendImage(url);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void startedDownloadingServerSettings() {
-		if (viewer instanceof IStormFrontClientViewer)
-			((IStormFrontClientViewer)viewer).startedDownloadingServerSettings();
+		//if (viewer instanceof IStormFrontClientViewer)
+			//((IStormFrontClientViewer)viewer).startedDownloadingServerSettings();
 	}
 	
 	public void finishedDownloadingServerSettings(String str) {
@@ -241,13 +229,13 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 			e.printStackTrace();
 		}
 		
-		if (viewer instanceof IStormFrontClientViewer)
-			((IStormFrontClientViewer)viewer).finishedDownloadingServerSettings();
+		//if (viewer instanceof IStormFrontClientViewer)
+			//((IStormFrontClientViewer)viewer).finishedDownloadingServerSettings();
 	}
 	
 	public void receivedServerSetting(String setting) {
-		if (viewer instanceof IStormFrontClientViewer)
-			((IStormFrontClientViewer)viewer).receivedServerSetting(setting);
+		//if (viewer instanceof IStormFrontClientViewer)
+			//((IStormFrontClientViewer)viewer).receivedServerSetting(setting);
 	}
 	
 	@Override

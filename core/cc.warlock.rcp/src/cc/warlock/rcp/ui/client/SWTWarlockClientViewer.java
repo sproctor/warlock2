@@ -28,6 +28,7 @@
 package cc.warlock.rcp.ui.client;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Collection;
 
 import org.eclipse.swt.widgets.Display;
@@ -37,6 +38,7 @@ import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockEntry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockMacro;
 
@@ -45,74 +47,12 @@ import cc.warlock.core.client.internal.WarlockMacro;
  *
  * A convenience super class for viewers who need SWT thread access
  */
-public class SWTWarlockClientViewer implements IWarlockClientViewer  {
-
+public class SWTWarlockClientViewer implements IWarlockClientViewer {
+	
 	private IWarlockClientViewer viewer;
 	
-	public SWTWarlockClientViewer (IWarlockClientViewer viewer)
-	{
+	public SWTWarlockClientViewer (IWarlockClientViewer viewer) {
 		this.viewer = viewer;
-	}
-	
-	private class SetCommandWrapper implements Runnable {
-		public String command;
-		
-		public SetCommandWrapper(String command) {
-			this.command = command;
-		}
-		
-		public void run () {
-			viewer.setCurrentCommand(command);
-		}
-	}
-	
-	
-	private class NextCommandWrapper implements Runnable {
-		public void run () {
-			viewer.nextCommand();
-		}
-	}
-	
-	private class PrevCommandWrapper implements Runnable {
-		public void run () {
-			viewer.prevCommand();
-		}
-	}
-	
-	private class SearchHistoryWrapper implements Runnable {
-		public void run () {
-			viewer.searchHistory();
-		}
-	}
-	
-	private class RepeatLastCommandWrapper implements Runnable {
-		public void run () {
-			viewer.repeatLastCommand();
-		}
-	}
-	
-	private class RepeatSecondToLastCommandWrapper implements Runnable {
-		public void run () {
-			viewer.repeatSecondToLastCommand();
-		}
-	}
-	
-	private class SubmitWrapper implements Runnable {
-		public void run () {
-			viewer.submit();
-		}
-	}
-	
-	private class AppendWrapper implements Runnable {
-		public char c;
-		
-		public AppendWrapper(char ch) {
-			this.c = ch;
-		}
-		
-		public void run () {
-			viewer.append(c);
-		}
 	}
 	
 	private class CopyWrapper implements Runnable {
@@ -122,7 +62,7 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	}
 	
 	private class PlaySoundWrapper implements Runnable {
-		public InputStream soundStream;
+		private InputStream soundStream;
 		
 		public PlaySoundWrapper(InputStream soundStream) {
 			this.soundStream = soundStream;
@@ -133,14 +73,9 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 		}
 	}
 	
-	private class PasteWrapper implements Runnable {
-		public void run () {
-			viewer.paste();
-		}
-	}
 	
 	private class OpenCustomStreamWrapper implements Runnable {
-		public String name;
+		private String name;
 		
 		public OpenCustomStreamWrapper(String name) {
 			this.name = name;
@@ -166,7 +101,7 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	}
 	
 	private class ClearCustomStreamWrapper implements Runnable {
-		public String name;
+		private String name;
 		
 		public ClearCustomStreamWrapper(String name) {
 			this.name = name;
@@ -177,57 +112,40 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 		}
 	}
 	
-	protected void run(Runnable runnable)
-	{
-		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
+	private class LaunchUrlWrapper implements Runnable {
+		private URL url;
+
+		LaunchUrlWrapper(URL url) {
+			this.url = url;
+		}
+		
+		public void run() {
+			viewer.launchURL(url);
+		}
 	}
 	
-	public String getCurrentCommand() {
-		return viewer.getCurrentCommand();
+	private class AppendImageWrapper implements Runnable {
+		private URL url;
+
+		public AppendImageWrapper(URL url) {
+			this.url = url;
+		}
+		
+		public void run() {
+			viewer.appendImage(url);
+		}
+	}
+	
+	protected void run(Runnable runnable) {
+		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
 	}
 	
 	public IWarlockClient getClient() {
 		return viewer.getClient();
 	}
 	
-	public void setCurrentCommand(String command) {
-		run(new SetCommandWrapper(command));
-	}
-	
-	public void append(char ch) {
-		run(new AppendWrapper(ch));
-	}
-	
-	public void nextCommand() {
-		run(new NextCommandWrapper());
-	}
-	
-	public void prevCommand() {
-		run(new PrevCommandWrapper());
-	}
-	
-	public void searchHistory() {
-		run(new SearchHistoryWrapper());
-	}
-	
-	public void repeatLastCommand() {
-		run(new RepeatLastCommandWrapper());
-	}
-	
-	public void repeatSecondToLastCommand() {
-		run(new RepeatSecondToLastCommandWrapper());
-	}
-	
-	public void submit() {
-		run(new SubmitWrapper());
-	}
-	
 	public void copy() {
 		run(new CopyWrapper());
-	}
-	
-	public void paste() {
-		run(new PasteWrapper());
 	}
 	
 	public void playSound(InputStream file) {
@@ -265,5 +183,17 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer  {
 	
 	public void send(ICommand command) {
 		viewer.send(command);
+	}
+	
+	public void launchURL(URL url) {
+		run(new LaunchUrlWrapper(url));
+	}
+	
+	public void appendImage(URL imageURL) {
+		run(new AppendImageWrapper(imageURL));
+	}
+	
+	public IWarlockEntry getEntry () {
+		return new SWTWarlockEntry(viewer.getEntry());
 	}
 }

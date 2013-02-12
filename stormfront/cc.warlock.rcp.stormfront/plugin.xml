@@ -117,16 +117,6 @@
             class="cc.warlock.rcp.stormfront.ui.prefs.PresetsPreferencePage"
             id="cc.warlock.rcp.stormfront.ui.prefs.presets"
             name="Colors and Presets">
-         <enabledWhen>
-            <and>
-               <adapt
-                     type="cc.warlock.core.stormfront.client.IStormFrontClient">
-               </adapt>
-               <test
-                     property="cc.warlock.rcp.clientConnected">
-               </test>
-            </and>
-         </enabledWhen>
       </page>
       <page
             class="cc.warlock.rcp.stormfront.ui.prefs.AccountsPreferencePage"

@@ -51,7 +51,6 @@ public class LoginUtil {
 		String key = loginProperties.get("KEY");
 		
 		StormFrontClient client = new StormFrontClient(loginProperties.get("GAMECODE"));
-		//client.getServerSettings().setMacroImporter(new StormFrontSWTSettings());
 		gameView.setClient(client);
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

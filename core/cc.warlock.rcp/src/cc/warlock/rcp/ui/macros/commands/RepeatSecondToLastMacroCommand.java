@@ -31,7 +31,7 @@ public class RepeatSecondToLastMacroCommand implements IMacroCommand {
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		viewer.repeatSecondToLastCommand();
+		viewer.getEntry().repeatSecondToLastCommand();
 	}
 	
 	public String getDescription() {

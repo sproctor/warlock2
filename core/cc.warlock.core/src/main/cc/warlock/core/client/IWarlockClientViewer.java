@@ -25,6 +25,7 @@
 package cc.warlock.core.client;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Collection;
 
 import cc.warlock.core.client.internal.WarlockMacro;
@@ -38,33 +39,14 @@ import cc.warlock.core.client.internal.WarlockMacro;
  * The implementor of this class will be responsible for echoing
  * and appending text to the view of this client.  
  */
-public interface IWarlockClientViewer {
-
+public interface IWarlockClientViewer
+{
 	public IWarlockClient getClient ();
-	
-	public String getCurrentCommand ();
-	
-	public void setCurrentCommand (String command);
-	
-	public void append(char c);
-	
-	public void submit();
+	public IWarlockEntry getEntry ();
 	
 	public void send(ICommand command);
 	
-	public void prevCommand();
-	
-	public void nextCommand();
-	
-	public void searchHistory();
-	
-	public void repeatLastCommand();
-	
-	public void repeatSecondToLastCommand();
-	
 	public void copy();
-	
-	public void paste();
 	
 	public void playSound(InputStream soundStream);
 	
@@ -79,4 +61,16 @@ public interface IWarlockClientViewer {
 	public void openCustomStream(String name);
 	public void printToCustomStream(String name, WarlockString text);
 	public void clearCustomStream(String name);
+	
+	/**
+	 * Append an image to this viewer
+	 * @param imageURL The URL of the image to show
+	 */
+	public void appendImage (URL imageURL);
+	
+	/**
+	 * Launch a URL
+	 * @param url The URL to launch
+	 */
+	public void launchURL (URL url);
 }

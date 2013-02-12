@@ -38,10 +38,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.WarlockClientListener;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
@@ -68,7 +68,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		sentStyle = new WarlockStyle();
 		sentStyle.setForegroundColor(new WarlockColor("#FF0000"));
 		connListener = new SWTConnectionListenerAdapter(DebugView.this);
-		clientListener = new SWTWarlockClientListener(new WarlockClientListener() {
+		clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
 			@Override
 			public void clientConnected(final IWarlockClient client) {
 				Display.getDefault().asyncExec(new Runnable() {
@@ -82,11 +82,9 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 				});
 			}
 			@Override
-			public void clientActivated(IWarlockClient client) {}
+			public void clientCreated(IWarlockClient client) {}
 			@Override
 			public void clientDisconnected(IWarlockClient client) {}
-			@Override
-			public void clientRemoved(IWarlockClient client) {}
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {}
 		});

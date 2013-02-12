@@ -23,7 +23,6 @@ package cc.warlock.rcp.ui;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
@@ -31,25 +30,73 @@ import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockEntry;
+import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingListener;
+import cc.warlock.rcp.configuration.GameViewConfiguration;
+import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
+import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.views.GameView;
 
-abstract public class WarlockEntry
+abstract public class WarlockEntry implements IWarlockEntry
 {
 	protected StyledText widget;
 	private IWarlockClientViewer viewer;
 	private boolean searchMode = false;
 	private StringBuffer searchText = new StringBuffer();
 	private String searchCommand = "";
+	private VerifyKeyListener verifyKeyListener = new VerifyKeyListener() {
+		public void verifyKey(VerifyEvent e) {
+			if(!e.doit)
+				return;
+			if(processKey(e.keyCode, e.stateMask, e.character))
+				e.doit = false;
+		}
+	};
+	private KeyListener keyListener = new KeyListener() {
+		public void keyPressed(KeyEvent e) {
+			if(!e.doit || viewer.getClient() != GameView.getGameViewInFocus().getClient())
+				return;
+			if(processKey(e.keyCode, e.stateMask, e.character))
+				e.doit = false;
+		}
+		
+		public void keyReleased(KeyEvent e) {
+			// Do nothing
+		}
+	};
+	private static final ArrayList<Character> entryCharacters = new ArrayList<Character>();
+	static {
+		char[] entryChars = new char[] {
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'.', '/', '{', '}', '<', '>', ',', '?', '\'', '"', ':', ';', '[', ']', '|', '\\', '-', '_', '+', '=',
+			'~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ' '
+		};
+		
+		for (char c : entryChars) {
+			entryCharacters.add(c);
+		}
+	}
 	
 	public WarlockEntry(Composite parent, IWarlockClientViewer viewer) {
 		this.viewer = viewer;
@@ -57,12 +104,48 @@ abstract public class WarlockEntry
 		widget = new StyledText(parent, SWT.SINGLE); 
 		widget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		widget.setEditable(true);
+		widget.setMargins(2, 2, 2, 2);
 		
-		// TODO: why not Mac OSX?
-		if (!Platform.getOS().equals(Platform.OS_MACOSX))
-			widget.setLineSpacing(2);
+		widget.addVerifyKeyListener(verifyKeyListener);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addKeyListener(keyListener);
 		
-		widget.addVerifyKeyListener(new KeyVerifier());
+		Color background = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultBgColor);
+		Color foreground = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultFgColor);
+		
+		widget.setBackground(background);
+		widget.setForeground(foreground);
+		widget.setSize(300, 30);
+		
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+			@Override
+			public void clientCreated(IWarlockClient client) {}
+			@Override
+			public void clientConnected(IWarlockClient client) {}
+			@Override
+			public void clientDisconnected(IWarlockClient client) {}
+			@Override
+			public void clientSettingsLoaded(IWarlockClient client) {
+				if (client == WarlockEntry.this.viewer.getClient()) {
+					loadSettings();
+					WindowConfigurationProvider.getProvider(client.getClientSettings()).addListener(new SWTWarlockSettingListener(new IWarlockSettingListener() {
+						@Override
+						public void settingChanged(IWarlockSetting setting) {
+							loadSettings();
+						}
+					}));
+				}
+			}
+			
+		}));
+	}
+	
+	protected void loadSettings() {
+		IClientSettings settings = viewer.getClient().getClientSettings();
+		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
+		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
+		
+		widget.setBackground(ColorUtil.warlockColorToColor(bg));
+		widget.setForeground(ColorUtil.warlockColorToColor(fg));
 	}
 	
 	public String getText() {
@@ -76,10 +159,6 @@ abstract public class WarlockEntry
 		text = text.trim();
 		widget.setText(text);
 		widget.setCaretOffset(text.length());
-	}
-	
-	public void setSelection(int start) {
-		widget.setSelection(start);
 	}
 	
 	public void addKeyListener(KeyListener listener) {
@@ -127,28 +206,6 @@ abstract public class WarlockEntry
 		return false;
 	}
 	
-	public class KeyVerifier implements VerifyKeyListener {
-		public void verifyKey(VerifyEvent e) {
-			if(!e.doit)
-				return;
-			if(processKey(e.keyCode, e.stateMask, e.character))
-				e.doit = false;
-		}
-	}
-	
-	public class KeyEventListener implements KeyListener {
-		public void keyPressed(KeyEvent e) {
-			if(!e.doit || viewer.getClient() != GameView.getGameViewInFocus().getClient())
-				return;
-			if(processKey(e.keyCode, e.stateMask, e.character))
-				e.doit = false;
-		}
-		
-		public void keyReleased(KeyEvent e) {
-			// Do nothing
-		}
-	}
-	
 	private void leaveSearchMode() {
 		if(searchMode) {
 			 searchMode = false;
@@ -175,21 +232,6 @@ abstract public class WarlockEntry
 			searchCommand = foundCommand.getCommand();
 		}
 		setSearchText();
-	}
-	
-	private static final ArrayList<Character> entryCharacters = new ArrayList<Character>();
-	static {
-		char[] entryChars = new char[] {
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			'.', '/', '{', '}', '<', '>', ',', '?', '\'', '"', ':', ';', '[', ']', '|', '\\', '-', '_', '+', '=',
-			'~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ' '
-		};
-		
-		for (char c : entryChars) {
-			entryCharacters.add(c);
-		}
 	}
 	
 	public void prevCommand() {
@@ -258,5 +300,21 @@ abstract public class WarlockEntry
 		}
 	}
 	
+	public void setCurrentCommand (String command) {
+		if(command == null) {
+			command = "";
+		}
+		setText(command);
+		widget.setSelection(command.length());
+	}
+	
+	public void paste() {
+		widget.paste();
+	}
+	
 	abstract public void setClient (IWarlockClient client);
+	
+	public VerifyKeyListener getVerifyKeyListener() {
+		return verifyKeyListener;
+	}
 }

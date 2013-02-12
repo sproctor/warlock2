@@ -24,21 +24,13 @@ package cc.warlock.core.stormfront.script;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.script.IScriptCommands;
 import cc.warlock.core.script.ScriptCommandsFactory;
-import cc.warlock.core.script.internal.ScriptCommands;
-import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
 import cc.warlock.core.stormfront.script.internal.StormFrontScriptCommands;
 
 public class StormFrontScriptCommandsFactory extends ScriptCommandsFactory {
 
 	@Override
 	public IScriptCommands createScriptCommands(IWarlockClientViewer viewer, String name) {
-		
-		if (viewer instanceof IStormFrontClientViewer)
-		{
-			return new StormFrontScriptCommands(viewer, name);
-		}
-		
-		return new ScriptCommands(viewer, name);
+		return new StormFrontScriptCommands(viewer, name);
 	}
 
 }

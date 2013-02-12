@@ -31,7 +31,7 @@ public class HistorySearchMacroCommand implements IMacroCommand {
 	}
 	
 	public void execute(IWarlockClientViewer viewer) {
-		viewer.searchHistory();
+		viewer.getEntry().searchHistory();
 	}
 	
 	public String getDescription() {

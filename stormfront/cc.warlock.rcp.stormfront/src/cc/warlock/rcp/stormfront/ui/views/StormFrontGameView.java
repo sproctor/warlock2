@@ -38,7 +38,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -51,29 +50,27 @@ import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockClientListener;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.Profile;
 import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
-import cc.warlock.core.stormfront.client.IStormFrontClientViewer;
-import cc.warlock.core.stormfront.settings.internal.CommandLineSettings;
-import cc.warlock.rcp.stormfront.adapters.SWTStormFrontClientViewer;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.StormFrontStatus;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.stormfront.ui.style.StormFrontStyleProvider;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
 import cc.warlock.rcp.ui.IStyleProvider;
-import cc.warlock.rcp.ui.WarlockEntry;
 import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientViewer;
 import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.ui.style.StyleProviders;
@@ -82,19 +79,20 @@ import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.ConnectionView;
 import cc.warlock.rcp.views.GameView;
 
-public class StormFrontGameView extends GameView implements IStormFrontClientViewer {
-	
+public class StormFrontGameView extends GameView implements IWarlockClientViewer
+{
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.StormFrontGameView";
 	
 	protected StormFrontStatus status;
 	protected WarlockPopupAction reconnectPopup;
-	//protected StormFrontTextBorder textBorder;
+	protected Font normalFont;
+	private Button reconnect;
 	
 	public StormFrontGameView ()
 	{
 		super();
 
-		wrapper = new SWTStormFrontClientViewer(this);
+		wrapper = new SWTWarlockClientViewer(this);
 	}
 	
 	@Override
@@ -103,8 +101,8 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		
 		//textBorder = new StormFrontTextBorder(text);
 		
-		((GridLayout)entryComposite.getLayout()).numColumns = 2;
-		status = new StormFrontStatus(entryComposite);
+		//((GridLayout)entryComposite.getLayout()).numColumns = 2;
+		//status = new StormFrontStatus(entryComposite);
 		
 		//String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 		
@@ -118,10 +116,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			String characterName = getClient() != null ? getClient().getCharacterName() : "No Character";
 			setNoReconnectProfile(characterName);
 		}
-	}
-	
-	protected WarlockEntry createEntry() {
-		return new StormFrontEntry(entryComposite, wrapper);
 	}
 	
 	public void setProfile(Profile profile) {
@@ -303,13 +297,11 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 			if(settings != null)
 				loadClientSettings(settings);
 			
-			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new WarlockClientListener() {
+			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
 				@Override
-				public void clientActivated(IWarlockClient client) {}
+				public void clientCreated(IWarlockClient client) {}
 				@Override
 				public void clientConnected(IWarlockClient client) {}
-				@Override
-				public void clientRemoved(IWarlockClient client) {}
 				@Override
 				public void clientDisconnected(IWarlockClient client) {
 					if (client == getClient()) {
@@ -321,7 +313,9 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 					}
 				}
 				@Override
-				public void clientSettingsLoaded(IWarlockClient client) { }
+				public void clientSettingsLoaded(IWarlockClient client) {
+					loadClientSettings(client.getClientSettings());
+				}
 			}));
 		}
 		
@@ -332,16 +326,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 	{	
 		showPopup(reconnectPopup);
 //		reconnectPopup.setVisible(true);
-	}
-	
-	protected Font normalFont;
-
-	private Button reconnect;
-	
-	public void clientSettingsLoaded(IWarlockClient client) {
-		if(client == getClient()) {
-			loadClientSettings(client.getClientSettings());
-		}
 	}
 	
 	public void loadClientSettings(IClientSettings settings)
@@ -384,18 +368,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		
 		normalFont = mainFont.isDefaultFont() ? JFaceResources.getDefaultFont() : new Font(getSite().getShell().getDisplay(), fontFace, fontSize, SWT.NONE);
 		streamText.setFont(normalFont);
-		
-		CommandLineSettings commandLineSettings = CommandLineSettings.getProvider(settings);
-		WarlockColor entryBG = commandLineSettings.getBackgroundColor();
-		WarlockColor entryFG = commandLineSettings.getForegroundColor();
-		WarlockColor entryBarColor = commandLineSettings.getBarColor();
-		
-		entry.getWidget().setForeground(ColorUtil.warlockColorToColor(entryFG.isDefault() ? fg  : entryFG));
-		entry.getWidget().setBackground(ColorUtil.warlockColorToColor(entryBG.isDefault() ? bg : entryBG));
-		entry.getWidget().redraw();
-		
-		Caret newCaret = createCaret(1, ColorUtil.warlockColorToColor(entryBarColor.isDefault() ? fg : entryBarColor));
-		entry.getWidget().setCaret(newCaret);
 		
 		streamText.setClient(getClient());
 		streamText.setBackground(ColorUtil.warlockColorToColor(bg));
@@ -449,14 +421,6 @@ public class StormFrontGameView extends GameView implements IStormFrontClientVie
 		}
 		return super.getAdapter(adapter);
 	}
-
-	public void clientActivated(IWarlockClient client) {}
-
-	public void clientConnected(IWarlockClient client) {}
-
-	public void clientDisconnected(IWarlockClient client) {}
-
-	public void clientRemoved(IWarlockClient client) {}
 	
 	protected void setViewTitle(String title) {
 		String prefix = "";

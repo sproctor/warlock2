@@ -43,6 +43,7 @@ import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.util.ColorUtil;
@@ -124,6 +125,11 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		nullTextWidget.setEditable(false);
 		nullTextWidget.setWordWrap(true);
 		nullTextWidget.setIndent(1);
+		Color background = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultBgColor);
+		Color foreground = ColorUtil.warlockColorToColor(GameViewConfiguration.defaultDefaultFgColor);
+		
+		nullTextWidget.setBackground(background);
+		nullTextWidget.setForeground(foreground);
 		book.showPage(nullTextWidget);
 		
 		// Hacked to allow UserStream to preset the streamName
@@ -250,7 +256,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		activeStream.pageDown();
 	}
 
-	public void clientActivated(IWarlockClient client) {
+	public void clientCreated(IWarlockClient client) {
 		addClient(client);
 		if(activeClient == null || activeClient == client || activeStream == null)
 			setClient(client);
@@ -262,11 +268,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 
 	public void clientDisconnected(IWarlockClient client) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void clientRemoved(IWarlockClient client) {
 		// TODO Auto-generated method stub
 		
 	}

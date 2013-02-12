@@ -5,7 +5,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
@@ -38,10 +37,13 @@ public class StreamText extends WarlockText implements IStreamListener {
 	private IStreamListener streamListener = new SWTStreamListener(this);
 	private WindowSettingsListener settingListener;
 	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
-		public void clientActivated(IWarlockClient client) {}
+		@Override
+		public void clientCreated(IWarlockClient client) {}
+		@Override
 		public void clientConnected(IWarlockClient client) {}
+		@Override
 		public void clientDisconnected(IWarlockClient client) {}
-		public void clientRemoved(IWarlockClient client) {}
+		@Override
 		public void clientSettingsLoaded(IWarlockClient client) {
 			loadSettings();
 		}
@@ -173,8 +175,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 			if (game == null) {
 				System.out.println("Couldn't find a gameview for this client! This view won't be setup to send keys over.");
 			} else {
-				this.getTextWidget().addVerifyKeyListener(game.getWarlockEntry().new KeyVerifier());
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addKeyListener(game.getWarlockEntry().new KeyEventListener());
+				this.getTextWidget().addVerifyKeyListener(game.getEntry().getVerifyKeyListener());
 			}
 			stream = client.getStream(streamName);
 			client.addStreamListener(streamName, streamListener);
