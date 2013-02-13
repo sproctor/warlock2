@@ -120,14 +120,14 @@ public class StormFrontTextBorder implements PaintListener, IPropertyListener<St
 		if (activeClient == null) return;
 
 		ICharacterStatus status = activeClient.getCharacterStatus();
-		if (status.getStatus().get(ICharacterStatus.StatusType.Stunned)
-				&& status.getStatus().get(ICharacterStatus.StatusType.Bleeding)) {
+		if (status.hasStatus(ICharacterStatus.StatusType.Stunned)
+				&& status.hasStatus(ICharacterStatus.StatusType.Bleeding)) {
 			// If both are active, report stunned. 
 			// There is generally nothing they can do about the bleeding when stunned anyway
 			setStunned();
-		} else if (status.getStatus().get(ICharacterStatus.StatusType.Stunned)) {
+		} else if (status.hasStatus(ICharacterStatus.StatusType.Stunned)) {
 			setStunned();
-		} else if (status.getStatus().get(ICharacterStatus.StatusType.Bleeding)) {
+		} else if (status.hasStatus(ICharacterStatus.StatusType.Bleeding)) {
 			setBleeding();
 		} else {
 			setClear();

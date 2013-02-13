@@ -31,12 +31,9 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.ICompass.DirectionType;
@@ -56,7 +53,7 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	private CompassTheme theme;
 	private IWarlockClient client;
 	private IPropertyListener<ICompass> listener;
-	private Image compassImage;// = WarlockSharedImages.getImage(WarlockSharedImages.IMG_COMPASS_SMALL_MAIN);
+	private Image compassImage;
 	
 	public WarlockCompass (Composite parent, int style, CompassTheme theme, Composite container) {
 		
@@ -65,7 +62,6 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		
 		moveCursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
 		compassImage = theme.getMainImage();
-		//this.container = container;
 		
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -87,13 +83,6 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 			}
 			public void mouseUp(MouseEvent e) {
 				click(new Point(e.x, e.y));
-			}
-		});
-		getParent().addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				//System.out.println("compass: " + getParent().getSize());
-				redraw();
 			}
 		});
 	}

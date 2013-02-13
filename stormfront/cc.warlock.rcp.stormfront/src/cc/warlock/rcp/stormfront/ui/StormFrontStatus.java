@@ -21,8 +21,6 @@
  */
 package cc.warlock.rcp.stormfront.ui;
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.swt.SWT;
@@ -41,15 +39,18 @@ import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
 
-public class StormFrontStatus implements IPropertyListener<String> {
+public class StormFrontStatus extends Composite {
 
 	protected Label[] statusLabels = new Label[6];
-	protected IWarlockClient activeClient;
-	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
-	protected SWTPropertyListener<String> wrapper = new SWTPropertyListener<String>(this);
+	protected IWarlockClient client;
+	protected SWTPropertyListener<String> statusListener = new SWTPropertyListener<String>(new IPropertyListener<String>() {
+		@Override
+		public void propertyChanged(String value) {
+			updateStatus();
+		}
+	});
 	protected DecorationOverlayIcon multipleStatus;
 	protected Image multipleStatusImage;
-	private Composite main;
 	private SWTPropertyListener<Integer> rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
 		public void propertyChanged(Integer value) {
 			if (value == 0)
@@ -68,23 +69,23 @@ public class StormFrontStatus implements IPropertyListener<String> {
 	});
 	
 	public StormFrontStatus (Composite parent) {
-		main = new Composite(parent, SWT.BORDER);
+		super(parent, SWT.BORDER);
 		GridLayout layout = new GridLayout(statusLabels.length, false);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		main.setLayout(layout);
+		this.setLayout(layout);
 
 		for (int i = 0; i < statusLabels.length; i++) {
-			statusLabels[i] = new Label(main, SWT.CENTER);
+			statusLabels[i] = new Label(this, SWT.CENTER);
 			statusLabels[i].setImage(StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_STATUS_BLANK));
 			GridData data = new GridData(GridData.FILL | SWT.CENTER, GridData.FILL | SWT.CENTER, true, true);
 			data.minimumWidth = 24;
 			statusLabels[i].setLayoutData(data);
 		}
 		
-		setColors(new Color(main.getDisplay(), 240, 240, 255), new Color(main.getDisplay(), 25, 25, 50));
+		setColors(new Color(getDisplay(), 240, 240, 255), new Color(getDisplay(), 25, 25, 50));
 	}
 	
 	protected void clear ()
@@ -102,24 +103,55 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		statusLabels[place].setImage(StormFrontSharedImages.getImage(imageId));
 	}
 	
-	protected void handleMultipleStatus (ICharacterStatus status)
-	{
+	private void updateStatus() {
+
+		ICharacterStatus status = client.getCharacterStatus();
+
+		if (status.hasStatus(ICharacterStatus.StatusType.Invisible)) {
+			if (status.hasStatus(ICharacterStatus.StatusType.Standing))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_STANDING);
+			else if (status.hasStatus(ICharacterStatus.StatusType.Sitting))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_SITTING);
+			else if (status.hasStatus(ICharacterStatus.StatusType.Kneeling))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_KNEELING);
+			else if (status.hasStatus(ICharacterStatus.StatusType.Prone))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_PRONE);
+		} else {
+			if (status.hasStatus(ICharacterStatus.StatusType.Standing))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_STANDING);
+			else if (status.hasStatus(ICharacterStatus.StatusType.Sitting))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_SITTING);
+			else if (status.hasStatus(ICharacterStatus.StatusType.Kneeling))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_KNEELING);
+			else if (status.hasStatus(ICharacterStatus.StatusType.Prone))
+				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_PRONE);
+		}
+
+		if (status.hasStatus(ICharacterStatus.StatusType.Joined))
+			setStatusImage(1, StormFrontSharedImages.IMG_STATUS_JOINED);
+		else
+			setStatusImage(1, StormFrontSharedImages.IMG_STATUS_BLANK);
+
+		if (status.hasStatus(ICharacterStatus.StatusType.Hidden))
+			setStatusImage(2, StormFrontSharedImages.IMG_STATUS_HIDDEN);
+		else if (status.hasStatus(ICharacterStatus.StatusType.Dead))
+			setStatusImage(2, StormFrontSharedImages.IMG_STATUS_DEAD);
+		else
+			setStatusImage(2, StormFrontSharedImages.IMG_STATUS_BLANK);
+
 		if (statusLabels[3] == null)
 			return;
 		
 		Image baseImage = StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_STATUS_BLANK);
 		ImageDescriptor overlays[] = new ImageDescriptor[] { null, null, null, null, null };
 		
-		if (status.getStatus().get(ICharacterStatus.StatusType.Bleeding))
-		{
+		if (status.hasStatus(ICharacterStatus.StatusType.Bleeding)) {
 			overlays[0] = StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_STATUS_BLEEDING);
 		}
-		if (status.getStatus().get(ICharacterStatus.StatusType.Stunned))
-		{
+		if (status.hasStatus(ICharacterStatus.StatusType.Stunned)) {
 			overlays[1] = StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_STATUS_STUNNED);
 		}
-		if (status.getStatus().get(ICharacterStatus.StatusType.Webbed))
-		{
+		if (status.hasStatus(ICharacterStatus.StatusType.Webbed)) {
 			overlays[3] = StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_STATUS_WEBBED);
 		}
 
@@ -134,81 +166,15 @@ public class StormFrontStatus implements IPropertyListener<String> {
 			oldImage.dispose();
 	}
 	
-	public void propertyChanged(String value) {
-		if (activeClient == null)
-			return;
-
-		ICharacterStatus status = activeClient.getCharacterStatus();
-
-		if (status.getStatus().get(ICharacterStatus.StatusType.Invisible)) 
-		{
-			if (status.getStatus().get(ICharacterStatus.StatusType.Standing))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_STANDING);
-			}
-			else if (status.getStatus().get(ICharacterStatus.StatusType.Sitting))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_SITTING);
-			}
-			else if (status.getStatus().get(ICharacterStatus.StatusType.Kneeling))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_KNEELING);
-			}
-			else if (status.getStatus().get(ICharacterStatus.StatusType.Prone))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_INVIS_PRONE);
-			}
-		} else {
-			if (status.getStatus().get(ICharacterStatus.StatusType.Standing))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_STANDING);
-			}
-			else if (status.getStatus().get(ICharacterStatus.StatusType.Sitting))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_SITTING);
-			}
-			else if (status.getStatus().get(ICharacterStatus.StatusType.Kneeling))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_KNEELING);
-			}
-			else if (status.getStatus().get(ICharacterStatus.StatusType.Prone))
-			{
-				setStatusImage(0, StormFrontSharedImages.IMG_STATUS_PRONE);
-			}
-		}
-
-		if (status.getStatus().get(ICharacterStatus.StatusType.Joined))
-		{
-			setStatusImage(1, StormFrontSharedImages.IMG_STATUS_JOINED);
-		}
-		else {
-			setStatusImage(1, StormFrontSharedImages.IMG_STATUS_BLANK);
-		}
-
-		if (status.getStatus().get(ICharacterStatus.StatusType.Hidden))
-		{
-			setStatusImage(2, StormFrontSharedImages.IMG_STATUS_HIDDEN);
-		}
-		else if (status.getStatus().get(ICharacterStatus.StatusType.Dead))
-		{
-			setStatusImage(2, StormFrontSharedImages.IMG_STATUS_DEAD);
-		}
-		else {
-			setStatusImage(2, StormFrontSharedImages.IMG_STATUS_BLANK);
-		}
-
-		handleMultipleStatus(status);
-	}
-	
 	protected void setColors (Color fg, Color bg)
 	{
 		for (int i = 0; i < 4; i++) {
 			statusLabels[i].setForeground(fg);
 			statusLabels[i].setBackground(bg);
 		}
-		statusLabels[4].setForeground(new Color(main.getDisplay(), 225, 50, 50));
+		statusLabels[4].setForeground(new Color(getDisplay(), 225, 50, 50));
 		statusLabels[4].setBackground(bg);
-		statusLabels[5].setForeground(new Color(main.getDisplay(), 50, 50, 225));
+		statusLabels[5].setForeground(new Color(getDisplay(), 50, 50, 225));
 		statusLabels[5].setBackground(bg);
 	}
 	
@@ -219,30 +185,21 @@ public class StormFrontStatus implements IPropertyListener<String> {
 		setColors(fg, bg);
 	}
 	
-	public void setActiveClient (IWarlockClient client) {
-		if (client == null)
+	public void setClient (IWarlockClient client) {
+		if (client == null || client == this.client)
 			return;
 		
-		this.activeClient = client;
+		client.getCharacterStatus().removeListener(statusListener);
+		this.client = client;
 		
-		if (!clients.contains(client))
-		{
-			clear();
-			client.getCharacterStatus().addListener(wrapper);
-			client.getTimer("roundtime").getProperty().addListener(rtListener);
-			client.getTimer("casttime").getProperty().addListener(ctListener);
-			
-			clients.add(client);
-		} else {
-			propertyChanged(client.getCharacterStatus().get());
-		}
+		clear();
+		client.getCharacterStatus().addListener(statusListener);
+		client.getTimer("roundtime").getProperty().addListener(rtListener);
+		client.getTimer("casttime").getProperty().addListener(ctListener);
 		
 		IClientSettings settings = client.getClientSettings();
 		if(settings != null)
 			loadSettings(settings);
 	}
 	
-	public Composite getWidget() {
-		return main;
-	}
 }

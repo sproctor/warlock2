@@ -22,7 +22,6 @@
 package cc.warlock.core.client.internal;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IPropertyListener;
@@ -32,12 +31,10 @@ public class CharacterStatus extends Property<String> implements ICharacterStatu
 	
 	protected HashMap<StatusType, Boolean> status = new HashMap<StatusType, Boolean>();
 	
-	public CharacterStatus (IWarlockClient client)
-	{
+	public CharacterStatus (IWarlockClient client) {
 		super(null);
 		
-		for (StatusType type : StatusType.values())
-		{
+		for (StatusType type : StatusType.values()) {
 			status.put(type, false);
 		}
 	}
@@ -45,11 +42,9 @@ public class CharacterStatus extends Property<String> implements ICharacterStatu
 	public void set(String data) {
 		StatusType statusType = StatusType.getStatusType(data);
 		
-		if (statusType != null)
-		{
+		if (statusType != null) {
 			status.put(statusType, true);
-			for (IPropertyListener<String> listener : listeners)
-			{
+			for (IPropertyListener<String> listener : listeners) {
 				listener.propertyChanged(this.get());
 			}
 		}
@@ -58,17 +53,20 @@ public class CharacterStatus extends Property<String> implements ICharacterStatu
 	public void unset(String data) {
 		StatusType statusType = StatusType.getStatusType(data);
 		
-		if (statusType != null)
-		{
+		if (statusType != null) {
 			status.put(statusType, false);
-			for (IPropertyListener<String> listener : listeners)
-			{
+			for (IPropertyListener<String> listener : listeners) {
 				listener.propertyChanged(this.get());
 			}
 		}
 	}
 	
-	public Map<StatusType, Boolean> getStatus() {
-		return status;
+	public Boolean hasStatus(StatusType type) {
+		return status.get(type);
+	}
+	
+	public Boolean hasStatus(String name) {
+		StatusType type = StatusType.getStatusType("Icon" + name.toUpperCase());
+		return hasStatus(type);
 	}
 }

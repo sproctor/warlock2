@@ -128,8 +128,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		try {
 			IViewPart part = page.showView(viewId, secondId, IWorkbenchPage.VIEW_ACTIVATE);
 			// if there's an error in creating the view, we want to know about it.. don't cast unless we know it's not an errorviewpart
-			if (part instanceof GameView)
-			{
+			if (part instanceof GameView) {
 				GameView nextInstance = (GameView) part;
 				initializeGameView(nextInstance);
 				return nextInstance;
@@ -173,21 +172,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		popupPageBook.setVisible(false);
 		
 		streamText = new StreamText(mainComposite, IWarlockClient.DEFAULT_STREAM_NAME);
-		//streamText.setLineLimit(gameConfiguration.getBufferLines());
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streamText.setIgnoreEmptyLines(false);
-		
-		// create the entry
-		/*entryComposite = new Composite(mainComposite, SWT.NONE);
-		GridLayout entryLayout = new GridLayout(1, false);
-		entryLayout.horizontalSpacing = 0;
-		entryLayout.verticalSpacing = 0;
-		entryLayout.marginHeight = 1;
-		entryLayout.marginWidth = 0;
-		entryComposite.setLayout(entryLayout);
-		entryComposite.setLayoutData(new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_END, true, false));
-		
-		this.entry = createEntry(); // Do this BEFORE getTextForClient!*/
 		
 		mainComposite.addDisposeListener(new DisposeListener() {
 			@Override
@@ -234,45 +220,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public void playSound(InputStream soundStream) {
 		SoundPlayer.play(soundStream);
 	}
-	
-	/*protected Image createCaretImage (int width, Color foreground)
-	{
-		PaletteData caretPalette = new PaletteData(new RGB[] {
-				new RGB(0, 0, 0), new RGB(255, 255, 255) });
-		
-		int widthOffset = width - 1;
-		ImageData imageData = new ImageData(4 + widthOffset,
-				entry.getWidget().getLineHeight(), 1, caretPalette);
-		Display display = entry.getWidget().getDisplay();
-		Image bracketImage = new Image(display, imageData);
-		GC gc = new GC(bracketImage);
-		gc.setForeground(foreground);
-		gc.setLineWidth(1);
-		// gap between two bars of one third of the height
-		// draw boxes using lines as drawing a line of a certain width produces
-		// rounded corners.
-		for (int i = 0; i < width; i++) {
-			gc.drawLine(i, 0, i, imageData.height - 1);
-		}
-
-		gc.dispose();
-
-		return bracketImage;
-	}
-
-	protected Caret createCaret (int width, Color foreground) {
-		Caret caret = new Caret(entry.getWidget(), SWT.NULL);
-		Image image = createCaretImage(width, foreground);
-		
-		if (image != null)
-			caret.setImage(image);
-		else
-			caret.setSize(width, entry.getWidget().getLineHeight());
-
-		caret.setFont(entry.getWidget().getFont());
-
-		return caret;
-	}*/
 		
 	public void copy() {
 		streamText.copy();

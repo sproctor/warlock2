@@ -61,7 +61,6 @@ import cc.warlock.core.settings.Profile;
 import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
-import cc.warlock.rcp.stormfront.ui.StormFrontStatus;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.stormfront.ui.style.StormFrontStyleProvider;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
@@ -83,13 +82,11 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 {
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.StormFrontGameView";
 	
-	protected StormFrontStatus status;
 	protected WarlockPopupAction reconnectPopup;
 	protected Font normalFont;
 	private Button reconnect;
 	
-	public StormFrontGameView ()
-	{
+	public StormFrontGameView () {
 		super();
 
 		wrapper = new SWTWarlockClientViewer(this);
@@ -100,9 +97,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		super.createPartControl(parent);
 		
 		//textBorder = new StormFrontTextBorder(text);
-		
-		//((GridLayout)entryComposite.getLayout()).numColumns = 2;
-		//status = new StormFrontStatus(entryComposite);
 		
 		//String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 		
@@ -181,7 +175,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 				action.setGameView(StormFrontGameView.this);
 				action.run();
 				hidePopup(reconnectPopup);
-//				reconnectPopup.setVisible(false);
 			}
 		};
 		
@@ -233,7 +226,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 					action.setGameView(StormFrontGameView.this);
 					action.run();
 					hidePopup(reconnectPopup);
-//					reconnectPopup.setVisible(false);
 				}
 			});
 		}
@@ -285,47 +277,37 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	@Override
 	public void setClient(IWarlockClient client) {
 		hidePopup(reconnectPopup);
-//		reconnectPopup.setVisible(false);
-		if (client instanceof IStormFrontClient)
-		{
-			if (status != null) {
-				status.setActiveClient(client);
-				// textBorder.setActiveClient(sfClient);
+
+		IClientSettings settings = client.getClientSettings();
+		if(settings != null)
+			loadClientSettings(settings);
+
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+			@Override
+			public void clientCreated(IWarlockClient client) {}
+			@Override
+			public void clientConnected(IWarlockClient client) {}
+			@Override
+			public void clientDisconnected(IWarlockClient client) {
+				if (client == getClient()) {
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run () {
+							StormFrontGameView.this.disconnected();
+						}
+					});
+				}
 			}
-			
-			IClientSettings settings = client.getClientSettings();
-			if(settings != null)
-				loadClientSettings(settings);
-			
-			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
-				@Override
-				public void clientCreated(IWarlockClient client) {}
-				@Override
-				public void clientConnected(IWarlockClient client) {}
-				@Override
-				public void clientDisconnected(IWarlockClient client) {
-					if (client == getClient()) {
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run () {
-								StormFrontGameView.this.disconnected();
-							}
-						});
-					}
-				}
-				@Override
-				public void clientSettingsLoaded(IWarlockClient client) {
-					loadClientSettings(client.getClientSettings());
-				}
-			}));
-		}
-		
+			@Override
+			public void clientSettingsLoaded(IWarlockClient client) {
+				loadClientSettings(client.getClientSettings());
+			}
+		}));
+
 		super.setClient(client);
 	}
 	
-	protected void disconnected ()
-	{	
+	protected void disconnected () {	
 		showPopup(reconnectPopup);
-//		reconnectPopup.setVisible(true);
 	}
 	
 	public void loadClientSettings(IClientSettings settings)
@@ -374,13 +356,8 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		streamText.setForeground(ColorUtil.warlockColorToColor(fg));
 		streamText.getTextWidget().redraw();
 		
-		if (HandsView.getDefault() != null)
-		{
+		if (HandsView.getDefault() != null) {
 			HandsView.getDefault().loadSettings(settings);
-		}
-		
-		if (status != null) {
-			status.loadSettings(settings);
 		}
 	}
 	

@@ -45,16 +45,8 @@ public class StormFrontScriptCommands extends ScriptCommands implements IStormFr
 	private HashMap<IMatch, Runnable> actions = new HashMap<IMatch, Runnable>();
 	private Thread actionThread = null;
 	
-	public StormFrontScriptCommands(IWarlockClientViewer viewer, String name)
-	{
+	public StormFrontScriptCommands(IWarlockClientViewer viewer, String name) {
 		super(viewer, name);
-		
-		/* TODO which streams should we listen to here?
-		client.getDeathsStream().addStreamListener(this);
-		client.getFamiliarStream().addStreamListener(this);
-		client.getAssessStream().addStreamListener(this);
-		client.getExperienceStream().addStreamListener(this);
-		*/
 	}
 	
 	public StormFrontScriptCommands(IWarlockClientViewer viewer, IScript script)
@@ -179,9 +171,5 @@ public class StormFrontScriptCommands extends ScriptCommands implements IStormFr
 	public void stop() {
 		super.stop();
 		clearActions();
-		/*sfClient.getDeathsStream().removeStreamListener(this);
-		sfClient.getFamiliarStream().removeStreamListener(this);
-		sfClient.getAssessStream().removeStreamListener(this);
-		sfClient.getExperienceStream().removeStreamListener(this);*/
 	}
 }

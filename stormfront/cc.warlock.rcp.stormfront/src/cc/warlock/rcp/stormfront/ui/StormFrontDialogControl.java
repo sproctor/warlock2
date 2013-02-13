@@ -25,6 +25,8 @@ package cc.warlock.rcp.stormfront.ui;
 import java.util.HashMap;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -37,8 +39,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import cc.warlock.core.client.IWarlockDialogData;
+import cc.warlock.core.client.IWarlockDialogListener;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockDialog;
+import cc.warlock.rcp.ui.client.SWTWarlockDialogListener;
 import cc.warlock.rcp.util.ColorUtil;
 
 /**
@@ -50,12 +54,17 @@ import cc.warlock.rcp.util.ColorUtil;
 public class StormFrontDialogControl extends Canvas {
 	
 	private Font font;
-	//protected int width, height;
 	private int borderWidth = 1;
 	private WarlockDialog dialog;
 	
 	private HashMap<String, ColorGroup> colors = new HashMap<String, ColorGroup>();
 	private ColorGroup defaultColors;
+	private IWarlockDialogListener listener = new SWTWarlockDialogListener(new IWarlockDialogListener() {
+		@Override
+		public void dialogChanged() {
+			redraw();
+		}
+	});
 	
 	private class ColorGroup {
 		public Color fg;
@@ -72,10 +81,6 @@ public class StormFrontDialogControl extends Canvas {
 	public StormFrontDialogControl (Composite composite, int style) {
 		super(composite, style);
 		Display display = this.getDisplay();
-		
-		// defaults
-		//width = 100;
-		//height = 15;
 		
 		Font textFont = JFaceResources.getDefaultFont();
 		FontData textData = textFont.getFontData()[0];
@@ -148,21 +153,25 @@ public class StormFrontDialogControl extends Canvas {
 				}
 			}
 		});
+		addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				font.dispose();
+			}
+		});
 	}
 	
-	private Color getGradientColor (int factor, boolean lighter, Color color)
-	{
+	private Color getGradientColor (int factor, boolean lighter, Color color) {
+		
 		int red = 0;
 		int green = 0;
 		int blue = 0;
 		
-		if (lighter) 
-		{
+		if (lighter) {
 			red = color.getRed() < (255 - factor) ? color.getRed() + factor : 255;
 			green = color.getGreen() < (255 - factor) ? color.getGreen() + factor : 255;
 			blue = color.getBlue() < (255 - factor) ? color.getBlue() + factor : 255;
-		}
-		else {
+		} else {
 			red = color.getRed() > factor ? color.getRed() - factor : 0;
 			green = color.getRed() > factor ? color.getRed() - factor : 0;
 			blue = color.getRed() > factor ? color.getRed() - factor : 0;
@@ -171,90 +180,11 @@ public class StormFrontDialogControl extends Canvas {
 		return new Color(getShell().getDisplay(), red, green, blue);
 	}
 	
-	/*public void setSize(int width, int height) {
-		this.width = width;
-		this.height = height;
-		
-		redraw();
-	}
-	
-	public Point computeSize(int wHint, int hHint, boolean changed) {
-		
-		return new Point (width, height);
-	}*/
-	
-	public void dispose() {
-		font.dispose();
-		
-		super.dispose();
-	}
-	
 	public void setDialog(WarlockDialog dialog) {
+		if(this.dialog != null)
+			this.dialog.removeListener(listener);
 		this.dialog = dialog;
-	}
-
-	/*public void sendMessage(IWarlockDialogData msg) {
-		progressBars.put(msg.getId(), msg);
-		redraw();
+		dialog.addListener(listener);
 	}
 	
-	private Color getTextColor(String id) {
-		
-		if(id.equals("health"))
-			return healthFG;
-		
-		if(id.equals("mana"))
-			return manaFG;
-		
-		if(id.equals("spirit"))
-			return spiritFG;
-		
-		if(id.equals("stamina"))
-			return fatigueFG;
-		
-		if(id.equals("concentration"))
-			return concentrationFG;
-		
-		return defaultFG;
-	}
-	
-	private Color getBgColor(String id) {
-		
-		if(id.equals("health"))
-			return healthBG;
-		
-		if(id.equals("mana"))
-			return manaBG;
-		
-		if(id.equals("spirit"))
-			return spiritBG;
-		
-		if(id.equals("stamina"))
-			return fatigueBG;
-		
-		if(id.equals("concentration"))
-			return concentrationBG;
-		
-		return defaultBG;
-	}
-	
-	private Color getBorderColor(String id) {
-		
-		if(id.equals("health"))
-			return healthBorder;
-		
-		if(id.equals("mana"))
-			return manaBorder;
-		
-		if(id.equals("spirit"))
-			return spiritBorder;
-		
-		if(id.equals("stamina"))
-			return fatigueBorder;
-		
-		if(id.equals("concentration"))
-			return concentrationBorder;
-		
-		return defaultBorder;
-	}*/
 }

@@ -31,4 +31,8 @@ public class WarlockDialog {
 	public void addListener(IWarlockDialogListener listener) {
 		listeners.add(listener);
 	}
+	
+	public void removeListener(IWarlockDialogListener listener) {
+		listeners.remove(listener);
+	}
 }

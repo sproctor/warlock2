@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.client;
 
-import java.util.Map;
 
 /**
  * This interface represents the current status of the current character.
@@ -49,6 +48,7 @@ public interface ICharacterStatus extends IProperty<String> {
 		}
 	};
 	
-	public Map<StatusType, Boolean> getStatus();
+	public Boolean hasStatus(StatusType type);
+	public Boolean hasStatus(String name);
 	public void unset(String status);
 }
