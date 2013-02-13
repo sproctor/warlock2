@@ -38,13 +38,12 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.IWarlockDialogListener;
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.rcp.stormfront.ui.StormFrontDialogControl;
 import cc.warlock.rcp.stormfront.ui.StormFrontStatus;
 import cc.warlock.rcp.ui.WarlockCompass;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.ui.client.SWTWarlockDialogListener;
 import cc.warlock.rcp.ui.style.CompassTheme;
 import cc.warlock.rcp.ui.style.CompassThemes;
@@ -70,7 +69,6 @@ public class BarsView extends ViewPart {
 	private GameView activeView;
 	private HashMap<GameView, Composite> pages = new HashMap<GameView, Composite>();
 	private CompassTheme theme = CompassThemes.getCompassTheme("small");
-	private Composite parent;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -130,7 +128,6 @@ public class BarsView extends ViewPart {
 		if(activeView == view)
 			return;
 		activeView = view;
-		IWarlockClient client = view.getClient();
 		
 		Composite page = pages.get(view);
 		if(page == null) {
@@ -143,15 +140,13 @@ public class BarsView extends ViewPart {
 	
 	private class BarsPageView extends Composite {
 		
-		GameView view;
 		StormFrontEntry entry;
 		StormFrontStatus status;
 		WarlockCompass compass;
 		StormFrontDialogControl minivitals;
 		
-		public BarsPageView(Composite Parent, GameView view) {
+		public BarsPageView(Composite parent, GameView view) {
 			super(parent, SWT.NONE);
-			this.view = view;
 			
 			this.setLayout(new GridLayout(3, false));
 			
@@ -175,6 +170,13 @@ public class BarsView extends ViewPart {
 			minivitals.setLayoutData(mvData);
 			
 			view.setEntry(entry);
+			setClient(view.getClient());
+			view.addClientViewerListener(new SWTWarlockClientViewerListener(new IWarlockClientViewerListener() {
+				@Override
+				public void clientChanged(IWarlockClient client) {
+					setClient(client);
+				}
+			}));
 		}
 		
 		public void setClient(IWarlockClient client) {

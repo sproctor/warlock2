@@ -221,8 +221,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		});
 	}
 	
-	//abstract protected WarlockEntry createEntry();
-	
 	@Override
 	public void setFocus() {
 		super.setFocus();
@@ -346,8 +344,10 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 			}
 		});
 		streamText.setClient(client);
-		if(entry != null)
-			entry.setClient(client);
+		
+		for(IWarlockClientViewerListener listener : listeners) {
+			listener.clientChanged(client);
+		}
 	}
 	
 	protected abstract void setViewTitle(String title);

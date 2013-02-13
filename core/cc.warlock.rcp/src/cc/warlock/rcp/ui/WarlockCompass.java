@@ -102,12 +102,12 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		if(this.isDisposed() || gc.isDisposed())
 			return;
 		
-		ImageData imgData = compassImage.getImageData();
+		/*ImageData imgData = compassImage.getImageData();
 		int height = Math.min(getParent().getSize().y - 6, imgData.height);
 		gc.setClipping(0, 0, imgData.width, height);
 		System.out.println("height: " + height);
 		System.out.println("compass: " + this.getSize());
-		this.setSize(imgData.width, height);
+		this.setSize(imgData.width, height);*/
 		gc.drawImage(compassImage, 0, 0);
 		if (client != null && client.getCompass() != null && client.getCompass().get() != null) {
 			for (DirectionType direction : DirectionType.values()) {
@@ -150,5 +150,6 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	public void setClient(IWarlockClient client) {
 		listener = new SWTPropertyListener<ICompass>(this);
 		client.getCompass().addListener(listener);
+		this.client = client;
 	}
 }
