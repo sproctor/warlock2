@@ -45,6 +45,7 @@ import org.eclipse.ui.part.PageBook;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.script.ScriptEngineRegistry;
@@ -72,9 +73,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected StreamText streamText;
 	protected WarlockEntry entry;
 	protected SWTWarlockClientViewer wrapper;
-	//protected Composite entryComposite;
 	private IWarlockClient client;
 	protected Composite mainComposite;
+	private ArrayList<IWarlockClientViewerListener> listeners = new ArrayList<IWarlockClientViewerListener>();
 	
 	private Profile profile;
 	
@@ -402,5 +403,15 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	public void setEntry(WarlockEntry entry) {
 		this.entry = entry;
+	}
+	
+	@Override
+	public void addClientViewerListener(IWarlockClientViewerListener listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	public void removeClientViewerListener(IWarlockClientViewerListener listener) {
+		listeners.add(listener);
 	}
 }

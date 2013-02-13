@@ -92,7 +92,8 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		getParent().addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				System.out.println("compass: " + getParent().getSize());
+				//System.out.println("compass: " + getParent().getSize());
+				redraw();
 			}
 		});
 	}
@@ -102,10 +103,12 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 			return;
 		
 		ImageData imgData = compassImage.getImageData();
-		int height = Math.min(getParent().getSize().y, imgData.height);
-		gc.drawImage(compassImage, 0, 0, imgData.width, height,
-				0, 0, imgData.width, height);
-		//gc.drawImage(compassImage, 0, 0);
+		int height = Math.min(getParent().getSize().y - 6, imgData.height);
+		gc.setClipping(0, 0, imgData.width, height);
+		System.out.println("height: " + height);
+		System.out.println("compass: " + this.getSize());
+		this.setSize(imgData.width, height);
+		gc.drawImage(compassImage, 0, 0);
 		if (client != null && client.getCompass() != null && client.getCompass().get() != null) {
 			for (DirectionType direction : DirectionType.values()) {
 				if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction))

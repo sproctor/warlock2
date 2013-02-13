@@ -51,16 +51,16 @@ public interface IWarlockClientViewer
 	public void playSound(InputStream soundStream);
 	
 	public Collection<IMacroVariable> getMacroVariables();
-	
 	public IMacroCommand getMacroCommand(String id);
-	
 	public Collection<WarlockMacro> getDefaultMacros();
 	
 	public boolean isStreamOpen(String streamName);
-	
 	public void openCustomStream(String name);
 	public void printToCustomStream(String name, WarlockString text);
 	public void clearCustomStream(String name);
+	
+	public void addClientViewerListener(IWarlockClientViewerListener listener);
+	public void removeClientViewerListener(IWarlockClientViewerListener listener);
 	
 	/**
 	 * Append an image to this viewer

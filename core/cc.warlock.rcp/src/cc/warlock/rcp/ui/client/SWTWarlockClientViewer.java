@@ -38,6 +38,7 @@ import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.IWarlockEntry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockMacro;
@@ -196,4 +197,15 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	public IWarlockEntry getEntry () {
 		return new SWTWarlockEntry(viewer.getEntry());
 	}
+
+	@Override
+	public void addClientViewerListener(IWarlockClientViewerListener listener) {
+		viewer.addClientViewerListener(listener);
+	}
+
+	@Override
+	public void removeClientViewerListener(IWarlockClientViewerListener listener) {
+		viewer.removeClientViewerListener(listener);
+	}
+	
 }
