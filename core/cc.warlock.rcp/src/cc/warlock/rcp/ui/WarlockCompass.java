@@ -35,7 +35,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -63,13 +62,12 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	private Image scaledImage;
 	private HashMap<DirectionType, Image> scaledDirections = new HashMap<DirectionType, Image>();
 	
-	public WarlockCompass (final Composite parent, int style, CompassTheme theme, final GridData layoutData) {
+	public WarlockCompass (final Composite parent, int style, CompassTheme theme) {
 		
 		super(parent, style);
 		this.theme = theme;
 		moveCursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
-		setScale(parent.getSize().y);
-		setSize(32, 32);
+		setScale(parent.getSize().y - 10);
 		
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -96,17 +94,7 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		parent.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				setScale(parent.getSize().y - 6);
-				redraw();
-				ImageData imgData = scaledImage.getImageData();
-				int height = Math.min(getParent().getSize().y - 6, imgData.height);
-				WarlockCompass.this.setSize(imgData.width, height);
-				//layoutData.heightHint = height + 4;
-				WarlockCompass.this.setLayoutData(layoutData);
-				//System.out.println("trimming: " + WarlockCompass.this.get);
-				//WarlockCompass.this.layout();
-				System.out.println("widget size: " + getSize());
-				System.out.println("parent size: " + parent.getSize());
+				setScale(parent.getSize().y - 10);
 			}
 		});
 	}

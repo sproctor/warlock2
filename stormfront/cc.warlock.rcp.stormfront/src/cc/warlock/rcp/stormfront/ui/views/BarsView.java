@@ -113,9 +113,9 @@ public class BarsView extends ViewPart {
 			status = new StormFrontStatus(this, view);
 			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false));
 			
-			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 2);
+			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 2);
 			compassData.heightHint = 64;
-			compass = new WarlockCompass(this, SWT.NONE, theme, compassData);
+			compass = new WarlockCompass(this, SWT.NONE, theme);
 			compass.setLayoutData(compassData);
 			
 			minivitals = new StormFrontDialogControl(this, SWT.NONE);
@@ -130,16 +130,6 @@ public class BarsView extends ViewPart {
 					setClient(client);
 				}
 			}));
-			this.addListener(SWT.Resize, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					System.out.println("re-layout");
-					BarsView.this.book.layout();
-					minivitals.layout();
-					System.out.println("mv size" + minivitals.getSize());
-					BarsView.this.book.redraw();
-				}
-			});
 		}
 		
 		public void setClient(IWarlockClient client) {
