@@ -34,6 +34,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ViewPart;
 
@@ -111,8 +113,9 @@ public class BarsView extends ViewPart {
 			status = new StormFrontStatus(this, view);
 			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false));
 			
-			compass = new WarlockCompass(this, SWT.NONE, theme, parent);
 			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 2);
+			compassData.heightHint = 64;
+			compass = new WarlockCompass(this, SWT.NONE, theme, compassData);
 			compass.setLayoutData(compassData);
 			
 			minivitals = new StormFrontDialogControl(this, SWT.NONE);
@@ -127,6 +130,16 @@ public class BarsView extends ViewPart {
 					setClient(client);
 				}
 			}));
+			this.addListener(SWT.Resize, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					System.out.println("re-layout");
+					BarsView.this.book.layout();
+					minivitals.layout();
+					System.out.println("mv size" + minivitals.getSize());
+					BarsView.this.book.redraw();
+				}
+			});
 		}
 		
 		public void setClient(IWarlockClient client) {
@@ -141,8 +154,7 @@ public class BarsView extends ViewPart {
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		// Don't need to do anything
 	}
 	
 }

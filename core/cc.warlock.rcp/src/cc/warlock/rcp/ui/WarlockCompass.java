@@ -21,6 +21,8 @@
  */
 package cc.warlock.rcp.ui;
 
+import java.util.HashMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -31,9 +33,13 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.ICompass.DirectionType;
@@ -53,15 +59,17 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 	private CompassTheme theme;
 	private IWarlockClient client;
 	private IPropertyListener<ICompass> listener;
-	private Image compassImage;
+	private double scale = 1.0;
+	private Image scaledImage;
+	private HashMap<DirectionType, Image> scaledDirections = new HashMap<DirectionType, Image>();
 	
-	public WarlockCompass (Composite parent, int style, CompassTheme theme, Composite container) {
+	public WarlockCompass (final Composite parent, int style, CompassTheme theme, final GridData layoutData) {
 		
 		super(parent, style);
 		this.theme = theme;
-		
 		moveCursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
-		compassImage = theme.getMainImage();
+		setScale(parent.getSize().y);
+		setSize(32, 32);
 		
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -85,36 +93,74 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 				click(new Point(e.x, e.y));
 			}
 		});
+		parent.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				setScale(parent.getSize().y - 6);
+				redraw();
+				ImageData imgData = scaledImage.getImageData();
+				int height = Math.min(getParent().getSize().y - 6, imgData.height);
+				WarlockCompass.this.setSize(imgData.width, height);
+				//layoutData.heightHint = height + 4;
+				WarlockCompass.this.setLayoutData(layoutData);
+				//System.out.println("trimming: " + WarlockCompass.this.get);
+				//WarlockCompass.this.layout();
+				System.out.println("widget size: " + getSize());
+				System.out.println("parent size: " + parent.getSize());
+			}
+		});
+	}
+	
+	private void setScale(int windowHeight) {
+		ImageData data = theme.getMainImage().getImageData();
+		int height = data.height;
+		int width = data.width;
+		if(height > windowHeight)
+			scale = (double)windowHeight / (double)height;
+		else
+			scale = 1.0;
+		if(scaledImage != null)
+			scaledImage.dispose();
+		//System.out.println("size: " + (int)(width*scale)+","+(int)(height*scale));
+		if(windowHeight > 0) {
+			scaledImage = new Image(getDisplay(), data.scaledTo((int)(width*scale),
+				(int)(height*scale)));
+		} else {
+			scaledImage = null;
+			scale = 1.0;
+		}
+		for (DirectionType direction : DirectionType.values()) {
+			if (direction != DirectionType.None) {
+				Image oldImage = scaledDirections.get(direction);
+				if(oldImage != null)
+					oldImage.dispose();
+				ImageData dirData = theme.getDirectionImage(direction).getImageData();
+				scaledDirections.put(direction, new Image(getDisplay(), dirData.scaledTo((int)(dirData.width*scale),
+						(int)(dirData.height*scale))));
+			}
+		}
 	}
 	
 	private void drawCompass (GC gc) {
 		if(this.isDisposed() || gc.isDisposed())
 			return;
-		
-		/*ImageData imgData = compassImage.getImageData();
-		int height = Math.min(getParent().getSize().y - 6, imgData.height);
-		gc.setClipping(0, 0, imgData.width, height);
-		System.out.println("height: " + height);
-		System.out.println("compass: " + this.getSize());
-		this.setSize(imgData.width, height);*/
-		gc.drawImage(compassImage, 0, 0);
+		Image image = scaledImage == null ? theme.getMainImage() : scaledImage;
+		//gc.setClipping(0, 0, image.getImageData().width, image.getImageData().height);
+		gc.drawImage(image, 0, 0);
 		if (client != null && client.getCompass() != null && client.getCompass().get() != null) {
 			for (DirectionType direction : DirectionType.values()) {
-				if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction))
-				{
-					Point point = theme.getDirectionPosition(direction);
-					gc.drawImage(theme.getDirectionImage(direction), point.x, point.y);
-				}
-			}
-		} else {
-			// draw all "on" by default
-			for (DirectionType direction : DirectionType.values()) {
-				if (direction != DirectionType.None) {
-					Point point = theme.getDirectionPosition(direction);
-					gc.drawImage(theme.getDirectionImage(direction), point.x, point.y);
+				if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction)) {
+					drawDirection(gc, direction);
 				}
 			}
 		}
+	}
+	
+	private void drawDirection(GC gc, DirectionType direction) {
+		if(direction == DirectionType.None)
+			return;
+		Point point = theme.getDirectionPosition(direction);
+		gc.drawImage(scaledDirections.get(direction), (int)(point.x*scale), (int)(point.y*scale));
 	}
 	
 	protected void click(Point c) {
@@ -123,8 +169,11 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		for (DirectionType direction : DirectionType.values()) {
 			if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction)) {
 				Point point = theme.getDirectionPosition(direction);
-				if(c.x >= point.x && c.x <= point.x + theme.getDirectionWidth(direction)
-						&& c.y >= point.y && c.y <= point.y + theme.getDirectionHeight(direction)) {
+				int x = (int)(point.x * scale);
+				int y = (int)(point.y * scale);
+				int width = (int)(theme.getDirectionWidth(direction) * scale);
+				int height = (int)(theme.getDirectionHeight(direction) * scale);
+				if(c.x >= x && c.x <= x + width && c.y >= y && c.y <= y + height) {
 					client.send(new Command(direction.getName()));
 					break;
 				}
