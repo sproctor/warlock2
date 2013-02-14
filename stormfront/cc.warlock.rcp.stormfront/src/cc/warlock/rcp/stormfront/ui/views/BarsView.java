@@ -105,18 +105,18 @@ public class BarsView extends ViewPart {
 			
 			entry = new StormFrontEntry(this, view);
 			GridData entryData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
-			entryData.heightHint = 25;
+			entryData.heightHint = 22;
 			entry.getWidget().setLayoutData(entryData);
 			
 			status = new StormFrontStatus(this, view);
-			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false, 1, 2));
+			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false));
 			
 			compass = new WarlockCompass(this, SWT.NONE, theme, parent);
 			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 2);
 			compass.setLayoutData(compassData);
 			
 			minivitals = new StormFrontDialogControl(this, SWT.NONE);
-			GridData mvData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			GridData mvData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 			minivitals.setLayoutData(mvData);
 			
 			view.setEntry(entry);
