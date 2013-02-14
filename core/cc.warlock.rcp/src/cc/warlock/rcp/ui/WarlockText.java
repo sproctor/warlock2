@@ -386,6 +386,8 @@ public class WarlockText {
 		for (Iterator<? extends IWarlockHighlight> iter = client.getHighlightsIterator();
 				iter.hasNext(); ) {
 			IWarlockHighlight highlight = iter.next();
+			if(highlight == null)
+				continue;
 			Pattern p;
 			try {
 				p = highlight.getPattern();
