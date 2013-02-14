@@ -40,6 +40,7 @@ import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.IWarlockEntry;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
@@ -50,6 +51,7 @@ import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.util.ColorUtil;
@@ -82,6 +84,12 @@ abstract public class WarlockEntry implements IWarlockEntry {
 			// Do nothing
 		}
 	};
+	private IWarlockClientViewerListener viewerListener = new SWTWarlockClientViewerListener(new IWarlockClientViewerListener() {
+		@Override
+		public void clientChanged(IWarlockClient client) {
+			setClient(client);
+		}
+	});
 	private static final ArrayList<Character> entryCharacters = new ArrayList<Character>();
 	static {
 		char[] entryChars = new char[] {
@@ -101,7 +109,6 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		this.viewer = viewer;
 		
 		widget = new StyledText(parent, SWT.SINGLE); 
-		//widget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		widget.setEditable(true);
 		widget.setMargins(2, 2, 2, 2);
 		
@@ -113,7 +120,6 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		
 		widget.setBackground(background);
 		widget.setForeground(foreground);
-		//widget.setSize(300, 30);
 		
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
 			@Override
@@ -134,8 +140,10 @@ abstract public class WarlockEntry implements IWarlockEntry {
 					}));
 				}
 			}
-			
 		}));
+		
+		setClient(viewer.getClient());
+		viewer.addClientViewerListener(viewerListener);
 	}
 	
 	protected void loadSettings() {
