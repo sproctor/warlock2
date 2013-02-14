@@ -24,14 +24,9 @@ package cc.warlock.rcp.stormfront.ui;
 
 import java.util.HashMap;
 
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -53,7 +48,6 @@ import cc.warlock.rcp.util.ColorUtil;
  */
 public class StormFrontDialogControl extends Canvas {
 	
-	private Font font;
 	private int borderWidth = 1;
 	private WarlockDialog dialog;
 	
@@ -80,11 +74,7 @@ public class StormFrontDialogControl extends Canvas {
 	
 	public StormFrontDialogControl (Composite composite, int style) {
 		super(composite, style);
-		Display display = this.getDisplay();
-		
-		Font textFont = JFaceResources.getDefaultFont();
-		FontData textData = textFont.getFontData()[0];
-		int minHeight = 10;
+		Display display = getDisplay();
 		
 		colors.put("health", new ColorGroup(display, "#FFFFFF", "#800000", "#796a6a"));
 		colors.put("mana", new ColorGroup(display, "#FFFFFF", "#0000FF", "#7272FF"));
@@ -93,19 +83,12 @@ public class StormFrontDialogControl extends Canvas {
 		colors.put("concentration", new ColorGroup(display, "#000000", "#00FF00", "#E1E1E1"));
 		defaultColors = new ColorGroup(display, "#000000", "#969696", "#E1E1E1");
 		
-		font = new Font(getShell().getDisplay(),
-			textData.getName(), (int)Math.max(minHeight,textData.getHeight()), textData.getStyle());
-		
-		//borderWidth = 1;
-		
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				if(dialog == null)
 					return;
 				
 				Rectangle bounds = getBounds();
-				
-				e.gc.setFont (font);
 				
 				synchronized(dialog) {
 					for(IWarlockDialogData progressBar : dialog.getElements()) {
@@ -151,12 +134,6 @@ public class StormFrontDialogControl extends Canvas {
 						e.gc.drawText (text, text_left, text_top, true);
 					}
 				}
-			}
-		});
-		addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				font.dispose();
 			}
 		});
 	}
