@@ -108,7 +108,7 @@ public class BarsView extends ViewPart {
 			entryData.heightHint = 25;
 			entry.getWidget().setLayoutData(entryData);
 			
-			status = new StormFrontStatus(this);
+			status = new StormFrontStatus(this, view);
 			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false, 1, 2));
 			
 			compass = new WarlockCompass(this, SWT.NONE, theme, parent);
@@ -133,7 +133,6 @@ public class BarsView extends ViewPart {
 			if(client != null) {
 				minivitals.setDialog(client.getDialog("minivitals"));
 				compass.setClient(client);
-				status.setClient(client);
 			}
 		}
 	}

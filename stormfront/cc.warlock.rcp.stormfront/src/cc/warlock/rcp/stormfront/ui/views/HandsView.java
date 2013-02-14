@@ -40,6 +40,8 @@ import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
@@ -54,9 +56,9 @@ public class HandsView extends ViewPart
 	protected GradientInfo leftHandInfo, rightHandInfo, spellInfo;
 	protected IWarlockClient activeClient;
 	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
+	private IWarlockSettingListener settingListener;
 	
-	public HandsView ()
-	{
+	public HandsView () {
 		_instance = this;
 		
 		GameView.addGameViewFocusListener(new IGameViewFocusListener() {
@@ -220,18 +222,25 @@ public class HandsView extends ViewPart
 		spellInfo.setForeground(fg);
 	}
 	
-	public void loadSettings (IClientSettings settings)
-	{
+	public void loadSettings (IClientSettings settings) {
 		if(settings == null)
 			return;
-		//IWindowSettings mainSettings = settings.getMainWindowSettings();
-		//if(mainSettings == null)
-			//return;
 		
-		Color bg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultBackground());
-		Color fg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultForeground());
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		Color bg = ColorUtil.warlockColorToColor(provider.getDefaultBackground());
+		Color fg = ColorUtil.warlockColorToColor(provider.getDefaultForeground());
 		
 		setColors(fg, bg);
+		
+		if(settingListener == null) {
+			settingListener = new IWarlockSettingListener() {
+				@Override
+				public void settingChanged(IWarlockSetting setting) {
+					loadSettings(activeClient.getClientSettings());
+				}
+			};
+			provider.addListener(settingListener);
+		}
 	}
 
 	private class HandListener implements IPropertyListener<String> {

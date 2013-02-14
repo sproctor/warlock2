@@ -35,14 +35,22 @@ import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientViewerListener;
+import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.util.ColorUtil;
+import cc.warlock.rcp.views.GameView;
 
 public class StormFrontStatus extends Composite {
 
 	protected Label[] statusLabels = new Label[6];
-	protected IWarlockClient client;
+	private GameView viewer;
 	protected SWTPropertyListener<String> statusListener = new SWTPropertyListener<String>(new IPropertyListener<String>() {
 		@Override
 		public void propertyChanged(String value) {
@@ -67,9 +75,44 @@ public class StormFrontStatus extends Composite {
 				statusLabels[5].setText(value.toString());
 		}
 	});
+	private SWTWarlockClientViewerListener viewerListener = new SWTWarlockClientViewerListener(new IWarlockClientViewerListener() {
+		@Override
+		public void clientChanged(IWarlockClient client) {
+			if (client == null)
+				return;
+			
+			client.getCharacterStatus().removeListener(statusListener);
+			
+			clear();
+			client.getCharacterStatus().addListener(statusListener);
+			client.getTimer("roundtime").getProperty().addListener(rtListener);
+			client.getTimer("casttime").getProperty().addListener(ctListener);
+			
+			IClientSettings settings = client.getClientSettings();
+			WarlockClientRegistry.addWarlockClientListener(clientListener);
+			if(settings != null)
+				loadSettings(settings);
+		}
+	});
+	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+		@Override
+		public void clientCreated(IWarlockClient client) {}
+		@Override
+		public void clientConnected(IWarlockClient client) {}
+		@Override
+		public void clientDisconnected(IWarlockClient client) {}
+		@Override
+		public void clientSettingsLoaded(IWarlockClient client) {
+			loadSettings(client.getClientSettings());
+		}
+	});
+	private IWarlockSettingListener settingListener;
 	
-	public StormFrontStatus (Composite parent) {
+	public StormFrontStatus (Composite parent, GameView viewer) {
 		super(parent, SWT.BORDER);
+		
+		this.viewer = viewer;
+		
 		GridLayout layout = new GridLayout(statusLabels.length, false);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
@@ -86,6 +129,8 @@ public class StormFrontStatus extends Composite {
 		}
 		
 		setColors(new Color(getDisplay(), 240, 240, 255), new Color(getDisplay(), 25, 25, 50));
+		
+		viewer.addClientViewerListener(viewerListener);
 	}
 	
 	protected void clear ()
@@ -105,7 +150,7 @@ public class StormFrontStatus extends Composite {
 	
 	private void updateStatus() {
 
-		ICharacterStatus status = client.getCharacterStatus();
+		ICharacterStatus status = viewer.getClient().getCharacterStatus();
 
 		if (status.hasStatus(ICharacterStatus.StatusType.Invisible)) {
 			if (status.hasStatus(ICharacterStatus.StatusType.Standing))
@@ -178,28 +223,22 @@ public class StormFrontStatus extends Composite {
 		statusLabels[5].setBackground(bg);
 	}
 	
-	public void loadSettings (IClientSettings settings) {	
-		Color bg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultBackground());
-		Color fg = ColorUtil.warlockColorToColor(WindowConfigurationProvider.getProvider(settings).getDefaultForeground());
+	private void loadSettings (IClientSettings settings) {
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		Color bg = ColorUtil.warlockColorToColor(provider.getDefaultBackground());
+		Color fg = ColorUtil.warlockColorToColor(provider.getDefaultForeground());
 		
 		setColors(fg, bg);
-	}
-	
-	public void setClient (IWarlockClient client) {
-		if (client == null || client == this.client)
-			return;
 		
-		client.getCharacterStatus().removeListener(statusListener);
-		this.client = client;
-		
-		clear();
-		client.getCharacterStatus().addListener(statusListener);
-		client.getTimer("roundtime").getProperty().addListener(rtListener);
-		client.getTimer("casttime").getProperty().addListener(ctListener);
-		
-		IClientSettings settings = client.getClientSettings();
-		if(settings != null)
-			loadSettings(settings);
+		if(settingListener == null) {
+			settingListener = new IWarlockSettingListener() {
+				@Override
+				public void settingChanged(IWarlockSetting setting) {
+					loadSettings(viewer.getClient().getClientSettings());
+				}
+			};
+			provider.addListener(settingListener);
+		}
 	}
 	
 }

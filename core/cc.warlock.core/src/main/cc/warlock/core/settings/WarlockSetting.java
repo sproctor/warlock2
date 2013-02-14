@@ -86,7 +86,7 @@ public class WarlockSetting implements IWarlockSetting {
 		}
 	}
 	
-	public void notifyListenersChanged() {
+	public synchronized void notifyListenersChanged() {
 		if(listeners != null) {
 			for(IWarlockSettingListener listener: listeners) {
 				listener.settingChanged(this);
@@ -97,14 +97,14 @@ public class WarlockSetting implements IWarlockSetting {
 		}
 	}
 	
-	public void addListener(IWarlockSettingListener listener) {
+	public synchronized void addListener(IWarlockSettingListener listener) {
 		if(listeners == null)
 			listeners = new ArrayList<IWarlockSettingListener>();
 		
 		listeners.add(listener);
 	}
 	
-	public boolean removeListener(IWarlockSettingListener listener) {
+	public synchronized boolean removeListener(IWarlockSettingListener listener) {
 		if(listeners == null)
 			return false;
 		
