@@ -44,8 +44,7 @@ import cc.warlock.rcp.views.GameView;
 
 public class LoginUtil {
 
-	public static void connect (StormFrontGameView gameView, Map<String,String> loginProperties)
-	{
+	public static void connect (StormFrontGameView gameView, Map<String,String> loginProperties) {
 		String server = loginProperties.get("GAMEHOST");
 		int port = Integer.parseInt (loginProperties.get("GAMEPORT"));
 		String key = loginProperties.get("KEY");
@@ -84,11 +83,9 @@ public class LoginUtil {
 		}
 	}
 	
-	public static GameView connectAndOpenGameView (Map<String,String> loginProperties, String characterName)
-	{
+	public static StormFrontGameView connectAndOpenGameView (Map<String,String> loginProperties, String characterName) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (!page.getPerspective().getId().equals(StormFrontPerspectiveFactory.PERSPECTIVE_ID))
-		{
+		if (!page.getPerspective().getId().equals(StormFrontPerspectiveFactory.PERSPECTIVE_ID)) {
 			RCPUtil.openPerspective(StormFrontPerspectiveFactory.PERSPECTIVE_ID);
 		}
 		
@@ -97,9 +94,7 @@ public class LoginUtil {
 			if (!(view instanceof StormFrontGameView))
 				continue;
 
-			if (view.getClient() == null
-					|| view.getClient().getConnection() == null
-					|| !view.getClient().getConnection().isConnected()) {
+			if (view.getClient() == null) {
 				firstEmptyView = (StormFrontGameView) view;
 				break;
 			}

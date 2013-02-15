@@ -100,7 +100,7 @@ public class WarlockCompass extends Canvas {
 		parent.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				setScale(parent.getSize().y - 10);
+				setScale(parent.getSize().y);
 			}
 		});
 		addMouseMoveListener(new MouseMoveListener() {

@@ -46,14 +46,13 @@ import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.util.LoginUtil;
 import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
 import cc.warlock.rcp.ui.network.SWTConnectionListenerAdapter;
-import cc.warlock.rcp.views.GameView;
 
 public class ProfileConnectAction extends Action implements ISGEConnectionListener, ILineConnectionListener {
 	private Profile profile;
 	private IProgressMonitor monitor;
 	private boolean finished;
 	private IStatus status;
-	private GameView gameView;
+	private StormFrontGameView gameView;
 	
 	public ProfileConnectAction (Profile profile) {
 		super(profile.getName(), StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
@@ -143,13 +142,11 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		{
 			// Check to see if there is an open gameView, and if it's connected.
 			// If it is, open a new one.
-			if (gameView == null || !(gameView instanceof StormFrontGameView) 
-					|| gameView.getClient() == null || gameView.getClient().getConnection() == null 
-					|| gameView.getClient().getConnection().isConnected()) {
+			if (gameView == null) {
 				gameView = LoginUtil.connectAndOpenGameView(loginProperties, profile.getName());
 				gameView.setProfile(profile);
 			} else {
-				LoginUtil.connect((StormFrontGameView) gameView, loginProperties);
+				LoginUtil.connect(gameView, loginProperties);
 			}
 		} else {
 			status = Status.CANCEL_STATUS;
@@ -158,7 +155,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		finished = true;
 	}
 
-	public void setGameView(GameView gameView) {
+	public void setGameView(StormFrontGameView gameView) {
 		this.gameView = gameView;
 	}
 

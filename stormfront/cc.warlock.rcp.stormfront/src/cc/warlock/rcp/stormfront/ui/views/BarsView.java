@@ -30,7 +30,6 @@ package cc.warlock.rcp.stormfront.ui.views;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,9 +65,16 @@ public class BarsView extends ViewPart {
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		container.setLayout(layout);
 		
-		book = new PageBook(parent, SWT.NONE);
-		book.setLayout(new FillLayout());
+		book = new PageBook(container, SWT.NONE);
+		book.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		setView(GameView.getGameViewInFocus());
 		
@@ -101,7 +107,12 @@ public class BarsView extends ViewPart {
 		public BarsPageView(Composite parent, GameView view) {
 			super(parent, SWT.NONE);
 			
-			this.setLayout(new GridLayout(3, false));
+			GridLayout layout = new GridLayout(3, false);
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+			layout.horizontalSpacing = 0;
+			layout.verticalSpacing = 0;
+			this.setLayout(layout);
 			
 			entry = new StormFrontEntry(this, view);
 			GridData entryData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);

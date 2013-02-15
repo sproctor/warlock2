@@ -69,7 +69,6 @@ import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
-import cc.warlock.rcp.ui.client.SWTWarlockClientViewer;
 import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.ui.style.StyleProviders;
@@ -78,19 +77,13 @@ import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.ConnectionView;
 import cc.warlock.rcp.views.GameView;
 
-public class StormFrontGameView extends GameView implements IWarlockClientViewer
-{
+public class StormFrontGameView extends GameView implements IWarlockClientViewer {
+	
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.StormFrontGameView";
 	
 	protected WarlockPopupAction reconnectPopup;
 	protected Font normalFont;
 	private Button reconnect;
-	
-	public StormFrontGameView () {
-		super();
-
-		wrapper = new SWTWarlockClientViewer(this);
-	}
 	
 	@Override
 	public void createPartControl(Composite parent) {
