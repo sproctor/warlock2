@@ -52,12 +52,17 @@ import cc.warlock.rcp.ui.style.CompassTheme;
  * This is our custom compass that is drawn on top of the text widget and is movable like a normal window (within the text area for now).
  * @author marshall
  */
-public class WarlockCompass extends Canvas implements IPropertyListener<ICompass> {
+public class WarlockCompass extends Canvas {
 
 	private Cursor moveCursor;
 	private CompassTheme theme;
 	private IWarlockClient client;
-	private IPropertyListener<ICompass> listener;
+	private IPropertyListener<ICompass> listener = new SWTPropertyListener<ICompass>(new IPropertyListener<ICompass>() {
+		@Override
+		public void propertyChanged(ICompass value) {
+			redraw();
+		}
+	});
 	private double scale = 1.0;
 	private Image scaledImage;
 	private HashMap<DirectionType, Image> scaledDirections = new HashMap<DirectionType, Image>();
@@ -169,12 +174,7 @@ public class WarlockCompass extends Canvas implements IPropertyListener<ICompass
 		}
 	}
 	
-	public void propertyChanged(ICompass value) {
-		redraw();
-	}
-	
 	public void setClient(IWarlockClient client) {
-		listener = new SWTPropertyListener<ICompass>(this);
 		client.getCompass().addListener(listener);
 		this.client = client;
 	}

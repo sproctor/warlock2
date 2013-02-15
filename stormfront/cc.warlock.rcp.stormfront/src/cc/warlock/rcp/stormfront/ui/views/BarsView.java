@@ -34,8 +34,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ViewPart;
 
@@ -113,14 +111,11 @@ public class BarsView extends ViewPart {
 			status = new StormFrontStatus(this, view);
 			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false));
 			
-			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 2);
-			compassData.heightHint = 64;
 			compass = new WarlockCompass(this, SWT.NONE, theme);
-			compass.setLayoutData(compassData);
+			compass.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 2));
 			
 			minivitals = new StormFrontDialogControl(this, SWT.NONE);
-			GridData mvData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-			minivitals.setLayoutData(mvData);
+			minivitals.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 			
 			view.setEntry(entry);
 			setClient(view.getClient());
