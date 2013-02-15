@@ -183,6 +183,8 @@ public class WarlockCompass extends Canvas {
 	}
 	
 	public void setClient(IWarlockClient client) {
+		if(this.client != null)
+			this.client.getCompass().removeListener(listener);
 		client.getCompass().addListener(listener);
 		this.client = client;
 	}
