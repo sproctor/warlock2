@@ -28,6 +28,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Cursor;
@@ -71,15 +72,15 @@ public class WarlockCompass extends Canvas {
 		
 		super(parent, style);
 		this.theme = theme;
-		moveCursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
+		moveCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
 		setScale(parent.getSize().y - 10);
 		
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				moveCursor.dispose();
 				moveCursor = null;
-				if(listener != null)
-					WarlockCompass.this.client.getCompass().removeListener(listener);
+				if(client != null)
+					client.getCompass().removeListener(listener);
 			}
 		});
 		addPaintListener(new PaintListener() {
@@ -90,16 +91,25 @@ public class WarlockCompass extends Canvas {
 		addMouseListener(new MouseListener() {
 			public void mouseDoubleClick(MouseEvent e) {}
 			public void mouseDown(MouseEvent e) {
-				// Should we use this to check the mouse wasn't moved while clicked?
+				// TODO Should we use this to check the mouse wasn't moved while clicked?
 			}
 			public void mouseUp(MouseEvent e) {
-				click(new Point(e.x, e.y));
+				click(e.x, e.y);
 			}
 		});
 		parent.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				setScale(parent.getSize().y - 10);
+			}
+		});
+		addMouseMoveListener(new MouseMoveListener() {
+			@Override
+			public void mouseMove(MouseEvent e) {
+				if(getDirectionAt(e.x, e.y) != null)
+					WarlockCompass.this.setCursor(moveCursor);
+				else
+					WarlockCompass.this.setCursor(null);
 			}
 		});
 	}
@@ -114,7 +124,6 @@ public class WarlockCompass extends Canvas {
 			scale = 1.0;
 		if(scaledImage != null)
 			scaledImage.dispose();
-		//System.out.println("size: " + (int)(width*scale)+","+(int)(height*scale));
 		if(windowHeight > 0) {
 			scaledImage = new Image(getDisplay(), data.scaledTo((int)(width*scale),
 				(int)(height*scale)));
@@ -138,40 +147,39 @@ public class WarlockCompass extends Canvas {
 		if(this.isDisposed() || gc.isDisposed())
 			return;
 		Image image = scaledImage == null ? theme.getMainImage() : scaledImage;
-		//gc.setClipping(0, 0, image.getImageData().width, image.getImageData().height);
 		gc.drawImage(image, 0, 0);
 		if (client != null && client.getCompass() != null && client.getCompass().get() != null) {
 			for (DirectionType direction : DirectionType.values()) {
 				if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction)) {
-					drawDirection(gc, direction);
+					Point point = theme.getDirectionPosition(direction);
+					gc.drawImage(scaledDirections.get(direction), (int)(point.x*scale), (int)(point.y*scale));
 				}
 			}
 		}
 	}
 	
-	private void drawDirection(GC gc, DirectionType direction) {
-		if(direction == DirectionType.None)
-			return;
-		Point point = theme.getDirectionPosition(direction);
-		gc.drawImage(scaledDirections.get(direction), (int)(point.x*scale), (int)(point.y*scale));
+	protected void click(int x, int y) {
+		DirectionType direction = getDirectionAt(x, y);
+		if(direction != null)
+			client.send(new Command(direction.getName()));
 	}
 	
-	protected void click(Point c) {
+	private DirectionType getDirectionAt(int x, int y) {
 		if (client == null || client.getCompass() == null || client.getCompass().get() == null)
-			return;
+			return null;
 		for (DirectionType direction : DirectionType.values()) {
 			if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction)) {
 				Point point = theme.getDirectionPosition(direction);
-				int x = (int)(point.x * scale);
-				int y = (int)(point.y * scale);
+				int dirx = (int)(point.x * scale);
+				int diry = (int)(point.y * scale);
 				int width = (int)(theme.getDirectionWidth(direction) * scale);
 				int height = (int)(theme.getDirectionHeight(direction) * scale);
-				if(c.x >= x && c.x <= x + width && c.y >= y && c.y <= y + height) {
-					client.send(new Command(direction.getName()));
-					break;
+				if(x >= dirx && x <= dirx + width && y >= diry && y <= diry + height) {
+					return direction;
 				}
 			}
 		}
+		return null;
 	}
 	
 	public void setClient(IWarlockClient client) {
