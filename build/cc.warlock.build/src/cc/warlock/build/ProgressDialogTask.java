@@ -39,12 +39,12 @@ public class ProgressDialogTask extends Task {
 	protected ArrayList<Integer> currents = new ArrayList<Integer>();
 	
 	
-	protected String[] array (List<String> list)
+	protected String[] str_array (List<String> list)
 	{
 		return list.toArray(new String [list.size()]);
 	}
 	
-	protected int[] array (List<Integer> list)
+	protected int[] int_array (List<Integer> list)
 	{
 		int[] array = new int[list.size()];
 		int i = 0;
@@ -70,7 +70,7 @@ public class ProgressDialogTask extends Task {
 			currents.add(bar.getCurrent());
 		}
 		
-		new ProgressDialog(name, icon, title, array(barNames), array(barMessages), array(mins), array(maxes), array(currents));
+		new ProgressDialog(name, icon, title, str_array(barNames), str_array(barMessages), int_array(mins), int_array(maxes), int_array(currents));
 	}
 	
 	protected ArrayList<ProgressBarTask> bars = new ArrayList<ProgressBarTask>();
