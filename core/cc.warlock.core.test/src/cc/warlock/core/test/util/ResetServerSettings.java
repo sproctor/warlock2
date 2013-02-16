@@ -11,9 +11,9 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.client.internal.StormFrontClient;
-import cc.warlock.core.stormfront.internal.SettingsInfoTagHandler;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
+import cc.warlock.core.stormfront.tags.SettingsInfoTagHandler;
 import cc.warlock.core.test.TestUtil;
 
 public class ResetServerSettings {
