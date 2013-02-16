@@ -37,6 +37,7 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 		this.client = client;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (IWarlockClient.class.isAssignableFrom(adapter))
 		{

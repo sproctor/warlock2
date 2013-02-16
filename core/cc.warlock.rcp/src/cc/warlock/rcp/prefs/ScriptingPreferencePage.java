@@ -53,24 +53,16 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.settings.DirectorySetting;
 
-public class ScriptingPreferencePage extends PropertyPage implements
-		IWorkbenchPropertyPage {
+public class ScriptingPreferencePage extends PropertyPage implements IWorkbenchPropertyPage {
 
-	//protected Text scriptPrefix;
 	protected TreeViewer scriptDirectories;
 	protected Button addScriptDir, removeScriptDir /*, moveUp, moveDown*/;
 	
-	// protected ArrayList<String> directories = new ArrayList<String>();
-	
-	public ScriptingPreferencePage() {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(3, false));
-//		main.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
 		new Label(main, SWT.NONE);
 		
@@ -89,7 +81,7 @@ public class ScriptingPreferencePage extends PropertyPage implements
 				return new Object[0];
 			}
 			public Object[] getElements(Object inputElement) {
-				return ((Collection<DirectorySetting>)inputElement).toArray();
+				return ((Collection<?>)inputElement).toArray();
 			}
 			public Object getParent(Object element) {return null;}
 			public boolean hasChildren(Object element) { return false; }

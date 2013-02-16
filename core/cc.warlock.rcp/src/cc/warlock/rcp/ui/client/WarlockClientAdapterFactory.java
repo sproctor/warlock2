@@ -25,12 +25,15 @@ import org.eclipse.core.runtime.IAdapterFactory;
 
 import cc.warlock.core.client.IWarlockClient;
 
+@SuppressWarnings("rawtypes")
 public class WarlockClientAdapterFactory implements IAdapterFactory {
 
+	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		return ((WarlockClientAdaptable)adaptableObject).getAdapter(adapterType);
 	}
-
+	
+	@Override
 	public Class[] getAdapterList() {
 		return new Class[] { IWarlockClient.class };
 	}

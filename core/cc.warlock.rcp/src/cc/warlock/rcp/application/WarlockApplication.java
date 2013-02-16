@@ -80,6 +80,7 @@ public class WarlockApplication implements IApplication, IAdaptable {
 	}
 	
 	public Object start(IApplicationContext context) throws Exception {
+		@SuppressWarnings("rawtypes")
 		Map args = context.getArguments();
 		String arguments[] = (String[]) args.get(IApplicationContext.APPLICATION_ARGS);
 		
@@ -114,6 +115,7 @@ public class WarlockApplication implements IApplication, IAdaptable {
 
 	// Generic getAdapter because this is used as a model for the CNF-based
 	// script view.
+	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (adapter.isInstance(this))
 			return this;

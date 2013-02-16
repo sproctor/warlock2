@@ -23,7 +23,6 @@ package cc.warlock.rcp.ui;
 
 import java.text.MessageFormat;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -248,10 +247,6 @@ public class ContentAssistCellEditor extends CellEditor
         Object typedValue = value;
         boolean oldValidState = isValueValid();
         boolean newValidState = isCorrect(typedValue);
-        if (typedValue == null && newValidState) {
-			Assert.isTrue(false,
-                    "Validator isn't limiting the cell editor's type range");//$NON-NLS-1$
-		}
         if (!newValidState) {
             // try to insert the current value into the error message.
             setErrorMessage(MessageFormat.format(getErrorMessage(),

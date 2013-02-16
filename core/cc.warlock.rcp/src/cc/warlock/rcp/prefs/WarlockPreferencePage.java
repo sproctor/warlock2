@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
@@ -52,7 +51,7 @@ public class WarlockPreferencePage extends PreferencePageUtils implements IWorkb
 		suppressScriptExceptionsButton = new Button(main, SWT.CHECK);
 		suppressScriptExceptionsButton.setText("Suppress Script Exceptions");
 		
-		Label label = new Label(main, SWT.HORIZONTAL);
+		//Label label = new Label(main, SWT.HORIZONTAL);
 		minRecordedCommand = new Spinner(main, SWT.NONE);
 		minRecordedCommand.setIncrement(1);
 		minRecordedCommand.setMinimum(0);
