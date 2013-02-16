@@ -23,7 +23,7 @@
 	</tr>
 	<tr>
 		<td><img class="platform" src="http://warlock.sf.net/images/mac.png" border="0" /></td>
-		<td><a href="http://downloads.sourceforge.net/warlock/${buildId}-${warlock-version}-macosx.carbon.ppc-installer.jar">Installer for Mac OS X (ppc)</a></td>
+		<td><a href="http://downloads.sourceforge.net/warlock/${buildId}-${warlock-version}-macosx.cocoa.x86-installer.jar">Installer for Mac OS X (x86)</a></td>
 	</tr>
 	</table>
 	</div>
@@ -46,7 +46,7 @@
 		</tr>
 		<tr>
 			<td><img class="platform" src="http://warlock.sf.net/images/mac.png" border="0" /></td>
-			<td><a href="http://downloads.sourceforge.net/warlock/${buildId}-${warlock-version}-macosx.carbon.ppc.tar.gz">Mac OS X (ppc, tar.gz)</a></td>
+			<td><a href="http://downloads.sourceforge.net/warlock/${buildId}-${warlock-version}-macosx.cocoa.x86.tar.gz">Mac OS X (x86, tar.gz)</a></td>
 		</tr>
 		</table>
 		</div>

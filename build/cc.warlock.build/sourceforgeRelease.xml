@@ -31,18 +31,18 @@
 		<getPlatformProperties platform="linux.gtk.x86"/> 
 		<getPlatformProperties platform="linux.gtk.x86_64"/>
 		<getPlatformProperties platform="win32.win32.x86"/>
-		<getPlatformProperties platform="macosx.carbon.ppc"/>
+		<getPlatformProperties platform="macosx.cocoa.x86"/>
 		
 		<echo>
 		Releasing ${warlock-version} on ${releasedate} files:
 	        ${linux.gtk.x86-installer}
 			${win32.win32.x86-installer}
 			${linux.gtk.x86_64-installer}
-			${macosx.carbon.ppc-installer}
+			${macosx.cocoa.x86-installer}
 			${linux.gtk.x86-binary}
 			${win32.win32.x86-binary}
 			${linux.gtk.x86_64-binary}
-			${macosx.carbon.ppc-binary}
+			${macosx.cocoa.x86-binary}
 		</echo>
 		
 		<exec executable="perl">
@@ -61,12 +61,12 @@
 			<arg value="${linux.gtk.x86-installer}"/>
 			<arg value="${linux.gtk.x86_64-installer}"/>
 			<arg value="${win32.win32.x86-installer}"/>
-			<arg value="${macosx.carbon.ppc-installer}"/>
+			<arg value="${macosx.cocoa.x86-installer}"/>
 			
 			<arg value="${linux.gtk.x86-binary}"/>
 			<arg value="${linux.gtk.x86_64-binary}"/>
 			<arg value="${win32.win32.x86-binary}"/>
-			<arg value="${macosx.carbon.ppc-binary}"/>
+			<arg value="${macosx.cocoa.x86-binary}"/>
 		</exec>
 			
 		<!--sfpublish releasename="${warlock-version}"
