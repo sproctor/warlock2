@@ -8,10 +8,11 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class WarlockPreferencesScope {
 	private static WarlockPreferencesScope instance = new WarlockPreferencesScope();
-	private WarlockPreferences preferences = new WarlockPreferences(ConfigurationScope.INSTANCE.getNode("cc.warlock"));
+	protected ConfigurationScope scope = new ConfigurationScope();
+	private WarlockPreferences preferences = new WarlockPreferences(scope.getNode("cc.warlock"));
 	
 	protected WarlockPreferencesScope() {
-		System.out.println("Configuration location: " + ConfigurationScope.INSTANCE.getLocation().toString());
+		System.out.println("Configuration location: " + scope.getLocation().toString());
 		try {
 			preferences.sync();
 		} catch(BackingStoreException e) {
@@ -28,11 +29,11 @@ public class WarlockPreferencesScope {
 	}
 	
 	public void addNodeChangeListener(IWarlockSetting setting, INodeChangeListener listener) {
-		ConfigurationScope.INSTANCE.getNode(setting.getNode().absolutePath()).addNodeChangeListener(listener);
+		scope.getNode(setting.getNode().absolutePath()).addNodeChangeListener(listener);
 	}
 	
 	public void addPreferenceChangeListener(IWarlockSetting setting, IPreferenceChangeListener listener) {
-		ConfigurationScope.INSTANCE.getNode(setting.getNode().absolutePath()).addPreferenceChangeListener(listener);
+		scope.getNode(setting.getNode().absolutePath()).addPreferenceChangeListener(listener);
 	}
 	
 	public void flush() {
