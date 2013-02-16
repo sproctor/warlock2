@@ -8,11 +8,7 @@
   <packaging>pom</packaging>
   <name>Warlock 2 Build</name>
   
-  <properties>
-    <tycho-version>0.16.0</tycho-version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
+
   <modules>
     <module>../../core/cc.warlock.core</module>
     <module>../../core/cc.warlock.core.script</module>
@@ -21,6 +17,19 @@
     <module>../../core/cc.warlock.rcp</module>
     <module>../../stormfront/cc.warlock.rcp.stormfront</module>
   </modules>
+  
+  <properties>
+    <tycho-version>0.16.0</tycho-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <repositories>
+    <repository>
+      <id>indigo</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/indigo</url>
+    </repository>
+  </repositories>
   
   <build>
     <plugins>
