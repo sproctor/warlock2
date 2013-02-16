@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.7"?>
-
+<?pde version="3.5"?>
 <product name="Warlock 2" id="cc.warlock.rcp.product" application="cc.warlock.rcp.warlock" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
