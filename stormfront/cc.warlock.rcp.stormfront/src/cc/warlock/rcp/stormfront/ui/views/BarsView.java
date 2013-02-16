@@ -60,6 +60,7 @@ public class BarsView extends ViewPart {
 	private PageBook book;
 	private HashMap<GameView, Composite> pages = new HashMap<GameView, Composite>();
 	private CompassTheme theme = CompassThemes.getCompassTheme("small");
+	private GameView activeGame;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -76,23 +77,23 @@ public class BarsView extends ViewPart {
 		book = new PageBook(container, SWT.NONE);
 		book.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		setView(GameView.getGameViewInFocus());
+		setGame(GameView.getGameViewInFocus());
 		
 		GameView.addGameViewFocusListener(new IGameViewFocusListener () {
 			public void gameViewFocused(GameView gameView) {
-				setView(gameView);
+				setGame(gameView);
 			}
 		});
 	}
 	
-	protected void setView(GameView view) {
-		if(view == null)
+	protected void setGame(GameView game) {
+		if(game == null || activeGame == game)
 			return;
 		
-		Composite page = pages.get(view);
+		Composite page = pages.get(game);
 		if(page == null) {
-			page = new BarsPageView(book, view);
-			pages.put(view, page);
+			page = new BarsPageView(book, game);
+			pages.put(game, page);
 		}
 		book.showPage(page);
 	}

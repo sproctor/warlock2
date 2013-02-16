@@ -47,8 +47,9 @@ public class PromptTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
+		handler.flushBuffer();
 		handler.clearStyles();
-		handler.clearDest();
+		handler.clearStreams();
 		prompt.setLength(0);
 		
 		if (attributes.getValue("time") != null)

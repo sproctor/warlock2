@@ -54,6 +54,6 @@ public class PushStreamTagHandler extends DefaultTagHandler {
 		if(closedStyle != null && closedStream != null)
 			closedStream.setClosedStyle(closedStyle);
 		
-		handler.setDestStream(id);
+		handler.pushStream(id);
 	}
 }

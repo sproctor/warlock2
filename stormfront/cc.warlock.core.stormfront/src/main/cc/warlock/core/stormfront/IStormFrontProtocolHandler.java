@@ -29,6 +29,7 @@ package cc.warlock.core.stormfront;
 
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.xml.IStormFrontXMLHandler;
 
@@ -43,14 +44,14 @@ public interface IStormFrontProtocolHandler extends IStormFrontXMLHandler {
 	public void registerHandler(IStormFrontTagHandler tagHandler);
 	
 	public IStormFrontClient getClient();
-	public void setDestStream(String name);
-	public void setDestComponent(String id);
+	public void pushStream(String name);
+	public void popStream();
+	public void clearStreams();
 	public IStream getCurrentStream();
 	
 	public void addStyle(IWarlockStyle style);
 	public void removeStyle(IWarlockStyle style);
 	public void clearStyles();
-	public void clearDest();
 	public void startBold();
 	public void stopBold();
 	
@@ -59,4 +60,8 @@ public interface IStormFrontProtocolHandler extends IStormFrontXMLHandler {
 	public int getMonsterCount();
 	
 	public IStormFrontTagHandler getTagHandler(Class<? extends IStormFrontTagHandler> handlerType);
+	
+	public void flushBuffer();
+	public WarlockString getBuffer();
+	public void clearBuffer();
 }

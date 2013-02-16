@@ -45,15 +45,14 @@ public class StreamTagHandler extends DefaultTagHandler {
 		 {
 			String streamId = id;
 			
-			handler.setDestStream(streamId);
+			handler.pushStream(streamId);
 		 }
 	}
 	 
 	 @Override
 	public void handleEnd(String rawXML) {
-		 // TODO flush the buffer here manually
-		 // force append a new-line.. most of the use of <stream>xxx</stream> doesn't have newlines, so the buffer won't flush
-		 handler.characters("\n");
-		 handler.clearDest();
+		 // TODO We used to append a newline here. should we still?
+		 handler.flushBuffer();
+		 handler.popStream();
 	}
 }

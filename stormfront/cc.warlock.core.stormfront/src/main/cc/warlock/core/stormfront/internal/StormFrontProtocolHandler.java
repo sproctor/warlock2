@@ -27,6 +27,7 @@
  */
 package cc.warlock.core.stormfront.internal;
 
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -88,61 +89,15 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
 	protected IStormFrontClient client;
 	protected HashMap<String, IStormFrontTagHandler> defaultTagHandlers = new HashMap<String, IStormFrontTagHandler>();
-	protected TextDest textDest = null;
 	protected Stack<String> tagStack = new Stack<String>();
+	private Stack<IStream> streamStack = new Stack<IStream>();
 	protected Stack<WarlockStringMarker> styleStack = new Stack<WarlockStringMarker>();
-	private WarlockString buffer = null;
+	private WarlockString buffer = new WarlockString();
 	protected int currentSpacing = 0;
 	protected int monsterCount = 0;
 	protected IWarlockStyle boldStyle = null;
 	private boolean lineHasTag = false;
 	private boolean lineHasContent = false;
-	
-	protected interface TextDest {
-		public void put(WarlockString text);
-		public void flush();
-		public IStream getStream();
-	}
-	
-	protected class StreamTextDest implements TextDest {
-		private IStream stream;
-		
-		public StreamTextDest(IStream stream) {
-			this.stream = stream;
-		}
-		
-		public void put(WarlockString text) {
-			stream.put(text);
-		}
-		
-		public IStream getStream() {
-			return stream;
-		}
-		
-		public void flush() { }
-	}
-	
-	protected class ComponentTextDest implements TextDest {
-		private WarlockString buffer = new WarlockString();
-		private String id;
-		
-		public ComponentTextDest(String id) {
-			this.id = id;
-		}
-		
-		public void put(WarlockString text) {
-			buffer.append(text);
-		}
-		
-		public IStream getStream() {
-			return null;
-		}
-		
-		public void flush() {
-			client.updateComponent(id, buffer);
-			buffer = null;
-		}
-	}
 	
  	public StormFrontProtocolHandler(IStormFrontClient client) {
 		
@@ -217,36 +172,23 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	/*
 	 *  push a stream onto the stack
 	 */
-	public void setDestStream(String streamId) {
-		clearDest();
+	public void pushStream(String streamId) {
 		IStream stream = client.getStream(streamId);
-		if(stream != null)
-			textDest = new StreamTextDest(stream);
+		streamStack.push(stream);
 		lineHasContent = false;
 	}
 	
-	public void setDestComponent(String id) {
-		clearDest();
-		textDest = new ComponentTextDest(id);
-		lineHasContent = false;
-	}
-	
-	public void clearDest() {
-		clearStyles();
-		if(textDest != null) {
-			textDest.flush();
-			textDest = null;
+	public void popStream() {
+		try {
+			streamStack.pop();
+		} catch(EmptyStackException e) {
+			e.printStackTrace();
 		}
 		lineHasContent = false;
 	}
 
-	public IStream getCurrentStream ()
-	{
-		IStream stream;
-		if(textDest == null || (stream = textDest.getStream()) == null)
-			return this.getCurrentStream();
-		
-		return stream;
+	public IStream getCurrentStream() {
+		return streamStack.peek();
 	}
 	
 	/* (non-Javadoc)
@@ -256,26 +198,19 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		// if there was no handler or it couldn't handle the characters,
 		// take a default action
 		if(!handleCharacters(characters)) {
-			if(styleStack.isEmpty()) {
-				String str = characters;
-				// Suppress newlines following tags when the line is empty
-				if(lineHasTag && !lineHasContent) {
-					if(str.startsWith("\n"))
-						str = str.substring(1);
-					else if(str.startsWith("\r\n"))
-						str = str.substring(2);
-				}
-				
-				if(str.length() > 0) {
-					WarlockString text = new WarlockString(str);
-					if(textDest != null)
-						textDest.put(text);
-					else
-						client.getDefaultStream().put(text);
-				}
-			} else {
-				buffer.append(characters);
+			String str = characters;
+			// Suppress newlines following tags when the line is empty
+			if(lineHasTag && !lineHasContent) {
+				if(str.startsWith("\n"))
+					str = str.substring(1);
+				else if(str.startsWith("\r\n"))
+					str = str.substring(2);
 			}
+			
+			// user the buffer
+			buffer.append(str);
+			if(styleStack.empty() && tagStack.empty())
+				flushBuffer();
 			
 			if(characters.contains("\n"))
 				lineHasTag = false;
@@ -306,7 +241,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	 */
 	public void endElement(String name, String rawXML) {
 		// Get the tag name off the stack
-		if(tagStack.size() == 0 || !name.equals(tagStack.peek())) {
+		if(tagStack.empty() || !name.equals(tagStack.peek())) {
 			System.err.println("Unexpected close tag \"" + name + "\".");
 		} else {
 			tagStack.pop();
@@ -315,7 +250,6 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		// call the method for the object
 		IStormFrontTagHandler tagHandler = getTagHandlerForElement(name);
 		if(tagHandler != null) {
-			
 			tagHandler.setCurrentTag(name);
 			tagHandler.handleEnd(rawXML);
 		}
@@ -344,7 +278,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	}
 	
 	private IStormFrontTagHandler getTagHandlerForElement(String name) {
-		if(tagStack.size() == 0)
+		if(tagStack.empty())
 			return defaultTagHandlers.get(name);
 		
 		IStormFrontTagHandler rv = getTagHandlerForElementHelper(name, null, 0, false);
@@ -398,9 +332,6 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	}
 	
 	public void addStyle(IWarlockStyle style) {
-		if(buffer == null)
-			buffer = new WarlockString();
-		
 		WarlockStringMarker marker = new WarlockStringMarker(style,
 				buffer.length(), buffer.length());
 		
@@ -417,38 +348,35 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	}
 	
 	public void removeStyle(IWarlockStyle style) {
-		if(styleStack.isEmpty() || styleStack.peek().getStyle() != style)
+		if(styleStack.empty() || styleStack.peek().getStyle() != style)
 			return;
 		
 		WarlockStringMarker marker = styleStack.pop();
 		marker.setEnd(buffer.length());
 		
-		if(styleStack.isEmpty()) {
+		if(styleStack.empty() && tagStack.empty()) {
 			flushBuffer();
 		}
 	}
 	
-	private void flushBuffer() {
-		if(buffer == null)
-			return;
-		
-		if(textDest != null)
-			textDest.put(buffer);
-		else
-			client.getDefaultStream().put(buffer);
-		buffer = null;
+	public void flushBuffer() {	
+		put(buffer);
+		buffer = new WarlockString();
+	}
+	
+	private void put(WarlockString str) {
+		if(streamStack.empty()) {
+			client.getDefaultStream().put(str);
+		} else {
+			streamStack.peek().put(str);
+		}
 	}
 	
 	public void clearStyles() {
 		boldStyle = null;
-		if(buffer == null) {
-			styleStack.clear();
-		} else {
-			while(!styleStack.isEmpty()) {
-				WarlockStringMarker marker = styleStack.pop();
-				marker.setEnd(buffer.length());
-			}
-			flushBuffer();
+		while(!styleStack.isEmpty()) {
+			WarlockStringMarker marker = styleStack.pop();
+			marker.setEnd(buffer.length());
 		}
 	}
 	
@@ -487,5 +415,17 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
 	public int getMonsterCount() {
 		return monsterCount;
+	}
+	
+	public WarlockString getBuffer() {
+		return buffer;
+	}
+	
+	public void clearBuffer() {
+		buffer = new WarlockString();
+	}
+	
+	public void clearStreams() {
+		streamStack.clear();
 	}
 }

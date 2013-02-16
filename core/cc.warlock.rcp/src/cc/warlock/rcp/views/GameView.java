@@ -211,8 +211,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public void setFocus() {
 		super.setFocus();
 		gameInFocus = this;
-		for (IGameViewFocusListener listener : focusListeners)
-		{
+		for (IGameViewFocusListener listener : focusListeners) {
 			listener.gameViewFocused(this);
 		}
 	}

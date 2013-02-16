@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.stormfront.tags;
 
+import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
@@ -48,7 +49,7 @@ public class ComponentTagHandler extends DefaultTagHandler {
 		if(id.equals("room objs"))
 			handler.resetMonsterCount();
 		
-		handler.setDestComponent(id);
+		//handler.setDestComponent(id);
 	}
 	
 	@Override
@@ -61,7 +62,9 @@ public class ComponentTagHandler extends DefaultTagHandler {
 			handler.getClient().setProperty("monstercount", String.valueOf(count));
 		}
 		
-		handler.clearDest();
+		WarlockString str = handler.getBuffer();
+		handler.getClient().updateComponent(id, str);
+		handler.clearBuffer();
 	}
 
 }
