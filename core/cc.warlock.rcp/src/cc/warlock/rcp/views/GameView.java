@@ -63,10 +63,9 @@ import cc.warlock.rcp.util.SoundPlayer;
 public abstract class GameView extends WarlockView implements IWarlockClientViewer {
 	public static final String VIEW_ID = "cc.warlock.rcp.ui.views.GameView";
 	
-	protected static boolean firstInstanceIsUsed = false;
-	protected static ArrayList<GameView> openViews = new ArrayList<GameView>();
-	protected static ArrayList<IGameViewFocusListener> focusListeners = new ArrayList<IGameViewFocusListener>();
-	protected static GameView gameInFocus;
+	private static ArrayList<GameView> openViews = new ArrayList<GameView>();
+	private static ArrayList<IGameViewFocusListener> focusListeners = new ArrayList<IGameViewFocusListener>();
+	private static GameView gameInFocus;
 	
 	protected PageBook popupPageBook;
 	protected Label emptyPopup;
@@ -90,13 +89,11 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 
 	}
 	
-	public static void addGameViewFocusListener (IGameViewFocusListener listener)
-	{
+	public static void addGameViewFocusListener (IGameViewFocusListener listener) {
 		focusListeners.add(listener);
 	}
 	
-	public static void removeGameViewFocusListener (IGameViewFocusListener listener)
-	{
+	public static void removeGameViewFocusListener (IGameViewFocusListener listener) {
 		focusListeners.remove(listener);
 	}
 	
@@ -105,17 +102,14 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		return openViews;
 	}
 	
-	public static GameView getGameViewInFocus ()
-	{
+	public static GameView getGameViewInFocus () {
 		return gameInFocus;
 	}
 	
-	public static void initializeGameView (GameView gameView)
-	{
+	public static void initializeGameView (GameView gameView) {
 		gameInFocus = gameView;
 		
-		if (ConnectionView.closeAfterConnect)
-		{
+		if (ConnectionView.closeAfterConnect) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IViewPart part = page.findView(ConnectionView.VIEW_ID);
 			if (part != null)
@@ -182,7 +176,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 					// All done with client, dispose of it so it can do whatever it needs to to be done.
 					client.dispose();
 				}
-				openViews.remove(this);
+				openViews.remove(GameView.this);
 				if (gameInFocus == GameView.this) {
 					gameInFocus = null;
 				}

@@ -100,16 +100,13 @@ public class LoginUtil {
 			}
 		}
 		
-		if (firstEmptyView != null)
-		{
+		if (firstEmptyView != null) {
 			// reuse the existing view if it's already created
 			
 			GameView.initializeGameView(firstEmptyView);
 			connect(firstEmptyView, loginProperties);
 			return firstEmptyView;
-		}
-		else 
-		{
+		} else {
 			StormFrontGameView gameView = (StormFrontGameView) StormFrontGameView.createNext(StormFrontGameView.VIEW_ID, characterName);
 			connect(gameView, loginProperties);
 			return gameView;
