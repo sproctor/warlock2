@@ -82,8 +82,15 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 
 	public IWarlockStyle getStyle(String id) {
 		IWarlockStyle style = styleSettings.get(id);
-		if(style == null)
-			style = defaultStyles.get(id);
+		if(style == null) {
+			style = new StyleSetting(this, id, true);
+			IWarlockStyle defaults = defaultStyles.get(id);
+			if(defaults != null) {
+				style.setBackgroundColor(defaults.getBackgroundColor());
+				style.setForegroundColor(defaults.getForegroundColor());
+				style.setFullLine(defaults.isFullLine());
+			}
+		}
 		
 		return style;
 	}
