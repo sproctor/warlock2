@@ -11,6 +11,10 @@
    </aboutInfo>
 
    <configIni use="default">
+      <linux>/cc.warlock.rcp/config.ini</linux>
+      <macosx>/cc.warlock.rcp/config.ini</macosx>
+      <solaris>/cc.warlock.rcp/config.ini</solaris>
+      <win32>/cc.warlock.rcp/config.ini</win32>
    </configIni>
 
    <launcherArgs>
@@ -47,7 +51,6 @@
       <plugin id="cc.warlock.rcp"/>
       <plugin id="cc.warlock.rcp.stormfront"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="javax.servlet"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.compare.core"/>
       <plugin id="org.eclipse.core.commands"/>
@@ -65,6 +68,7 @@
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.net"/>
       <plugin id="org.eclipse.core.net.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.net.linux.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.net.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
@@ -74,13 +78,6 @@
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
-      <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
-      <plugin id="org.eclipse.equinox.p2.core"/>
-      <plugin id="org.eclipse.equinox.p2.engine"/>
-      <plugin id="org.eclipse.equinox.p2.jarprocessor"/>
-      <plugin id="org.eclipse.equinox.p2.metadata"/>
-      <plugin id="org.eclipse.equinox.p2.metadata.repository"/>
-      <plugin id="org.eclipse.equinox.p2.repository"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
