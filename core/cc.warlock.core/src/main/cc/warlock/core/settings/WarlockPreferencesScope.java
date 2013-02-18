@@ -1,17 +1,21 @@
 package cc.warlock.core.settings;
 
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.service.prefs.BackingStoreException;
 
 
 public class WarlockPreferencesScope {
-	private static WarlockPreferencesScope instance = new WarlockPreferencesScope();
-	private WarlockPreferences preferences = new WarlockPreferences(ConfigurationScope.INSTANCE.getNode("cc.warlock"));
+	
+	private static final WarlockPreferencesScope instance = new WarlockPreferencesScope();
+	
+	private final IScopeContext scope = InstanceScope.INSTANCE;
+	private WarlockPreferences preferences = new WarlockPreferences(scope.getNode("cc.warlock"));
 	
 	protected WarlockPreferencesScope() {
-		System.out.println("Configuration location: " + ConfigurationScope.INSTANCE.getLocation().toString());
+		System.out.println("Configuration location: " + scope.getLocation());
 		try {
 			preferences.sync();
 		} catch(BackingStoreException e) {
@@ -28,11 +32,11 @@ public class WarlockPreferencesScope {
 	}
 	
 	public void addNodeChangeListener(IWarlockSetting setting, INodeChangeListener listener) {
-		ConfigurationScope.INSTANCE.getNode(setting.getNode().absolutePath()).addNodeChangeListener(listener);
+		scope.getNode(setting.getNode().absolutePath()).addNodeChangeListener(listener);
 	}
 	
 	public void addPreferenceChangeListener(IWarlockSetting setting, IPreferenceChangeListener listener) {
-		ConfigurationScope.INSTANCE.getNode(setting.getNode().absolutePath()).addPreferenceChangeListener(listener);
+		scope.getNode(setting.getNode().absolutePath()).addPreferenceChangeListener(listener);
 	}
 	
 	public void flush() {
