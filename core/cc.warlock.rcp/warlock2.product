@@ -11,10 +11,6 @@
    </aboutInfo>
 
    <configIni use="default">
-      <linux>/cc.warlock.rcp/config.ini</linux>
-      <macosx>/cc.warlock.rcp/config.ini</macosx>
-      <solaris>/cc.warlock.rcp/config.ini</solaris>
-      <win32>/cc.warlock.rcp/config.ini</win32>
    </configIni>
 
    <launcherArgs>
@@ -124,7 +120,10 @@
    </features>
 
    <configurations>
+      <property name="osgi.bundles" value="org.eclipse.equinox.common@2:start,org.eclipse.update.configurator@3:start,org.eclipse.core.runtime@start" />
+      <property name="osgi.bundles.defaultStartLevel" value="4" />
       <property name="osgi.configuration.area" value="@user.home/.warlock2" />
+      <property name="osgi.splashPath" value="platform:/base/plugins/cc.warlock.rcp" />
    </configurations>
 
 </product>
