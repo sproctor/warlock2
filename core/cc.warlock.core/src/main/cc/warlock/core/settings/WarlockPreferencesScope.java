@@ -1,9 +1,9 @@
 package cc.warlock.core.settings;
 
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.service.prefs.BackingStoreException;
 
 
@@ -11,7 +11,7 @@ public class WarlockPreferencesScope {
 	
 	private static final WarlockPreferencesScope instance = new WarlockPreferencesScope();
 	
-	private final IScopeContext scope = InstanceScope.INSTANCE;
+	private final IScopeContext scope = ConfigurationScope.INSTANCE;
 	private WarlockPreferences preferences = new WarlockPreferences(scope.getNode("cc.warlock"));
 	
 	protected WarlockPreferencesScope() {

@@ -40,10 +40,8 @@
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="cc.warlock.core"/>
@@ -125,5 +123,8 @@
       <feature id="cc.warlock.feature" version="2.0.238.snapshot"/>
    </features>
 
+   <configurations>
+      <property name="osgi.configuration.area" value="@user.home/.warlock2" />
+   </configurations>
 
 </product>
