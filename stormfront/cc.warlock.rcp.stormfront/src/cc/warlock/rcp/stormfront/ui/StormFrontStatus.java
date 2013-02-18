@@ -59,7 +59,7 @@ public class StormFrontStatus extends Composite {
 	});
 	protected DecorationOverlayIcon multipleStatus;
 	protected Image multipleStatusImage;
-	private SWTPropertyListener<Integer> rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
+	private final SWTPropertyListener<Integer> rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
 		public void propertyChanged(Integer value) {
 			if (value == 0)
 				statusLabels[4].setText("");
@@ -67,7 +67,7 @@ public class StormFrontStatus extends Composite {
 				statusLabels[4].setText(value.toString());
 		}
 	});
-	private SWTPropertyListener<Integer> ctListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
+	private final SWTPropertyListener<Integer> ctListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
 		public void propertyChanged(Integer value) {
 			if (value == 0)
 				statusLabels[5].setText("");
@@ -75,7 +75,7 @@ public class StormFrontStatus extends Composite {
 				statusLabels[5].setText(value.toString());
 		}
 	});
-	private SWTWarlockClientViewerListener viewerListener = new SWTWarlockClientViewerListener(new IWarlockClientViewerListener() {
+	private final SWTWarlockClientViewerListener viewerListener = new SWTWarlockClientViewerListener(new IWarlockClientViewerListener() {
 		@Override
 		public void clientChanged(IWarlockClient client) {
 			if (client == null)

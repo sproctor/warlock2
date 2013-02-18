@@ -49,6 +49,8 @@ public class Property<T> implements IProperty<T> {
 	}
 	
 	public void addListener(IPropertyListener<T> listener) {
+		if(listener == null)
+			return;
 		listeners.add(listener);
 	}
 	

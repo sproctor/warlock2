@@ -18,18 +18,8 @@ public class StormFrontEntry extends WarlockEntry {
 	private int rt;
 	private int ct;
 	
-	private SWTPropertyListener<Integer> rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
-		public void propertyChanged(Integer value) {
-			rt = value;
-			widget.redraw();
-		}
-	});
-	private SWTPropertyListener<Integer> ctListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
-		public void propertyChanged(Integer value) {
-			ct = value;
-			widget.redraw();
-		}
-	});
+	private SWTPropertyListener<Integer> rtListener;
+	private SWTPropertyListener<Integer> ctListener;
 	
 	public StormFrontEntry (Composite parent, IWarlockClientViewer viewer) {
 		super(parent, viewer);
@@ -73,6 +63,20 @@ public class StormFrontEntry extends WarlockEntry {
 		}
 		this.client = client;
 		if (client != null) {
+			if(rtListener == null)
+				rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
+					public void propertyChanged(Integer value) {
+						rt = value;
+						widget.redraw();
+					}
+				});
+			if(ctListener == null)
+				ctListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
+					public void propertyChanged(Integer value) {
+						ct = value;
+						widget.redraw();
+					}
+				});
 			client.getTimer("roundtime").getProperty().addListener(rtListener);
 			client.getTimer("casttime").getProperty().addListener(ctListener);
 		}
