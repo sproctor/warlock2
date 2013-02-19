@@ -47,6 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import cc.warlock.core.settings.Account;
@@ -202,8 +203,7 @@ public class CharacterSelectWizardPage extends WizardPage {
 			CharacterSelectWizardPage.this.characters.setEnabled(true);
 		}
 		
-		public void readyToPlay (SGEConnection connection, Map<String,String> loginProperties)
-		{
+		public void readyToPlay (SGEConnection connection, Map<String,String> loginProperties) {
 			if (monitor != null) {
 				monitor.worked(1);
 				//monitor.done();
@@ -216,8 +216,7 @@ public class CharacterSelectWizardPage extends WizardPage {
 			if (account != null && !getSelectedCharacterCode().equals(SGEConnection.NEW_CHARACTER_CODE))
 			{
 				boolean exists = false;
-				for (Profile profile : account.getProfiles())
-				{
+				for (Profile profile : account.getProfiles()) {
 					if (getSelectedCharacterName().equals(profile.getName())) {
 						exists = true;
 						break;
@@ -225,12 +224,12 @@ public class CharacterSelectWizardPage extends WizardPage {
 				}
 					
 				if (!exists) {
-					boolean response = MessageDialog.openQuestion(getShell(),
+					Shell shell = getShell();
+					boolean response = MessageDialog.openQuestion(shell,
 						"Save Profile?",
 						"Would you like to save the character \"" + getSelectedCharacterName() + "\" as a new profile?");
 					
-					if (response)
-					{
+					if (response) {
 						account.getProfileProvider().createProfile(getSelectedCharacterCode(), getSelectedCharacterName(), gameSelectPage.getSelectedGameCode(), gameSelectPage.getSelectedGameName());
 						account.getProfileProvider().flush();
 					}

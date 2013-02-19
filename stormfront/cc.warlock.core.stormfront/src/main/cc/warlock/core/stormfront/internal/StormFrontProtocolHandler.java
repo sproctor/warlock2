@@ -173,12 +173,16 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	 *  push a stream onto the stack
 	 */
 	public void pushStream(String streamId) {
+		clearStyles();
+		flushBuffer();
 		IStream stream = client.getStream(streamId);
 		streamStack.push(stream);
 		lineHasContent = false;
 	}
 	
 	public void popStream() {
+		clearStyles();
+		flushBuffer();
 		try {
 			streamStack.pop();
 		} catch(EmptyStackException e) {
@@ -335,7 +339,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		WarlockStringMarker marker = new WarlockStringMarker(style,
 				buffer.length(), buffer.length());
 		
-		if(!styleStack.isEmpty()) {
+		if(!styleStack.empty()) {
 			WarlockStringMarker lastStyle = styleStack.peek();
 			lastStyle.addMarker(marker);
 		} else {
@@ -374,7 +378,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
 	public void clearStyles() {
 		boldStyle = null;
-		while(!styleStack.isEmpty()) {
+		while(!styleStack.empty()) {
 			WarlockStringMarker marker = styleStack.pop();
 			marker.setEnd(buffer.length());
 		}
@@ -423,6 +427,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
 	public void clearBuffer() {
 		buffer = new WarlockString();
+		lineHasContent = false;
 	}
 	
 	public void clearStreams() {

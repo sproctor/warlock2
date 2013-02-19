@@ -41,7 +41,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 public class CompDefTagHandler extends DefaultTagHandler {
 	
 	protected String id;
-	protected StringBuffer buffer = new StringBuffer();
+	protected StringBuffer buffer;
 	protected WarlockStyle style;
 	
 	public CompDefTagHandler (IStormFrontProtocolHandler handler) {
@@ -59,17 +59,17 @@ public class CompDefTagHandler extends DefaultTagHandler {
 			handler.removeStyle(style);
 			style = null;
 		}
-		buffer.setLength(0);
+		buffer = new StringBuffer();
 		
 		id = attributes.getValue("id");
 		if(id == null)
 			return;
+		if(id.equals("room objs"))
+			handler.resetMonsterCount();
 		
 		style = new WarlockStyle();
 		style.setComponentName(id);
 		handler.addStyle(style);
-		if(id.equals("room objs"))
-			handler.resetMonsterCount();
 	}
 	
 	@Override

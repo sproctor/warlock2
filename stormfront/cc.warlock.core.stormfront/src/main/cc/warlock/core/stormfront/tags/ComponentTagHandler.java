@@ -49,6 +49,7 @@ public class ComponentTagHandler extends DefaultTagHandler {
 		if(id.equals("room objs"))
 			handler.resetMonsterCount();
 		
+		handler.flushBuffer();
 		//handler.setDestComponent(id);
 	}
 	

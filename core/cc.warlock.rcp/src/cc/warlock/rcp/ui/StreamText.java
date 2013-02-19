@@ -94,7 +94,6 @@ public class StreamText extends WarlockText implements IStreamListener {
 	private synchronized void flushBuffer() {
 		if(textBuffer != null) {
 			append(textBuffer);
-			textBuffer.clear();
 			textBuffer = null;
 		}
 	}
