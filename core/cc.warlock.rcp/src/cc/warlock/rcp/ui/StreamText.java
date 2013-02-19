@@ -140,7 +140,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	public void streamReceivedText(IStream stream, WarlockString text) {
 		WarlockString string = new WarlockString();
 		
-		if (isPrompting) {
+		if (isPrompting && text.length() > 0) {
 			string.append("\n");
 			isPrompting = false;
 		}
