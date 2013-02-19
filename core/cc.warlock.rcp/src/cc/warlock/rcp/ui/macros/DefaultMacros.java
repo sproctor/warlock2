@@ -119,7 +119,7 @@ public class DefaultMacros {
 	}
 	
 	private void createDefaultMacro(String command, int keycode, int modifier) {
-		macros.add(new WarlockMacro(command, MacroRegistry.instance().getKeyString(keycode, modifier)));
+		macros.add(new WarlockMacro(MacroRegistry.instance().getKeyString(keycode, modifier), command));
 	}
 	
 	public Collection<WarlockMacro> getCollection() {
