@@ -58,6 +58,7 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -92,9 +93,10 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		
 		//textBorder = new StormFrontTextBorder(text);
 		
-		//String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
-		
 		IProfile profile = getProfile();
+		if(profile == null) {
+			profile = AccountProvider.getInstance().getProfileByViewId(getViewId());
+		}
 		createReconnectPopup();
 		
 		if (profile != null) {
@@ -384,10 +386,10 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 //		});
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class adapter) {
-		if (IStormFrontClient.class.equals(adapter))
-		{
+		if (IStormFrontClient.class.equals(adapter)) {
 			return getClient();
 		}
 		return super.getAdapter(adapter);

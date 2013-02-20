@@ -26,8 +26,10 @@ package cc.warlock.rcp.views;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -66,6 +68,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	private static ArrayList<GameView> openViews = new ArrayList<GameView>();
 	private static ArrayList<IGameViewFocusListener> focusListeners = new ArrayList<IGameViewFocusListener>();
 	private static GameView gameInFocus;
+	private static final Random generator = new Random(new Date().getTime());
 	
 	protected PageBook popupPageBook;
 	protected Label emptyPopup;
@@ -117,10 +120,10 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		}
 	}
 	
-	public static GameView createNext (String viewId, String secondId) {
+	public static GameView createNext (String viewId) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		try {
-			IViewPart part = page.showView(viewId, secondId, IWorkbenchPage.VIEW_ACTIVATE);
+			IViewPart part = page.showView(viewId, Integer.toString(generator.nextInt()), IWorkbenchPage.VIEW_ACTIVATE);
 			// if there's an error in creating the view, we want to know about it.. don't cast unless we know it's not an errorviewpart
 			if (part instanceof GameView) {
 				GameView nextInstance = (GameView) part;
@@ -353,5 +356,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	@Override
 	public void removeClientViewerListener(IWarlockClientViewerListener listener) {
 		listeners.add(listener);
+	}
+	
+	public String getViewId() {
+		return getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 	}
 }

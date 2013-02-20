@@ -36,6 +36,7 @@ import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.settings.Account;
+import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
@@ -52,23 +53,23 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 	private boolean finished;
 	private IStatus status;
 	private StormFrontGameView gameView;
-	
-	public ProfileConnectAction (IProfile profile) {
+
+	public ProfileConnectAction(IProfile profile) {
 		super(profile.getName(), StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
 		setDescription(profile.getGameName() + " character \"" + profile.getName() + "\"");
-		
+
 		this.profile = profile;
 	}
-	
+
 	@Override
-	public void run() {	
+	public void run() {
 		finished = false;
 		status = Status.OK_STATUS;
-		
+
 		Job connectJob = new Job("Logging into profile \"" + profile.getName() + "\"...") {
 			protected IStatus run(IProgressMonitor monitor) {
 				ProfileConnectAction.this.monitor = monitor;
-				
+
 				SGEConnection connection = new SGEConnection();
 				connection.setRetrieveGameInfo(false);
 				connection.addConnectionListener(new SWTConnectionListenerAdapter(ProfileConnectAction.this));
@@ -76,26 +77,26 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 				monitor.beginTask("Logging into profile \"" + profile.getName() + "\"...", 5);
 
 				connection.connect();
-				
+
 				while (!ProfileConnectAction.this.finished) {
 					Display.getDefault().syncExec(new Runnable() {
-						public void run () { 
+						public void run() {
 							Display.getDefault().readAndDispatch();
 						}
 					});
 				}
-				
+
 				return status;
 			}
 		};
-		
+
 		connectJob.setUser(true);
 		connectJob.schedule();
 	}
 
 	public void loginReady(SGEConnection connection) {
 		monitor.worked(1);
-		
+
 		if (!monitor.isCanceled()) {
 			Account account = profile.getAccount();
 			connection.login(account.getAccountName(), account.getPassword());
@@ -104,41 +105,39 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 			finished = true;
 		}
 	}
-	
+
 	public void loginFinished(SGEConnection connection) {
 		monitor.worked(1);
 	}
-	
+
 	public void sgeError(SGEConnection connection, int errorCode) {
 		LoginUtil.showAuthenticationError(errorCode);
 		this.status = new Status(IStatus.ERROR, Warlock2Plugin.PLUGIN_ID, LoginUtil.getAuthenticationError(errorCode));
 		finished = true;
 	}
-	
+
 	public void gamesReady(SGEConnection connection, List<? extends ISGEGame> games) {
 		monitor.worked(1);
-		
-		if (!monitor.isCanceled())
-		{
+
+		if (!monitor.isCanceled()) {
 			connection.selectGame(profile.getGameCode());
 		} else {
 			status = Status.CANCEL_STATUS;
 			finished = true;
 		}
 	}
-	 
+
 	public void charactersReady(SGEConnection connection, Map<String, String> characters) {
 		monitor.worked(1);
-		
+
 		connection.selectCharacter(profile.getCharacterId());
 	}
 
-	public void readyToPlay(SGEConnection connection, Map<String,String> loginProperties) {
+	public void readyToPlay(SGEConnection connection, Map<String, String> loginProperties) {
 		monitor.worked(1);
 		monitor.done();
-		
-		if (!monitor.isCanceled())
-		{
+
+		if (!monitor.isCanceled()) {
 			// Check to see if there is an open gameView, and if it's connected.
 			// If it is, open a new one.
 			if (gameView == null) {
@@ -148,6 +147,11 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 				LoginUtil.connect(gameView, loginProperties);
 				gameView.setProfile(profile);
 			}
+			IProfile curProfile;
+			while ((curProfile = AccountProvider.getInstance().getProfileByViewId(gameView.getViewId())) != null) {
+				curProfile.setViewId(null);
+			}
+			profile.setViewId(gameView.getViewId());
 		} else {
 			status = Status.CANCEL_STATUS;
 		}
@@ -168,14 +172,22 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 	}
 
 	@Override
-	public void connected(IConnection connection) {}
-	@Override
-	public void dataReady(IConnection connection, String data) {}
-	@Override
-	public void lineReady(IConnection connection, String line) {}
-	@Override
-	public void disconnected(IConnection connection) {}
+	public void connected(IConnection connection) {
+	}
 
 	@Override
-	public void dataSent(IConnection connection, String data) {}
+	public void dataReady(IConnection connection, String data) {
+	}
+
+	@Override
+	public void lineReady(IConnection connection, String line) {
+	}
+
+	@Override
+	public void disconnected(IConnection connection) {
+	}
+
+	@Override
+	public void dataSent(IConnection connection, String data) {
+	}
 }

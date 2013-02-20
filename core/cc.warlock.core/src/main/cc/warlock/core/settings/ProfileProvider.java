@@ -49,9 +49,17 @@ public class ProfileProvider extends ArrayConfigurationProvider<ProfileSetting> 
 	
 	public ProfileSetting getProfileByCharacterName (String characterName)
 	{	
-		for (ProfileSetting profile : getSettings())
-		{
-			if (profile.getName().equals(characterName))
+		for (ProfileSetting profile : getSettings()) {
+			if (characterName.equals(profile.getName()))
+				return profile;
+		}
+		return null;
+	}
+	
+	public ProfileSetting getProfileByViewId (String viewId)
+	{	
+		for (ProfileSetting profile : getSettings()) {
+			if (viewId.equals(profile.viewId))
 				return profile;
 		}
 		return null;

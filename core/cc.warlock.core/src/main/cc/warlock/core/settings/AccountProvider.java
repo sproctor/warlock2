@@ -47,4 +47,13 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 		}
 		return null;
 	}
+	
+	public ProfileSetting getProfileByViewId (String viewId) {
+		for (Account account : this.getSettings()) {
+			ProfileSetting profile = account.getProfileProvider().getProfileByViewId(viewId);
+			if (profile != null)
+				return profile;
+		}
+		return null;
+	}
 }

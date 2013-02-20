@@ -107,7 +107,7 @@ public class LoginUtil {
 			connect(firstEmptyView, loginProperties);
 			return firstEmptyView;
 		} else {
-			StormFrontGameView gameView = (StormFrontGameView) StormFrontGameView.createNext(StormFrontGameView.VIEW_ID, characterName);
+			StormFrontGameView gameView = (StormFrontGameView) StormFrontGameView.createNext(StormFrontGameView.VIEW_ID);
 			connect(gameView, loginProperties);
 			return gameView;
 		}
