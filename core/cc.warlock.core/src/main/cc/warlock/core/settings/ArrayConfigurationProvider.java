@@ -77,6 +77,7 @@ public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> exte
 		if (setting == null)
 			return null;
 		add(id, setting);
+		/* TODO if settings are added elsewhere, re-enable this
 		WarlockPreferencesScope.getInstance().addNodeChangeListener(this, new INodeChangeListener() {
 			public void added(NodeChangeEvent event) {
 				String name = event.getChild().name();
@@ -90,7 +91,7 @@ public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> exte
 				String id = event.getChild().name();
 				settings.remove(id);
 			}
-		});
+		});*/
 		this.notifyListenersChanged();
 		return setting;
 	}

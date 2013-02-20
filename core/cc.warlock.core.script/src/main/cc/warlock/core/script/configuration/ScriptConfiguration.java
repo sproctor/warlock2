@@ -54,10 +54,6 @@ public class ScriptConfiguration extends WarlockSetting {
 		
 		directoryConf = new ScriptDirectoryConfiguration(this);
 		if(directoryConf.getSettings().isEmpty()) {
-			DirectorySetting userScripts = directoryConf.createSetting();
-			userScripts.setDirectory("scripts", "user");
-			DirectorySetting userWarlockScripts = directoryConf.createSetting();
-			userWarlockScripts.setDirectory("warlock-scripts", "user");
 			DirectorySetting confScripts = directoryConf.createSetting();
 			confScripts.setDirectory("scripts", "config");
 		}
