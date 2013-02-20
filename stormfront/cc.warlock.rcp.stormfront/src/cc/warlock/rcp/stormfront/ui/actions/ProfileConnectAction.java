@@ -146,6 +146,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 				gameView.setProfile(profile);
 			} else {
 				LoginUtil.connect(gameView, loginProperties);
+				gameView.setProfile(profile);
 			}
 		} else {
 			status = Status.CANCEL_STATUS;
@@ -166,13 +167,15 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		LoginUtil.showConnectionError(errorType);
 	}
 
+	@Override
 	public void connected(IConnection connection) {}
+	@Override
 	public void dataReady(IConnection connection, String data) {}
+	@Override
 	public void lineReady(IConnection connection, String line) {}
+	@Override
 	public void disconnected(IConnection connection) {}
 
 	@Override
 	public void dataSent(IConnection connection, String data) {}
-
-	
 }
