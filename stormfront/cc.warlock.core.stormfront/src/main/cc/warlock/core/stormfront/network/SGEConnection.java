@@ -36,7 +36,7 @@ import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.network.LineConnection;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.network.ISGEGame.AccountStatus;
 import cc.warlock.core.stormfront.network.ISGEGame.GameURL;
 
@@ -433,7 +433,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	
 	private static class AutoLoginListener extends SGEConnectionListener
 	{
-		public Profile profile;
+		public ProfileSetting profile;
 		public boolean loggedIn = false;
 		public Map <String,String> properties = null;
 		
@@ -460,7 +460,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 		}
 	}
 	
-	public static Map<String, String> autoLogin (Profile profile, ISGEConnectionListener extraListener)
+	public static Map<String, String> autoLogin (ProfileSetting profile, ISGEConnectionListener extraListener)
 	{
 		SGEConnection connection = new SGEConnection();
 		connection.setRetrieveGameInfo(false);
