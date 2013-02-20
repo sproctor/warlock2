@@ -51,7 +51,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class AccountsPreferencePage extends PropertyPage implements
@@ -60,8 +60,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 	public static final String PAGE_ID = "cc.warlock.rcp.stormfront.ui.prefs.accountsAndProfiles";
 	protected ArrayList<Account> addedAccounts = new ArrayList<Account>();
 	protected ArrayList<Account> removedAccounts = new ArrayList<Account>();
-	protected HashMap<Profile, Account> addedProfiles = new HashMap<Profile, Account>();
-	protected HashMap<Profile, Account> removedProfiles = new HashMap<Profile, Account>();
+	protected HashMap<ProfileSetting, Account> addedProfiles = new HashMap<ProfileSetting, Account>();
+	protected HashMap<ProfileSetting, Account> removedProfiles = new HashMap<ProfileSetting, Account>();
 	
 	protected TreeViewer accountViewer;
 	protected Button removeAccount, editAccount, addProfile, removeProfile;
@@ -161,8 +161,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 			}
 			
 			public Object getParent(Object element) {
-				if (element instanceof Profile) {
-					return AccountProvider.getInstance().getAccountByProfile((Profile)element);
+				if (element instanceof ProfileSetting) {
+					return AccountProvider.getInstance().getAccountByProfile((ProfileSetting)element);
 				}
 				return null;
 			}
@@ -181,15 +181,15 @@ public class AccountsPreferencePage extends PropertyPage implements
 			public void addListener(ILabelProviderListener listener) {}
 			public void dispose() {}
 			public Image getImage(Object element) {
-				if (element instanceof Profile)
+				if (element instanceof ProfileSetting)
 					return WarlockSharedImages.getImage(WarlockSharedImages.IMG_CHARACTER);
 				return null;
 			}
 			public String getText(Object element) {
 				if (element instanceof Account) {
 					return ((Account)element).getAccountName();
-				} else if (element instanceof Profile) {
-					return ((Profile)element).getName();
+				} else if (element instanceof ProfileSetting) {
+					return ((ProfileSetting)element).getName();
 				}
 				return "";
 			}
@@ -203,8 +203,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 					Account account = (Account) element;
 					if (removedAccounts.contains(account))
 						return false;
-				} else if (element instanceof Profile) {
-					Profile profile = (Profile) element;
+				} else if (element instanceof ProfileSetting) {
+					ProfileSetting profile = (ProfileSetting) element;
 					if (removedProfiles.containsKey(profile))
 						return false;
 				}
@@ -220,8 +220,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				if (selection.getFirstElement() instanceof Account) {
 					accountSelected((Account)selection.getFirstElement());
-				} else if (selection.getFirstElement() instanceof Profile) {
-					profileSelected((Profile)selection.getFirstElement());
+				} else if (selection.getFirstElement() instanceof ProfileSetting) {
+					profileSelected((ProfileSetting)selection.getFirstElement());
 				}
 			}
 		});
@@ -246,8 +246,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 		currentProfile = null;
 	}
 	
-	protected Profile currentProfile;
-	protected void profileSelected (Profile profile)
+	protected ProfileSetting currentProfile;
+	protected void profileSelected (ProfileSetting profile)
 	{
 		removeProfile.setEnabled(true);
 		removeAccount.setEnabled(true);

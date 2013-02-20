@@ -31,12 +31,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 
+import cc.warlock.core.client.IProfile;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.settings.Account;
-import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.Profile;
 import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
@@ -48,13 +47,13 @@ import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
 import cc.warlock.rcp.ui.network.SWTConnectionListenerAdapter;
 
 public class ProfileConnectAction extends Action implements ISGEConnectionListener, ILineConnectionListener {
-	private Profile profile;
+	private IProfile profile;
 	private IProgressMonitor monitor;
 	private boolean finished;
 	private IStatus status;
 	private StormFrontGameView gameView;
 	
-	public ProfileConnectAction (Profile profile) {
+	public ProfileConnectAction (IProfile profile) {
 		super(profile.getName(), StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
 		setDescription(profile.getGameName() + " character \"" + profile.getName() + "\"");
 		
@@ -98,7 +97,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		monitor.worked(1);
 		
 		if (!monitor.isCanceled()) {
-			Account account = AccountProvider.getInstance().getAccountByProfile(profile);
+			Account account = profile.getAccount();
 			connection.login(account.getAccountName(), account.getPassword());
 		} else {
 			status = Status.CANCEL_STATUS;
@@ -159,7 +158,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		this.gameView = gameView;
 	}
 
-	public Profile getProfile() {
+	public IProfile getProfile() {
 		return profile;
 	}
 

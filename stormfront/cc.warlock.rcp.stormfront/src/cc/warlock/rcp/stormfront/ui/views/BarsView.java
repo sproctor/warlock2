@@ -124,10 +124,14 @@ public class BarsView extends ViewPart {
 			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false));
 			
 			compass = new WarlockCompass(this, SWT.NONE, theme);
-			compass.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 2));
+			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 2);
+			compassData.heightHint = theme.getMainImage().getImageData().height;
+			compass.setLayoutData(compassData);
 			
 			minivitals = new StormFrontDialogControl(this, SWT.NONE);
-			minivitals.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+			GridData mvData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+			mvData.heightHint = 20;
+			minivitals.setLayoutData(mvData);
 			
 			view.setEntry(entry);
 			setClient(view.getClient());

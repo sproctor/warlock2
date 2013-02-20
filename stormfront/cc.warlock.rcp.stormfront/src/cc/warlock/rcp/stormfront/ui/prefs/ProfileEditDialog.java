@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import cc.warlock.core.settings.Account;
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.SGEConnectionListener;
@@ -48,7 +48,7 @@ import cc.warlock.rcp.ui.ComboField;
 public class ProfileEditDialog extends Dialog {
 
 	protected Account account;
-	protected Profile profile;
+	protected ProfileSetting profile;
 	
 	protected ComboField gameField;
 	protected ComboField characterField;
@@ -61,7 +61,7 @@ public class ProfileEditDialog extends Dialog {
 		this.account = account;
 	}
 	
-	public ProfileEditDialog (Shell parentShell, Account account, Profile profile)
+	public ProfileEditDialog (Shell parentShell, Account account, ProfileSetting profile)
 	{
 		this(parentShell, account);
 		

@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.wizards.WizardPageWithNotification;
@@ -149,7 +149,7 @@ class ImportSettingsWizardPage extends WizardPageWithNotification
 				return WarlockSharedImages.getImage(WarlockSharedImages.IMG_CHARACTER);
 			}
 			public String getText(Object element) {
-				return ((Profile)element).getName();
+				return ((ProfileSetting)element).getName();
 			}
 			public boolean isLabelProperty(Object element, String property) { return true; }
 			public void removeListener(ILabelProviderListener listener) {}
@@ -216,8 +216,8 @@ class ImportSettingsWizardPage extends WizardPageWithNotification
 		return fileText.getText();
 	}
 	
-	public Profile getTargetProfile() {
-		return (Profile) ((IStructuredSelection)profileTable.getSelection()).getFirstElement();
+	public ProfileSetting getTargetProfile() {
+		return (ProfileSetting) ((IStructuredSelection)profileTable.getSelection()).getFirstElement();
 	}
 	
 	@Override

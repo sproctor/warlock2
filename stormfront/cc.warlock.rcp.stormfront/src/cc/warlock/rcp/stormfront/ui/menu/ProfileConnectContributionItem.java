@@ -32,7 +32,7 @@ import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.ui.ConnectionAction;
@@ -55,7 +55,7 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
 		
 		for(Account account : AccountProvider.getInstance().getSettings()) {
-			for (Profile profile : account.getProfiles()) {
+			for (ProfileSetting profile : account.getProfiles()) {
 				items.add(new ActionContributionItem(new ProfileConnectAction(profile)));
 			}
 		}
@@ -67,7 +67,7 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 		ArrayList<IConnectionCommand> commands = new ArrayList<IConnectionCommand>();
 		
 		for(Account account : AccountProvider.getInstance().getSettings()) {
-			for (Profile profile : account.getProfiles()) {
+			for (ProfileSetting profile : account.getProfiles()) {
 				commands.add(new ConnectionAction(new ProfileConnectAction(profile)));
 			}
 		}

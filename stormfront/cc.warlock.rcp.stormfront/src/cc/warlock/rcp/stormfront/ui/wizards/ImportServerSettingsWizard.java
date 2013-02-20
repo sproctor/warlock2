@@ -12,7 +12,7 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.settings.ConfigurationUtil;
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.rcp.wizards.WizardWithNotification;
@@ -29,7 +29,7 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 	
 	@Override
 	public boolean performFinish() {
-		Profile profile = page1.getTargetProfile();
+		ProfileSetting profile = page1.getTargetProfile();
 		
 		StormFrontServerSettings serverSettings = null;
 		ClientSettings clientSettings = null;

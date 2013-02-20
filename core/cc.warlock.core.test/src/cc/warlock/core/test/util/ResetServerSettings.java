@@ -9,7 +9,7 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.Profile;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
@@ -34,7 +34,7 @@ public class ResetServerSettings {
 			return;
 		}
 		
-		Profile profile = null;
+		ProfileSetting profile = null;
 		
 		if (args.length == 1)
 		{

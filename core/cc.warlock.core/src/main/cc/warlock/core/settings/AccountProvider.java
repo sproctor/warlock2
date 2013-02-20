@@ -31,7 +31,7 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 		return null;
 	}
 	
-	public Account getAccountByProfile(Profile profile) {
+	public Account getAccountByProfile(ProfileSetting profile) {
 		for(Account account : this.getSettings()) {
 			if(account.getProfiles().contains(profile))
 				return account;
@@ -39,9 +39,9 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 		return null;
 	}
 	
-	public Profile getProfileByCharacterName (String characterName) {
+	public ProfileSetting getProfileByCharacterName (String characterName) {
 		for (Account account : this.getSettings()) {
-			Profile profile = account.getProfileProvider().getProfileByCharacterName(characterName);
+			ProfileSetting profile = account.getProfileProvider().getProfileByCharacterName(characterName);
 			if (profile != null)
 				return profile;
 		}

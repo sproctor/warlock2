@@ -24,16 +24,18 @@
  */
 package cc.warlock.core.settings;
 
+import cc.warlock.core.client.IProfile;
+
 
 
 /**
  * @author Marshall
  */
-public class Profile extends WarlockSetting {
+public class ProfileSetting extends WarlockSetting implements IProfile {
 
 	protected String characterId, name, gameCode, gameName, viewId;
 	
-	public Profile (IWarlockSetting parent, String path) {
+	public ProfileSetting (IWarlockSetting parent, String path) {
 		super(parent, path);
 		
 		this.characterId = getNode().get("character-id", null);
@@ -46,54 +48,71 @@ public class Profile extends WarlockSetting {
 	/**
 	 * @return Returns the gameCode.
 	 */
+	@Override
 	public String getGameCode() {
 		return gameCode;
 	}
+	
 	/**
 	 * @param gameCode The gameCode to set.
 	 */
+	@Override
 	public void setGameCode(String gameCode) {
 		getNode().put("game-code", gameCode);
 		this.gameCode = gameCode;
 	}
+	
 	/**
 	 * @return Returns the gameName.
 	 */
+	@Override
 	public String getGameName() {
 		return gameName;
 	}
 	/**
 	 * @param gameName The gameName to set.
 	 */
+	@Override
 	public void setGameName(String gameName) {
 		getNode().put("game-name", gameName);
 		this.gameName = gameName;
 	}
 	
+	@Override
 	public String getCharacterId() {
 		return characterId;
 	}
 	
+	@Override
 	public void setCharacterId(String id) {
 		getNode().put("character-id", id);
 		this.characterId = id;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 	
+	@Override
 	public void setName(String name) {
 		getNode().put("name", name);
 		this.name = name;
 	}
 	
+	@Override
 	public String getViewId() {
 		return viewId;
 	}
 	
+	@Override
 	public void setViewId(String viewId) {
 		getNode().put("view-id", viewId);
 		this.viewId = viewId;
+	}
+	
+	@Override
+	public Account getAccount() {
+		return AccountProvider.getInstance().getAccountByProfile(this);
 	}
 }

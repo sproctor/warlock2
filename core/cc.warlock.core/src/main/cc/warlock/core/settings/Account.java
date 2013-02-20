@@ -184,7 +184,7 @@ public class Account extends WarlockSetting {
 		return profileProvider;
 	}
 	
-	public Collection<Profile> getProfiles() {
+	public Collection<ProfileSetting> getProfiles() {
 		return profileProvider.getSettings();
 	}
 }

@@ -43,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.ICommand;
+import cc.warlock.core.client.IProfile;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
@@ -50,7 +51,6 @@ import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
-import cc.warlock.core.settings.Profile;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockEntry;
 import cc.warlock.rcp.ui.WarlockPopupAction;
@@ -76,7 +76,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected Composite mainComposite;
 	private ArrayList<IWarlockClientViewerListener> listeners = new ArrayList<IWarlockClientViewerListener>();
 	
-	private Profile profile;
+	private IProfile profile;
 	
 	private HashMap<String, StreamText> customStreams = new HashMap<String, StreamText>();
 	
@@ -303,11 +303,11 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		return false;
 	}
 	
-	public Profile getProfile() {
+	public IProfile getProfile() {
 		return profile;
 	}
 	
-	public void setProfile(Profile profile) {
+	public void setProfile(IProfile profile) {
 		this.profile = profile;
 	}
 	

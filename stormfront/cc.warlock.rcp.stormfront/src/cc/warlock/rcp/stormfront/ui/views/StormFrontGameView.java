@@ -49,6 +49,7 @@ import org.eclipse.ui.PlatformUI;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
+import cc.warlock.core.client.IProfile;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
@@ -57,8 +58,8 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
-import cc.warlock.core.settings.Profile;
 import cc.warlock.core.settings.ProfileProvider;
+import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
@@ -93,7 +94,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		
 		//String fullId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
 		
-		Profile profile = getProfile();
+		IProfile profile = getProfile();
 		createReconnectPopup();
 		
 		if (profile != null) {
@@ -105,7 +106,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		}
 	}
 	
-	public void setProfile(Profile profile) {
+	public void setProfile(IProfile profile) {
 		super.setProfile(profile);
 		
 		if (profile != null) {
@@ -152,7 +153,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	}
 	
 	protected SelectionListener currentListener;
-	protected void setReconnectProfile (final Profile profile)
+	protected void setReconnectProfile (final IProfile profile)
 	{
 		String characterName = profile.getName();
 		reconnectLabel.setText("The character \"" + characterName + "\" is currently disconnected.");
@@ -208,7 +209,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 			}
 		});
 		
-		for (final Profile profile : ProfileProvider.getAllProfiles())
+		for (final ProfileSetting profile : ProfileProvider.getAllProfiles())
 		{
 			MenuItem item = new MenuItem (menu, SWT.PUSH);
 			item.setText(profile.getName());

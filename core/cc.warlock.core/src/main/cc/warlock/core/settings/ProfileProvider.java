@@ -26,18 +26,18 @@ import java.util.Collection;
 
 
 
-public class ProfileProvider extends ArrayConfigurationProvider<Profile> implements IWarlockSetting {
+public class ProfileProvider extends ArrayConfigurationProvider<ProfileSetting> implements IWarlockSetting {
 	
 	public ProfileProvider(IWarlockSetting parent) {
 		super(parent, "profiles");
 	}
 	
-	protected Profile loadSetting(String id) {
-		return new Profile(this, id);
+	protected ProfileSetting loadSetting(String id) {
+		return new ProfileSetting(this, id);
 	}
 	
-	public Profile createProfile (String id, String name, String gameCode, String gameName) {
-		Profile profile = createSetting();
+	public ProfileSetting createProfile (String id, String name, String gameCode, String gameName) {
+		ProfileSetting profile = createSetting();
 		profile.setCharacterId(id); //character id
 		profile.setName(name);
 		profile.setGameCode(gameCode);
@@ -47,9 +47,9 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 		return profile;
 	}
 	
-	public Profile getProfileByCharacterName (String characterName)
+	public ProfileSetting getProfileByCharacterName (String characterName)
 	{	
-		for (Profile profile : getSettings())
+		for (ProfileSetting profile : getSettings())
 		{
 			if (profile.getName().equals(characterName))
 				return profile;
@@ -57,8 +57,8 @@ public class ProfileProvider extends ArrayConfigurationProvider<Profile> impleme
 		return null;
 	}
 	
-	public static Collection<Profile> getAllProfiles() {
-		ArrayList<Profile> profiles = new ArrayList<Profile>();
+	public static Collection<ProfileSetting> getAllProfiles() {
+		ArrayList<ProfileSetting> profiles = new ArrayList<ProfileSetting>();
 		for(Account account : AccountProvider.getInstance().getSettings()) {
 			profiles.addAll(account.getProfiles());
 		}
