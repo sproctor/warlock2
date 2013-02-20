@@ -86,6 +86,7 @@ public class WarlockText {
 		textWidget.setEditable(false);
 		textWidget.setWordWrap(true);
 		textWidget.setIndent(1);
+		textWidget.setCaret(null);
 
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
 
