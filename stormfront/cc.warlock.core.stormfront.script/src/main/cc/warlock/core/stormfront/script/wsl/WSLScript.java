@@ -180,10 +180,7 @@ public class WSLScript extends AbstractScript {
 	
 	private class WSLRoomTitle extends WSLAbstractString {
 		public String toString() {
-			IStream roomStream = getClient().getStream("room");
-			if(roomStream == null)
-				return "";
-			return roomStream.getFullTitle();
+			return getClient().getStreamTitle("room");
 		}
 	}
 	

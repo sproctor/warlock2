@@ -168,7 +168,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		popupPageBook.showPage(emptyPopup);
 		popupPageBook.setVisible(false);
 		
-		streamText = new StreamText(mainComposite, IWarlockClient.DEFAULT_STREAM_NAME);
+		streamText = new StreamText(mainComposite, IWarlockClient.MAIN_STREAM_NAME);
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streamText.setIgnoreEmptyLines(false);
 		
@@ -296,7 +296,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	protected abstract void setViewTitle(String title);
 	
 	public boolean isStreamOpen(String streamName) {
-		if(streamName == IWarlockClient.DEFAULT_STREAM_NAME)
+		if(streamName == IWarlockClient.MAIN_STREAM_NAME)
 			return true;
 		
 		for(StreamView streamView : StreamView.getOpenViews()) {

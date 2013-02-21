@@ -80,7 +80,7 @@ public class TelnetClient extends WarlockClient {
 				// Push the raw input into the Stream
 				WarlockString string = new WarlockString(data);
 				string.addStyle(WarlockMonospace.getInstance());
-				getDefaultStream().put(string);
+				getMainStream().put(string);
 			}
 			public void dataSent (IConnection connection, String data) {
 				

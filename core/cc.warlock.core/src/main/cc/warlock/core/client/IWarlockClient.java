@@ -43,7 +43,7 @@ import cc.warlock.core.network.IConnection;
  */
 public interface IWarlockClient extends IRoomListener {
 	
-	public static final String DEFAULT_STREAM_NAME = "main";
+	public static final String MAIN_STREAM_NAME = "main";
 	
 	/**
 	 * Connect and handshake with the Simutronics server
@@ -74,7 +74,7 @@ public interface IWarlockClient extends IRoomListener {
 	 * Functionally equivalent to getStream(DEFAULT_STREAM_NAME)
 	 * @return The default stream to send data to.
 	 */
-	public IStream getDefaultStream();
+	//public IStream getMainStream();
 	
 	/**
 	 * @param streamName The stream name
@@ -203,7 +203,7 @@ public interface IWarlockClient extends IRoomListener {
 	 */
 	public String getComponent(String componentName);
 	
-	public void setComponent (String componentName, String value, IStream stream);
+	public void setComponent (String componentName, String value, String stream);
 	
 	public void updateComponent(String name, WarlockString value);
 	
@@ -221,4 +221,24 @@ public interface IWarlockClient extends IRoomListener {
 	public void dispose();
 	
 	public int getMinCommandLength();
+	
+	public void put(WarlockString text);
+	
+	public void put(String streamName, WarlockString text);
+	
+	public void echo(String text);
+	
+	public void echo(String text, IWarlockStyle style);
+	
+	public void echo(String streamName, String text);
+	
+	public void echo(String streamName, String text, IWarlockStyle style);
+	
+	public void prompt(String prompt);
+	
+	public void clear(String streamName);
+	
+	public String getStreamTitle(String streamName);
+	
+	public WarlockString getStreamHistory(String streamName);
 }

@@ -122,7 +122,7 @@ public class ScriptEngineRegistry {
 			}
 		}
 		
-		viewer.getClient().getDefaultStream().echo("Could not find script \"" + scriptName + "\"\n");
+		viewer.getClient().echo("Could not find script \"" + scriptName + "\"\n");
 		return null;
 	}
 	

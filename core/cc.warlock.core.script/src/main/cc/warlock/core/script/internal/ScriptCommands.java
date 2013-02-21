@@ -57,14 +57,14 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	/**
 	 * Used to count room changes. In order to enable waitForRoom to reliably
 	 * detect when we've entered a new room, we need a persistent state change
-	 * of some sort. Unless you miss 4 billion rooms, this number will be
-	 * different.
+	 * of some sort.
 	 * 
 	 * @see #waitNextRoom()
 	 */
 	private int room = 0;
 	private int prompt = 0;
-	private boolean atPrompt;
+	// It's not particularly important what the initial state of atPrompt is.
+	private boolean atPrompt = true;
 	
 	private final Lock lock = new ReentrantLock();
 	private final Condition gotResume = lock.newCondition();
@@ -77,14 +77,13 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	{
 		this.viewer = viewer;
 		this.scriptName = scriptName;
-		atPrompt = getClient().getDefaultStream().isPrompting();
 
-		getClient().getDefaultStream().addStreamListener(this);
+		getClient().addStreamListener(IWarlockClient.MAIN_STREAM_NAME, this);
 		getClient().addRoomListener(this);
 	}
 	
 	public void echo(String text) {
-		getClient().getDefaultStream().echo("[" + scriptName + "]: " + text + "\n");
+		getClient().echo("[" + scriptName + "]: " + text + "\n");
 	}
 	
 	public BlockingQueue<String> createLineQueue() {
@@ -264,7 +263,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void stop() {
 		interrupt();
 
-		getClient().getDefaultStream().removeStreamListener(this);
+		getClient().removeStreamListener(IWarlockClient.MAIN_STREAM_NAME, this);
 		getClient().removeRoomListener(this);
 	}
 	

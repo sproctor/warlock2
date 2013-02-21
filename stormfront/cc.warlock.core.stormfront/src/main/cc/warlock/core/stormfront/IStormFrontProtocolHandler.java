@@ -27,7 +27,6 @@
  */
 package cc.warlock.core.stormfront;
 
-import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -47,7 +46,7 @@ public interface IStormFrontProtocolHandler extends IStormFrontXMLHandler {
 	public void pushStream(String name);
 	public void popStream();
 	public void clearStreams();
-	public IStream getCurrentStream();
+	public String getCurrentStream();
 	
 	public void addStyle(IWarlockStyle style);
 	public void removeStyle(IWarlockStyle style);

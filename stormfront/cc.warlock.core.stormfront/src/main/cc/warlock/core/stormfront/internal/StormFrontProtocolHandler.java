@@ -31,7 +31,6 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
 
-import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
@@ -90,7 +89,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	protected IStormFrontClient client;
 	protected HashMap<String, IStormFrontTagHandler> defaultTagHandlers = new HashMap<String, IStormFrontTagHandler>();
 	protected Stack<String> tagStack = new Stack<String>();
-	private Stack<IStream> streamStack = new Stack<IStream>();
+	private Stack<String> streamStack = new Stack<String>();
 	protected Stack<WarlockStringMarker> styleStack = new Stack<WarlockStringMarker>();
 	private WarlockString buffer = new WarlockString();
 	protected int currentSpacing = 0;
@@ -175,8 +174,8 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	public void pushStream(String streamId) {
 		clearStyles();
 		flushBuffer();
-		IStream stream = client.getStream(streamId);
-		streamStack.push(stream);
+		//IStream stream = client.getStream(streamId);
+		streamStack.push(streamId);
 		lineHasContent = false;
 	}
 	
@@ -191,7 +190,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		lineHasContent = false;
 	}
 
-	public IStream getCurrentStream() {
+	public String getCurrentStream() {
 		return streamStack.peek();
 	}
 	
@@ -370,9 +369,9 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
 	private void put(WarlockString str) {
 		if(streamStack.empty()) {
-			client.getDefaultStream().put(str);
+			client.put(str);
 		} else {
-			streamStack.peek().put(str);
+			client.put(streamStack.peek(), str);
 		}
 	}
 	

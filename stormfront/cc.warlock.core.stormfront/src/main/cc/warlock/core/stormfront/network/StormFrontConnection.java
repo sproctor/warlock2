@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockMonospace;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnectionListener;
@@ -128,14 +127,12 @@ public class StormFrontConnection implements IConnection
 	
 	protected void disconnected ()
 	{	
-		WarlockString message = new WarlockString(
+		String message = 
 			"******************************\n"+
 			"* Disconnected from the game *\n" +
-			"******************************\n",
-			WarlockMonospace.getInstance());
+			"******************************\n";
 		
-		client.getDefaultStream().put(message);
-		client.getDefaultStream().flush();
+		client.echo(message, WarlockMonospace.getInstance());
 		connected = false;
 		
 		for (IConnectionListener listener : listeners)
@@ -162,8 +159,7 @@ public class StormFrontConnection implements IConnection
 						break;
 					} catch (ParseException e) {
 						e.printStackTrace();
-						client.getDefaultStream().flush();
-						client.getDefaultStream().echo("\n*** Parse error ***\n");
+						client.echo("\n*** Parse error ***\n");
 						parser.ReInit(reader);
 					}
 				}

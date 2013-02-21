@@ -64,7 +64,7 @@ public class PromptTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().getDefaultStream().prompt(prompt.toString());
+		handler.getClient().prompt(prompt.toString());
 		
 		if (waitingForInitialStreams)
 		{

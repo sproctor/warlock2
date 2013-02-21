@@ -30,7 +30,6 @@ import cc.warlock.rcp.views.GameView;
 public class StreamText extends WarlockText implements IStreamListener {
 
 	protected String streamName;
-	protected IStream stream;
 	protected boolean isPrompting = false;
 	protected String prompt = null;
 	protected Property<String> title = new Property<String>();
@@ -59,7 +58,16 @@ public class StreamText extends WarlockText implements IStreamListener {
 		// Nothing to do
 	}
 	
-	protected synchronized void bufferText (WarlockString string)
+	protected void bufferText (WarlockString string)
+	{
+		if(textBuffer == null) {
+			textBuffer = new WarlockString();
+		}
+
+		textBuffer.append(string);
+	}
+	
+	protected void bufferText (String string)
 	{
 		if(textBuffer == null) {
 			textBuffer = new WarlockString();
@@ -73,7 +81,6 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 	
 	public void streamCreated(IStream stream) {
-		this.stream = stream;
 		this.title.set(stream.getFullTitle());
 	}
 	
@@ -91,7 +98,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 		flushBuffer();
 	}
 
-	private synchronized void flushBuffer() {
+	private void flushBuffer() {
 		if(textBuffer != null) {
 			append(textBuffer);
 			textBuffer = null;
@@ -124,10 +131,10 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 
 	public void streamReceivedCommand(IStream stream, ICommand command) {
-		IWarlockClient client = stream.getClient();
-		WarlockString string = new WarlockString(command.getText());
+		flushBuffer();
 		
-		string.addStyle(client.getCommandStyle());
+		WarlockString string = new WarlockString(command.getText(),
+				stream.getClient().getCommandStyle());
 		
 		if(!isPrompting && prompt != null)
 			append(new WarlockString(prompt));
@@ -137,19 +144,12 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 
 	public void streamReceivedText(IStream stream, WarlockString text) {
-		WarlockString string = new WarlockString();
-		
 		if (isPrompting && text.length() > 0) {
-			string.append("\n");
+			bufferText("\n");
 			isPrompting = false;
 		}
 		
-		string.append(text);
-		
-		if(string.hasStyleNamed("echo") || string.hasStyleNamed("debug"))
-			append(string);
-		else
-			bufferText(string);
+		bufferText(text);
 	}
 	
 	public void streamTitleChanged(IStream stream, String title) {
@@ -176,22 +176,18 @@ public class StreamText extends WarlockText implements IStreamListener {
 			} else {
 				this.getTextWidget().addVerifyKeyListener(game.getEntry().getVerifyKeyListener());
 			}
-			stream = client.getStream(streamName);
+			
 			client.addStreamListener(streamName, streamListener);
 			WarlockClientRegistry.addWarlockClientListener(clientListener);
 			// if client already has settings, we'll unintentially load them twice
 			loadSettings();
-		} else {
-			stream = null;
 		}
 		
-		if(stream != null) {
-			this.title.set(stream.getFullTitle());
-			WarlockString history = stream.getHistory();
+			this.title.set(client.getStreamTitle(streamName));
+			WarlockString history = client.getStreamHistory(streamName);
 			if(history != null)
-				this.streamReceivedText(stream, stream.getHistory());
+				bufferText(history);
 			this.flushBuffer();
-		}
 	}
 	
 	private class WindowSettingsListener implements IWarlockSettingListener {

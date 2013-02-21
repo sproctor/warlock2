@@ -32,14 +32,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import cc.warlock.core.client.IRoomListener;
-import cc.warlock.core.client.IStream;
-import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.internal.Stream;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.internal.WarlockStyle;
@@ -53,7 +49,6 @@ import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
-import cc.warlock.core.util.Pair;
 
 /**
  * @author Marshall
@@ -75,6 +70,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		WarlockClientRegistry.clientCreated(this);
 	}
 
+	@Override
 	public void connect(String server, int port, String key) throws IOException {
 		connection = new StormFrontConnection(this, key);
 		connection.connect(server, port);
@@ -82,15 +78,13 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		WarlockClientRegistry.clientConnected(this);
 	}
 	
-	public void streamCleared() {
-		// TODO Auto-generated method stub
-		
-	}
 
+	@Override
 	public String getPlayerId() {
 		return playerId;
 	}
 	
+	@Override
 	public void setPlayerId(String playerId) {
 		this.playerId = playerId;
 		
@@ -111,37 +105,31 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		WarlockClientRegistry.clientSettingsLoaded(this);
 	}
 	
+	@Override
 	public String getCharacterName() {
 		if (clientSettings == null)
 			return null;
 		return clientSettings.getName();
 	}
 	
+	@Override
 	public void setCharacterName(String name) {
 		if (clientSettings != null)
 			clientSettings.setName(name);
 	}
 	
+	@Override
 	public String getGameCode() {
 		return gameCode;
 	}
 	
+	@Override
 	public String getClientId() {
 		//return gameCode + "_" + playerId;
 		return playerId;
 	}
 	
 	@Override
-	public IStream getDefaultStream() {
-		IStream stream = this.getStream(DEFAULT_STREAM_NAME);
-		if(stream != null)
-			return stream;
-		
-		stream = createStream(DEFAULT_STREAM_NAME);
-		stream.setLogging(true);
-		return stream;
-	}
-	
 	public IWarlockStyle getCommandStyle() {
 		IWarlockStyle style = getNamedStyle(PresetStyleConfigurationProvider.PRESET_COMMAND);
 		if (style == null) {
@@ -176,11 +164,13 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		}
 	}
 	
+	@Override
 	public String getCommand(String coord) {
 		if(commands == null) return null;
 		return commands.get(coord);
 	}
 	
+	@Override
 	public void launchURL(String url) {
 		try {
 			viewer.launchURL(new URL(url));
@@ -189,6 +179,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		}
 	}
 	
+	@Override
 	public void appendImage(String pictureId) {
 		try {
 			URL url = new URL("http://www.play.net/bfe/DR-art/" + pictureId + "_t.jpg");
@@ -238,25 +229,4 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 			//((IStormFrontClientViewer)viewer).receivedServerSetting(setting);
 	}
 	
-	@Override
-	public IStream createStream(String streamName) {
-		synchronized(streams) {
-			IStream stream = getStream(streamName);
-			if(stream == null) {
-				stream = new Stream(this, streamName);
-				streams.put(streamName, stream);
-				for(Iterator<Pair<String, IStreamListener>> iter =
-						streamListeners.iterator(); iter.hasNext(); ) {
-					Pair<String, IStreamListener> pair = iter.next();
-					if(pair.first().equals(streamName)) {
-						stream.addStreamListener(pair.second());
-						iter.remove();
-					}
-				}
-				// TODO: or should this always be called?
-				stream.create();
-			}
-			return stream;
-		}
-	}
 }

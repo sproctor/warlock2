@@ -92,7 +92,7 @@ public class UserStream extends StreamView {
 	@Override
 	public void createPartControl(Composite parent) {
 		name = getViewSite().getSecondaryId().substring(getViewSite().getSecondaryId().lastIndexOf('.')+1);
-		setStreamName(IWarlockClient.DEFAULT_STREAM_NAME);
+		setStreamName(IWarlockClient.MAIN_STREAM_NAME);
 		super.createPartControl(parent);
 		if (name.equals("Events")) {
 			this.filters = getEventsFilters();

@@ -63,7 +63,7 @@ public class LoginUtil {
 			"* or your internet connection is not active\n" +
 			"******************************************************************\n";
 			
-			client.getDefaultStream().put(new WarlockString(errorConnectMessage, WarlockMonospace.getInstance()));
+			client.getMainStream().put(new WarlockString(errorConnectMessage, WarlockMonospace.getInstance()));
 		}
 	}
 	

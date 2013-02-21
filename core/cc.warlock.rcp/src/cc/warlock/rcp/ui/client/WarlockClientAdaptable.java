@@ -59,7 +59,7 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 		if(client == null)
 			return null;
 		
-		return client.getDefaultStream().getFullTitle();
+		return client.getStreamTitle(IWarlockClient.MAIN_STREAM_NAME);
 	}
 	
 	public Object getParent(Object o) {

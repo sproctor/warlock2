@@ -34,6 +34,7 @@ public class WSLActionRemove extends WSLAbstractCommand {
 
 	public void execute() {
 		script.scriptCommands.removeAction(when.toString());
+		script.scriptDebug(2, "Action removed \"" + when + "\"");
 	}
 
 }

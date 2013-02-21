@@ -24,7 +24,6 @@
  */
 package cc.warlock.core.client;
 
-import cc.warlock.core.client.internal.WarlockStyle;
 
 
 /**
@@ -47,15 +46,16 @@ public interface IStream {
 	
 	public void prompt(String prompt);
 	public void sendCommand(ICommand command);
-	public boolean isPrompting();
+	//public boolean isPrompting();
 	public void flush();
 	public void create();
 	
 	public void setClosedTarget(String target);
+	public String getClosedTarget();
 	public void setClosedStyle(String style);
+	public String getClosedStyle();
 	
-	public void echo(String text);
-	public void echo(String text, WarlockStyle style);
+	public void echo(WarlockString text);
 	
 	public void addStreamListener(IStreamListener listener);
 	public void removeStreamListener(IStreamListener listener);

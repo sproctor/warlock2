@@ -536,7 +536,7 @@ public class WSLScriptCommands {
 				if(stream == null)
 					script.scriptWarning("Stream \"" + streamName + "\" does not exist.");
 				else
-					script.setGlobalVariable(var, stream.getFullTitle());
+					script.setGlobalVariable(var, script.getClient().getStreamTitle(streamName));
 			} else {
 				script.scriptError("Invalid arguments to random");
 			}

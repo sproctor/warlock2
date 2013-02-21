@@ -161,6 +161,7 @@ public class StreamTest {
 		Assert.assertEquals(listener.prompt, ">");
 	}
 
+	/*
 	@Test
 	public void testIsPrompting() {
 		stream.prompt(">");
@@ -175,6 +176,7 @@ public class StreamTest {
 		Assert.assertTrue(listener.echoed);
 		Assert.assertEquals(listener.echo, TEST_STRING);
 	}
+	*/
 
 	@Test
 	public void testGetName() {

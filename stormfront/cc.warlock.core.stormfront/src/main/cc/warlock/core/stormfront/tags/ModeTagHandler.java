@@ -52,7 +52,7 @@ public class ModeTagHandler extends DefaultTagHandler {
 			if (id.equals("CMGR"))
 			{
 				((StormFrontConnection)client.getConnection()).passThrough();
-				client.getDefaultStream().prompt(null);
+				client.prompt(null);
 			} else {
 				// Shouldn't get here
 			}

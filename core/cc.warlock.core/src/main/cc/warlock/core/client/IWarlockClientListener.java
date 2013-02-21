@@ -21,10 +21,12 @@
  */
 package cc.warlock.core.client;
 
-public interface IWarlockClientListener
-{
-	public void clientCreated (IWarlockClient client);
-	public void clientConnected (IWarlockClient client);
-	public void clientDisconnected (IWarlockClient client);
+public interface IWarlockClientListener {
+	public void clientCreated(IWarlockClient client);
+
+	public void clientConnected(IWarlockClient client);
+
+	public void clientDisconnected(IWarlockClient client);
+
 	public void clientSettingsLoaded(IWarlockClient client);
 }

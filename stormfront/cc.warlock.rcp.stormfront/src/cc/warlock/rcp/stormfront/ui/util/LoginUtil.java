@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.WarlockMonospace;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.stormfront.client.internal.StormFrontClient;
@@ -79,7 +78,7 @@ public class LoginUtil {
 			"* or your internet connection is not active\n" +
 			"******************************************************************\n";
 			
-			client.getDefaultStream().put(new WarlockString(errorConnectMessage, WarlockMonospace.getInstance()));
+			client.echo(errorConnectMessage, WarlockMonospace.getInstance());
 		}
 	}
 	

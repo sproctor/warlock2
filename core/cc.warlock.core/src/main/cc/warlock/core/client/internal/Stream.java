@@ -45,14 +45,13 @@ public class Stream implements IStream {
 	protected String title;
 	protected String subtitle;
 	private ArrayList<IStreamListener> listeners = new ArrayList<IStreamListener>();
-	protected boolean isPrompting = false;
 	private String closedStyle;
 	private String closedTarget = "main";
 	private String streamName;
 	protected boolean isLogging = false;
 	private String location = "right";
 	private StreamHistory history = null;
-	private final WarlockStyle echoStyle = new WarlockStyle("echo");
+	
 	
 	public Stream (IWarlockClient client, String streamName) {
 		this.client = client;
@@ -107,18 +106,9 @@ public class Stream implements IStream {
 				t.printStackTrace();
 			}
 		}
-		
-		if(!client.getViewer().isStreamOpen(streamName) && !closedTarget.equals("") && !streamName.equals(closedTarget)) {
-			WarlockString closedText = new WarlockString(text.toString(), new WarlockStyle(closedStyle));
-			client.getStream(closedTarget).put(closedText);
-		}
-		
-		isPrompting = false;
 	}
 	
 	public synchronized void prompt(String prompt) {
-		isPrompting = true;
-		
 		if (isLogging && client.getLogger() != null) {
 			client.getLogger().logPrompt(prompt);
 		}
@@ -142,30 +132,15 @@ public class Stream implements IStream {
 		{
 			listener.streamReceivedCommand(this, command);
 		}
-		
-		isPrompting = false;
 	}
 	
-	public boolean isPrompting () {
-		return isPrompting;
-	}
-	
-	public synchronized void echo(String text) {
-		echo(text, echoStyle);
-	}
-	
-	public void echo(String text, WarlockStyle style) {
-		WarlockString string = new WarlockString(text);
-		string.addStyle(style);
-
-		if (isLogging && client.getLogger() != null) {
-			client.getLogger().logEcho(text);
-		}
-		
+	public void echo(WarlockString text) {
 		for (IStreamListener listener : listeners)
 		{
 			try {
-				listener.streamReceivedText(this, string);
+				listener.streamFlush(this);
+				listener.streamReceivedText(this, text);
+				listener.streamFlush(this);
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -205,8 +180,16 @@ public class Stream implements IStream {
 		this.closedTarget = target;
 	}
 	
+	public String getClosedTarget() {
+		return closedTarget;
+	}
+	
 	public void setClosedStyle(String style) {
 		this.closedStyle = style;
+	}
+	
+	public String getClosedStyle() {
+		return closedStyle;
 	}
 	
 	public synchronized void updateComponent(String id, WarlockString text) {

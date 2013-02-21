@@ -32,6 +32,7 @@ public class WSLActionClear extends WSLAbstractCommand {
 	
 	public void execute() {
 		script.scriptCommands.clearActions();
+		script.scriptDebug(2, "Actions cleared");
 	}
 
 }

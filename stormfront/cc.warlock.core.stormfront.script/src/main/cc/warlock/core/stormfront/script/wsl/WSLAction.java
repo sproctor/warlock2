@@ -62,6 +62,7 @@ public class WSLAction extends WSLAbstractCommand {
 	public void execute() {
 		try {
 			match = new RegexMatch(when.toString().trim());
+			script.scriptDebug(2, "Action added \"" + command + "\" when \"" + when + "\"");
 			script.scriptCommands.addAction(new WSLActionAdapter(), match);
 		} catch(PatternSyntaxException e) {
 			script.scriptError("Bad regex \"" + when.toString().trim() + "\" in action");
