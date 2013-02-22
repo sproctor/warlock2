@@ -33,7 +33,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
  */
 public class PromptTagHandler extends DefaultTagHandler {
 	
-	protected StringBuffer prompt = new StringBuffer();
+	protected String prompt;
 	
 	public PromptTagHandler (IStormFrontProtocolHandler handler) {
 		super(handler);
@@ -49,7 +49,6 @@ public class PromptTagHandler extends DefaultTagHandler {
 		handler.flushBuffer();
 		handler.clearStyles();
 		handler.clearStreams();
-		prompt.setLength(0);
 		
 		String time = attributes.getValue("time");
 		if (time != null)
@@ -58,12 +57,13 @@ public class PromptTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public boolean handleCharacters(String characters) {
-		prompt.append(characters);
+		// If the prompt has tags in it... we fuck up
+		prompt = characters;
 		return true;
 	}
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().prompt(prompt.toString());
+		handler.getClient().prompt(prompt);
 	}
 }
