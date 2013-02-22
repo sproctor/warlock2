@@ -181,13 +181,15 @@ public class StreamText extends WarlockText implements IStreamListener {
 			WarlockClientRegistry.addWarlockClientListener(clientListener);
 			// if client already has settings, we'll unintentially load them twice
 			loadSettings();
-		}
-		
-			this.title.set(client.getStreamTitle(streamName));
+			
+
+			title.set(client.getStreamTitle(streamName));
 			WarlockString history = client.getStreamHistory(streamName);
 			if(history != null)
 				bufferText(history);
-			this.flushBuffer();
+		}
+		
+		this.flushBuffer();
 	}
 	
 	private class WindowSettingsListener implements IWarlockSettingListener {
