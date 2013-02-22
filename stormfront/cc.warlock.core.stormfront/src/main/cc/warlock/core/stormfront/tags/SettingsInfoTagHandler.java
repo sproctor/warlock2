@@ -60,7 +60,7 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 			// StormFrontServerSettings.sendInitialServerSettings(handler.getClient());
 			
 			PromptTagHandler promptHandler = (PromptTagHandler) handler.getTagHandler(PromptTagHandler.class);
-			promptHandler.setWaitingForInitialStreams(true);
+			// promptHandler.setWaitingForInitialStreams(true);
 			return;
 		}
 		

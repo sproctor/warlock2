@@ -34,7 +34,6 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 public class PromptTagHandler extends DefaultTagHandler {
 	
 	protected StringBuffer prompt = new StringBuffer();
-	protected boolean waitingForInitialStreams = false;
 	
 	public PromptTagHandler (IStormFrontProtocolHandler handler) {
 		super(handler);
@@ -66,19 +65,5 @@ public class PromptTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleEnd(String rawXML) {
 		handler.getClient().prompt(prompt.toString());
-		
-		if (waitingForInitialStreams)
-		{
-			// StormFrontServerSettings.sendInitialStreamWindows(handler.getClient());
-			waitingForInitialStreams = false;
-		}
-	}
-
-	public boolean isWaitingForInitialStreams() {
-		return waitingForInitialStreams;
-	}
-
-	public void setWaitingForInitialStreams(boolean waitingForInitialStreams) {
-		this.waitingForInitialStreams = waitingForInitialStreams;
 	}
 }
