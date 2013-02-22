@@ -22,7 +22,7 @@
 				<not><isset property="@{property}"/></not>
 				<then>
 					<property environment="env"/>
-					<property name="@{property}" value="${warlock2-version-prefix}.${env.BUILD_NUMBER}_${warlock2-version-suffix}"/>
+					<property name="@{property}" value="${warlock2-version-prefix}.${env.MICRO_VERSION}_${warlock2-version-suffix}"/>
 				</then>
 			</if>
 		</sequential>
