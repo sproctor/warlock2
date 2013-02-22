@@ -52,8 +52,9 @@ public class PromptTagHandler extends DefaultTagHandler {
 		handler.clearStreams();
 		prompt.setLength(0);
 		
-		if (attributes.getValue("time") != null)
-			handler.getClient().syncTime(new Long(attributes.getValue("time")));
+		String time = attributes.getValue("time");
+		if (time != null)
+			handler.getClient().syncTime(new Long(time));
 	}
 	
 	@Override

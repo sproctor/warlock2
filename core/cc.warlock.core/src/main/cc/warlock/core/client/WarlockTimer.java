@@ -32,9 +32,7 @@ public class WarlockTimer {
 	
 	private WarlockTimerTask task;
 	private Property<Integer> value = new Property<Integer>(0);
-	private int length;
-	private long timeDelta;
-	private Long end;
+	private long end = 0; // 0 for no roundtime or roundtime already setup
 	
 	private class WarlockTimerTask extends TimerTask {
 		public void run() {
@@ -43,67 +41,39 @@ public class WarlockTimer {
 	}
 	
 	private synchronized void update() {
-		// Synchronize with external roundtime updates
-		long now = System.currentTimeMillis();
-		long useconds = 0;
-		
-		
-		if (end != null)
-			useconds = end * 1000L + timeDelta - now;
+		int newValue = value.get() - 1;
 
-		if (useconds <= 0) {
+		if (newValue <= 0) {
 			task.cancel();
 			task = null;
 			clear();
 			return;
 		}
 		
-		// Update the world with the new roundtime
-		// Avoid flicker caused by redundant updates
-		int newValue = (int)((useconds + 999) / 1000);
-		if (value.get() != newValue)
-			value.set(newValue);
-
-		// Compute how long until next roundtime update
-		long waitTime = useconds % 1000;
-		if (waitTime == 0)
-			waitTime = 1000;
-
+		value.set(newValue);
+	}
+	
+	/*
+	 * Sync sets up the timer if we previously set the end.
+	 */
+	public synchronized void sync(long time) {
+		if(end == 0) // no roundtime or it's already setup
+			return;
+		
+		if(end > time)
+			value.set((int)(end - time));
+		
+		// Set end to 0 to signify that we setup the timer
+		end = 0;
+		
 		if(task != null)
 			task.cancel();
 		task = new WarlockTimerTask();
-		timer.scheduleAtFixedRate(task, waitTime, 1000);
-	}
-	
-	public synchronized void sync(long time) {
-		if(end == null)
-			return;
-		
-		long newTimeDelta = System.currentTimeMillis() - time * 1000L;
-		
-		if (length > 0) {
-			// Don't decrease timeDelta while roundtimes are active.
-			if (newTimeDelta > timeDelta)
-				timeDelta = newTimeDelta;
-			return;
-		}
-		
-		timeDelta = newTimeDelta;
-		
-		if (end > time) {
-			// We need to do this now due to scheduling delays in the thread
-			length = (int)(end - time);
-			value.set(length);
-			update();
-		} else {
-			clear();
-		}
+		timer.scheduleAtFixedRate(task, 1000, 1000);
 	}
 	
 	private void clear() {
 		value.set(0);
-		end = null;
-		length = 0;
 		this.notifyAll();
 	}
 	
@@ -115,13 +85,8 @@ public class WarlockTimer {
 		return value.get();
 	}
 	
-	public int getLength() {
-		return length;
-	}
-	
-	
 	public synchronized void waitForEnd() throws InterruptedException {
-		while (end != null) {
+		while (value.get() > 0) {
 			wait();
 		}
 	}
