@@ -492,7 +492,19 @@ public abstract class WarlockClient implements IWarlockClient {
 	public synchronized void echo(String streamName, String text, IWarlockStyle style) {
 		WarlockString string = new WarlockString(text, style);
 
-		streams.get(streamName).echo(string);
+		IStream stream = streams.get(streamName);
+		if(stream == null) {
+			// panic
+			throw new Error("Printing to uninstantiated stream");
+		}
+		stream.echo(string);
+		String closedTarget = stream.getClosedTarget();
+		if(!viewer.isStreamOpen(streamName) && !closedTarget.equals("")) {
+			String closedStyle = stream.getClosedStyle();
+			WarlockString closedText = new WarlockString(text, new WarlockStyle(closedStyle));
+			IStream targetStream = streams.get(closedTarget);
+			targetStream.echo(closedText);
+		}
 	}
 	
 	public synchronized void clear(String streamName) {
