@@ -37,10 +37,23 @@ public class WarlockMacro implements IMacro
 	private String command;
 	private IMacroHandler handler;
 	
-	public WarlockMacro (String keyString, String command) {
+	public WarlockMacro (String command, String keyString) {
 		this.keyString = keyString;
 		this.command = command;
 		this.handler = new CommandMacroHandler(command);
+	}
+	
+	public WarlockMacro (String command, String key, int modifiers) {
+		this(command, getKeyString(key, modifiers));
+	}
+	
+	private static String getKeyString(String key, int modifiers) {
+		String keyString = key;
+		if((modifiers | IMacro.ALT) != 0)
+			keyString = "Alt+" + keyString;
+		if((modifiers | IMacro.CTRL) != 0)
+			keyString = "Ctrl+" + keyString;
+		return keyString;
 	}
 	
 	public String getKeyString() {
@@ -49,6 +62,10 @@ public class WarlockMacro implements IMacro
 	
 	public void setKeyString(String keyString) {
 		this.keyString = keyString;
+	}
+	
+	public void setKeyString(String key, int modifiers) {
+		setKeyString(getKeyString(key, modifiers));
 	}
 	
 	public void setHandler(IMacroHandler handler) {

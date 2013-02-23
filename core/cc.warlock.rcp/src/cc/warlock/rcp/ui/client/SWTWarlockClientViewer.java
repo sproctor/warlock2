@@ -165,10 +165,6 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	public IMacroCommand getMacroCommand(String id) {
 		return viewer.getMacroCommand(id);
 	}
-
-	public Collection<WarlockMacro> getDefaultMacros() {
-		return viewer.getDefaultMacros();
-	}
 	
 	public void openCustomStream(String name) {
 		run(new OpenCustomStreamWrapper(name));

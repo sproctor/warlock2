@@ -48,24 +48,19 @@ public class LoginUtil {
 		int port = Integer.parseInt (loginProperties.get("GAMEPORT"));
 		String key = loginProperties.get("KEY");
 		
-		StormFrontClient client = new StormFrontClient(loginProperties.get("GAMECODE"));
-		gameView.setClient(client);
-		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		
 		try {
 			if (page.findView(HandsView.VIEW_ID) == null)
-			{
 				page.showView(HandsView.VIEW_ID);
-			}
 			if (page.findView(BarsView.VIEW_ID) == null)
-			{
 				page.showView(BarsView.VIEW_ID);
-			}
-		} catch (PartInitException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (PartInitException e) {
+			e.printStackTrace();
 		}
+		
+		StormFrontClient client = new StormFrontClient(loginProperties.get("GAMECODE"));
+		gameView.setClient(client);
 		
 		try {
 			client.connect(server, port, key);

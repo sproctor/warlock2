@@ -29,9 +29,13 @@
 public interface IMacro {
 
 	public static final int NO_MODIFIERS = 0;
+	public static final int ALT = 1;
+	public static final int CTRL = 2;
+	public static final int SHIFT = 4;
 	
 	public String getKeyString ();
 	public void setKeyString (String keyString);
+	public void setKeyString(String key, int modifiers);
 	
 	public String getCommand ();
 	public void setCommand (String command);

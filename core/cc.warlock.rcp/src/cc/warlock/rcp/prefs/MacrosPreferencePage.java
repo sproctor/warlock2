@@ -67,6 +67,7 @@ import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.internal.CommandMacroHandler;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.client.settings.DefaultMacros;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.settings.MacroSetting;
 import cc.warlock.rcp.ui.ContentAssistCellEditor;
@@ -74,7 +75,6 @@ import cc.warlock.rcp.ui.KeyStrokeCellEditor;
 import cc.warlock.rcp.ui.KeyStrokeText;
 import cc.warlock.rcp.ui.KeyStrokeText.KeyStrokeLockListener;
 import cc.warlock.rcp.ui.WarlockSharedImages;
-import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 
 /**

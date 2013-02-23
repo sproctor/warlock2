@@ -88,8 +88,8 @@ public class MacroRegistry {
 	}
 	
 	private void loadBaseMacros () {
-		addMacro(new WarlockMacro(getKeyString(SWT.CR, 0), "{Return}"));
-		addMacro(new WarlockMacro(getKeyString(SWT.ESC, 0), "{StopScript}"));
+		addMacro(new WarlockMacro("{Return}", getKeyString(SWT.CR, 0)));
+		addMacro(new WarlockMacro("{StopScript}", getKeyString(SWT.ESC, 0)));
 	}
 	
 	public IMacro getMacro(int keycode, int modifiers) {
