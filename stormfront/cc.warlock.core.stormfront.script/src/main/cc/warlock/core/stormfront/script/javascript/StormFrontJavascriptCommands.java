@@ -133,7 +133,7 @@ public class StormFrontJavascriptCommands extends JavascriptCommands
 	}
 	
 	public String getVariable(String name) {
-		return sfCommands.getClient().getVariable(name);
+		return sfCommands.getStoredVariable(name);
 	}
 	
 	public String getVital(String name) {
@@ -141,6 +141,6 @@ public class StormFrontJavascriptCommands extends JavascriptCommands
 	}
 	
 	public void setVariable(String name, String value) {
-		sfCommands.getClient().setVariable(name, value);
+		sfCommands.setStoredVariable(name, value);
 	}
 }

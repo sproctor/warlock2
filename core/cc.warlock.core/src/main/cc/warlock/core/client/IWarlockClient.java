@@ -160,17 +160,15 @@ public interface IWarlockClient extends IRoomListener {
 	
 	public void removeStreamListener(String streamName, IStreamListener listener);
 	
-	public String getVariable(String id);
-	
-	public void setVariable(String id, String value);
-	
-	public void removeVariable(String id);
-	
 	/**
 	 * @return The gameCode of the current player
 	 */
 	public String getGameCode();
 	
+	/**
+	 * @param name
+	 * @return The named timer
+	 */
 	public WarlockTimer getTimer(String name);
 	
 	/**

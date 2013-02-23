@@ -53,9 +53,7 @@ import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.HighlightConfigurationProvider;
-import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.network.IConnection;
-import cc.warlock.core.settings.IVariable;
 import cc.warlock.core.util.Pair;
 
 
@@ -319,39 +317,6 @@ public abstract class WarlockClient implements IWarlockClient {
 			}
 		}
 	}
-	
-	/*public void settingChanged(IWarlockSetting setting) {
-		reloadHighlights();
-	}*/
-	
-	
-	public String getVariable(String id) {
-		IClientSettings clientSettings = getClientSettings();
-		if(clientSettings == null)
-			return null;
-		IVariable var = VariableConfigurationProvider.getProvider(clientSettings).getVariable(id);
-		if(var == null)
-			return null;
-		return var.getValue();
-	}
-	
-	public void setVariable(String id, String value) {
-		IClientSettings clientSettings = getClientSettings();
-		if(clientSettings == null)
-			return;
-		VariableConfigurationProvider.getProvider(clientSettings).addVariable(id, value);
-	}
-	
-	public void removeVariable(String id) {
-		IClientSettings clientSettings = getClientSettings();
-		if(clientSettings == null)
-			return;
-		VariableConfigurationProvider.getProvider(clientSettings).removeVariable(id);
-	}
-	
-	/*public IWarlockStyle getNamedStyle(String id) {
-		return PresetStyleConfigurationProvider.getProvider(getClientSettings()).getStyle(id);
-	}*/
 	
 	public ICharacterStatus getCharacterStatus() {
 		return status;

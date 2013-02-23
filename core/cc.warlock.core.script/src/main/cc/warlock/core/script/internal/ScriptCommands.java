@@ -33,6 +33,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.IStream;
@@ -42,8 +43,11 @@ import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Command;
+import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.IScriptCommands;
+import cc.warlock.core.settings.IVariable;
 
 public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomListener {
 
@@ -98,10 +102,12 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		client.addRoomListener(this);
 	}
 	
+	@Override
 	public void echo(String text) {
 		getClient().echo("[" + scriptName + "]: " + text + "\n");
 	}
 	
+	@Override
 	public BlockingQueue<String> createLineQueue() {
 		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 		synchronized(textWaiters) {
@@ -110,10 +116,12 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		return queue;
 	}
 	
+	@Override
 	public boolean removeLineQueue(BlockingQueue<String> queue) {
 		return textWaiters.remove(queue);
 	}
 	
+	@Override
 	public IMatch matchWait(Collection<IMatch> matches, BlockingQueue<String> matchQueue, double timeout) throws InterruptedException {
 		try {
 			boolean haveTimeout = timeout > 0.0;
@@ -146,11 +154,13 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
+	@Override
 	public void move(String direction, int lineNum) throws InterruptedException {
 		put(direction, lineNum);
 		waitNextRoom();
 	}
 
+	@Override
 	public void waitNextRoom() throws InterruptedException {
 		lock.lock();
 		try {
@@ -164,6 +174,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
+	@Override
 	public void pause(double seconds) throws InterruptedException {
 		long now = System.currentTimeMillis();
 		long pauseEnd = now + (long)(seconds * 1000.0);
@@ -174,12 +185,14 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 	
+	@Override
 	public void put(String text, int lineNum) throws InterruptedException {
 		Command command = new Command(text, true);
 		command.setPrefix("[" + scriptName + ":" + lineNum + "]: ");
 		getClient().send(command);
 	}
 
+	@Override
 	public void waitFor(IMatch match) throws InterruptedException {
 		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
@@ -196,6 +209,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
+	@Override
 	public void waitForPrompt() throws InterruptedException {
 		lock.lock();
 		try {
@@ -207,14 +221,18 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 	
+	@Override
 	public IWarlockClient getClient() {
 		return viewer.getClient();
 	}
-		
+	
+	@Override
 	public void streamCleared(IStream stream) {}
 	
+	@Override
 	public void streamFlush(IStream stream) {}
 	
+	@Override
 	public void streamPrompted(IStream stream, String prompt) {
 		lock.lock();
 		try {
@@ -227,12 +245,14 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		receiveLine(prompt);
 	}
 	
+	@Override
 	public void streamReceivedCommand(IStream stream, ICommand command) {
 		atPrompt = false;
 		if(!command.fromScript())
 			receiveText(command.getCommand());
 	}
 	
+	@Override
 	public void streamReceivedText(IStream stream, WarlockString text) {
 		if(text.hasStyleNamed("debug"))
 			return;
@@ -243,6 +263,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		receiveText(text.toString());
 	}
 	
+	@Override
 	public void componentUpdated(IStream stream, String id, WarlockString text) { }
 	
 	protected void receiveText(String text) {
@@ -266,6 +287,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 	
+	@Override
 	public void nextRoom() {
 		lock.lock();
 		try {
@@ -276,6 +298,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
+	@Override
 	public void stop() {
 		interrupt();
 
@@ -283,6 +306,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		getClient().removeRoomListener(this);
 	}
 	
+	@Override
 	public void interrupt() {
 		lock.lock();
 		try {
@@ -295,6 +319,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 	
+	@Override
 	public void resume() {
 		lock.lock();
 		try {
@@ -305,14 +330,17 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
+	@Override
 	public void suspend() {
 		this.suspended = true;
 	}
 	
+	@Override
 	public boolean isSuspended() {
 		return suspended;
 	}
 	
+	@Override
 	public void waitForResume() throws InterruptedException {
 		// Don't grab the lock if we don't need to
 		if(!suspended)
@@ -327,37 +355,73 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 	
+	@Override
 	public void addThread(Thread thread) {
 		scriptThreads.add(thread);
 	}
 	
+	@Override
 	public void removeThread(Thread thread) {
 		scriptThreads.remove(thread);
 	}
 	
+	@Override
 	public void playSound(InputStream stream) {
 		getClient().playSound(stream);
 	}
 
+	@Override
 	public void streamTitleChanged(IStream stream, String title) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void streamCreated(IStream stream) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	@Override
 	public void openWindow(String name) {
 		getClient().getViewer().openCustomStream("script" + name);
 	}
 	
+	@Override
 	public void printToWindow(String name, String text) {
 		getClient().getViewer().printToCustomStream("script" + name, new WarlockString(text));
 	}
 	
+	@Override
 	public void clearWindow(String name) {
 		getClient().getViewer().clearCustomStream("script" + name);
+	}
+
+	private IClientSettings getSettings() {
+		IWarlockClient client = getClient();
+		IClientSettings settings = null;
+		if(client != null)
+			settings = client.getClientSettings();
+		if(settings == null)
+			settings = ClientSettings.getGlobalClientSettings();
+		return settings;
+	}
+	
+	@Override
+	public String getStoredVariable(String id) {
+		IVariable var = VariableConfigurationProvider.getProvider(getSettings()).getVariable(id);
+		if(var == null)
+			return null;
+		return var.getValue();
+	}
+
+	@Override
+	public void setStoredVariable(String id, String value) {
+		VariableConfigurationProvider.getProvider(getSettings()).addVariable(id, value);
+	}
+
+	@Override
+	public void removeStoredVariable(String id) {
+		VariableConfigurationProvider.getProvider(getSettings()).removeVariable(id);
 	}
 }

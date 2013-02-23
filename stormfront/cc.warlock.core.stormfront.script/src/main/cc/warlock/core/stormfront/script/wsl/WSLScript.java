@@ -106,11 +106,7 @@ public class WSLScript extends AbstractScript {
 		if (val != null)
 			return val;
 		
-		// return value from settings. All user global variables are stored here
-		String var = null;
-		IWarlockClient client = getClient();
-		if(client != null)
-			var = client.getVariable(name);
+		String var = scriptCommands.getStoredVariable(name);
 		if (var != null)
 			return new WSLString(var);
 		
@@ -118,7 +114,7 @@ public class WSLScript extends AbstractScript {
 	}
 	
 	public boolean variableExists(String name) {
-		return specialVariables.containsKey(name) || getClient().getVariable(name) != null;
+		return specialVariables.containsKey(name) || scriptCommands.getStoredVariable(name) != null;
 	}
 	
 	public boolean localVariableExists(String name) {
@@ -373,7 +369,7 @@ public class WSLScript extends AbstractScript {
 	protected void setGlobalVariable(String name, String value) {
 		if(specialVariables.containsValue(name))
 			scriptError("Cannot overwrite special variable \"" + name + "\"");
-		getClient().setVariable(name, value);
+		scriptCommands.setStoredVariable(name, value);
 	}
 	
 	protected void setSpecialVariable(String name, String value) {
@@ -386,7 +382,7 @@ public class WSLScript extends AbstractScript {
 	}
 	
 	protected void deleteVariable(String name) {
-		getClient().removeVariable(name);
+		scriptCommands.removeStoredVariable(name);
 	}
 	
 	protected void deleteLocalVariable(String name) {
