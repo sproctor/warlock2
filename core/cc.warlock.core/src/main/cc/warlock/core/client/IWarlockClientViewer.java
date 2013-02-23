@@ -28,8 +28,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
-import cc.warlock.core.client.internal.WarlockMacro;
-
 
 
 /**
@@ -52,7 +50,6 @@ public interface IWarlockClientViewer
 	
 	public Collection<IMacroVariable> getMacroVariables();
 	public IMacroCommand getMacroCommand(String id);
-	public Collection<WarlockMacro> getDefaultMacros();
 	
 	public boolean isStreamOpen(String streamName);
 	public void openCustomStream(String name);

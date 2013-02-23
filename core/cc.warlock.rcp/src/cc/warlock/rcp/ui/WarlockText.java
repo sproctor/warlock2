@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
@@ -59,6 +60,7 @@ import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
 import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.SoundPlayer;
@@ -502,7 +504,10 @@ public class WarlockText {
 		boolean underline = style.isUnderline();
 		boolean fullLine = style.isFullLine();
 		
-		IWarlockStyle presetStyle = PresetStyleConfigurationProvider.getProvider(client.getClientSettings()).getStyle(style.getName());
+		IClientSettings settings = client.getClientSettings();
+		if(settings == null)
+			settings = ClientSettings.getGlobalClientSettings();
+		IWarlockStyle presetStyle = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName());
 		if(presetStyle != null) {
 			if(background == null || background.isDefault())
 				background = presetStyle.getBackgroundColor();

@@ -56,8 +56,6 @@ import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockMacro;
-import cc.warlock.core.client.settings.DefaultMacros;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.ProfileProvider;
@@ -303,33 +301,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		showPopup(reconnectPopup);
 	}
 	
-	public void loadClientSettings(IClientSettings settings)
-	{	
-		//IStyleProvider styleProvider = new StormFrontStyleProvider(settings);
-		
-		//StyleProviders.setStyleProvider(getClient(), styleProvider);
-		
-		/*sfClient.getCharacterName().addListener(new IPropertyListener<String>() {
-			public void propertyChanged(String value) {
-				String viewId = getViewSite().getId() + ":" + getViewSite().getSecondaryId();
-				
-				/* FIXME: Marshall, can you look the following. I _think_
-				 * sfClient.getCharacterName().get() should just be replaced
-				 * by value (the parameter to this method).
-				 *//*
-				
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						Profile profile = getProfile();
-						if (profile != null) {
-							setReconnectProfile(profile);
-						} else {
-							setNoReconnectProfile(sfClient.getCharacterName().get());
-						}	
-					}
-				});
-			}
-		});*/
+	public void loadClientSettings(IClientSettings settings) {	
 		
 		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
 		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
@@ -337,9 +309,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		IWarlockFont mainFont = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont();
 		String fontFace = mainFont.getFamilyName();
 		int fontSize = mainFont.getSize();
-//		if (Platform.getOS().equals(Platform.OS_MACOSX)) {
-//			fontSize = settings.getMainWindowSettings().getFontSizeInPixels();
-//		}
 		
 		normalFont = mainFont.isDefaultFont() ? JFaceResources.getDefaultFont() : new Font(getSite().getShell().getDisplay(), fontFace, fontSize, SWT.NONE);
 		streamText.setFont(normalFont);
@@ -411,11 +380,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	@Override
 	public IMacroCommand getMacroCommand(String id) {
 		return MacroRegistry.instance().getMacroCommand(id);
-	}
-
-	@Override
-	public Collection<WarlockMacro> getDefaultMacros() {
-		return DefaultMacros.instance().getCollection();
 	}
 	
 }

@@ -41,7 +41,6 @@ import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.IWarlockEntry;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.WarlockMacro;
 
 /**
  * @author Marshall

@@ -31,11 +31,19 @@ import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClientViewer;
 
-public class WarlockMacro implements IMacro
-{
+public class WarlockMacro implements IMacro {
 	private String keyString;
 	private String command;
 	private IMacroHandler handler;
+	
+	public static String getKeyString(String key, int modifiers) {
+		String keyString = key;
+		if((modifiers | IMacro.ALT) != 0)
+			keyString = "Alt+" + keyString;
+		if((modifiers | IMacro.CTRL) != 0)
+			keyString = "Ctrl+" + keyString;
+		return keyString;
+	}
 	
 	public WarlockMacro (String command, String keyString) {
 		this.keyString = keyString;
@@ -47,14 +55,6 @@ public class WarlockMacro implements IMacro
 		this(command, getKeyString(key, modifiers));
 	}
 	
-	private static String getKeyString(String key, int modifiers) {
-		String keyString = key;
-		if((modifiers | IMacro.ALT) != 0)
-			keyString = "Alt+" + keyString;
-		if((modifiers | IMacro.CTRL) != 0)
-			keyString = "Ctrl+" + keyString;
-		return keyString;
-	}
 	
 	public String getKeyString() {
 		return keyString;

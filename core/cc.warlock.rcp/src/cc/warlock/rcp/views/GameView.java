@@ -274,7 +274,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		streamText.pageUp();
 	}
 	
-	public void setClient(IWarlockClient client) {
+	public synchronized void setClient(IWarlockClient client) {
 		if (this.client != null) {
 			// All done with client, dispose of it so it can do whatever it needs to to be done.
 			this.client.dispose();
@@ -353,13 +353,13 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	}
 	
 	@Override
-	public void addClientViewerListener(IWarlockClientViewerListener listener) {
+	public synchronized void addClientViewerListener(IWarlockClientViewerListener listener) {
 		listeners.add(listener);
 	}
 
 	@Override
-	public void removeClientViewerListener(IWarlockClientViewerListener listener) {
-		listeners.add(listener);
+	public synchronized void removeClientViewerListener(IWarlockClientViewerListener listener) {
+		listeners.remove(listener);
 	}
 	
 	public String getViewId() {

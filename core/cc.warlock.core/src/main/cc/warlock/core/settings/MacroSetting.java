@@ -31,6 +31,7 @@ import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroHandler;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.internal.CommandMacroHandler;
+import cc.warlock.core.client.internal.WarlockMacro;
 
 public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSetting
 {
@@ -68,6 +69,10 @@ public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSett
 		this.keyString = keyString;
 		getNode().put("keystring", keyString);
 		updateDeferred = true;
+	}
+	
+	public void setKeyString(String key, int modifiers) {
+		setKeyString(WarlockMacro.getKeyString(key, modifiers));
 	}
 	
 	public void setCommand(String command) {

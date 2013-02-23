@@ -1,11 +1,10 @@
-package cc.warlock.core.client.settings;
+package cc.warlock.core.client.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 import cc.warlock.core.client.IMacro;
-import cc.warlock.core.client.internal.WarlockMacro;
 
 public class DefaultMacros {
 	private static DefaultMacros instance = new DefaultMacros();

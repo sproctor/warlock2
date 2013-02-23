@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.internal.DefaultMacros;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.ClientSettings;
@@ -88,7 +89,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		clientSettings = ClientSettings.getClientSettings(playerId);
 		
 		if(clientSettings.isNewSetting()) {
-			for(WarlockMacro macro : viewer.getDefaultMacros()) {
+			for(WarlockMacro macro : DefaultMacros.instance().getCollection()) {
 				MacroSetting smacro = MacroConfigurationProvider.getProvider(clientSettings).createSetting();
 				smacro.setCommand(macro.getCommand());
 				smacro.setKeyString(macro.getKeyString());

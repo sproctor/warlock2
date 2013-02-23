@@ -49,7 +49,7 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.CommandHistory;
-import cc.warlock.core.client.settings.DefaultMacros;
+import cc.warlock.core.client.internal.DefaultMacros;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
@@ -195,11 +195,12 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	protected boolean processKey(int keyCode, int stateMask, char character) {
 		//System.out.println("got char \"" + e.character + "\"");
 		IWarlockClient client = viewer.getClient();
+		String keyString = MacroRegistry.instance().getKeyString(keyCode, stateMask);
 		IMacro macro;
 		if(client == null || client.getClientSettings() == null)
-			macro = DefaultMacros.instance().getMacro(keyCode, stateMask);
+			macro = DefaultMacros.instance().getMacro(keyString);
 		else
-			macro = MacroConfigurationProvider.getProvider(client.getClientSettings()).getMacro(MacroRegistry.instance().getKeyString(keyCode, stateMask));
+			macro = MacroConfigurationProvider.getProvider(client.getClientSettings()).getMacro(keyString);
 
 		// System macros
 		if(macro == null)
