@@ -26,14 +26,12 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
@@ -53,10 +51,7 @@ import cc.warlock.core.client.IProfile;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.ProfileProvider;
 import cc.warlock.core.settings.ProfileSetting;
@@ -69,7 +64,6 @@ import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
-import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.ConnectionView;
 import cc.warlock.rcp.views.GameView;
@@ -79,7 +73,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.StormFrontGameView";
 	
 	protected WarlockPopupAction reconnectPopup;
-	protected Font normalFont;
 	private Button reconnect;
 	
 	@Override
@@ -301,21 +294,8 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		showPopup(reconnectPopup);
 	}
 	
-	public void loadClientSettings(IClientSettings settings) {	
-		
-		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
-		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
-		
-		IWarlockFont mainFont = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont();
-		String fontFace = mainFont.getFamilyName();
-		int fontSize = mainFont.getSize();
-		
-		normalFont = mainFont.isDefaultFont() ? JFaceResources.getDefaultFont() : new Font(getSite().getShell().getDisplay(), fontFace, fontSize, SWT.NONE);
-		streamText.setFont(normalFont);
-		
+	public void loadClientSettings(IClientSettings settings) {			
 		streamText.setClient(getClient());
-		streamText.setBackground(ColorUtil.warlockColorToColor(bg));
-		streamText.setForeground(ColorUtil.warlockColorToColor(fg));
 		streamText.getTextWidget().redraw();
 		
 		if (HandsView.getDefault() != null) {

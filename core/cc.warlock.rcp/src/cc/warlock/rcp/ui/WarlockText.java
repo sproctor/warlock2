@@ -79,6 +79,7 @@ public class WarlockText {
 	private int doScrollDirection = SWT.DOWN;
 	private Menu contextMenu;
 	private boolean ignoreEmptyLines = true;
+	private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
 	
 	public WarlockText(Composite parent) {
@@ -196,6 +197,10 @@ public class WarlockText {
 	
 	public void setFont(Font font) {
 		textWidget.setFont(font);
+	}
+	
+	public void setColumnFont(Font font) {
+		monoFont = font;
 	}
 	
 	public void clearText() {
@@ -497,14 +502,16 @@ public class WarlockText {
 	}
 	
 	private StyleRangeWithData warlockStyleToStyleRange(IWarlockStyle style, int start, int length) {
-		StyleRangeWithData styleRange;
+		StyleRangeWithData styleRange = new StyleRangeWithData();
 		
 		WarlockColor foreground = style.getForegroundColor();
 		WarlockColor background = style.getBackgroundColor();
 		boolean underline = style.isUnderline();
 		boolean fullLine = style.isFullLine();
 		
-		IClientSettings settings = client.getClientSettings();
+		IClientSettings settings = null;
+		if(client != null)
+			settings = client.getClientSettings();
 		if(settings == null)
 			settings = ClientSettings.getGlobalClientSettings();
 		IWarlockStyle presetStyle = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName());
@@ -517,7 +524,11 @@ public class WarlockText {
 			fullLine |= presetStyle.isFullLine();
 		}
 		
-		styleRange = new StyleRangeWithData();
+		if(monoFont != null && style.isMonospace()) {
+			styleRange.font = monoFont;
+		}
+		
+		
 		styleRange.fontStyle = SWT.NORMAL;
 		if (style.isBold())
 			styleRange.fontStyle |= SWT.BOLD;

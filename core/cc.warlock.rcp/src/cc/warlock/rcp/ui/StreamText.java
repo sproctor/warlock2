@@ -20,6 +20,7 @@ import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
+import cc.warlock.core.settings.IWindowSettings;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
@@ -226,13 +227,22 @@ public class StreamText extends WarlockText implements IStreamListener {
 		this.setBackground(background);
 		this.setForeground(foreground);
 
-		String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
-		int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
-
 		if (font.isDefaultFont()) {
+			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
+			int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
 			this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
 		} else {
 			this.setFont(FontUtil.warlockFontToFont(font));
+		}
+		
+		IWindowSettings mainWindow = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings();
+		IWarlockFont columnFont = mainWindow.getColumnFont();
+		if(columnFont == null || columnFont.isDefaultFont()) {
+			this.setColumnFont(null);
+		} else {
+			String fontFace = columnFont.getFamilyName();
+			int fontSize = columnFont.getSize();
+			this.setColumnFont(new Font(getTextWidget().getDisplay(), fontFace, fontSize, SWT.NORMAL));
 		}
 	}
 	
