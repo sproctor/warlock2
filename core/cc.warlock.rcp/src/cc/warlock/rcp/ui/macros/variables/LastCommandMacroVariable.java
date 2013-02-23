@@ -26,7 +26,6 @@ package cc.warlock.rcp.ui.macros.variables;
 
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IMacroVariable;
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 
 
@@ -39,11 +38,9 @@ public class LastCommandMacroVariable implements IMacroVariable {
 		return "$lastCommand";
 	}
 
-	public String getValue(IWarlockClientViewer context) {
+	public String getValue(IWarlockClientViewer viewer) {
 		
-		IWarlockClient client = context.getClient();
-		
-		ICommand command = client.getCommandHistory().getLastCommand();
+		ICommand command = viewer.getEntry().getCommandHistory().getLastCommand();
 			
 		if(command != null) {
 			return command.getCommand();

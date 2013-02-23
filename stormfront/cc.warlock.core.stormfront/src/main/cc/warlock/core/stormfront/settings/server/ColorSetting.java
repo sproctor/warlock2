@@ -127,10 +127,10 @@ public abstract class ColorSetting extends ServerSetting implements Comparable<C
 			if (!skinFallback)
 				return StormFrontColor.DEFAULT_COLOR;
 			
-			if (KEY_FGCOLOR.equals(key) || foregroundKey.equals(key))
+			/*if (KEY_FGCOLOR.equals(key) || foregroundKey.equals(key))
 				return skinColor(DefaultSkin.getInstance().getDefaultForegroundColor(getId()));
 			else if (KEY_BGCOLOR.equals(key))
-				return skinColor(DefaultSkin.getInstance().getDefaultBackgroundColor(getId()));
+				return skinColor(DefaultSkin.getInstance().getDefaultBackgroundColor(getId()));*/
 		}
 		
 		return new StormFrontColor(color);

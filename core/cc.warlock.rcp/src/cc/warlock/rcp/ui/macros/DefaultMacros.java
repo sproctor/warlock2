@@ -125,4 +125,13 @@ public class DefaultMacros {
 	public Collection<WarlockMacro> getCollection() {
 		return Collections.unmodifiableCollection(macros);
 	}
+	
+	public WarlockMacro getMacro(int keycode, int modifier) {
+		String keyString = MacroRegistry.instance().getKeyString(keycode, modifier);
+		for(WarlockMacro macro : macros) {
+			if(macro.getKeyString().equals(keyString))
+				return macro;
+		}
+		return null;
+	}
 }

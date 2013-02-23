@@ -2,6 +2,7 @@ package cc.warlock.rcp.ui.client;
 
 import org.eclipse.swt.widgets.Display;
 
+import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.IWarlockEntry;
 
 public class SWTWarlockEntry implements IWarlockEntry {
@@ -47,6 +48,11 @@ public class SWTWarlockEntry implements IWarlockEntry {
 		return entry.getText();
 	}
 
+	@Override
+	public ICommandHistory getCommandHistory() {
+		return entry.getCommandHistory();
+	}
+	
 	@Override
 	public void setCurrentCommand(String command) {
 		run(new SetCurrentCommandWrapper(command));

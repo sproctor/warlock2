@@ -401,7 +401,7 @@ public class WSLScriptCommands {
 			if(arguments.startsWith(ScriptConfiguration.instance().getScriptPrefix())) {
 				// Quit this script if we're starting another one
 				script.stop();
-				ScriptEngineRegistry.startScript(script.getClient(), arguments.substring(1));
+				ScriptEngineRegistry.startScript(script.getViewer(), arguments.substring(1));
 			} else {
 				script.scriptCommands.put(arguments, script.getLineNum());
 			}
@@ -428,7 +428,7 @@ public class WSLScriptCommands {
 	protected class WSLCommandRun implements IWSLCommandDefinition {
 
 		public void execute(WSLScript script, String arguments) throws InterruptedException {
-			ScriptEngineRegistry.startScript(script.getClient(), arguments);
+			ScriptEngineRegistry.startScript(script.getViewer(), arguments);
 		}
 	}
 

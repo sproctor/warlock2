@@ -144,11 +144,11 @@ public class CommandLineSettings extends ColorSetting {
 
 	public StormFrontColor getBarColor ()
 	{
-		if (this.barColor != null && "skin".equals(this.barColor))
+		/*if (this.barColor != null && "skin".equals(this.barColor))
 		{
 			return new StormFrontColor(DefaultSkin.getInstance().getColor(IWarlockSkin.ColorType.CommandLine_BarColor));
 		}
-		else return getColorFromString(KEY_BARCOLOR, barColor, true);
+		else*/ return getColorFromString(KEY_BARCOLOR, barColor, true);
 	}
 	
 	public void setBarColor (WarlockColor barColor)

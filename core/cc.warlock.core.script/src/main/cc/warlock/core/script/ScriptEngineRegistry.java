@@ -92,7 +92,7 @@ public class ScriptEngineRegistry {
 		return null;
 	}
 	
-	public static IScript startScript (IWarlockClient client, String command) {
+	public static IScript startScript (IWarlockClientViewer viewer, String command) {
 		command = command.replaceAll("[\\r\\n]", "");
 		
 		int firstSpace = command.indexOf(" ");
@@ -105,7 +105,7 @@ public class ScriptEngineRegistry {
 			arguments = CommandLineTokenizer.tokenize(args);
 		}
 		
-		return startScript(scriptName, client.getViewer(), arguments);
+		return startScript(scriptName, viewer, arguments);
 	}
 	
 	public static IScript startScript (String scriptName, IWarlockClientViewer viewer, String[] arguments)

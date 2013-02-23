@@ -39,6 +39,7 @@ import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.script.IMatch;
@@ -78,8 +79,23 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		this.viewer = viewer;
 		this.scriptName = scriptName;
 
-		getClient().addStreamListener(IWarlockClient.MAIN_STREAM_NAME, this);
-		getClient().addRoomListener(this);
+		IWarlockClient client = getClient();
+		if(client != null) {
+			setClient(client);
+		} else {
+			viewer.addClientViewerListener(new IWarlockClientViewerListener() {
+				@Override
+				public void clientChanged(IWarlockClient client) {
+					setClient(client);
+					ScriptCommands.this.viewer.removeClientViewerListener(this);
+				}
+			});
+		}
+	}
+	
+	private void setClient(IWarlockClient client) {
+		client.addStreamListener(IWarlockClient.MAIN_STREAM_NAME, this);
+		client.addRoomListener(this);
 	}
 	
 	public void echo(String text) {

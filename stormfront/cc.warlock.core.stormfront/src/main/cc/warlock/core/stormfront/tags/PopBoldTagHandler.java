@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.stormfront.tags;
 
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 
 
@@ -37,6 +38,6 @@ public class PopBoldTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.stopBold();
+		handler.removeStyle(WarlockStyle.boldStyle);
 	}
 }

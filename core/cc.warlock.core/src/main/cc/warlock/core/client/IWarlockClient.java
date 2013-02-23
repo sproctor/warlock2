@@ -58,23 +58,12 @@ public interface IWarlockClient extends IRoomListener {
 	public void send(ICommand command);
 	
 	/**
-	 * @return This client's command history
-	 */
-	public ICommandHistory getCommandHistory();
-	
-	/**
 	 * Sets a viewer for the client
 	 * @param viewer The viewer to set
 	 */
 	public void setViewer (IWarlockClientViewer viewer);
 	
 	public IWarlockClientViewer getViewer();
-
-	/**
-	 * Functionally equivalent to getStream(DEFAULT_STREAM_NAME)
-	 * @return The default stream to send data to.
-	 */
-	//public IStream getMainStream();
 	
 	/**
 	 * @param streamName The stream name
@@ -88,12 +77,7 @@ public interface IWarlockClient extends IRoomListener {
 	 * Do not use the raw connection unless you know what you are doing!
 	 * @return
 	 */
-	public IConnection getConnection ();
-	
-	/**
-	 * @return The style for commands output by this client
-	 */
-	public IWarlockStyle getCommandStyle();
+	public IConnection getConnection();
 	
 	public void flushStreams();
 	
@@ -182,8 +166,6 @@ public interface IWarlockClient extends IRoomListener {
 	
 	public void removeVariable(String id);
 	
-	public IWarlockStyle getNamedStyle(String id);
-	
 	/**
 	 * @return The gameCode of the current player
 	 */
@@ -219,8 +201,6 @@ public interface IWarlockClient extends IRoomListener {
 	public void setProperty(String name, String property);
 	
 	public void dispose();
-	
-	public int getMinCommandLength();
 	
 	public void put(WarlockString text);
 	

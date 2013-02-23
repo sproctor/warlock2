@@ -34,6 +34,7 @@ import java.util.Stack;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.IStormFrontTagHandler;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -94,7 +95,6 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	private WarlockString buffer = new WarlockString();
 	protected int currentSpacing = 0;
 	protected int monsterCount = 0;
-	protected IWarlockStyle boldStyle = null;
 	private boolean lineHasTag = false;
 	private boolean lineHasContent = false;
 	
@@ -376,32 +376,14 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	}
 	
 	public void clearStyles() {
-		boldStyle = null;
 		while(!styleStack.empty()) {
 			WarlockStringMarker marker = styleStack.pop();
 			marker.setEnd(buffer.length());
 		}
 	}
 	
-	public void startBold() {
-		if (boldStyle == null) {
-			boldStyle = this.getClient().getNamedStyle("bold");
-			if(boldStyle != null)
-				this.addStyle(boldStyle);
-		}
-	}
-	
-	public void stopBold() {
-		if (boldStyle != null) {
-			this.removeStyle(boldStyle);
-			boldStyle = null;
-		}
-	}
-	
 	public IStormFrontTagHandler getTagHandler(Class<? extends IStormFrontTagHandler> handlerType) {
-		
-		for (IStormFrontTagHandler handler : defaultTagHandlers.values())
-		{
+		for (IStormFrontTagHandler handler : defaultTagHandlers.values()) {
 			if (handler.getClass().equals(handlerType))
 				return handler;
 		}

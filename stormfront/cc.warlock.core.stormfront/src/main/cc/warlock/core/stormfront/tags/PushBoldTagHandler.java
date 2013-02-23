@@ -21,6 +21,7 @@
  */
 package cc.warlock.core.stormfront.tags;
 
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 
 
@@ -38,7 +39,7 @@ public class PushBoldTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.startBold();
+		handler.addStyle(WarlockStyle.boldStyle);
 		handler.incrementMonsterCount();
 	}
 }

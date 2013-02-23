@@ -51,6 +51,7 @@ import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockString;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.rcp.ui.StreamText;
@@ -338,9 +339,12 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		String scriptPrefix = ScriptConfiguration.instance().getScriptPrefix();
 		
 		if (command.getCommand().startsWith(scriptPrefix)){
-			ScriptEngineRegistry.startScript(client, command.getCommand().substring(scriptPrefix.length()));
+			ScriptEngineRegistry.startScript(this, command.getCommand().substring(scriptPrefix.length()));
 		} else {
-			getClient().send(command);
+			if(client != null)
+				client.send(command);
+			else
+				streamText.streamReceivedText(null, new WarlockString("No connection, command not sent", WarlockStyle.echoStyle));
 		}
 	}
 	

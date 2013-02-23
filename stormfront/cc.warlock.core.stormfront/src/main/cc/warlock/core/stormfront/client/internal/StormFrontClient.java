@@ -34,14 +34,11 @@ import java.net.URL;
 import java.util.HashMap;
 
 import cc.warlock.core.client.IRoomListener;
-import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMacro;
-import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
-import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.settings.MacroSetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
@@ -129,14 +126,14 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		return playerId;
 	}
 	
-	@Override
+	/*@Override
 	public IWarlockStyle getCommandStyle() {
 		IWarlockStyle style = getNamedStyle(PresetStyleConfigurationProvider.PRESET_COMMAND);
 		if (style == null) {
 			return new WarlockStyle();
 		}
 		return style;
-	}
+	}*/
 	
 	public void loadCmdlist()
 	{

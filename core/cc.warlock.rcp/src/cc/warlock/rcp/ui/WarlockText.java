@@ -52,14 +52,14 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
 import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.rcp.ui.style.StyleProviders;
+import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.SoundPlayer;
 
@@ -496,33 +496,39 @@ public class WarlockText {
 	
 	private StyleRangeWithData warlockStyleToStyleRange(IWarlockStyle style, int start, int length) {
 		StyleRangeWithData styleRange;
-		IStyleProvider styleProvider = StyleProviders.getStyleProvider(client);
-		if(styleProvider != null) {
 		
-			styleRange = styleProvider.getStyleRange(style);
-			if(styleRange == null)
-				return null;
-		} else {
-			styleRange = new StyleRangeWithData();
-			styleRange.fontStyle = SWT.NORMAL;
-			if (style.isBold())
-				styleRange.fontStyle |= SWT.BOLD;
-			if (style.isItalic())
-				styleRange.fontStyle |= SWT.ITALIC;
-			if (style.isUnderline())
-				styleRange.underline = true;
-			WarlockColor foreground = style.getForegroundColor();
-			WarlockColor background = style.getBackgroundColor();
-			if (foreground != null && !foreground.isDefault())
-				styleRange.foreground = ColorUtil.warlockColorToColor(foreground);
-			if (background != null && !background.isDefault())
-				styleRange.background = ColorUtil.warlockColorToColor(background);
+		WarlockColor foreground = style.getForegroundColor();
+		WarlockColor background = style.getBackgroundColor();
+		boolean underline = style.isUnderline();
+		boolean fullLine = style.isFullLine();
+		
+		IWarlockStyle presetStyle = PresetStyleConfigurationProvider.getProvider(client.getClientSettings()).getStyle(style.getName());
+		if(presetStyle != null) {
+			if(background == null || background.isDefault())
+				background = presetStyle.getBackgroundColor();
+			if(foreground == null || foreground.isDefault())
+				foreground = presetStyle.getForegroundColor();
+			underline |= presetStyle.isUnderline();
+			fullLine |= presetStyle.isFullLine();
 		}
+		
+		styleRange = new StyleRangeWithData();
+		styleRange.fontStyle = SWT.NORMAL;
+		if (style.isBold())
+			styleRange.fontStyle |= SWT.BOLD;
+		if (style.isItalic())
+			styleRange.fontStyle |= SWT.ITALIC;
+		styleRange.underline = underline;
+		
+		if (foreground != null && !foreground.isDefault())
+			styleRange.foreground = ColorUtil.warlockColorToColor(foreground);
+		if (background != null && !background.isDefault())
+			styleRange.background = ColorUtil.warlockColorToColor(background);
 
 		styleRange.start = start;
 		styleRange.length = length;
 		
-		if(style.isFullLine())
+		if(fullLine)
 			textWidget.setLineBackground(textWidget.getLineAtOffset(styleRange.start), 1, styleRange.background);
 		if(style.getAction() != null)
 			styleRange.action = style.getAction();

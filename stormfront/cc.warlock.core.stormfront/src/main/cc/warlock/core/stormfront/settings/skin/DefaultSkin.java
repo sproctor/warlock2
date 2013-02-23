@@ -32,12 +32,12 @@ import cc.warlock.core.client.settings.WindowConfigurationProvider;
  * The default skin handles any attributes who's values are "skin"
  * @author marshall
  */
-public class DefaultSkin implements IWarlockSkin {
+public class DefaultSkin /*implements IWarlockSkin*/ {
 
 	public final static DefaultSkin instance = new DefaultSkin();
 	
-	public static final int DEFAULT_FONT_SIZE = 12;
-	public static final WarlockColor MAIN_COLOR = new WarlockColor(-1, -1, -1);
+	//public static final int DEFAULT_FONT_SIZE = 12;
+	//public static final WarlockColor MAIN_COLOR = new WarlockColor(-1, -1, -1);
 	
 	// TODO give these proper size/load since we know their final sizes.
 	protected HashMap<String, WarlockColor> fgColors = new HashMap<String, WarlockColor>();
@@ -48,7 +48,7 @@ public class DefaultSkin implements IWarlockSkin {
 	
 	private DefaultSkin ()
 	{
-		fgColors.put("bold", new WarlockColor("#FFFF00"));
+	/*	fgColors.put("bold", new WarlockColor("#FFFF00"));
 		fgColors.put("roomName", new WarlockColor("#FFFFFF"));
 		fgColors.put("speech", new WarlockColor("#80FF80"));
 		fgColors.put("thought", new WarlockColor("#FF8000"));
@@ -164,6 +164,6 @@ public class DefaultSkin implements IWarlockSkin {
 		if (foreground.isDefault()) {
 			foreground = getDefaultWindowForeground();
 		}
-		return foreground;
+		return foreground;*/
 	}
 }

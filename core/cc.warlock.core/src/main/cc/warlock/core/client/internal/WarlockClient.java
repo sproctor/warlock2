@@ -33,13 +33,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
-
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
-import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IRoomListener;
@@ -57,7 +53,6 @@ import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.HighlightConfigurationProvider;
-import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.settings.IVariable;
@@ -73,7 +68,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	protected IWarlockClientViewer viewer;
 	protected IWarlockClientListener listener;
 	private String lastCommand;
-	protected ICommandHistory commandHistory = new CommandHistory();
+	//protected ICommandHistory commandHistory = new CommandHistory();
 	protected String streamPrefix;
 	private Collection<IRoomListener> roomListeners = Collections.synchronizedCollection(new ArrayList<IRoomListener>());
 	protected Property<ICompass> compass = new Property<ICompass>(null);
@@ -89,8 +84,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
 	protected ClientSettings clientSettings;
-	private int minCommandSize;
-	private final WarlockStyle echoStyle = new WarlockStyle("echo");
+	//private int minCommandSize;
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
@@ -114,14 +108,6 @@ public abstract class WarlockClient implements IWarlockClient {
 				// if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
 					logger = new SimpleLogger(WarlockClient.this);
 					highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
-					minCommandSize = getClientSettings().getMinCommandSize();
-					getClientSettings().getNode().addPreferenceChangeListener(new IPreferenceChangeListener() {
-						@Override
-						public void preferenceChange(PreferenceChangeEvent event) {
-							if (event.getKey().equals("min-command-size"))
-								minCommandSize = Integer.parseInt((String)event.getNewValue());
-						}
-					});
 			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
@@ -146,9 +132,9 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	// IWarlockClient methods
 	
-	public ICommandHistory getCommandHistory() {
+	/*public ICommandHistory getCommandHistory() {
 		return commandHistory;
-	}
+	}*/
 	
 	public abstract void connect(String server, int port, String key) throws IOException;
 	
@@ -363,9 +349,9 @@ public abstract class WarlockClient implements IWarlockClient {
 		VariableConfigurationProvider.getProvider(clientSettings).removeVariable(id);
 	}
 	
-	public IWarlockStyle getNamedStyle(String id) {
+	/*public IWarlockStyle getNamedStyle(String id) {
 		return PresetStyleConfigurationProvider.getProvider(getClientSettings()).getStyle(id);
-	}
+	}*/
 	
 	public ICharacterStatus getCharacterStatus() {
 		return status;
@@ -441,9 +427,9 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	abstract public String getGameCode();
 	
-	public int getMinCommandLength() {
+	/*public int getMinCommandLength() {
 		return minCommandSize;
-	}
+	}*/
 	
 	public IClientSettings getClientSettings() {
 		return clientSettings;
@@ -475,7 +461,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	// TODO flush buffer before and after echo
 	public void echo(String text) {
-		echo(text, echoStyle);
+		echo(text, WarlockStyle.echoStyle);
 	}
 	
 	public synchronized void echo(String text, IWarlockStyle style) {
@@ -486,7 +472,7 @@ public abstract class WarlockClient implements IWarlockClient {
 	}
 	
 	public void echo(String streamName, String text) {
-		echo(streamName, text, echoStyle);
+		echo(streamName, text, WarlockStyle.echoStyle);
 	}
 	
 	public synchronized void echo(String streamName, String text, IWarlockStyle style) {

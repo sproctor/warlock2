@@ -16,6 +16,7 @@ import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
@@ -133,8 +134,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	public void streamReceivedCommand(IStream stream, ICommand command) {
 		flushBuffer();
 		
-		WarlockString string = new WarlockString(command.getText(),
-				stream.getClient().getCommandStyle());
+		WarlockString string = new WarlockString(command.getText(), WarlockStyle.commandStyle);
 		
 		if(!isPrompting && prompt != null)
 			append(new WarlockString(prompt));
@@ -182,7 +182,6 @@ public class StreamText extends WarlockText implements IStreamListener {
 			// if client already has settings, we'll unintentially load them twice
 			loadSettings();
 			
-
 			title.set(client.getStreamTitle(streamName));
 			WarlockString history = client.getStreamHistory(streamName);
 			if(history != null)

@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.client.settings;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 import cc.warlock.core.client.IClientSettings;
@@ -76,16 +75,12 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 		}
 	}
 
-	public Collection<IWarlockStyle> getStyles() {
-		return styleSettings.values();
-	}
-
 	public IWarlockStyle getStyle(String id) {
 		IWarlockStyle style = styleSettings.get(id);
 		if(style == null) {
-			style = new StyleSetting(this, id, true);
 			IWarlockStyle defaults = defaultStyles.get(id);
 			if(defaults != null) {
+				style = new StyleSetting(this, id, true);
 				style.setBackgroundColor(defaults.getBackgroundColor());
 				style.setForegroundColor(defaults.getForegroundColor());
 				style.setFullLine(defaults.isFullLine());
@@ -96,7 +91,7 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 	}
 
 	public IWarlockStyle getOrCreateStyle(String id) {
-		IWarlockStyle style = styleSettings.get(id);
+		IWarlockStyle style = getStyle(id);
 		if(style == null) {
 			style = new StyleSetting(this, id, true);
 			styleSettings.put(id, style);

@@ -64,16 +64,13 @@ import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
-import cc.warlock.rcp.stormfront.ui.style.StormFrontStyleProvider;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
-import cc.warlock.rcp.ui.IStyleProvider;
 import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
-import cc.warlock.rcp.ui.style.StyleProviders;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.ConnectionView;
@@ -308,9 +305,9 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	
 	public void loadClientSettings(IClientSettings settings)
 	{	
-		IStyleProvider styleProvider = new StormFrontStyleProvider(settings);
+		//IStyleProvider styleProvider = new StormFrontStyleProvider(settings);
 		
-		StyleProviders.setStyleProvider(getClient(), styleProvider);
+		//StyleProviders.setStyleProvider(getClient(), styleProvider);
 		
 		/*sfClient.getCharacterName().addListener(new IPropertyListener<String>() {
 			public void propertyChanged(String value) {

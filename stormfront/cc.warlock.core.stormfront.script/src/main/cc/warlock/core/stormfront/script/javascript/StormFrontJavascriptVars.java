@@ -54,7 +54,7 @@ public class StormFrontJavascriptVars implements IJavascriptVariableProvider {
 
 		scope.put("script", scope, commands);
 		scope.put("compass", scope, client.getCompass());
-		scope.put("commandHistory", scope, client.getCommandHistory());
+		scope.put("commandHistory", scope, script.getViewer().getEntry().getCommandHistory());
 
 		scope.put("roundtime", scope, new JavascriptProperty<Integer>(scope, client.getTimer("roundtime").getProperty()));
 		scope.put("casttime", scope, new JavascriptProperty<Integer>(scope, client.getTimer("casttime").getProperty()));

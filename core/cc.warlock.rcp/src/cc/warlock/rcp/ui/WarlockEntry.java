@@ -23,6 +23,8 @@ package cc.warlock.rcp.ui;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
@@ -36,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
+import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
@@ -45,6 +48,7 @@ import cc.warlock.core.client.IWarlockEntry;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.Command;
+import cc.warlock.core.client.internal.CommandHistory;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
@@ -53,6 +57,7 @@ import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
+import cc.warlock.rcp.ui.macros.DefaultMacros;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.views.GameView;
@@ -64,6 +69,8 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	private boolean searchMode = false;
 	private StringBuffer searchText = new StringBuffer();
 	private String searchCommand = "";
+	private CommandHistory commandHistory = new CommandHistory();
+	private int minCommandSize = 0;
 	private VerifyKeyListener verifyKeyListener = new VerifyKeyListener() {
 		public void verifyKey(VerifyEvent e) {
 			if(!e.doit)
@@ -153,6 +160,14 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		
 		widget.setBackground(ColorUtil.warlockColorToColor(bg));
 		widget.setForeground(ColorUtil.warlockColorToColor(fg));
+		minCommandSize = settings.getMinCommandSize();
+		settings.getNode().addPreferenceChangeListener(new IPreferenceChangeListener() {
+			@Override
+			public void preferenceChange(PreferenceChangeEvent event) {
+				if (event.getKey().equals("min-command-size"))
+					minCommandSize = Integer.parseInt((String)event.getNewValue());
+			}
+		});
 	}
 	
 	public String getText() {
@@ -179,7 +194,14 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	// returns whether we processed the key or not.
 	protected boolean processKey(int keyCode, int stateMask, char character) {
 		//System.out.println("got char \"" + e.character + "\"");
-		IMacro macro = MacroConfigurationProvider.getProvider(viewer.getClient().getClientSettings()).getMacro(MacroRegistry.instance().getKeyString(keyCode, stateMask));
+		IWarlockClient client = viewer.getClient();
+		IMacro macro;
+		if(client == null || client.getClientSettings() == null)
+			macro = DefaultMacros.instance().getMacro(keyCode, stateMask);
+		else
+			macro = MacroConfigurationProvider.getProvider(client.getClientSettings()).getMacro(MacroRegistry.instance().getKeyString(keyCode, stateMask));
+
+		// System macros
 		if(macro == null)
 			macro = MacroRegistry.instance().getMacro(keyCode, stateMask);
 		
@@ -234,7 +256,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	}
 	
 	private void search() {
-		ICommand foundCommand = viewer.getClient().getCommandHistory().search(searchText.toString());
+		ICommand foundCommand = commandHistory.search(searchText.toString());
 		if(foundCommand != null) {
 			searchCommand = foundCommand.getCommand();
 		}
@@ -242,7 +264,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	}
 	
 	public void prevCommand() {
-		ICommand prevCommand = viewer.getClient().getCommandHistory().prev();
+		ICommand prevCommand = commandHistory.prev();
 		
 		if(prevCommand != null)
 			setText(prevCommand.getCommand());
@@ -251,7 +273,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	}
 	
 	public void nextCommand() {
-		ICommand nextCommand = viewer.getClient().getCommandHistory().next();
+		ICommand nextCommand = commandHistory.next();
 		if(nextCommand != null) {
 			setText(nextCommand.getCommand());
 		} else {
@@ -261,7 +283,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	
 	public void searchHistory() {
 		if(searchMode) {
-			ICommand foundCommand = viewer.getClient().getCommandHistory().searchBefore(searchText.toString());
+			ICommand foundCommand = commandHistory.searchBefore(searchText.toString());
 			if(foundCommand != null) {
 				searchCommand = foundCommand.getCommand();
 			}
@@ -286,23 +308,22 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		}
 		ICommand command = new Command(text);
 		viewer.send(command);
-		if (command.getCommand().length() > viewer.getClient().getMinCommandLength())
-			viewer.getClient().getCommandHistory().addCommand(command);
-		viewer.getClient().getCommandHistory().resetPosition();
+		if (command.getCommand().length() > minCommandSize)
+			commandHistory.addCommand(command);
+		commandHistory.resetPosition();
 		setText("");
 	}
 	
 	public void repeatLastCommand() {
-		if (viewer.getClient().getCommandHistory().size() >= 1) {
-			ICommand command = viewer.getClient().getCommandHistory().getLastCommand();
+		if (commandHistory.size() >= 1) {
+			ICommand command = commandHistory.getLastCommand();
 			viewer.send(command);
 		}
 	}
 	
 	public void repeatSecondToLastCommand() {
-		if (viewer.getClient().getCommandHistory().size() >= 2)
-		{
-			ICommand command = viewer.getClient().getCommandHistory().getCommandAt(1);
+		if (commandHistory.size() >= 2) {
+			ICommand command = commandHistory.getCommandAt(1);
 			viewer.send(command);
 		}
 	}
@@ -323,5 +344,9 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	
 	public VerifyKeyListener getVerifyKeyListener() {
 		return verifyKeyListener;
+	}
+	
+	public ICommandHistory getCommandHistory() {
+		return commandHistory;
 	}
 }
