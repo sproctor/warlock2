@@ -37,7 +37,7 @@ import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
-import cc.warlock.core.client.IStream;
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.script.AbstractScript;
@@ -107,7 +107,10 @@ public class WSLScript extends AbstractScript {
 			return val;
 		
 		// return value from settings. All user global variables are stored here
-		String var = getClient().getVariable(name);
+		String var = null;
+		IWarlockClient client = getClient();
+		if(client != null)
+			var = client.getVariable(name);
 		if (var != null)
 			return new WSLString(var);
 		
