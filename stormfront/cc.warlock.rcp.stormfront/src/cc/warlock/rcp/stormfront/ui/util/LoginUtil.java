@@ -114,24 +114,19 @@ public class LoginUtil {
 		
 		String title = "Login Error: ";
 		
-		switch (status)
-		{
+		switch (status) {
 			case SGEConnection.ACCOUNT_REJECTED:
-			{
 				title += "Account Rejected";
-			} break;
+				break;
 			case SGEConnection.INVALID_ACCOUNT:
-			{
 				title += "Invalid Account";
-			} break;
+				break;
 			case SGEConnection.INVALID_PASSWORD:
-			{
 				title += "Wrong Password";
-			} break;
+				break;
 			case SGEConnection.ACCOUNT_EXPIRED:
-			{
 				title += "Account Expired";
-			} break;
+				break;
 		}
 		
 		if (title != null && message != null)

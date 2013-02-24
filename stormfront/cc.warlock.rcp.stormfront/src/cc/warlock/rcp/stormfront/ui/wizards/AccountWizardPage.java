@@ -74,7 +74,8 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 	private TextField password;
 	private Listener listener;
 	private SWTConnectionListenerAdapter connectionListener;
-	private Account savedAccount; 
+	private Account savedAccount;
+	protected String accountName;
 	
 	public AccountWizardPage (SGEConnection connection)
 	{
@@ -109,8 +110,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 		for (Account account : accounts) {
 			this.account.getCombo().add(account.getAccountName());
 		}
-		if (accounts.size() > 0)
-		{
+		if (accounts.size() > 0) {
 			account.getCombo().select(0);
 			Account selectedAccount = AccountProvider.getInstance().getAccount(account.getCombo().getText());
 			if(selectedAccount != null) {
@@ -130,8 +130,6 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 			});
 		}
 	}
-	
-	protected String accountName;
 	
 	@Override
 	public void pageExited(int button) {
