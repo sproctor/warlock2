@@ -46,6 +46,7 @@ public class PromptTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
+		prompt = null;
 		handler.flushBuffer();
 		handler.clearStyles();
 		handler.clearStreams();
@@ -57,8 +58,10 @@ public class PromptTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public boolean handleCharacters(String characters) {
-		// If the prompt has tags in it... we fuck up
-		prompt = characters;
+		if(prompt == null)
+			prompt = characters;
+		else
+			prompt = prompt + characters;
 		return true;
 	}
 	
