@@ -87,10 +87,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public GameView () {
 		super();
 		
-		openViews.add(this);
 		wrapper = new SWTWarlockClientViewer(this);
-		this.setFocus();
-
 	}
 	
 	public static void addGameViewFocusListener (IGameViewFocusListener listener) {
@@ -173,6 +170,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streamText.setIgnoreEmptyLines(false);
 		
+		openViews.add(this);
+		this.setFocus();
+
 		mainComposite.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
@@ -183,24 +183,13 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 				openViews.remove(GameView.this);
 				if (gameInFocus == GameView.this) {
 					gameInFocus = null;
+					if(!openViews.isEmpty()) {
+						GameView firstView = openViews.get(0);
+						firstView.setFocus();
+					}
 				}
-				/*if (firstInstance == this) {
-						if (openViews.isEmpty()) {
-							firstInstance = null;
-							// Show connections page since we're getting rid of the main window
-							IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-							//IViewPart part = page.findView(ConnectionView.VIEW_ID);
-							try {
-								if (page != null) 
-									page.showView(ConnectionView.VIEW_ID);
-							} catch (PartInitException e) {
-								e.printStackTrace();
-							}
-						} else {
-							firstInstance = openViews.get(0);
-						}
-					}*/
 				streamText.dispose();
+				streamText = null;
 			}
 		});
 	}
