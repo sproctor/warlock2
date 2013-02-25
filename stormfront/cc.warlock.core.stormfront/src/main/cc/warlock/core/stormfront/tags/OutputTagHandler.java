@@ -21,14 +21,11 @@
  */
 package cc.warlock.core.stormfront.tags;
 
-import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class OutputTagHandler extends DefaultTagHandler {
-	private IWarlockStyle currentStyle;
-	
 	/**
 	 * @param handler
 	 */
@@ -43,19 +40,18 @@ public class OutputTagHandler extends DefaultTagHandler {
 
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
-		if(currentStyle != null) {
-			handler.removeStyle(currentStyle);
-		}
 	
 		String className = attributes.getValue("class");
 		
-		if (className != null) {
-			currentStyle = new WarlockStyle(className);
+		if (className != null && className.length() > 0) {
+			WarlockStyle currentStyle = new WarlockStyle(className);
 		
 			if(className.equals("mono"))
 				currentStyle.setMonospace(true);
 			
-			handler.addStyle(currentStyle);
+			handler.setOutputStyle(currentStyle);
+		} else {
+			handler.setOutputStyle(null);
 		}
 	}
 }

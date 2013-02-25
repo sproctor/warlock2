@@ -34,7 +34,6 @@ import java.util.Stack;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
-import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.IStormFrontTagHandler;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -81,9 +80,6 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 /**
  * @author sproctor
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
@@ -92,6 +88,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	protected Stack<String> tagStack = new Stack<String>();
 	private Stack<String> streamStack = new Stack<String>();
 	protected Stack<WarlockStringMarker> styleStack = new Stack<WarlockStringMarker>();
+	private IWarlockStyle outputStyle = null;
 	private WarlockString buffer = new WarlockString();
 	protected int currentSpacing = 0;
 	protected int monsterCount = 0;
@@ -362,17 +359,15 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		}
 	}
 	
-	public void flushBuffer() {	
-		put(buffer);
-		buffer = new WarlockString();
-	}
-	
-	private void put(WarlockString str) {
+	public void flushBuffer() {
+		if(outputStyle != null)
+			buffer.addStyle(outputStyle);
 		if(streamStack.empty()) {
-			client.put(str);
+			client.put(buffer);
 		} else {
-			client.put(streamStack.peek(), str);
+			client.put(streamStack.peek(), buffer);
 		}
+		buffer = new WarlockString();
 	}
 	
 	public void clearStyles() {
@@ -413,5 +408,10 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
 	public void clearStreams() {
 		streamStack.clear();
+	}
+	
+	public void setOutputStyle(IWarlockStyle style) {
+		flushBuffer();
+		outputStyle = style;
 	}
 }
