@@ -72,8 +72,11 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.StormFrontGameView";
 	
-	protected WarlockPopupAction reconnectPopup;
+	private WarlockPopupAction reconnectPopup;
 	private Button reconnect;
+	private SelectionListener currentListener;
+	private Label reconnectLabel;
+	private ProgressMonitorDialog settingsProgressDialog;
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -107,10 +110,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		}
 	}
 	
-	protected Label reconnectLabel;
-	
-	protected void createReconnectPopup()
-	{
+	private void createReconnectPopup() {
 		reconnectPopup = createPopup();
 		reconnectPopup.setLayout(new GridLayout(2, false));
 		reconnectLabel = new Label(reconnectPopup, SWT.WRAP);
@@ -142,9 +142,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		});
 	}
 	
-	protected SelectionListener currentListener;
-	protected void setReconnectProfile (final IProfile profile)
-	{
+	private void setReconnectProfile (final IProfile profile) {
 		String characterName = profile.getName();
 		reconnectLabel.setText("The character \"" + characterName + "\" is currently disconnected.");
 		reconnectLabel.setBackground(reconnectPopup.getBackground());
@@ -165,8 +163,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		reconnect.addSelectionListener(currentListener);
 	}
 	
-	protected void setNoReconnectProfile (String characterName)
-	{
+	private void setNoReconnectProfile (String characterName) {
 		reconnectLabel.setText("The character \"" + characterName +
 			"\" is not a saved profile, you will need to re-login:");
 		reconnectLabel.setBackground(reconnectPopup.getBackground());
@@ -187,8 +184,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		reconnect.addSelectionListener(currentListener);
 	}
 	
-	protected Menu createProfileMenu (final Button connections)
-	{
+	private Menu createProfileMenu (final Button connections) {
 		Menu menu = new Menu(connections);
 		menu.addMenuListener(new MenuAdapter() {
 			public void menuShown(MenuEvent e) {
@@ -230,7 +226,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		return menu;
 	}
 	
-	private ProgressMonitorDialog settingsProgressDialog;
 	public void startedDownloadingServerSettings() {
 		settingsProgressDialog = new ProgressMonitorDialog(getSite().getShell());
 		settingsProgressDialog.setBlockOnOpen(false);
@@ -290,19 +285,23 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		super.setClient(client);
 	}
 	
-	protected void disconnected () {	
+	private void disconnected() {	
 		showPopup(reconnectPopup);
 	}
 	
-	public void loadClientSettings(IClientSettings settings) {			
-		streamText.setClient(getClient());
-		streamText.getTextWidget().redraw();
+	@Override
+	protected void loadClientSettings(IClientSettings settings) {
+		if(streamText != null) {
+			streamText.setClient(getClient());
+			streamText.getTextWidget().redraw();
+		}
 		
 		if (HandsView.getDefault() != null) {
 			HandsView.getDefault().loadSettings(settings);
 		}
 	}
 	
+	@Override
 	public void launchURL(final URL url) {
 		Display.getDefault().asyncExec(new Runnable () {
 			public void run () {
@@ -341,6 +340,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		return super.getAdapter(adapter);
 	}
 	
+	@Override
 	protected void setViewTitle(String title) {
 		String prefix = "";
 		String game = getClient().getGameCode();

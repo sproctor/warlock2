@@ -44,6 +44,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.PageBook;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IProfile;
 import cc.warlock.core.client.IWarlockClient;
@@ -71,13 +72,14 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	private static GameView gameInFocus;
 	private static final Random generator = new Random(new Date().getTime());
 	
-	protected PageBook popupPageBook;
-	protected Label emptyPopup;
 	protected StreamText streamText;
-	protected WarlockEntry entry;
-	protected SWTWarlockClientViewer wrapper;
+	
+	private PageBook popupPageBook;
+	private Label emptyPopup;
+	private WarlockEntry entry;
+	private final SWTWarlockClientViewer wrapper;
 	private IWarlockClient client;
-	protected Composite mainComposite;
+	private Composite mainComposite;
 	private ArrayList<IWarlockClientViewerListener> listeners = new ArrayList<IWarlockClientViewerListener>();
 	
 	private IProfile profile;
@@ -145,6 +147,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		return null;
 	}
 	
+	@Override
 	public void createPartControl(Composite parent) {
 		// Create main composite
 		mainComposite = new Composite (parent, SWT.NONE);
@@ -172,6 +175,10 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		
 		openViews.add(this);
 		this.setFocus();
+		
+		if(client != null) {
+			loadClientSettings(client.getClientSettings());
+		}
 
 		mainComposite.addDisposeListener(new DisposeListener() {
 			@Override
@@ -194,6 +201,8 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		});
 	}
 	
+	abstract protected void loadClientSettings(IClientSettings settings);
+	
 	@Override
 	public void setFocus() {
 		super.setFocus();
@@ -203,28 +212,28 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		}
 	}
 	
+	@Override
 	public void playSound(InputStream soundStream) {
 		SoundPlayer.play(soundStream);
 	}
-		
+	
+	@Override
 	public void copy() {
 		streamText.copy();
 	}
 	
+	@Override
 	public IWarlockClient getClient() {
 		return client;
 	}
 	
+	@Override
 	public WarlockEntry getEntry() {
 		return entry;
 	}
 	
-	public WarlockPopupAction createPopup ()
-	{
+	public WarlockPopupAction createPopup() {
 		WarlockPopupAction popup = new WarlockPopupAction(popupPageBook, SWT.NONE);
-//		popup.moveAbove(book);
-//		popup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-//		popup.setVisible(false);
 		
 		return popup;
 	}
