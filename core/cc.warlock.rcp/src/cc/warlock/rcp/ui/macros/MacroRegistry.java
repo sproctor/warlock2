@@ -27,6 +27,7 @@
  */
 package cc.warlock.rcp.ui.macros;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,7 @@ import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.internal.WarlockMacro;
+import cc.warlock.core.util.Pair;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
 
 
@@ -58,7 +60,7 @@ public class MacroRegistry {
 	// TODO - determine if variables and commands should be synchronized
 	private HashMap<String, IMacroVariable> variables = new HashMap<String, IMacroVariable>();
 	private HashMap<String, IMacroCommand> commands = new HashMap<String, IMacroCommand>();
-	public HashMap<String, Integer> keys = new HashMap<String, Integer>();
+	public ArrayList<Pair<String, Integer>> keys = new ArrayList<Pair<String, Integer>>();
 	public HashMap<String, Integer> mods = new HashMap<String, Integer>();
 	
 	private MacroRegistry () {
@@ -174,7 +176,13 @@ public class MacroRegistry {
 			}
 			break;
 		}
-		Integer keycode = keys.get(keyString);
+		Integer keycode = null;
+		for(Pair<String, Integer> mapping : keys) {
+			if(mapping.first().equals(keyString)) {
+				keycode = mapping.second();
+				break;
+			}
+		}
 		if(keycode != null)
 			return keycode;
 		if (keyString.length() == 0)
@@ -196,9 +204,9 @@ public class MacroRegistry {
 	
 	public String getKeyString(int keycode, int modifiers) {
 		String key = null;
-		for(Map.Entry<String, Integer> entry : keys.entrySet()) {
-			if(keycode == entry.getValue()) {
-				key = entry.getKey();
+		for(Pair<String, Integer> entry : keys) {
+			if(keycode == entry.second()) {
+				key = entry.first();
 				break;
 			}
 		}
@@ -215,46 +223,50 @@ public class MacroRegistry {
 		return modString + key;
 	}
 	
+	private void mapKey(String keyName, int keyCode) {
+		keys.add(new Pair<String, Integer>(keyName, keyCode));
+	}
+	
 	private void loadKeys() {
-		keys.put("Keypad 0", SWT.KEYPAD_0);
-		keys.put("Keypad 1", SWT.KEYPAD_1);
-		keys.put("Keypad 2", SWT.KEYPAD_2);
-		keys.put("Keypad 3", SWT.KEYPAD_3);
-		keys.put("Keypad 4", SWT.KEYPAD_4);
-		keys.put("Keypad 5", SWT.KEYPAD_5);
-		keys.put("Keypad 6", SWT.KEYPAD_6);
-		keys.put("Keypad 7", SWT.KEYPAD_7);
-		keys.put("Keypad 8", SWT.KEYPAD_8);
-		keys.put("Keypad 9", SWT.KEYPAD_9);
-		keys.put("Keypad +", SWT.KEYPAD_ADD);
-		keys.put("Keypad /", SWT.KEYPAD_DIVIDE);
-		keys.put("Keypad *", SWT.KEYPAD_MULTIPLY);
-		keys.put("Keypad -", SWT.KEYPAD_SUBTRACT);
-		keys.put("Keypad .", SWT.KEYPAD_DECIMAL);
-		keys.put("Keypad Enter", SWT.KEYPAD_CR);
-		keys.put("Enter", (int)SWT.CR);
+		mapKey("Keypad 0", SWT.KEYPAD_0);
+		mapKey("Keypad 1", SWT.KEYPAD_1);
+		mapKey("Keypad 2", SWT.KEYPAD_2);
+		mapKey("Keypad 3", SWT.KEYPAD_3);
+		mapKey("Keypad 4", SWT.KEYPAD_4);
+		mapKey("Keypad 5", SWT.KEYPAD_5);
+		mapKey("Keypad 6", SWT.KEYPAD_6);
+		mapKey("Keypad 7", SWT.KEYPAD_7);
+		mapKey("Keypad 8", SWT.KEYPAD_8);
+		mapKey("Keypad 9", SWT.KEYPAD_9);
+		mapKey("Keypad +", SWT.KEYPAD_ADD);
+		mapKey("Keypad /", SWT.KEYPAD_DIVIDE);
+		mapKey("Keypad *", SWT.KEYPAD_MULTIPLY);
+		mapKey("Keypad -", SWT.KEYPAD_SUBTRACT);
+		mapKey("Keypad .", SWT.KEYPAD_DECIMAL);
+		mapKey("Keypad Enter", SWT.KEYPAD_CR);
+		mapKey("Enter", (int)SWT.CR);
 		
-		keys.put("F1", SWT.F1);
-		keys.put("F2", SWT.F2);
-		keys.put("F3", SWT.F3);
-		keys.put("F4", SWT.F4);
-		keys.put("F5", SWT.F5);
-		keys.put("F6", SWT.F6);
-		keys.put("F7", SWT.F7);
-		keys.put("F8", SWT.F8);
-		keys.put("F9", SWT.F9);
-		keys.put("F10", SWT.F10);
-		keys.put("F11", SWT.F11);
-		keys.put("F12", SWT.F12);
+		mapKey("F1", SWT.F1);
+		mapKey("F2", SWT.F2);
+		mapKey("F3", SWT.F3);
+		mapKey("F4", SWT.F4);
+		mapKey("F5", SWT.F5);
+		mapKey("F6", SWT.F6);
+		mapKey("F7", SWT.F7);
+		mapKey("F8", SWT.F8);
+		mapKey("F9", SWT.F9);
+		mapKey("F10", SWT.F10);
+		mapKey("F11", SWT.F11);
+		mapKey("F12", SWT.F12);
 		
-		keys.put("Page Up", SWT.PAGE_UP);
-		keys.put("Page Down", SWT.PAGE_DOWN);
-		keys.put("Up", SWT.ARROW_UP);
-		keys.put("Down", SWT.ARROW_DOWN);
-		keys.put("Tab", (int)SWT.TAB);
-		keys.put("Home", SWT.HOME);
-		keys.put("End", SWT.END);
-		keys.put("Esc", (int) SWT.ESC);
+		mapKey("Page Up", SWT.PAGE_UP);
+		mapKey("Page Down", SWT.PAGE_DOWN);
+		mapKey("Up", SWT.ARROW_UP);
+		mapKey("Down", SWT.ARROW_DOWN);
+		mapKey("Tab", (int)SWT.TAB);
+		mapKey("Home", SWT.HOME);
+		mapKey("End", SWT.END);
+		mapKey("Esc", (int) SWT.ESC);
 		
 		mods.put("Alt", SWT.ALT);
 		mods.put("Shift", SWT.SHIFT);
