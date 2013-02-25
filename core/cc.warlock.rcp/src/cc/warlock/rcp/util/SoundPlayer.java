@@ -32,6 +32,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
@@ -133,6 +134,13 @@ public class SoundPlayer
 			try
 			{
 				line = (SourceDataLine) AudioSystem.getLine(info);
+				
+				// TODO add a preference for volume.
+				// Change from Wealand to increase the volume
+				if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+					FloatControl volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+					volume.setValue(volume.getMaximum());
+				}
 
 				/*
 				  The line is there, but it is not yet ready to
