@@ -24,7 +24,6 @@ package cc.warlock.rcp.prefs;
 import java.util.ArrayList;
 
 import org.eclipse.jface.bindings.keys.KeyStroke;
-import org.eclipse.jface.bindings.keys.SWTKeySupport;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -350,7 +349,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			smacro.setCommand(macro.getCommand());
 			smacro.setKeyString(macro.getKeyString());*/
 			
-			WarlockMacro newMacro = new WarlockMacro(macro.getKeyString(), macro.getCommand());
+			WarlockMacro newMacro = new WarlockMacro(macro.getCommand(), macro.getKeyString());
 			addedMacros.add(newMacro);
 			displayedMacros.add(newMacro);
 			//macroTableView.add(newMacro);
@@ -391,7 +390,7 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			} else {
 				int keycode = MacroRegistry.instance().getKeycode(macro.getKeyString());
 				int modifiers = MacroRegistry.instance().getModifiers(macro.getKeyString());
-				return SWTKeySupport.getKeyFormatterForPlatform().format(KeyStroke.getInstance(modifiers, keycode));
+				return MacroRegistry.instance().getKeyString(keycode, modifiers);
 			}
 		}
 		public boolean isLabelProperty(Object element, String property) {

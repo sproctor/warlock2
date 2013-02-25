@@ -165,10 +165,14 @@ public class MacroRegistry {
 	}
 	
 	public int getKeycode(String keyString) {
-		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
-			if(keyString.startsWith(entry.getKey() + "-")) {
-				keyString = keyString.substring(entry.getKey().length() + 1);
+		outerloop: while(true) {
+			for(Map.Entry<String, Integer> entry : mods.entrySet()) {
+				if(keyString.startsWith(entry.getKey() + "+")) {
+					keyString = keyString.substring(entry.getKey().length() + 1);
+					continue outerloop;
+				}	
 			}
+			break;
 		}
 		Integer keycode = keys.get(keyString);
 		if(keycode != null)
@@ -181,7 +185,7 @@ public class MacroRegistry {
 	public int getModifiers(String keyString) {
 		int modifiers = 0;
 		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
-			if(keyString.startsWith(entry.getKey() + "-")) {
+			if(keyString.startsWith(entry.getKey() + "+")) {
 				keyString = keyString.substring(entry.getKey().length() + 1);
 				modifiers |= entry.getValue();
 			}
@@ -204,7 +208,7 @@ public class MacroRegistry {
 		String modString = "";
 		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
 			if((modifiers & entry.getValue()) != 0) {
-				modString = modString + entry.getKey() + "-";
+				modString += entry.getKey() + "+";
 			}
 		}
 		
@@ -245,8 +249,8 @@ public class MacroRegistry {
 		
 		keys.put("Page Up", SWT.PAGE_UP);
 		keys.put("Page Down", SWT.PAGE_DOWN);
-		keys.put("UP", SWT.ARROW_UP);
-		keys.put("DOWN", SWT.ARROW_DOWN);
+		keys.put("Up", SWT.ARROW_UP);
+		keys.put("Down", SWT.ARROW_DOWN);
 		keys.put("Tab", (int)SWT.TAB);
 		keys.put("Home", SWT.HOME);
 		keys.put("End", SWT.END);
