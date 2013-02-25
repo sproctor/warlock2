@@ -62,6 +62,8 @@ public class WarlockTimer {
 		
 		if(end > time)
 			value.set((int)(end - time));
+		else
+			value.set(0);
 		
 		// Set end to 0 to signify that we setup the timer
 		end = 0;
