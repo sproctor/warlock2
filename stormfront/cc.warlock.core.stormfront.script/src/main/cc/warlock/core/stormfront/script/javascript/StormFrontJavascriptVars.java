@@ -28,14 +28,13 @@ import org.mozilla.javascript.Scriptable;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.javascript.IJavascriptVariableProvider;
+import cc.warlock.core.script.javascript.JavascriptCommands;
 import cc.warlock.core.script.javascript.JavascriptEngine;
 import cc.warlock.core.script.javascript.JavascriptScript;
-import cc.warlock.core.stormfront.script.IStormFrontScriptCommands;
 
 public class StormFrontJavascriptVars implements IJavascriptVariableProvider {
 
-	protected HashMap<JavascriptScript, StormFrontJavascriptCommands> scriptCommands =
-		new HashMap<JavascriptScript, StormFrontJavascriptCommands>();
+	//protected HashMap<JavascriptScript, JavascriptCommands> scriptCommands = new HashMap<JavascriptScript, JavascriptCommands>();
 	
 	public StormFrontJavascriptVars ()
 	{
@@ -49,10 +48,10 @@ public class StormFrontJavascriptVars implements IJavascriptVariableProvider {
 		IWarlockClient client = script.getClient();
 
 		//overwrite the "script" variable with our big delegator
-		StormFrontJavascriptCommands commands = new StormFrontJavascriptCommands((IStormFrontScriptCommands)script.getCommands(), script);
-		scriptCommands.put(script, commands);
+		//JavascriptCommands commands = new JavascriptCommands(script.getCommands(), script);
+		//scriptCommands.put(script, script.);
 
-		scope.put("script", scope, commands);
+		scope.put("script", scope, script.getCommands());
 		scope.put("compass", scope, client.getCompass());
 		scope.put("commandHistory", scope, script.getViewer().getEntry().getCommandHistory());
 

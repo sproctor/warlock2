@@ -52,7 +52,7 @@ public class StormFrontScriptPlugin extends Plugin {
 		plugin = this;
 		
 
-		ScriptCommandsFactory.setFactory(new StormFrontScriptCommandsFactory());
+		ScriptCommandsFactory.setFactory(new ScriptCommandsFactory());
 	}
 
 	/*

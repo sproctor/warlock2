@@ -21,6 +21,9 @@
  */
 package cc.warlock.core.stormfront.script.wsl;
 
+import cc.warlock.core.stormfront.script.wsl.internal.IWSLValue;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractVariable;
+
 public class WSLVariable extends WSLAbstractVariable {
 	
 	private WSLScript script;

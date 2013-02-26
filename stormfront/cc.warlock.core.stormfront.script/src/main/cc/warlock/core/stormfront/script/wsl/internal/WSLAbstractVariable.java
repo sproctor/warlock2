@@ -19,18 +19,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.script.IScriptCommands;
-import cc.warlock.core.script.ScriptCommandsFactory;
-import cc.warlock.core.stormfront.script.internal.StormFrontScriptCommands;
-
-public class StormFrontScriptCommandsFactory extends ScriptCommandsFactory {
-
-	@Override
-	public IScriptCommands createScriptCommands(IWarlockClientViewer viewer, String name) {
-		return new StormFrontScriptCommands(viewer, name);
+abstract public class WSLAbstractVariable extends WSLAbstractString {
+	
+	protected IWSLValue variableName;
+	private String prefix;
+	
+	public WSLAbstractVariable(IWSLValue var, String prefix) {
+		variableName = var;
+		this.prefix = prefix;
 	}
-
+	
+	@Override
+	public String toString() {
+		IWSLValue value = getVariable();
+		if(value == null) {
+			return prefix + variableName.toString();
+		}
+		return value.toString();
+	}
+	
+	@Override
+	public boolean toBoolean() {
+		if(!variableExists()) return false;
+		return super.toBoolean();
+	}
+	
+	abstract protected IWSLValue getVariable();
+	abstract protected boolean variableExists();
 }

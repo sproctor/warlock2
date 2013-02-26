@@ -19,11 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
 import java.util.regex.PatternSyntaxException;
 
 import cc.warlock.core.script.internal.RegexMatch;
+import cc.warlock.core.stormfront.script.wsl.WSLScript;
 
 public class WSLAction extends WSLAbstractCommand {
 
@@ -45,13 +46,12 @@ public class WSLAction extends WSLAbstractCommand {
 			script.setVariablesFromMatch(match);
 			try {
 				if(!command.isInstant())
-					script.scriptCommands.waitForRoundtime();
-				while(script.scriptCommands.isSuspended()) {
-					script.scriptCommands.waitForResume();
+					script.getCommands().waitForRoundtime();
+				while(script.getCommands().isSuspended()) {
+					script.getCommands().waitForResume();
 					if(!command.isInstant())
-						script.scriptCommands.waitForRoundtime();
+						script.getCommands().waitForRoundtime();
 				}
-				Thread.sleep((long)(script.delay * 1000));
 				command.execute();
 			} catch(InterruptedException e) {
 				// TODO - what to do here?
@@ -63,7 +63,7 @@ public class WSLAction extends WSLAbstractCommand {
 		try {
 			match = new RegexMatch(when.toString().trim());
 			script.scriptDebug(2, "Action added \"" + command + "\" when \"" + when + "\"");
-			script.scriptCommands.addAction(new WSLActionAdapter(), match);
+			script.getCommands().addAction(new WSLActionAdapter(), match);
 		} catch(PatternSyntaxException e) {
 			script.scriptError("Bad regex \"" + when.toString().trim() + "\" in action");
 		}

@@ -19,26 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-public class WSLCondition extends WSLAbstractCommand {
+public class WSLNotCondition extends WSLAbstractBoolean {
 
-	private WSLScript script;
-	private WSLAbstractCommand command;
-	private IWSLValue condition;
+	private IWSLValue value;
 	
-	public WSLCondition(int lineNum, WSLScript script, IWSLValue condition, WSLAbstractCommand command) {
-		super(lineNum);
-		this.script = script;
-		this.condition = condition;
-		this.command = command;
+	public WSLNotCondition(IWSLValue value) {
+		this.value = value;
 	}
 	
-	public void execute() throws InterruptedException {
-		boolean cond = condition.toBoolean();
-		script.setLastCondition(cond);
-		if(cond)
-			command.execute();
+	@Override
+	public boolean toBoolean() {
+		return !value.toBoolean();
 	}
 
 }

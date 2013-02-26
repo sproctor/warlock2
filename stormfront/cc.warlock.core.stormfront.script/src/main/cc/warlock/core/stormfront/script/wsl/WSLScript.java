@@ -37,7 +37,6 @@ import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
-import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.script.AbstractScript;
@@ -47,13 +46,17 @@ import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptInfo;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.internal.RegexMatch;
-import cc.warlock.core.stormfront.script.IStormFrontScriptCommands;
-import cc.warlock.core.stormfront.script.internal.StormFrontScriptCommands;
+import cc.warlock.core.script.internal.ScriptCommands;
+import cc.warlock.core.stormfront.script.wsl.internal.ANTLRNoCaseReaderStream;
+import cc.warlock.core.stormfront.script.wsl.internal.IWSLCommandDefinition;
+import cc.warlock.core.stormfront.script.wsl.internal.IWSLValue;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractCommand;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractNumber;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractString;
 
 public class WSLScript extends AbstractScript {
 	
 	private int debugLevel = 0;
-	protected double delay = 0.0;
 	private HashMap<String, Integer> labels = new HashMap<String, Integer>();
 	private int nextLine = 0;
 	private WSLAbstractCommand curCommand;
@@ -72,17 +75,16 @@ public class WSLScript extends AbstractScript {
 	private BlockingQueue<String> matchQueue;
 	
 	protected WSLEngine engine;
-	protected IStormFrontScriptCommands scriptCommands;
+	protected IScriptCommands scriptCommands;
 	
-	public WSLScript (WSLEngine engine, IScriptInfo info, IWarlockClientViewer viewer)
-	{
+	public WSLScript (WSLEngine engine, IScriptInfo info, IWarlockClientViewer viewer) {
 		super(info, viewer);
 		this.engine = engine;
 		
 		if(!ScriptConfiguration.instance().getSupressExceptions().get())
 			debugLevel = 1;
 		
-		scriptCommands = new StormFrontScriptCommands(viewer, this);
+		scriptCommands = new ScriptCommands(viewer, this);
 		
 		IWSLValue rt = new WSLRoundTime();
 		setSpecialVariable("rt", rt);
@@ -255,7 +257,6 @@ public class WSLScript extends AbstractScript {
 						if(!curCommand.isInstant())
 							scriptCommands.waitForRoundtime();
 					}
-					Thread.sleep((long)(delay * 1000));
 				} catch(InterruptedException e) {
 					
 				} finally {
@@ -325,7 +326,7 @@ public class WSLScript extends AbstractScript {
 		commands.add(command);
 	}
 	
-	protected void execute(String line) throws InterruptedException {
+	public void execute(String line) throws InterruptedException {
 		curLine = line;
 		Matcher m = commandPattern.matcher(line.trim());
 		
@@ -346,17 +347,16 @@ public class WSLScript extends AbstractScript {
 		}
 	}
 	
-	protected void scriptError(String message) {
+	public void scriptError(String message) {
 		echo("ERROR " + this.getName() + ":" + curCommand.getLineNumber() + ": \"" + message + "\" line: (" + curLine + ")");
 		stop();
 	}
 	
-	protected void scriptWarning(String message) {
+	public void scriptWarning(String message) {
 		echo("WARNING " + this.getName() + ":" + curCommand.getLineNumber() + ": \"" + message + "\" line: (" + curLine + ")");
 	}
 	
-	protected void scriptDebug (int level, String message)
-	{
+	public void scriptDebug (int level, String message) {
 		if (level <= debugLevel) {
 			echo("DEBUG " + this.getName() + ":" + curCommand.getLineNumber() + ": " + message);
 		}
@@ -403,10 +403,6 @@ public class WSLScript extends AbstractScript {
 	
 	protected int getDebugLevel() {
 		return this.debugLevel;
-	}
-	
-	protected void setDelay(double delay) {
-		this.delay = delay;
 	}
 	
 	protected void matchWait(double timeout) throws InterruptedException {
@@ -592,7 +588,7 @@ public class WSLScript extends AbstractScript {
 		}
 	}
 	
-	protected void setVariablesFromMatch(IMatch match) {
+	public void setVariablesFromMatch(IMatch match) {
 		int i = 0;
 		for(String var : match.groups()) {
 			setLocalVariable(String.valueOf(i), var);

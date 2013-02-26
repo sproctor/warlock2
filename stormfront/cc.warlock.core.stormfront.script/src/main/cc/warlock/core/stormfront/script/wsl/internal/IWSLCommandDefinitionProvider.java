@@ -1,4 +1,4 @@
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
 import java.util.Map;
 

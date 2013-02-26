@@ -19,25 +19,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
 import java.util.List;
 
-public class WSLAndCondition extends WSLAbstractBoolean {
+public class WSLList extends WSLAbstractString {
 
-	private List<IWSLValue> args;
+	private List<IWSLValue> list;
 	
-	public WSLAndCondition(List<IWSLValue> args) {
-		this.args = args;
+	public WSLList(List<IWSLValue> list) {
+		this.list = list;
 	}
 	
 	@Override
-	public boolean toBoolean() {
-		for(IWSLValue value : args) {
-			if(!value.toBoolean()) {
-				return false;
-			}
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		
+		for(IWSLValue value : list) {
+			buffer.append(value.toString());
 		}
-		return true;
+		
+		return buffer.toString();
 	}
 }

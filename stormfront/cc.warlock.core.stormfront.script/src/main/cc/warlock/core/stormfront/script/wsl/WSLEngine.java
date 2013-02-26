@@ -31,6 +31,7 @@ import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptFileInfo;
 import cc.warlock.core.script.IScriptInfo;
 import cc.warlock.core.script.IScriptListener;
+import cc.warlock.core.stormfront.script.wsl.internal.IWSLCommandDefinitionProvider;
 
 
 public class WSLEngine implements IScriptEngine, IScriptListener {

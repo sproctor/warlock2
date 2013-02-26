@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -46,17 +47,17 @@ import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.script.IMatch;
+import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptCommands;
 import cc.warlock.core.settings.IVariable;
+import cc.warlock.core.util.Pair;
 
 public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomListener {
 
-	protected IWarlockClientViewer viewer;
-	protected Collection<LinkedBlockingQueue<String>> textWaiters =
+	private IWarlockClientViewer viewer;
+	private Collection<LinkedBlockingQueue<String>> textWaiters =
 		Collections.synchronizedCollection(new ArrayList<LinkedBlockingQueue<String>>());
 	private StringBuffer receiveBuffer = new StringBuffer();
-	
-	private String scriptName;
 	
 	private boolean suspended = false;
 	/**
@@ -69,7 +70,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	private int room = 0;
 	private int prompt = 0;
 	// It's not particularly important what the initial state of atPrompt is.
-	private boolean atPrompt = true;
+	//private boolean atPrompt = false;
 	
 	private final Lock lock = new ReentrantLock();
 	private final Condition gotResume = lock.newCondition();
@@ -77,11 +78,64 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	private final Condition atPromptCond = lock.newCondition();
 	
 	private List<Thread> scriptThreads = Collections.synchronizedList(new ArrayList<Thread>());
+
+	private IScript script;
 	
-	public ScriptCommands(IWarlockClientViewer viewer, String scriptName)
-	{
+	private int typeAhead = 0;
+	
+	/**
+	 * Storage for active actions. Users must acquire the monitor first!
+	 */
+	private ArrayList<Pair<IMatch, Runnable>> actions = new ArrayList<Pair<IMatch, Runnable>>();
+	private Thread actionThread = null;
+	
+	private class ScriptActionThread extends Thread {
+		public void run() {
+			addThread(this);
+			LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
+			textWaiters.add(queue);
+
+			try {
+				while(true) {
+					assert !script.isRunning();
+					String text = null;
+					try {
+						text = queue.take();
+					} catch(InterruptedException e) {
+						synchronized(actions) {
+							/* We must clear actionThread in the same critical
+							 * section as the decision to terminate the thread
+							 */
+							if(actions.size() == 0) {
+								actionThread = null;
+								return;
+							}
+							continue;
+						}
+					}
+	
+					synchronized(actions) {
+						for(Pair<IMatch, Runnable> action : actions) {
+							if(action.first().matches(text))
+								action.second().run();
+						}
+					}
+				}
+			} finally {
+				textWaiters.remove(queue);
+				removeThread(this);
+				synchronized(actions) {
+					// FIXME What to do for a runtime exception?
+					if (actionThread == this)
+						actionThread = null;
+				}
+			}
+		}
+	}
+	
+	public ScriptCommands(IWarlockClientViewer viewer, IScript script) {
 		this.viewer = viewer;
-		this.scriptName = scriptName;
+		this.script = script;
 
 		IWarlockClient client = getClient();
 		if(client != null) {
@@ -104,7 +158,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void echo(String text) {
-		getClient().echo("[" + scriptName + "]: " + text + "\n");
+		getClient().echo("[" + script.getName() + "]: " + text + "\n");
 	}
 	
 	@Override
@@ -167,8 +221,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 			int curRoom = room;
 			while (room == curRoom)
 				nextRoom.await();
-			while(!atPrompt)
-				atPromptCond.await();
+			doPromptWait();
 		} finally {
 			lock.unlock();
 		}
@@ -187,8 +240,13 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void put(String text, int lineNum) throws InterruptedException {
+		if(typeAhead >= 2)
+			this.waitForPrompt();
+		synchronized(this) {
+			typeAhead++;
+		}
 		Command command = new Command(text, true);
-		command.setPrefix("[" + scriptName + ":" + lineNum + "]: ");
+		command.setPrefix("[" + script.getName() + ":" + lineNum + "]: ");
 		getClient().send(command);
 	}
 
@@ -213,12 +271,16 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void waitForPrompt() throws InterruptedException {
 		lock.lock();
 		try {
-			int oldPrompt = prompt;
-			while(oldPrompt == prompt)
-				atPromptCond.await();
+			doPromptWait();
 		} finally {
 			lock.unlock();
 		}
+	}
+	
+	private void doPromptWait() throws InterruptedException {
+		int oldPrompt = prompt;
+		while(oldPrompt == prompt)
+			atPromptCond.await();
 	}
 	
 	@Override
@@ -234,9 +296,13 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void streamPrompted(IStream stream, String prompt) {
+		synchronized(this) {
+			if(typeAhead > 0)
+				typeAhead--;
+		}
 		lock.lock();
 		try {
-			atPrompt = true;
+			//atPrompt = true;
 			this.prompt++;
 			atPromptCond.signalAll();
 		} finally {
@@ -247,7 +313,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void streamReceivedCommand(IStream stream, ICommand command) {
-		atPrompt = false;
+		//atPrompt = false;
 		if(!command.fromScript())
 			receiveText(command.getCommand());
 	}
@@ -257,8 +323,8 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		if(text.hasStyleNamed("debug"))
 			return;
 		
-		if(!text.hasStyleNamed("echo"))
-			atPrompt = false;
+		//if(!text.hasStyleNamed("echo"))
+			//atPrompt = false;
 		
 		receiveText(text.toString());
 	}
@@ -304,6 +370,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 
 		getClient().removeStreamListener(IWarlockClient.MAIN_STREAM_NAME, this);
 		getClient().removeRoomListener(this);
+		clearActions();
 	}
 	
 	@Override
@@ -423,5 +490,57 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	@Override
 	public void removeStoredVariable(String id) {
 		VariableConfigurationProvider.getProvider(getSettings()).removeVariable(id);
+	}
+	
+	@Override
+	public void waitForRoundtime() throws InterruptedException {
+		getClient().getTimer("roundtime").waitForEnd();
+	}
+	
+	@Override
+	public void addAction(Runnable action, IMatch match) {
+		synchronized(actions) {
+			actions.add(new Pair<IMatch, Runnable>(match, action));
+			
+			if(actionThread == null) {	
+				actionThread = new ScriptActionThread();
+				actionThread.start();
+			}
+		}
+	}
+	
+	@Override
+	public void clearActions() {
+		synchronized(actions) {
+			actions.clear();
+			if(actionThread != null)
+				actionThread.interrupt();
+		}
+	}
+	
+	@Override
+	public void removeAction(IMatch action) {
+		synchronized(actions) {
+			actions.remove(action);
+			if(actionThread != null)
+				actionThread.interrupt();
+		}
+	}
+	
+	@Override
+	public void removeAction(String text) {
+		synchronized(actions) {
+			boolean changed = false;
+			for(Iterator<Pair<IMatch, Runnable>> iter = actions.iterator(); iter.hasNext(); ) {
+				IMatch match = iter.next().first();
+				// remove the element with the same name as text
+				if(match.getText().equals(text)) {
+					iter.remove();
+					changed = true;
+				}
+			}
+			if(changed && actionThread != null)
+				actionThread.interrupt();
+		}
 	}
 }

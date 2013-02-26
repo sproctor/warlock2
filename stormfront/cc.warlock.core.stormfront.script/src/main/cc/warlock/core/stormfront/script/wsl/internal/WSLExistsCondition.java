@@ -19,22 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-public class WSLActionRemove extends WSLAbstractCommand {
+public class WSLExistsCondition extends WSLAbstractBoolean {
 
-	private WSLScript script;
-	private IWSLValue when;
+	private IWSLValue variable;
 	
-	public WSLActionRemove(int lineNum, WSLScript script, IWSLValue when) {
-		super(lineNum);
-		this.script = script;
-		this.when = when;
+	public WSLExistsCondition(IWSLValue variable) {
+		this.variable = variable;
+		
 	}
-
-	public void execute() {
-		script.scriptCommands.removeAction(when.toString());
-		script.scriptDebug(2, "Action removed \"" + when + "\"");
+	
+	@Override
+	public boolean toBoolean() {
+		if(variable instanceof WSLAbstractVariable) {
+			return ((WSLAbstractVariable)variable).variableExists();
+		}
+		return false;
 	}
 
 }

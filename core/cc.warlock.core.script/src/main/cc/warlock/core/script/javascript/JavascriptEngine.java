@@ -145,16 +145,16 @@ public class JavascriptEngine implements IScriptEngine {
 	
 
 	public IScript startScript(IScriptInfo info, final IWarlockClientViewer viewer, final String[] arguments) {
-		// FIXME need to somehow get dependent IScriptCommands to pass into the following constructor
 		
-		IScriptCommands commands = ScriptCommandsFactory.getFactory().createScriptCommands(viewer, info.getScriptName());
-		final JavascriptScript script = new JavascriptScript(this, info, viewer, commands);
+		final JavascriptScript script = new JavascriptScript(this, info, viewer);
+		IScriptCommands commands = ScriptCommandsFactory.getFactory().createScriptCommands(viewer, script);
+		script.setCommands(commands);
 		
 		script.start();
 		runningScripts.add(script);
 		
 		new Thread(new Runnable() {
-			
+			@Override
 			public void run () {
 				script.getCommands().addThread(Thread.currentThread());
 				Context context = Context.enter();

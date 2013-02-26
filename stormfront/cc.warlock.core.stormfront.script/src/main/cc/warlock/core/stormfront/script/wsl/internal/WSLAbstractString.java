@@ -19,21 +19,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-import cc.warlock.core.script.IMatch;
-import cc.warlock.core.script.IScriptCommands;
+abstract public class WSLAbstractString implements IWSLValue {
+	
+	public Type getType() {
+		return Type.String;
+	}
+	
+	abstract public String toString();
 
-public interface IStormFrontScriptCommands extends IScriptCommands {
+	public boolean toBoolean() {
+		String str = toString().trim();
+		
+		if(str == null || str.equals("") || str.equals("false") || str.equals("0")) return false;
+		else return true;
+	}
 	
-	public void waitForRoundtime() throws InterruptedException;
-	
-	public void addAction(Runnable action, IMatch match);
-	
-	public void clearActions();
-	
-	public void removeAction(IMatch action);
-	
-	public void removeAction(String text);
-	
+	public double toDouble() {
+		try {
+			return Double.parseDouble(toString().trim());
+		} catch(NumberFormatException e) {
+			return 0.0;
+		}
+	}
 }

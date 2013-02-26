@@ -19,33 +19,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-abstract public class WSLAbstractVariable extends WSLAbstractString {
+import cc.warlock.core.stormfront.script.wsl.WSLScript;
+
+public class WSLCommand extends WSLAbstractCommand {
+
+	private WSLScript script;
+	private IWSLValue value;
 	
-	protected IWSLValue variableName;
-	private String prefix;
-	
-	public WSLAbstractVariable(IWSLValue var, String prefix) {
-		variableName = var;
-		this.prefix = prefix;
+	public WSLCommand(int lineNumber, WSLScript script, IWSLValue value) {
+		super(lineNumber);
+		this.script = script;
+		this.value = value;
 	}
 	
-	@Override
-	public String toString() {
-		IWSLValue value = getVariable();
-		if(value == null) {
-			return prefix + variableName.toString();
-		}
-		return value.toString();
+	public void execute() throws InterruptedException {
+		 // we can have empty commands at labels
+		if(value == null)
+			return;
+		
+		script.execute(value.toString());
 	}
-	
-	@Override
-	public boolean toBoolean() {
-		if(!variableExists()) return false;
-		return super.toBoolean();
-	}
-	
-	abstract protected IWSLValue getVariable();
-	abstract protected boolean variableExists();
 }

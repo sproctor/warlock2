@@ -26,12 +26,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Script;
 
 import cc.warlock.core.script.IMatch;
@@ -47,6 +49,31 @@ public class JavascriptCommands {
 	private JavascriptScript script;
 	private HashMap<Integer, TimerTask> timeTasks = new HashMap<Integer, TimerTask>();
 	private int nextTimerID = 1;
+	
+	protected class JSActionHandler implements Runnable 
+	{
+		private Function function;
+		private RegexMatch match;
+		
+		public JSActionHandler (Function function, RegexMatch match)
+		{
+			this.function = function;
+			this.match = match;
+		}
+		
+		public void run() {
+			Context.enter();
+			try {
+				Object[] arguments = new Object[0];
+				Collection<String> matchGroups = match.groups();
+				arguments = matchGroups.toArray(new String[matchGroups.size()]);
+				
+				function.call(getScript().getContext(), getScript().getScope(), null, arguments);
+			} finally {
+				Context.exit();
+			}
+		}
+	}
 	
 	public JavascriptCommands(IScriptCommands commands, JavascriptScript script) {
 		this.commands = commands;
@@ -118,6 +145,7 @@ public class JavascriptCommands {
 		
 		try {
 			commands.pause(seconds);
+			commands.waitForRoundtime();
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -260,7 +288,66 @@ public class JavascriptCommands {
 		}
 	}
 	
-	protected void checkStop() {
+	// IStormFrontScriptCommands delegated methods
+	public void addAction(Function action, String text) {
 		script.checkStop();
+
+		RegexMatch match = new RegexMatch(text);
+		JSActionHandler command = new JSActionHandler(action, match);
+		commands.addAction(command, match);
+	}
+
+	public void removeAction(String text) {
+		script.checkStop();
+
+		commands.removeAction(text);
+	}
+
+	public void removeAction(IMatch action) {
+		script.checkStop();
+
+		commands.removeAction(action);
+	}
+
+	public void clearActions() {
+		script.checkStop();
+
+		commands.clearActions();
+	}
+
+	public void waitForRoundtime() {
+		script.checkStop();
+
+		try {
+			commands.waitForRoundtime();
+		} catch(InterruptedException e) {
+			script.checkStop();
+		}
+	}
+
+	public void waitNextRoom() {
+		script.checkStop();
+
+		try {
+			commands.waitNextRoom();
+		} catch(InterruptedException e) {
+			script.checkStop();
+		}
+	}
+
+	public String getComponent(String component) {
+		return commands.getClient().getComponent(component);
+	}
+
+	public String getVariable(String name) {
+		return commands.getStoredVariable(name);
+	}
+
+	public String getVital(String name) {
+		return commands.getClient().getProperty(name).get();
+	}
+
+	public void setVariable(String name, String value) {
+		commands.setStoredVariable(name, value);
 	}
 }

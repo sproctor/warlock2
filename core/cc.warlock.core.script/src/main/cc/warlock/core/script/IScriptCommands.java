@@ -73,4 +73,14 @@ public interface IScriptCommands extends IRoomListener {
 	public void setStoredVariable(String id, String value);
 	
 	public void removeStoredVariable(String id);
+	
+	public void waitForRoundtime() throws InterruptedException;
+	
+	public void addAction(Runnable action, IMatch match);
+	
+	public void clearActions();
+	
+	public void removeAction(IMatch action);
+	
+	public void removeAction(String text);
 }

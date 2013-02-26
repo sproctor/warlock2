@@ -17,6 +17,11 @@ import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.internal.RegexMatch;
 import cc.warlock.core.script.internal.TextMatch;
+import cc.warlock.core.stormfront.script.wsl.internal.IWSLCommandDefinition;
+import cc.warlock.core.stormfront.script.wsl.internal.IWSLValue;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractNumber;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLBoolean;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLNumber;
 
 public class WSLScriptCommands {
 	private static final String argSeparator = "\\s+";
@@ -44,7 +49,6 @@ public class WSLScriptCommands {
 		addCommandDefinition("deletelocalvariable", new WSLCommandDeleteLocalVariable());
 		addCommandDefinition("deletevariable", new WSLCommandDeleteVariable());
 		addCommandDefinition("debug", new WSLCommandDebug());
-		addCommandDefinition("delay", new WSLCommandDelay());
 		addCommandDefinition("echo", new WSLCommandEcho());
 		addCommandDefinition("else", new WSLCommandElse());
 		addCommandDefinition("exit", new WSLCommandExit());
@@ -124,17 +128,6 @@ public class WSLScriptCommands {
 				} catch(NumberFormatException e) {
 					script.scriptWarning("Invalid argument to command \"debug\": " + arg);
 				}
-			}
-		}
-	}
-	
-	protected class WSLCommandDelay implements IWSLCommandDefinition {
-		
-		public void execute(WSLScript script, String arguments) {
-			try {
-				script.setDelay(Double.parseDouble(arguments));
-			} catch(NumberFormatException e) {
-				script.scriptWarning("Invalid arguments to delay");
 			}
 		}
 	}

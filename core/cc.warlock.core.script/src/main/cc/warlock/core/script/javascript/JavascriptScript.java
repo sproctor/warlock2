@@ -54,14 +54,16 @@ public class JavascriptScript extends AbstractScript {
 		private static final long serialVersionUID = 5687999229834097094L;
 	}
 	
-	public JavascriptScript (JavascriptEngine engine, IScriptInfo info, IWarlockClientViewer viewer, IScriptCommands commands)
-	{
+	public JavascriptScript (JavascriptEngine engine, IScriptInfo info, IWarlockClientViewer viewer) {
 		super(info, viewer);
 		
 		this.engine = engine;
-		this.commands = commands;
 	}
 
+	public void setCommands(IScriptCommands commands) {
+		this.commands = commands;
+	}
+	
 	public IScriptCommands getCommands() {
 		return commands;
 	}

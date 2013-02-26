@@ -24,7 +24,7 @@ package cc.warlock.core.script;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.script.internal.ScriptCommands;
 
-public abstract class ScriptCommandsFactory {
+public class ScriptCommandsFactory {
 
 	protected static ScriptCommandsFactory factory = new ScriptCommandsFactoryDefault();
 	
@@ -37,13 +37,15 @@ public abstract class ScriptCommandsFactory {
 		ScriptCommandsFactory.factory = factory;
 	}
 	
-	public abstract IScriptCommands createScriptCommands (IWarlockClientViewer viewer, String name);
+	public IScriptCommands createScriptCommands (IWarlockClientViewer viewer, IScript script) {
+		return new ScriptCommands(viewer, script);
+	}
 	
 	protected static class ScriptCommandsFactoryDefault extends ScriptCommandsFactory
 	{
 		@Override
-		public IScriptCommands createScriptCommands(IWarlockClientViewer viewer, String name) {
-			return new ScriptCommands(viewer, name);
+		public IScriptCommands createScriptCommands(IWarlockClientViewer viewer, IScript script) {
+			return new ScriptCommands(viewer, script);
 		}
 	}
 }

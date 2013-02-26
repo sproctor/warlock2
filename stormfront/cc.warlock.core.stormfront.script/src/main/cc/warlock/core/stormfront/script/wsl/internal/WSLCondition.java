@@ -19,26 +19,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-import java.util.List;
+import cc.warlock.core.stormfront.script.wsl.WSLScript;
 
-public class WSLList extends WSLAbstractString {
+public class WSLCondition extends WSLAbstractCommand {
 
-	private List<IWSLValue> list;
+	private WSLScript script;
+	private WSLAbstractCommand command;
+	private IWSLValue condition;
 	
-	public WSLList(List<IWSLValue> list) {
-		this.list = list;
+	public WSLCondition(int lineNum, WSLScript script, IWSLValue condition, WSLAbstractCommand command) {
+		super(lineNum);
+		this.script = script;
+		this.condition = condition;
+		this.command = command;
 	}
 	
-	@Override
-	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		
-		for(IWSLValue value : list) {
-			buffer.append(value.toString());
-		}
-		
-		return buffer.toString();
+	public void execute() throws InterruptedException {
+		boolean cond = condition.toBoolean();
+		script.setLastCondition(cond);
+		if(cond)
+			command.execute();
 	}
+
 }

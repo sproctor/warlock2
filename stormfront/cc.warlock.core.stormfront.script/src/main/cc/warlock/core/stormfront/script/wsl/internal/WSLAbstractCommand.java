@@ -19,15 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-public interface IWSLValue {
+
+abstract public class WSLAbstractCommand {
+	private int lineNumber;
+	private boolean instant = false;
 	
-	enum Type { Boolean, String, Number }
+	public WSLAbstractCommand(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
 	
-	public Type getType();
-	public String toString();
-	public boolean toBoolean();
-	public double toDouble();
+	public int getLineNumber() {
+		return lineNumber;
+	}
 	
+	public void setInstant(boolean i) {
+		instant = i;
+	}
+	
+	public boolean isInstant() {
+		return instant;
+	}
+	
+	abstract public void execute() throws InterruptedException;
+
 }

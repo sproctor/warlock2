@@ -207,9 +207,8 @@ abstract public class WarlockEntry implements IWarlockEntry {
 			macro = MacroRegistry.instance().getMacro(keyCode, stateMask);
 		
 		if(macro != null) {
-				leaveSearchMode();
-				macro.execute(viewer);
-				//keyHandled = true;
+			leaveSearchMode();
+			macro.execute(viewer);
 
 			return true;
 		}

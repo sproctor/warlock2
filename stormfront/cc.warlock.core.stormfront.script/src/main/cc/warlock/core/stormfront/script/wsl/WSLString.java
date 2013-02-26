@@ -21,6 +21,8 @@
  */
 package cc.warlock.core.stormfront.script.wsl;
 
+import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractString;
+
 public class WSLString extends WSLAbstractString {
 	
 	private String string;
