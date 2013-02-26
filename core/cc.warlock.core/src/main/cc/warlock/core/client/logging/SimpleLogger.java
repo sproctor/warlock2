@@ -35,6 +35,7 @@ import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockString;
+import cc.warlock.core.client.internal.WarlockClient;
 
 /**
  * A simple text-based logger that rotates daily
@@ -56,25 +57,28 @@ public class SimpleLogger implements IStreamListener {
 		this.client = client;
 	}
 	
-	private boolean isEnabled() {
+	private boolean isEnabled(IStream stream) {
 		IClientSettings settings = client.getClientSettings();
-		return settings != null && LoggingConfiguration.getProvider(settings).isLoggingEnabled();
+		return settings != null
+				&& LoggingConfiguration.getProvider(settings).isLoggingEnabled()
+				&& (stream.getName().equals(WarlockClient.MAIN_STREAM_NAME)
+						|| stream.getClosedTarget().equals(WarlockClient.MAIN_STREAM_NAME));
 	}
 	@Override
 	public void streamReceivedText(IStream stream, WarlockString text) {
-		if(isEnabled())
+		if(isEnabled(stream))
 			appendBuffer(text.toString());
 	}
 
 	@Override
 	public void streamPrompted(IStream stream, String prompt) {
-		if(isEnabled())
+		if(isEnabled(stream))
 			appendBuffer(prompt);
 	}
 
 	@Override
 	public void streamReceivedCommand(IStream stream, ICommand command) {
-		if(isEnabled())
+		if(isEnabled(stream))
 			appendBuffer(command.getText() + "\n");
 	}
 	
