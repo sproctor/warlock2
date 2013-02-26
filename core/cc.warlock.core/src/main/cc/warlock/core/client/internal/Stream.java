@@ -48,7 +48,6 @@ public class Stream implements IStream {
 	private String closedStyle;
 	private String closedTarget = "main";
 	private String streamName;
-	protected boolean isLogging = false;
 	private String location = "right";
 	private StreamHistory history = null;
 	
@@ -94,10 +93,6 @@ public class Stream implements IStream {
 	}
 	
 	public synchronized void put(WarlockString text) {
-		if (isLogging && client.getLogger() != null) {
-			client.getLogger().logText(text);
-		}
-
 		for(IStreamListener listener : listeners) {
 			try {
 				listener.streamReceivedText(this, text);
@@ -109,10 +104,6 @@ public class Stream implements IStream {
 	}
 	
 	public synchronized void prompt(String prompt) {
-		if (isLogging && client.getLogger() != null) {
-			client.getLogger().logPrompt(prompt);
-		}
-
 		for (IStreamListener listener : listeners)
 		{
 			try {
@@ -124,10 +115,6 @@ public class Stream implements IStream {
 	}
 	
 	public synchronized void sendCommand(ICommand command) {
-		if (isLogging && client.getLogger() != null) {
-			client.getLogger().logEcho(command.getText());
-		}
-
 		for (IStreamListener listener : listeners)
 		{
 			listener.streamReceivedCommand(this, command);
@@ -201,10 +188,6 @@ public class Stream implements IStream {
 				t.printStackTrace();
 			}
 		}
-	}
-	
-	public void setLogging (boolean logging) {
-		this.isLogging = logging;
 	}
 	
 	public void setLocation(String location) {

@@ -49,7 +49,6 @@ import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockTimer;
-import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.HighlightConfigurationProvider;
@@ -66,11 +65,10 @@ public abstract class WarlockClient implements IWarlockClient {
 	protected IWarlockClientViewer viewer;
 	protected IWarlockClientListener listener;
 	private String lastCommand;
-	//protected ICommandHistory commandHistory = new CommandHistory();
 	protected String streamPrefix;
 	private Collection<IRoomListener> roomListeners = Collections.synchronizedCollection(new ArrayList<IRoomListener>());
 	protected Property<ICompass> compass = new Property<ICompass>(null);
-	protected IClientLogger logger;
+	protected SimpleLogger logger;
 	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	protected final IStream mainStream;
 	protected ArrayList<Pair<String, IStreamListener>> streamListeners = new ArrayList<Pair<String, IStreamListener>>();
@@ -82,10 +80,10 @@ public abstract class WarlockClient implements IWarlockClient {
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
 	protected ClientSettings clientSettings;
-	//private int minCommandSize;
 	
 	public WarlockClient () {
 		streamPrefix = "client:" + hashCode() + ":";
+		logger = new SimpleLogger(this);
 		mainStream = createStream(IWarlockClient.MAIN_STREAM_NAME);
 		
 		status = new CharacterStatus(this);
@@ -103,9 +101,7 @@ public abstract class WarlockClient implements IWarlockClient {
 			public void clientConnected(IWarlockClient client) {}
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {
-				// if (getClientSettings().getLoggingSettings().getLogFormat().equals(LoggingConfiguration.LOG_FORMAT_TEXT))
-					logger = new SimpleLogger(WarlockClient.this);
-					highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
+				highlightLists.add(HighlightConfigurationProvider.getHighlights(getClientSettings()));
 			}
 		};
 		WarlockClientRegistry.addWarlockClientListener(listener);
@@ -129,10 +125,6 @@ public abstract class WarlockClient implements IWarlockClient {
 	}
 	
 	// IWarlockClient methods
-	
-	/*public ICommandHistory getCommandHistory() {
-		return commandHistory;
-	}*/
 	
 	public abstract void connect(String server, int port, String key) throws IOException;
 	
@@ -255,16 +247,13 @@ public abstract class WarlockClient implements IWarlockClient {
 		return new MultiIterator<IWarlockHighlight>(highlightLists);
 	}
 	
+	@Override
 	public void addHighlights(Collection<IWarlockHighlight> highlights) {
 		highlightLists.add(highlights);
 	}
 	
 	public boolean removeHighlights(Collection<IWarlockHighlight> highlights) {
 		return highlightLists.remove(highlights);
-	}
-	
-	public IClientLogger getLogger() {
-		return logger;
 	}
 	
 	public void playSound(InputStream stream) {
@@ -289,6 +278,7 @@ public abstract class WarlockClient implements IWarlockClient {
 				// TODO: or should this always be called?
 				stream.create();
 			}
+			stream.addStreamListener(logger);
 			return stream;
 		}
 	}

@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import cc.warlock.core.client.internal.WarlockDialog;
-import cc.warlock.core.client.logging.IClientLogger;
 import cc.warlock.core.network.IConnection;
 
 /**
@@ -136,7 +135,7 @@ public interface IWarlockClient extends IRoomListener {
 	/**
 	 * @return This client's logger (for use by streams etc)
 	 */
-	public IClientLogger getLogger();
+	//public IClientLogger getLogger();
 	
 	public void playSound(InputStream stream);
 

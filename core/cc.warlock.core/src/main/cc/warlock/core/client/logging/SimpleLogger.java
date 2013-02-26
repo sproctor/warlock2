@@ -29,6 +29,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import cc.warlock.core.client.IClientSettings;
+import cc.warlock.core.client.ICommand;
+import cc.warlock.core.client.IStream;
+import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockString;
 
@@ -38,41 +42,43 @@ import cc.warlock.core.client.WarlockString;
  * @author marshall
  *
  */
-public class SimpleLogger implements IClientLogger {
+public class SimpleLogger implements IStreamListener {
 
 	protected IWarlockClient client;
-	protected StringBuffer buffer = new StringBuffer();
 	protected int maxBufferSize = 2000;
+	protected StringBuffer buffer = new StringBuffer(maxBufferSize);
 	protected boolean nextlineStamp = false;
 	
 	protected static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 	protected static final DateFormat timeFormat = new SimpleDateFormat("[H:m:s] ");
 	
-	public SimpleLogger (IWarlockClient client)
-	{
+	public SimpleLogger (IWarlockClient client) {
 		this.client = client;
 	}
 	
-	public void logEcho(String command) {
-		appendBuffer(command);
-		appendBuffer("\n");
-		
-		checkAndDumpBuffer();
+	private boolean isEnabled() {
+		IClientSettings settings = client.getClientSettings();
+		return settings != null && LoggingConfiguration.getProvider(settings).isLoggingEnabled();
+	}
+	@Override
+	public void streamReceivedText(IStream stream, WarlockString text) {
+		if(isEnabled())
+			appendBuffer(text.toString());
 	}
 
-	public void logPrompt(String prompt) {
-		appendBuffer(prompt);
-		
-		checkAndDumpBuffer();
+	@Override
+	public void streamPrompted(IStream stream, String prompt) {
+		if(isEnabled())
+			appendBuffer(prompt);
 	}
 
-	public void logText(WarlockString text) {
-		appendBuffer(text.toString());
-		
-		checkAndDumpBuffer();
+	@Override
+	public void streamReceivedCommand(IStream stream, ICommand command) {
+		if(isEnabled())
+			appendBuffer(command.getText() + "\n");
 	}
 	
-	protected void appendBuffer(String str) {
+	protected synchronized void appendBuffer(String str) {
 		if (nextlineStamp) {
 			nextlineStamp = false;
 			str = timeFormat.format(Calendar.getInstance().getTime()) + str;
@@ -82,6 +88,9 @@ public class SimpleLogger implements IClientLogger {
 			nextlineStamp = true;
 		}
 		buffer.append(str);
+		if (buffer.length() >= maxBufferSize) {
+			dumpBuffer();
+		}
 	}
 
 	protected File getLogFile ()
@@ -92,15 +101,7 @@ public class SimpleLogger implements IClientLogger {
 			characterName + "-" + dateFormat.format(Calendar.getInstance().getTime()) + ".txt");
 	}
 	
-	protected void checkAndDumpBuffer ()
-	{
-		if (buffer.length() >= maxBufferSize)
-		{
-			dumpBuffer();
-		}
-	}
-	
-	public void flush() {
+	public synchronized void flush() {
 		dumpBuffer();
 	}
 	
@@ -111,13 +112,36 @@ public class SimpleLogger implements IClientLogger {
 			stream.write(buffer.toString().getBytes());
 			stream.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		buffer.setLength(0);
+	}
+
+	@Override
+	public void streamCreated(IStream stream) {
+		// Don't care
+	}
+	
+	@Override
+	public void streamCleared(IStream stream) {
+		// Don't care
+	}
+
+	@Override
+	public void streamFlush(IStream stream) {
+		// Don't care .. or maybe we should flush the buffer here?
+	}
+
+	@Override
+	public void streamTitleChanged(IStream stream, String title) {
+		// Don't care
+	}
+
+	@Override
+	public void componentUpdated(IStream stream, String id, WarlockString value) {
+		// and ... probably don't care
 	}
 }

@@ -64,8 +64,6 @@ public interface IStream {
 	
 	public void updateComponent(String id, WarlockString text);
 	
-	public void setLogging (boolean logging);
-	
 	public void setLocation(String location);
 	public String getLocation();
 	
