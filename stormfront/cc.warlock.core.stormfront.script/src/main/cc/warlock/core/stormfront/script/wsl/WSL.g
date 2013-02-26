@@ -3,14 +3,17 @@ grammar WSL;
 options { backtrack=true; memoize=true; }
 
 @parser::header {
-	package cc.warlock.core.stormfront.script.wsl;
-	import java.util.ArrayList;
-	import cc.warlock.core.stormfront.script.wsl.WSLEqualityCondition.EqualityOperator;
-	import cc.warlock.core.stormfront.script.wsl.WSLRelationalCondition.RelationalOperator;
+package cc.warlock.core.stormfront.script.wsl.internal;
+import java.util.ArrayList;
+import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLString;
+import cc.warlock.core.stormfront.script.wsl.WSLVariable;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLEqualityCondition.EqualityOperator;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLRelationalCondition.RelationalOperator;
 }
 
 @lexer::header {
-	package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 }
 
 @parser::members {

@@ -53,6 +53,8 @@ import cc.warlock.core.stormfront.script.wsl.internal.IWSLValue;
 import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractCommand;
 import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractNumber;
 import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractString;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLLexer;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLParser;
 
 public class WSLScript extends AbstractScript {
 	
@@ -322,7 +324,7 @@ public class WSLScript extends AbstractScript {
 			return -1;
 	}
 	
-	protected void addCommand(WSLAbstractCommand command) {
+	public void addCommand(WSLAbstractCommand command) {
 		commands.add(command);
 	}
 	
