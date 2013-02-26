@@ -73,7 +73,7 @@ public class SimpleLogger implements IStreamListener {
 	@Override
 	public void streamPrompted(IStream stream, String prompt) {
 		if(isEnabled(stream))
-			appendBuffer(prompt);
+			appendBuffer(prompt + "\n");
 	}
 
 	@Override
