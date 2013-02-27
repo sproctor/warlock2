@@ -112,7 +112,6 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	
 	@Override
 	protected Control createContents(Composite parent) {
-		this.noDefaultAndApplyButton();
 		
 		createProfileDropDown(parent);
 		
@@ -524,22 +523,26 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 		// Remove the added macros
 		addedMacros.clear();
 		
+		setData(settings);
+		
+		macroTableView.refresh();
+		
 		return true;
 	}
 	
 	@Override
 	public boolean performOk() {
+		for(MacroSetting setting : removedMacros) {
+			MacroConfigurationProvider.getProvider(settings).removeSetting(setting);
+		}
+		removedMacros.clear();
+		
 		for (WarlockMacro setting : addedMacros) {
 			MacroSetting macro = MacroConfigurationProvider.getProvider(settings).createSetting();
 			macro.setCommand(setting.getCommand());
 			macro.setKeyString(setting.getKeyString());
 		}
 		addedMacros.clear();
-		
-		for(MacroSetting setting : removedMacros) {
-			MacroConfigurationProvider.getProvider(settings).removeSetting(setting);
-		}
-		removedMacros.clear();
 		
 		settings.flush();
 		
