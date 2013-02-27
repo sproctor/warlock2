@@ -121,7 +121,7 @@ public class Stream implements IStream {
 		}
 	}
 	
-	public void echo(WarlockString text) {
+	public synchronized void echo(WarlockString text) {
 		for (IStreamListener listener : listeners)
 		{
 			try {
