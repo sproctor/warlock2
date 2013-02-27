@@ -137,8 +137,12 @@ public class WarlockCompass extends Canvas {
 				if(oldImage != null)
 					oldImage.dispose();
 				ImageData dirData = theme.getDirectionImage(direction).getImageData();
-				scaledDirections.put(direction, new Image(getDisplay(), dirData.scaledTo((int)(dirData.width*scale),
-						(int)(dirData.height*scale))));
+				Image newImage = null;
+				int dirHeight = (int)(dirData.height*scale);
+				int dirWidth = (int)(dirData.width*scale);
+				if(dirHeight > 0 && dirWidth > 0)
+					newImage = new Image(getDisplay(), dirData.scaledTo(dirWidth, dirHeight));
+				scaledDirections.put(direction, newImage);
 			}
 		}
 	}
@@ -152,7 +156,9 @@ public class WarlockCompass extends Canvas {
 			for (DirectionType direction : DirectionType.values()) {
 				if (direction != DirectionType.None && client.getCompass().get().getDirections().contains(direction)) {
 					Point point = theme.getDirectionPosition(direction);
-					gc.drawImage(scaledDirections.get(direction), (int)(point.x*scale), (int)(point.y*scale));
+					Image dirImage = scaledDirections.get(direction);
+					if(dirImage != null)
+						gc.drawImage(dirImage, (int)(point.x*scale), (int)(point.y*scale));
 				}
 			}
 		}
