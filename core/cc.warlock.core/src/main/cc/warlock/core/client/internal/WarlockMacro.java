@@ -42,6 +42,8 @@ public class WarlockMacro implements IMacro {
 			keyString = "Alt+" + keyString;
 		if((modifiers & IMacro.CTRL) != 0)
 			keyString = "Ctrl+" + keyString;
+		if((modifiers & IMacro.SHIFT) != 0)
+			keyString = "Shift+" + keyString;
 		return keyString;
 	}
 	
