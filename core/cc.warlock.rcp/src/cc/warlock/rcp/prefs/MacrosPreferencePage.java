@@ -427,14 +427,12 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 			macroTableView.update(element, null);
 		}
 		
-		protected class MacroCommandContentProposal implements IContentProposal
-		{
+		protected class MacroCommandContentProposal implements IContentProposal {
 			protected IMacroCommand command;
 			protected String contents;
 			protected int position;
 		
-			public MacroCommandContentProposal (IMacroCommand command, String contents, int position)
-			{
+			public MacroCommandContentProposal (IMacroCommand command, String contents, int position) {
 				this.command = command;
 				this.contents = contents;
 				this.position = position;

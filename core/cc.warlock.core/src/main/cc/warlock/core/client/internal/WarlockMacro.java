@@ -38,9 +38,9 @@ public class WarlockMacro implements IMacro {
 	
 	public static String getKeyString(String key, int modifiers) {
 		String keyString = key;
-		if((modifiers | IMacro.ALT) != 0)
+		if((modifiers & IMacro.ALT) != 0)
 			keyString = "Alt+" + keyString;
-		if((modifiers | IMacro.CTRL) != 0)
+		if((modifiers & IMacro.CTRL) != 0)
 			keyString = "Ctrl+" + keyString;
 		return keyString;
 	}
