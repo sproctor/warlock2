@@ -19,27 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-import cc.warlock.core.stormfront.script.wsl.internal.IWSLValue;
-import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractVariable;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLVariable extends WSLAbstractVariable {
 	
-	private WSLScript script;
-	
-	public WSLVariable(IWSLValue var, WSLScript script) {
+	public WSLVariable(IWSLValue var) {
 		super(var, "%");
-		this.script = script;
 	}
 	
 	@Override
-	public IWSLValue getVariable() {
-		return script.getVariable(variableName.toString());
+	public IWSLValue getVariable(WSLScriptContext cx) {
+		return cx.getScript().getVariable(variableName.toString(cx));
 	}
 	
 	@Override
-	public boolean variableExists() {
-		return script.variableExists(variableName.toString());
+	public boolean variableExists(WSLScriptContext cx) {
+		return cx.getScript().variableExists(variableName.toString(cx));
 	}
 }

@@ -21,24 +21,21 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
-import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLLocalVariable extends WSLAbstractVariable {
 	
-	private WSLScript script;
-	
-	public WSLLocalVariable(IWSLValue var, WSLScript script) {
+	public WSLLocalVariable(IWSLValue var) {
 		super(var, "$");
-		this.script = script;
 	}
 	
 	@Override
-	public IWSLValue getVariable() {
-		return script.getLocalVariable(variableName.toString());
+	public IWSLValue getVariable(WSLScriptContext cx) {
+		return cx.getLocalVariable(variableName.toString(cx));
 	}
 	
 	@Override
-	public boolean variableExists() {
-		return script.localVariableExists(variableName.toString());
+	public boolean variableExists(WSLScriptContext cx) {
+		return cx.localVariableExists(variableName.toString(cx));
 	}
 }

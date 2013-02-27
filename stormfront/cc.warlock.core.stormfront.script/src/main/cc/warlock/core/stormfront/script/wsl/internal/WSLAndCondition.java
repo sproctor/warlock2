@@ -23,6 +23,8 @@ package cc.warlock.core.stormfront.script.wsl.internal;
 
 import java.util.List;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public class WSLAndCondition extends WSLAbstractBoolean {
 
 	private List<IWSLValue> args;
@@ -32,9 +34,9 @@ public class WSLAndCondition extends WSLAbstractBoolean {
 	}
 	
 	@Override
-	public boolean toBoolean() {
+	public boolean toBoolean(WSLScriptContext cx) {
 		for(IWSLValue value : args) {
-			if(!value.toBoolean()) {
+			if(!value.toBoolean(cx)) {
 				return false;
 			}
 		}

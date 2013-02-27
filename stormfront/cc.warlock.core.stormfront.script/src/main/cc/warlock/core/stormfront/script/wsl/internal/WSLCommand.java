@@ -22,23 +22,24 @@
 package cc.warlock.core.stormfront.script.wsl.internal;
 
 import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLCommand extends WSLAbstractCommand {
 
-	private WSLScript script;
 	private IWSLValue value;
 	
 	public WSLCommand(int lineNumber, WSLScript script, IWSLValue value) {
-		super(lineNumber);
-		this.script = script;
+		super(lineNumber, script);
+		
 		this.value = value;
 	}
 	
-	public void execute() throws InterruptedException {
+	public void execute(WSLScriptContext cx) throws InterruptedException {
 		 // we can have empty commands at labels
 		if(value == null)
 			return;
 		
-		script.execute(value.toString());
+		cx.execute(value.toString(cx));
 	}
+	
 }

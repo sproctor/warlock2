@@ -21,20 +21,22 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 abstract public class WSLAbstractBoolean implements IWSLValue {
 	
-	abstract public boolean toBoolean();
-
-	public double toDouble() {
-		if(toBoolean()) return 1.0;
+	@Override
+	public double toDouble(WSLScriptContext cx) {
+		if(toBoolean(cx)) return 1.0;
 		else return 0.0;
 	}
 
-	public String toString() {
-		if(toBoolean()) return "true";
-		else return "false";
+	@Override
+	public String toString(WSLScriptContext cx) {
+		return toBoolean(cx) ? "true" : "false";
 	}
 
+	@Override
 	public Type getType() {
 		return Type.Boolean;
 	}

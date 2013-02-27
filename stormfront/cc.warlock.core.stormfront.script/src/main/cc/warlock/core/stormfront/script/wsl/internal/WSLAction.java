@@ -25,17 +25,17 @@ import java.util.regex.PatternSyntaxException;
 
 import cc.warlock.core.script.internal.RegexMatch;
 import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLAction extends WSLAbstractCommand {
 
-	private WSLScript script;
 	private WSLAbstractCommand command;
 	private IWSLValue when;
 	private RegexMatch match;
 	
 	public WSLAction(int lineNum, WSLScript script, WSLAbstractCommand command, IWSLValue when) {
-		super(lineNum);
-		this.script = script;
+		super(lineNum, script);
+		
 		this.command = command;
 		this.when = when;
 	}
@@ -43,6 +43,7 @@ public class WSLAction extends WSLAbstractCommand {
 	private class WSLActionAdapter implements Runnable {
 		
 		public void run() {
+			/*
 			script.setVariablesFromMatch(match);
 			try {
 				if(!command.isInstant())
@@ -55,17 +56,17 @@ public class WSLAction extends WSLAbstractCommand {
 				command.execute();
 			} catch(InterruptedException e) {
 				// TODO - what to do here?
-			}
+			}*/
 		}
 	}
 	
-	public void execute() {
+	public void execute(WSLScriptContext cx) {
 		try {
-			match = new RegexMatch(when.toString().trim());
-			script.scriptDebug(2, "Action added \"" + command + "\" when \"" + when + "\"");
-			script.getCommands().addAction(new WSLActionAdapter(), match);
+			match = new RegexMatch(when.toString(cx).trim());
+			cx.scriptDebug(2, "Action added \"" + command + "\" when \"" + when + "\"");
+			cx.getScript().getCommands().addAction(new WSLActionAdapter(), match);
 		} catch(PatternSyntaxException e) {
-			script.scriptError("Bad regex \"" + when.toString().trim() + "\" in action");
+			cx.scriptError("Bad regex \"" + when.toString(cx).trim() + "\" in action");
 		}
 	}
 

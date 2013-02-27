@@ -21,6 +21,8 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public class WSLBoolean extends WSLAbstractBoolean {
 
 	private boolean value;
@@ -29,7 +31,8 @@ public class WSLBoolean extends WSLAbstractBoolean {
 		value = v;
 	}
 	
-	public boolean toBoolean() {
+	@Override
+	public boolean toBoolean(WSLScriptContext cx) {
 		return value;
 	}
 

@@ -21,6 +21,8 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public class WSLNotCondition extends WSLAbstractBoolean {
 
 	private IWSLValue value;
@@ -30,8 +32,8 @@ public class WSLNotCondition extends WSLAbstractBoolean {
 	}
 	
 	@Override
-	public boolean toBoolean() {
-		return !value.toBoolean();
+	public boolean toBoolean(WSLScriptContext cx) {
+		return !value.toBoolean(cx);
 	}
 
 }

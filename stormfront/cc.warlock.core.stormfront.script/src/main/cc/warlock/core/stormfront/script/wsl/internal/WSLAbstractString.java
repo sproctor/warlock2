@@ -21,24 +21,29 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 abstract public class WSLAbstractString implements IWSLValue {
 	
+	@Override
 	public Type getType() {
 		return Type.String;
 	}
 	
-	abstract public String toString();
-
-	public boolean toBoolean() {
-		String str = toString().trim();
+	@Override
+	public boolean toBoolean(WSLScriptContext cx) {
+		String str = toString(cx).trim();
 		
-		if(str == null || str.equals("") || str.equals("false") || str.equals("0")) return false;
-		else return true;
+		if(str == null || str.equals("") || str.equals("false") || str.equals("0"))
+			return false;
+		else
+			return true;
 	}
 	
-	public double toDouble() {
+	@Override
+	public double toDouble(WSLScriptContext cx) {
 		try {
-			return Double.parseDouble(toString().trim());
+			return Double.parseDouble(toString(cx).trim());
 		} catch(NumberFormatException e) {
 			return 0.0;
 		}

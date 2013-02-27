@@ -19,9 +19,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.stormfront.script.wsl;
+package cc.warlock.core.stormfront.script.wsl.internal;
 
-import cc.warlock.core.stormfront.script.wsl.internal.WSLAbstractString;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 
 public class WSLString extends WSLAbstractString {
 	
@@ -32,7 +33,7 @@ public class WSLString extends WSLAbstractString {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(WSLScriptContext cx) {
 		return string;
 	}
 }

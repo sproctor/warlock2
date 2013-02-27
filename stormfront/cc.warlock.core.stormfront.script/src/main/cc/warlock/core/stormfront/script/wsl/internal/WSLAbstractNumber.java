@@ -21,18 +21,20 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 abstract public class WSLAbstractNumber implements IWSLValue {
 	
-	public boolean toBoolean() {
-		if(toDouble() == 0.0) return false;
+	@Override
+	public boolean toBoolean(WSLScriptContext cx) {
+		if(toDouble(cx) == 0.0) return false;
 		else return true;
 	}
 
-	abstract public double toDouble();
-	
-	public String toString() {
-		double v = toDouble();
-		if(Math.floor(v) == v) return Long.toString((long)v);
+	public String toString(WSLScriptContext cx) {
+		double v = toDouble(cx);
+		if(Math.floor(v) == v)
+			return Long.toString((long)v);
 		return Double.toString(v);
 	}
 

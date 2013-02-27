@@ -22,21 +22,21 @@
 package cc.warlock.core.stormfront.script.wsl.internal;
 
 import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLActionRemove extends WSLAbstractCommand {
 
-	private WSLScript script;
 	private IWSLValue when;
 	
 	public WSLActionRemove(int lineNum, WSLScript script, IWSLValue when) {
-		super(lineNum);
-		this.script = script;
+		super(lineNum, script);
+		
 		this.when = when;
 	}
 
-	public void execute() {
-		script.getCommands().removeAction(when.toString());
-		script.scriptDebug(2, "Action removed \"" + when + "\"");
+	public void execute(WSLScriptContext cx) {
+		cx.getScript().getCommands().removeAction(when.toString(cx));
+		cx.scriptDebug(2, "Action removed \"" + when + "\"");
 	}
 
 }

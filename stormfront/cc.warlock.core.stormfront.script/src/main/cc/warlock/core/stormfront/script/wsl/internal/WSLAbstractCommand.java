@@ -21,13 +21,19 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
-abstract public class WSLAbstractCommand {
+
+abstract public class WSLAbstractCommand implements IWSLCommand {
+	
 	private int lineNumber;
 	private boolean instant = false;
+	protected WSLScript script;
 	
-	public WSLAbstractCommand(int lineNumber) {
+	public WSLAbstractCommand(int lineNumber, WSLScript script) {
 		this.lineNumber = lineNumber;
+		this.script = script;
 	}
 	
 	public int getLineNumber() {
@@ -42,6 +48,15 @@ abstract public class WSLAbstractCommand {
 		return instant;
 	}
 	
-	abstract public void execute() throws InterruptedException;
+	abstract public void execute(WSLScriptContext cx) throws InterruptedException;
 
+	final public WSLAbstractCommand getNext() {
+		WSLAbstractCommand next = null;
+		int i = this.getLineNumber() + 1;
+		while(next == null && i < script.numLines()) {
+			next = script.getLine(i);
+			i++;
+		}
+		return next;
+	}
 }

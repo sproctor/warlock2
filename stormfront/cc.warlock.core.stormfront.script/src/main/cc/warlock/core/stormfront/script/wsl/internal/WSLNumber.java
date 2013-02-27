@@ -21,6 +21,8 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public class WSLNumber extends WSLAbstractNumber {
 
 	private double value;
@@ -33,7 +35,8 @@ public class WSLNumber extends WSLAbstractNumber {
 		value = Double.parseDouble(number);
 	}
 	
-	public double toDouble() {
+	@Override
+	public double toDouble(WSLScriptContext cx) {
 		return value;
 	}
 

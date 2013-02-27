@@ -21,6 +21,8 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 abstract public class WSLAbstractVariable extends WSLAbstractString {
 	
 	protected IWSLValue variableName;
@@ -32,20 +34,21 @@ abstract public class WSLAbstractVariable extends WSLAbstractString {
 	}
 	
 	@Override
-	public String toString() {
-		IWSLValue value = getVariable();
+	public String toString(WSLScriptContext cx) {
+		IWSLValue value = getVariable(cx);
 		if(value == null) {
-			return prefix + variableName.toString();
+			return prefix + variableName.toString(cx);
 		}
-		return value.toString();
+		return value.toString(cx);
 	}
 	
 	@Override
-	public boolean toBoolean() {
-		if(!variableExists()) return false;
-		return super.toBoolean();
+	public boolean toBoolean(WSLScriptContext cx) {
+		if(!variableExists(cx))
+			return false;
+		return super.toBoolean(cx);
 	}
 	
-	abstract protected IWSLValue getVariable();
-	abstract protected boolean variableExists();
+	abstract protected IWSLValue getVariable(WSLScriptContext cx);
+	abstract protected boolean variableExists(WSLScriptContext cx);
 }

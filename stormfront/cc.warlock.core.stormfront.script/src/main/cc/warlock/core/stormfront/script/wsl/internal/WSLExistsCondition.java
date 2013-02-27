@@ -21,19 +21,20 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public class WSLExistsCondition extends WSLAbstractBoolean {
 
 	private IWSLValue variable;
 	
 	public WSLExistsCondition(IWSLValue variable) {
 		this.variable = variable;
-		
 	}
 	
 	@Override
-	public boolean toBoolean() {
+	public boolean toBoolean(WSLScriptContext cx) {
 		if(variable instanceof WSLAbstractVariable) {
-			return ((WSLAbstractVariable)variable).variableExists();
+			return ((WSLAbstractVariable)variable).variableExists(cx);
 		}
 		return false;
 	}

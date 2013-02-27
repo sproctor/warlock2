@@ -22,19 +22,17 @@
 package cc.warlock.core.stormfront.script.wsl.internal;
 
 import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLActionClear extends WSLAbstractCommand {
 
-	private WSLScript script;
-	
 	public WSLActionClear(int lineNum, WSLScript script) {
-		super(lineNum);
-		this.script = script;
+		super(lineNum, script);
 	}
 	
-	public void execute() {
-		script.getCommands().clearActions();
-		script.scriptDebug(2, "Actions cleared");
+	public void execute(WSLScriptContext cx) {
+		cx.getScript().getCommands().clearActions();
+		cx.scriptDebug(2, "Actions cleared");
 	}
 
 }

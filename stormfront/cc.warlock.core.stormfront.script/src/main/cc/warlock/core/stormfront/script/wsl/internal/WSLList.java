@@ -23,6 +23,8 @@ package cc.warlock.core.stormfront.script.wsl.internal;
 
 import java.util.List;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public class WSLList extends WSLAbstractString {
 
 	private List<IWSLValue> list;
@@ -32,11 +34,11 @@ public class WSLList extends WSLAbstractString {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(WSLScriptContext cx) {
 		StringBuffer buffer = new StringBuffer();
 		
 		for(IWSLValue value : list) {
-			buffer.append(value.toString());
+			buffer.append(value.toString(cx));
 		}
 		
 		return buffer.toString();

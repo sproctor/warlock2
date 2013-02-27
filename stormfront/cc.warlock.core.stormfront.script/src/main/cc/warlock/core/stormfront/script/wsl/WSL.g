@@ -6,8 +6,8 @@ options { backtrack=true; memoize=true; }
 package cc.warlock.core.stormfront.script.wsl.internal;
 import java.util.ArrayList;
 import cc.warlock.core.stormfront.script.wsl.WSLScript;
-import cc.warlock.core.stormfront.script.wsl.WSLString;
-import cc.warlock.core.stormfront.script.wsl.WSLVariable;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLString;
+import cc.warlock.core.stormfront.script.wsl.internal.WSLVariable;
 import cc.warlock.core.stormfront.script.wsl.internal.WSLEqualityCondition.EqualityOperator;
 import cc.warlock.core.stormfront.script.wsl.internal.WSLRelationalCondition.RelationalOperator;
 }
@@ -18,7 +18,7 @@ package cc.warlock.core.stormfront.script.wsl.internal;
 
 @parser::members {
 	private WSLScript script;
-	private int lineNum = 1;
+	private int lineNum = 0;
 	private int actionDepth = 0;
 	public void setScript(WSLScript s) { script = s; }
 	private boolean isNumber(String str) {
@@ -47,11 +47,11 @@ script
 line
 	: (label=LABEL)? (c=expr)?
 		{
-			script.addCommand(c);
+			script.addLine(c);
 			if(label != null) {
 				int existingLine = script.labelLineNumber($label.text);
 				if(existingLine != -1)
-					script.scriptDebug(1, "Redefinition of label \"" + $label.text + "\" on line " + lineNum + ", originally defined on line " + existingLine);
+					script.getCommands().echo("Redefinition of label \"" + $label.text + "\" on line " + lineNum + ", originally defined on line " + existingLine);
 				script.addLabel($label.text, lineNum);
 			}
 			lineNum++;
@@ -183,7 +183,7 @@ relationalExpression returns [IWSLValue cond]
 				if(args == null)
 					cond = arg;
 				else
-					cond = new WSLRelationalCondition(script, args, ops);
+					cond = new WSLRelationalCondition(args, ops);
 			}
 	;
 
@@ -213,11 +213,11 @@ primaryExpression returns [IWSLValue cond]
 	
 cond_value returns [IWSLValue value]
 	: PERCENT (str=common_string
-			{ value = new WSLVariable(new WSLString(str), script); } PERCENT?
-		| v=escaped_var { value = new WSLVariable(v, script); })
+			{ value = new WSLVariable(new WSLString(str)); } PERCENT?
+		| v=escaped_var { value = new WSLVariable(v); })
 	| DOLLAR (str=common_string
-			{ value = new WSLLocalVariable(new WSLString(str), script); } DOLLAR?
-		| v=escaped_var { value = new WSLLocalVariable(v, script); })
+			{ value = new WSLLocalVariable(new WSLString(str)); } DOLLAR?
+		| v=escaped_var { value = new WSLLocalVariable(v); })
 	| val=number		{ value = val; }
 	| TRUE				{ value = new WSLBoolean(true); }
 	| FALSE				{ value = new WSLBoolean(false); }
@@ -305,9 +305,9 @@ text_string returns [String value]
 
 variable returns [IWSLValue value]
 	: PERCENT (str=escaped_var | str=variable_string PERCENT?)
-		{ value = new WSLVariable(str, script); }
+		{ value = new WSLVariable(str); }
 	| DOLLAR (str=escaped_var | str=variable_string DOLLAR?)
-		{ value = new WSLLocalVariable(str, script); }
+		{ value = new WSLLocalVariable(str); }
 	;
 
 variable_string returns [IWSLValue value]

@@ -21,13 +21,15 @@
  */
 package cc.warlock.core.stormfront.script.wsl.internal;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 public interface IWSLValue {
 	
 	enum Type { Boolean, String, Number }
 	
 	public Type getType();
-	public String toString();
-	public boolean toBoolean();
-	public double toDouble();
+	public String toString(WSLScriptContext cx);
+	public boolean toBoolean(WSLScriptContext cx);
+	public double toDouble(WSLScriptContext cx);
 	
 }

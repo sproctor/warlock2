@@ -23,6 +23,8 @@ package cc.warlock.core.stormfront.script.wsl.internal;
 
 import java.util.List;
 
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
+
 
 public class WSLEqualityCondition extends WSLAbstractBoolean {
 
@@ -32,13 +34,13 @@ public class WSLEqualityCondition extends WSLAbstractBoolean {
 		
 		protected abstract boolean eval(boolean eval);
 		
-		public boolean compare(IWSLValue arg1, IWSLValue arg2) {
+		public boolean compare(WSLScriptContext cx, IWSLValue arg1, IWSLValue arg2) {
 			if(arg1.getType() == Type.Boolean || arg2.getType() == Type.Boolean) {
-				return eval(arg1.toBoolean() == arg2.toBoolean());
+				return eval(arg1.toBoolean(cx) == arg2.toBoolean(cx));
 			} else if(arg1.getType() == Type.Number || arg2.getType() == Type.Number) {
-				return eval(arg1.toDouble() == arg2.toDouble());
+				return eval(arg1.toDouble(cx) == arg2.toDouble(cx));
 			} else {
-				return eval(arg1.toString().trim().equals(arg2.toString().trim()));
+				return eval(arg1.toString(cx).trim().equals(arg2.toString(cx).trim()));
 			}
 		}
 	}
@@ -53,12 +55,12 @@ public class WSLEqualityCondition extends WSLAbstractBoolean {
 	}
 	
 	@Override
-	public boolean toBoolean() {
+	public boolean toBoolean(WSLScriptContext cx) {
 		IWSLValue value = args.get(0);
 
 		for(int i = 0; i < equalityOps.size(); i++) {
 			IWSLValue nextValue = args.get(i + 1);
-			if(!equalityOps.get(i).compare(value, nextValue))
+			if(!equalityOps.get(i).compare(cx, value, nextValue))
 				return false;
 			value = nextValue;
 		}

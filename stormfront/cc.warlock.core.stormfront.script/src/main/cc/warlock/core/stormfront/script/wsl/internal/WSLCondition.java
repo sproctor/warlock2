@@ -22,25 +22,25 @@
 package cc.warlock.core.stormfront.script.wsl.internal;
 
 import cc.warlock.core.stormfront.script.wsl.WSLScript;
+import cc.warlock.core.stormfront.script.wsl.WSLScriptContext;
 
 public class WSLCondition extends WSLAbstractCommand {
 
-	private WSLScript script;
 	private WSLAbstractCommand command;
 	private IWSLValue condition;
 	
 	public WSLCondition(int lineNum, WSLScript script, IWSLValue condition, WSLAbstractCommand command) {
-		super(lineNum);
-		this.script = script;
+		super(lineNum, script);
+		
 		this.condition = condition;
 		this.command = command;
 	}
 	
-	public void execute() throws InterruptedException {
-		boolean cond = condition.toBoolean();
-		script.setLastCondition(cond);
+	@Override
+	public void execute(WSLScriptContext cx) throws InterruptedException {
+		boolean cond = condition.toBoolean(cx);
+		cx.setLastCondition(cond);
 		if(cond)
-			command.execute();
+			command.execute(cx);
 	}
-
 }
