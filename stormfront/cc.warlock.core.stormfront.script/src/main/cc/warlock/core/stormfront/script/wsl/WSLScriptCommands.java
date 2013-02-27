@@ -151,8 +151,8 @@ public class WSLScriptCommands {
 					}
 					break;
 				} else {
-					String arg = local ? cx.getLocalVariable(nextVar).toString()
-							: cx.getScript().getVariable(nextVar).toString();
+					String arg = local ? cx.getLocalVariable(nextVar).toString(cx)
+							: cx.getScript().getVariable(nextVar).toString(cx);
 					if (arg == null)
 						cx.scriptError("String error in arguments.");
 					if(allArgs.length() > 0)
@@ -483,8 +483,9 @@ public class WSLScriptCommands {
 		}
 
 		public void execute (WSLScriptContext cx, String arguments) throws InterruptedException {
-			if (cx.getScript().variableExists(variableName) &&
-					cx.getScript().getVariable(variableName).toString().length() > 0)
+			boolean exists = cx.getScript().variableExists(variableName);
+			int varLength = cx.getScript().getVariable(variableName).toString(cx).length();
+			if (exists && varLength > 0)
 				cx.execute(arguments);
 		}
 	}
