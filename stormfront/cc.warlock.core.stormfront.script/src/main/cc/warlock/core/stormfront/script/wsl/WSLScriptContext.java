@@ -88,6 +88,11 @@ public class WSLScriptContext implements Runnable {
 		
 	}
 	
+	public WSLScriptContext(WSLScript script, IWSLCommand command) {
+		this.script = script;
+		this.nextCommand = command;
+	}
+	
 	public void run() {
 		while(script.isRunning() && nextCommand != null) {
 			curCommand = nextCommand;

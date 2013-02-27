@@ -42,21 +42,16 @@ public class WSLAction extends WSLAbstractCommand {
 	
 	private class WSLActionAdapter implements Runnable {
 		
+		WSLScript script;
+		
+		public WSLActionAdapter(WSLScript script) {
+			this.script = script;
+		}
+		
 		public void run() {
-			/*
-			script.setVariablesFromMatch(match);
-			try {
-				if(!command.isInstant())
-					script.getCommands().waitForRoundtime();
-				while(script.getCommands().isSuspended()) {
-					script.getCommands().waitForResume();
-					if(!command.isInstant())
-						script.getCommands().waitForRoundtime();
-				}
-				command.execute();
-			} catch(InterruptedException e) {
-				// TODO - what to do here?
-			}*/
+			WSLScriptContext cx = new WSLScriptContext(script, command);
+			Thread actionThread = new Thread(cx);
+			actionThread.start();
 		}
 	}
 	
@@ -64,7 +59,7 @@ public class WSLAction extends WSLAbstractCommand {
 		try {
 			match = new RegexMatch(when.toString(cx).trim());
 			cx.scriptDebug(2, "Action added \"" + command + "\" when \"" + when + "\"");
-			cx.getScript().getCommands().addAction(new WSLActionAdapter(), match);
+			cx.getScript().getCommands().addAction(new WSLActionAdapter(script), match);
 		} catch(PatternSyntaxException e) {
 			cx.scriptError("Bad regex \"" + when.toString(cx).trim() + "\" in action");
 		}
