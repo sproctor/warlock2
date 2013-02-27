@@ -51,7 +51,7 @@ public class DefaultMacros {
 		createDefaultMacro("\\xnw\\r", "Keypad 7",0);
 		createDefaultMacro("\\xn\\r", "Keypad 8",0);
 		createDefaultMacro("\\xne\\r", "Keypad 9",0);
-		createDefaultMacro("{PageUp}", "PageUp",0);
+		createDefaultMacro("{PageUp}", "Page Up",0);
 		createDefaultMacro("{PageDown}", "Page Down",0);
 		createDefaultMacro("{LineUp}", "Page Up", IMacro.SHIFT);
 		createDefaultMacro("{LineDown}", "Page Down", IMacro.SHIFT);
@@ -63,8 +63,8 @@ public class DefaultMacros {
 		createDefaultMacro("{RepeatLast}", "Keypad Enter", IMacro.CTRL);
 		createDefaultMacro("{RepeatSecondToLast}", "Keypad Enter", IMacro.ALT);
 		createDefaultMacro("{CycleWindows}", "Tab", 0);
-		createDefaultMacro("{BufferTop}", "PageUp", IMacro.CTRL);
-		createDefaultMacro("{BufferBottom}","PageDown", IMacro.CTRL);
+		createDefaultMacro("{BufferTop}", "Page Up", IMacro.CTRL);
+		createDefaultMacro("{BufferBottom}","Page Down", IMacro.CTRL);
 		createDefaultMacro("{BufferTop}", "Home", IMacro.CTRL);
 		createDefaultMacro("{BufferBottom}","End", IMacro.CTRL);
 		createDefaultMacro("{CycleWindowsReverse}", "Tab", IMacro.SHIFT);
