@@ -9,9 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core.script,
  cc.warlock.core.stormfront
 Bundle-ActivationPolicy: lazy
-Export-Package: cc.warlock.core.stormfront.script,
- cc.warlock.core.stormfront.script.javascript,
- cc.warlock.core.stormfront.script.wsl
+Export-Package: cc.warlock.core.stormfront.script
 Bundle-ClassPath: warlock2-core-stormfront-script.jar,
  warlock2-core-stormfront-script-eclipse.jar,
  lib/antlr-runtime-3.2.jar

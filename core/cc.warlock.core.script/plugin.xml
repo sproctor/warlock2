@@ -7,6 +7,9 @@
       <scriptEngine
             classname="cc.warlock.core.script.javascript.JavascriptEngine">
       </scriptEngine>
+      <scriptEngine
+            classname="cc.warlock.core.script.wsl.WSLEngine">
+      </scriptEngine>
    </extension>
 
 </plugin>

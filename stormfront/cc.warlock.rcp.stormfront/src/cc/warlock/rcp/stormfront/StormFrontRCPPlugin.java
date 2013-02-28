@@ -25,9 +25,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import cc.warlock.core.script.javascript.JavascriptVars;
 import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.settings.ProfileProvider;
-import cc.warlock.core.stormfront.script.javascript.StormFrontJavascriptVars;
 import cc.warlock.rcp.application.WarlockApplication;
 import cc.warlock.rcp.stormfront.adapters.StormFrontClientAdapterFactory;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
@@ -59,7 +59,7 @@ public class StormFrontRCPPlugin extends AbstractUIPlugin {
 		plugin = this;
 		
 		// i think this is the best place for this to go?
-		new StormFrontJavascriptVars();
+		new JavascriptVars();
 		
 		Platform.getAdapterManager().registerAdapters(new StormFrontClientAdapterFactory(), WarlockClientAdaptable.class);
 		

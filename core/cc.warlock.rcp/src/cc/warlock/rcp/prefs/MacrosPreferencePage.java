@@ -286,7 +286,6 @@ public class MacrosPreferencePage extends PreferencePageUtils implements
 	protected void setData (IClientSettings settings) {
 		this.settings = settings;
 		
-		
 		displayedMacros.addAll(MacroConfigurationProvider.getMacros(ClientSettings.getGlobalClientSettings()));
 		displayedMacros.addAll(MacroConfigurationProvider.getMacros(settings));
 		macroTableView.setInput(displayedMacros);

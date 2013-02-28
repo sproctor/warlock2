@@ -8,7 +8,6 @@ Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core,
  cc.warlock.core.script,
  cc.warlock.core.stormfront,
- cc.warlock.core.stormfront.script,
  org.junit4
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
