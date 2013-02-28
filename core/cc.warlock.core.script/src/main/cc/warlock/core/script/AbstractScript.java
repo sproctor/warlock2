@@ -73,7 +73,9 @@ public abstract class AbstractScript implements IScript {
 			echo("[script paused: " + getName() + "]");
 			getCommands().suspend();
 
-			for (IScriptListener listener : listeners) listener.scriptPaused(this);
+			for (IScriptListener listener : listeners) {
+				listener.scriptPaused(this);
+			}
 		}
 	}
 	
@@ -82,7 +84,9 @@ public abstract class AbstractScript implements IScript {
 			echo("[script resumed: " + getName() + "]");
 			getCommands().resume();
 			
-			for (IScriptListener listener : listeners) listener.scriptResumed(this);
+			for (IScriptListener listener : listeners) {
+				listener.scriptResumed(this);
+			}
 		}
 	}
 	

@@ -382,10 +382,6 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	abstract public String getGameCode();
 	
-	/*public int getMinCommandLength() {
-		return minCommandSize;
-	}*/
-	
 	public IClientSettings getClientSettings() {
 		return clientSettings;
 	}

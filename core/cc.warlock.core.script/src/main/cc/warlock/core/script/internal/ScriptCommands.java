@@ -69,8 +69,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	 */
 	private int room = 0;
 	private int prompt = 0;
-	// It's not particularly important what the initial state of atPrompt is.
-	//private boolean atPrompt = false;
 	
 	private final Lock lock = new ReentrantLock();
 	private final Condition gotResume = lock.newCondition();
@@ -302,7 +300,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 		lock.lock();
 		try {
-			//atPrompt = true;
 			this.prompt++;
 			atPromptCond.signalAll();
 		} finally {
@@ -322,9 +319,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void streamReceivedText(IStream stream, WarlockString text) {
 		if(text.hasStyleNamed("debug"))
 			return;
-		
-		//if(!text.hasStyleNamed("echo"))
-			//atPrompt = false;
 		
 		receiveText(text.toString());
 	}

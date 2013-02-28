@@ -430,10 +430,7 @@ public class WarlockText {
 				
 				try{
 					if (style.getSound() != null && !style.getSound().equals("")){
-						//System.out.println("Playing sound " + style.getSound());
 						SoundPlayer.play(style.getSound());
-						//InputStream soundStream = new FileInputStream(style.getSound());
-						//RCPUtil.playSound(soundStream);
 					}
 				} catch(Exception e) {
 					e.printStackTrace();
