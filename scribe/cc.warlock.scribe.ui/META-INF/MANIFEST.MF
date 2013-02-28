@@ -11,6 +11,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  cc.warlock.core.script,
  cc.warlock.core.stormfront,
- cc.warlock.core.stormfront.script,
  cc.warlock.rcp.stormfront
 Eclipse-LazyStart: true

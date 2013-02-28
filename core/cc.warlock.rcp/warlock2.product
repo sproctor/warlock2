@@ -47,7 +47,6 @@
       <plugin id="cc.warlock.core"/>
       <plugin id="cc.warlock.core.script"/>
       <plugin id="cc.warlock.core.stormfront"/>
-      <plugin id="cc.warlock.core.stormfront.script"/>
       <plugin id="cc.warlock.rcp"/>
       <plugin id="cc.warlock.rcp.stormfront"/>
       <plugin id="com.ibm.icu"/>

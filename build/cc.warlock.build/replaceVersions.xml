@@ -41,7 +41,6 @@
 		<replace-versions id="cc.warlock.core"/>
 		<replace-versions id="cc.warlock.core.script"/>
 		<replace-versions id="cc.warlock.core.stormfront"/>
-		<replace-versions id="cc.warlock.core.stormfront.script"/>
 		<replace-versions id="cc.warlock.rcp"/>
 		<replace-versions id="cc.warlock.rcp.stormfront"/>
 	</target>

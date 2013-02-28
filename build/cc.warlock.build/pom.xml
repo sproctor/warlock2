@@ -13,7 +13,6 @@
     <module>../../core/cc.warlock.core</module>
     <module>../../core/cc.warlock.core.script</module>
     <module>../../stormfront/cc.warlock.core.stormfront</module>
-    <module>../../stormfront/cc.warlock.core.stormfront.script</module>
     <module>../../core/cc.warlock.rcp</module>
     <module>../../stormfront/cc.warlock.rcp.stormfront</module>
   </modules>

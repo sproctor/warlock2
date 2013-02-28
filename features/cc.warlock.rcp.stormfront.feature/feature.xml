@@ -633,12 +633,6 @@ END OF TERMS AND CONDITIONS
          version="0.0.0"/>
 
    <plugin
-         id="cc.warlock.core.stormfront.script"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="cc.warlock.rcp.stormfront"
          download-size="0"
          install-size="0"
