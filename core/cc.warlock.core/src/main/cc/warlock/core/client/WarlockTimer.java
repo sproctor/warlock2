@@ -88,7 +88,8 @@ public class WarlockTimer {
 	}
 	
 	public synchronized void waitForEnd() throws InterruptedException {
-		while (value.get() > 0) {
+		// while we have a roundtime or a roundtime being setup.
+		while (value.get() > 0 || end > 0) {
 			wait();
 		}
 	}
