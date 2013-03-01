@@ -104,8 +104,10 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	
 	public void setClient(IWarlockClient client) {
 		activeClient = client;
-		activeText = getTextForClient(client);
-		book.showPage(activeText.getTextWidget());
+		if(client != null) {
+			activeText = getTextForClient(client);
+			book.showPage(activeText.getTextWidget());
+		}
 	}
 	
 	private void debug (IWarlockClient client, String message)
@@ -193,10 +195,13 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	}
 	
 	public WarlockText getTextForClient(IWarlockClient client) {
+		if(client == null)
+			return null;
+		
 		WarlockText text = clientStreams.get(client);
 		
 		if (text == null) {
-			text = new WarlockText(book, "debug");
+			text = new WarlockText(book, client.getViewer(), "debug");
 			
 			clientStreams.put(client, text);
 		}

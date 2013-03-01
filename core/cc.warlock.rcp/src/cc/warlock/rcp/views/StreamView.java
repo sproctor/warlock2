@@ -145,7 +145,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 	
 	protected void addClient(IWarlockClient client) {
-		StreamText streamText = createStreamText(book);
+		StreamText streamText = createStreamText(book, client);
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streams.put(client, streamText);
 		streamText.setClient(client);
@@ -158,8 +158,8 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 	
 	// Hack to allow UserStream to inject its custom StreamText
-	protected StreamText createStreamText(Composite container) {
-		return new StreamText(container, streamName);
+	protected StreamText createStreamText(Composite container, IWarlockClient client) {
+		return new StreamText(container, client.getViewer(), streamName);
 	}
 	
 	private class NameListener extends PropertyListener<String> {

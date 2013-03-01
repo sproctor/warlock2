@@ -169,7 +169,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		popupPageBook.showPage(emptyPopup);
 		popupPageBook.setVisible(false);
 		
-		streamText = new StreamText(mainComposite, IWarlockClient.MAIN_STREAM_NAME);
+		streamText = new StreamText(mainComposite, this, IWarlockClient.MAIN_STREAM_NAME);
 		streamText.getTextWidget().setLayout(new GridLayout(1, false));
 		streamText.setIgnoreEmptyLines(false);
 		

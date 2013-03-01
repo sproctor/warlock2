@@ -38,14 +38,31 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FontDialog;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.client.IWarlockFont;
+import cc.warlock.core.client.settings.ClientSettings;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.core.settings.IWindowSettings;
 import cc.warlock.rcp.ui.client.WarlockClientAdaptable;
 import cc.warlock.rcp.views.GameView;
 
@@ -158,5 +175,110 @@ public class RCPUtil {
 		dialog.getTreeViewer().expandToLevel(2);
 
 		return dialog.open();
+	}
+	
+	public static void addTextContextMenu(final StyledText text, final IWarlockClientViewer viewer, final String name) {
+		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
+		
+		Menu contextMenu = new Menu(text);
+		MenuItem itemFont = new MenuItem(contextMenu, SWT.PUSH);
+		itemFont.setText("Change normal font");
+		itemFont.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				IWarlockClient client = viewer.getClient();
+				FontDialog fontDialog = new FontDialog(text.getShell());
+				fontDialog.setText("Choose normal font");
+				FontData font = fontDialog.open();
+				if(font == null)
+					return;
+				IClientSettings settings = null;
+				if(client != null)
+					settings = client.getClientSettings();
+				if(settings == null)
+					settings = ClientSettings.getGlobalClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
+				IWarlockFont fontSetting = wsetting.getFont();
+				FontUtil.setWarlockFontFromFontData(fontSetting, font);
+			}
+		});
+		MenuItem itemMonoFont = new MenuItem(contextMenu, SWT.PUSH);
+		itemMonoFont.setText("Change monospace font");
+		itemMonoFont.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				IWarlockClient client = viewer.getClient();
+				FontDialog fontDialog = new FontDialog(text.getShell());
+				fontDialog.setText("Choose normal font");
+				FontData font = fontDialog.open();
+				if(font == null)
+					return;
+				IClientSettings settings = null;
+				if(client != null)
+					settings = client.getClientSettings();
+				if(settings == null)
+					settings = ClientSettings.getGlobalClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
+				IWarlockFont fontSetting = wsetting.getColumnFont();
+				FontUtil.setWarlockFontFromFontData(fontSetting, font);
+			}
+		});
+		MenuItem itemBgColor = new MenuItem(contextMenu, SWT.PUSH);
+		itemBgColor.setText("Change background color");
+		itemBgColor.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				IWarlockClient client = viewer.getClient();
+				ColorDialog colorDialog = new ColorDialog(text.getShell());
+				colorDialog.setText("Choose font color");
+				RGB color = colorDialog.open();
+				if(color == null)
+					return;
+				IClientSettings settings = null;
+				if(client != null)
+					settings = client.getClientSettings();
+				if(settings == null)
+					settings = ClientSettings.getGlobalClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
+				wsetting.setBackgroundColor(ColorUtil.rgbToWarlockColor(color));
+			}
+		});
+		MenuItem itemFgColor = new MenuItem(contextMenu, SWT.PUSH);
+		itemFgColor.setText("Change font color");
+		itemFgColor.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				IWarlockClient client = viewer.getClient();
+				ColorDialog colorDialog = new ColorDialog(text.getShell());
+				colorDialog.setText("Choose font color");
+				RGB color = colorDialog.open();
+				if(color == null)
+					return;
+				IClientSettings settings = null;
+				if(client != null)
+					settings = client.getClientSettings();
+				if(settings == null)
+					settings = ClientSettings.getGlobalClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
+				wsetting.setForegroundColor(ColorUtil.rgbToWarlockColor(color));
+			}
+		});
+		MenuItem itemCopy = new MenuItem(contextMenu, SWT.PUSH);
+		itemCopy.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				text.copy();
+			}
+		});
+		itemCopy.setText("Copy");
+		itemCopy.setImage(images.getImage(ISharedImages.IMG_TOOL_COPY));
+		MenuItem itemClear = new MenuItem(contextMenu, SWT.PUSH);
+		itemClear.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				text.setText("");
+			}
+		});
+		itemClear.setText("Clear");
+		itemClear.setImage(images.getImage(ISharedImages.IMG_TOOL_DELETE));
+		text.setMenu(contextMenu);
 	}
 }

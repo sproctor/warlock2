@@ -38,27 +38,18 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FontDialog;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
@@ -78,6 +69,7 @@ import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
+import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.util.SoundPlayer;
 
 /**
@@ -88,17 +80,17 @@ import cc.warlock.rcp.util.SoundPlayer;
 public class WarlockText {
 	
 	private class WindowSettingsListener implements IWarlockSettingListener {
-		WindowConfigurationProvider provider;
+		IWindowSettings settings;
 		IWarlockSettingListener listener = new SWTWarlockSettingListener(this);
-		public WindowSettingsListener(WindowConfigurationProvider provider) {
-			this.provider = provider;
-			provider.addListener(listener);
+		public WindowSettingsListener(IWindowSettings settings) {
+			this.settings = settings;
+			settings.addListener(listener);
 		}
 		public void settingChanged(IWarlockSetting setting) {
 			loadSettings();
 		}
 		public void remove() {
-			provider.removeListener(listener);
+			settings.removeListener(listener);
 		}
 	}
 	
@@ -107,7 +99,6 @@ public class WarlockText {
 	private Cursor handCursor, defaultCursor;
 	private int lineLimit = 5000;
 	private int doScrollDirection = SWT.DOWN;
-	private Menu contextMenu;
 	private boolean ignoreEmptyLines = true;
 	private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
@@ -127,7 +118,7 @@ public class WarlockText {
 	final private String streamName;
 	
 	
-	public WarlockText(Composite parent, final String streamName) {
+	public WarlockText(Composite parent, IWarlockClientViewer viewer, String streamName) {
 		this.streamName = streamName;
 		
 		textWidget = new StyledText(parent, SWT.V_SCROLL);
@@ -138,84 +129,11 @@ public class WarlockText {
 		textWidget.setIndent(1);
 		textWidget.setCaret(null);
 
-		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-
 		Display display = parent.getDisplay();
 		handCursor = new Cursor(display, SWT.CURSOR_HAND);
 		defaultCursor = parent.getCursor();
 
-		contextMenu = new Menu(textWidget);
-		MenuItem itemFont = new MenuItem(contextMenu, SWT.PUSH);
-		itemFont.setText("Change normal font");
-		itemFont.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				FontDialog fontDialog = new FontDialog(textWidget.getShell());
-				fontDialog.setText("Choose normal font");
-				FontData font = fontDialog.open();
-				IClientSettings settings = client.getClientSettings();
-				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
-				IWarlockFont fontSetting = wsetting.getFont();
-				FontUtil.setWarlockFontFromFontData(fontSetting, font);
-			}
-		});
-		MenuItem itemMonoFont = new MenuItem(contextMenu, SWT.PUSH);
-		itemMonoFont.setText("Change monospace font");
-		itemMonoFont.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				FontDialog fontDialog = new FontDialog(textWidget.getShell());
-				fontDialog.setText("Choose normal font");
-				FontData font = fontDialog.open();
-				IClientSettings settings = client.getClientSettings();
-				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
-				IWarlockFont fontSetting = wsetting.getColumnFont();
-				FontUtil.setWarlockFontFromFontData(fontSetting, font);
-			}
-		});
-		MenuItem itemBgColor = new MenuItem(contextMenu, SWT.PUSH);
-		itemBgColor.setText("Change background color");
-		itemBgColor.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				ColorDialog colorDialog = new ColorDialog(textWidget.getShell());
-				colorDialog.setText("Choose font color");
-				RGB color = colorDialog.open();
-				IClientSettings settings = client.getClientSettings();
-				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
-				wsetting.setBackgroundColor(ColorUtil.rgbToWarlockColor(color));
-			}
-		});
-		MenuItem itemFgColor = new MenuItem(contextMenu, SWT.PUSH);
-		itemFgColor.setText("Change font color");
-		itemFgColor.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				ColorDialog colorDialog = new ColorDialog(textWidget.getShell());
-				colorDialog.setText("Choose font color");
-				RGB color = colorDialog.open();
-				IClientSettings settings = client.getClientSettings();
-				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
-				wsetting.setForegroundColor(ColorUtil.rgbToWarlockColor(color));
-			}
-		});
-		MenuItem itemCopy = new MenuItem(contextMenu, SWT.PUSH);
-		itemCopy.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				textWidget.copy();
-			}
-		});
-		itemCopy.setText("Copy");
-		itemCopy.setImage(images.getImage(ISharedImages.IMG_TOOL_COPY));
-		MenuItem itemClear = new MenuItem(contextMenu, SWT.PUSH);
-		itemClear.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				textWidget.setText("");
-			}
-		});
-		itemClear.setText("Clear");
-		itemClear.setImage(images.getImage(ISharedImages.IMG_TOOL_DELETE));
-		textWidget.setMenu(contextMenu);
+		RCPUtil.addTextContextMenu(textWidget, viewer, streamName);
 
 		textWidget.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent e) {
@@ -225,11 +143,9 @@ public class WarlockText {
 						Point point = new Point(e.x, e.y);
 						int offset = textWidget.getOffsetAtLocation(point);
 						StyleRange range = textWidget.getStyleRangeAtOffset(offset);
-						if (range != null && range instanceof StyleRangeWithData)
-						{
+						if (range != null && range instanceof StyleRangeWithData) {
 							StyleRangeWithData range2 = (StyleRangeWithData) range;
-							if (range2.action != null)
-							{
+							if (range2.action != null) {
 								textWidget.setCursor(handCursor);
 								return;
 							}
@@ -880,6 +796,9 @@ public class WarlockText {
 		if(settingListener != null)
 			settingListener.remove();
 		
+		if(textWidget.isDisposed())
+			return;
+		
 		IClientSettings settings = null;
 		if(client != null)
 			settings = client.getClientSettings();
@@ -888,7 +807,7 @@ public class WarlockText {
 			settings = ClientSettings.getGlobalClientSettings();
 		
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-		settingListener = new WindowSettingsListener(provider);
+		settingListener = new WindowSettingsListener(provider.getOrCreateWindowSettings(streamName));
 		
 		// Set to defaults first, then try window settings later
 		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));

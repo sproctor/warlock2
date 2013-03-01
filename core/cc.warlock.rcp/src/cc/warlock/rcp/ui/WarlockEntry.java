@@ -33,7 +33,9 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IClientSettings;
@@ -45,6 +47,7 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.IWarlockEntry;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.internal.Command;
@@ -60,6 +63,8 @@ import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.util.ColorUtil;
+import cc.warlock.rcp.util.FontUtil;
+import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.GameView;
 
 abstract public class WarlockEntry implements IWarlockEntry {
@@ -151,12 +156,23 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		
 		setClient(viewer.getClient());
 		viewer.addClientViewerListener(viewerListener);
+		
+		RCPUtil.addTextContextMenu(widget, viewer, "entry");
 	}
 	
 	protected void loadSettings() {
 		IClientSettings settings = viewer.getClient().getClientSettings();
-		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor();
-		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor();
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		WarlockColor bg = provider.getWindowBackground("entry");
+		WarlockColor fg = provider.getWindowForeground("entry");
+		IWarlockFont font = provider.getWindowFont("entry");
+		if (font.isDefaultFont()) {
+			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
+			int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
+			widget.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
+		} else {
+			widget.setFont(FontUtil.warlockFontToFont(font));
+		}
 		
 		widget.setBackground(ColorUtil.warlockColorToColor(bg));
 		widget.setForeground(ColorUtil.warlockColorToColor(fg));

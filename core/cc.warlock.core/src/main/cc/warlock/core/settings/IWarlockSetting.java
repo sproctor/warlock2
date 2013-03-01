@@ -31,4 +31,6 @@ public interface IWarlockSetting {
 	public void flush();
 	public boolean isNewSetting();
 	public void notifyListenersChanged(); // Should only be called by its children
+	public void addListener(IWarlockSettingListener listener);
+	public boolean removeListener(IWarlockSettingListener listener);
 }

@@ -6,6 +6,7 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.internal.WarlockStyle;
@@ -22,8 +23,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 	
 	private WarlockString textBuffer;
 	
-	public StreamText(Composite parent, String streamName) {
-		super(parent, streamName);
+	public StreamText(Composite parent, IWarlockClientViewer viewer, String streamName) {
+		super(parent, viewer, streamName);
 	}
 	
 	protected void bufferText (WarlockString string)

@@ -40,7 +40,7 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 	public static final String WINDOW_DEFAULT = "default";
 	
 	// TODO: store these in settings
-	public static WarlockColor defaultBgColor = new WarlockColor("191932");
+	public static WarlockColor defaultBgColor = new WarlockColor("#191932");
 	public static WarlockColor defaultFgColor = new WarlockColor("#F0F0FF");
 	
 	protected HashMap<String, IWindowSettings> windowSettings = new HashMap<String, IWindowSettings>();

@@ -33,6 +33,7 @@ import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IStreamFilter;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.StreamFilter;
 import cc.warlock.rcp.ui.StreamText;
@@ -55,8 +56,8 @@ public class UserStream extends StreamView {
 	
 	protected class UserStreamText extends StreamText {
 		
-		public UserStreamText(Composite parent, String streamName) {
-			super(parent, streamName);
+		public UserStreamText(Composite parent, IWarlockClientViewer viewer, String streamName) {
+			super(parent, viewer, streamName);
 		}
 		
 		@Override
@@ -110,8 +111,8 @@ public class UserStream extends StreamView {
 	}
 	
 	@Override
-	protected StreamText createStreamText(Composite container) {
-		return new UserStreamText(container, streamName);
+	protected StreamText createStreamText(Composite container, IWarlockClient client) {
+		return new UserStreamText(container, client.getViewer(), streamName);
 	}
 	
 	protected IStreamFilter[] getEventsFilters ()
