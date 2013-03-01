@@ -46,7 +46,7 @@ public abstract class ColorFontSetting extends WarlockSetting implements IFontSe
 		if(bgcolor != null)
 			backgroundColor = new WarlockColor(bgcolor);
 		
-		font = new FontSetting(parent, "font");
+		font = new FontSetting(this, "font");
 	}
 
 	public WarlockColor getForegroundColor() {
