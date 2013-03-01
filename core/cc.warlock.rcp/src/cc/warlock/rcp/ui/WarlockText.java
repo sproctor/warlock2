@@ -880,10 +880,12 @@ public class WarlockText {
 		if(settingListener != null)
 			settingListener.remove();
 		
-		IClientSettings settings = client.getClientSettings();
+		IClientSettings settings = null;
+		if(client != null)
+			settings = client.getClientSettings();
 		
 		if(settings == null)
-			return;
+			settings = ClientSettings.getGlobalClientSettings();
 		
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
 		settingListener = new WindowSettingsListener(provider);
