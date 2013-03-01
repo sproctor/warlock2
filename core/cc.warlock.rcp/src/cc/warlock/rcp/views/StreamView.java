@@ -40,8 +40,6 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
@@ -233,32 +231,20 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		setPartName(title);
 	}
 	
-	public void setForeground (IWarlockClient client, Color foreground)
-	{
-		StreamText stream = streams.get(client);
-		if(stream != null)
-			stream.setForeground(foreground);
-	}
-	
-	public void setBackground (IWarlockClient client, Color background)
-	{
-		StreamText stream = streams.get(client);
-		if(stream != null)
-			stream.setBackground(background);
-	}
-	
+	@Override
 	public void pageUp() {
 		activeStream.pageUp();
 	}
 	
+	@Override
 	public void pageDown() {
 		activeStream.pageDown();
 	}
 
 	public void clientCreated(IWarlockClient client) {
 		addClient(client);
-		if(activeClient == null || activeClient == client || activeStream == null)
-			setClient(client);
+		//if(activeClient == null || activeClient == client || activeStream == null)
+			//setClient(client);
 	}
 
 	public void clientConnected(IWarlockClient client) {
@@ -272,12 +258,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 	
 	public void clientSettingsLoaded(IWarlockClient client) {
-		
-		WarlockColor bg = WindowConfigurationProvider.getProvider(client.getClientSettings()).getWindowBackground(streamName);
-		WarlockColor fg = WindowConfigurationProvider.getProvider(client.getClientSettings()).getWindowForeground(streamName);
-		
-		this.setBackground(client, ColorUtil.warlockColorToColor(bg));
-		this.setForeground(client, ColorUtil.warlockColorToColor(fg));
+		// Not interested
 	}
 	
 	public StreamText getStreamTextForClient(IWarlockClient client) {

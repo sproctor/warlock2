@@ -196,7 +196,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		WarlockText text = clientStreams.get(client);
 		
 		if (text == null) {
-			text = new WarlockText(book);
+			text = new WarlockText(book, "debug");
 			
 			clientStreams.put(client, text);
 		}

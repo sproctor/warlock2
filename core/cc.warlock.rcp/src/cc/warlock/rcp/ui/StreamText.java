@@ -1,63 +1,29 @@
 package cc.warlock.rcp.ui;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
-import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
-import cc.warlock.core.client.IWarlockFont;
-import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Property;
 import cc.warlock.core.client.internal.WarlockStyle;
-import cc.warlock.core.client.settings.WindowConfigurationProvider;
-import cc.warlock.core.settings.IWarlockSetting;
-import cc.warlock.core.settings.IWarlockSettingListener;
-import cc.warlock.core.settings.IWindowSettings;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
-import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
-import cc.warlock.rcp.util.ColorUtil;
-import cc.warlock.rcp.util.FontUtil;
 import cc.warlock.rcp.views.GameView;
 
 public class StreamText extends WarlockText implements IStreamListener {
 
-	protected String streamName;
 	protected boolean isPrompting = false;
 	protected String prompt = null;
 	protected Property<String> title = new Property<String>();
 	private IStreamListener streamListener = new SWTStreamListener(this);
-	private WindowSettingsListener settingListener;
-	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
-		@Override
-		public void clientCreated(IWarlockClient client) {}
-		@Override
-		public void clientConnected(IWarlockClient client) {}
-		@Override
-		public void clientDisconnected(IWarlockClient client) {}
-		@Override
-		public void clientSettingsLoaded(IWarlockClient client) {
-			loadSettings();
-		}
-	});
+	
 	private WarlockString textBuffer;
 	
 	public StreamText(Composite parent, String streamName) {
-		super(parent);
-		this.streamName = streamName;
-	}
-	
-	public void setFocus() {
-		// Nothing to do
+		super(parent, streamName);
 	}
 	
 	protected void bufferText (WarlockString string)
@@ -108,7 +74,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 	
 	private void showPrompt(String prompt) {
-		if(!GameViewConfiguration.getProvider(client.getClientSettings()).getSuppressPrompt()) {
+		if(!GameViewConfiguration.getProvider(getClient().getClientSettings()).getSuppressPrompt()) {
 			append(new WarlockString(prompt));
 		}
 	}
@@ -158,17 +124,14 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 
 	public void setClient(IWarlockClient client) {
-		if (this.client == client)
+		if (getClient() == client)
 			return;
 		
-		if(this.client != null) {
-			this.client.removeStreamListener(streamName, streamListener);
-			WarlockClientRegistry.removeWarlockClientListener(clientListener);
-			if(settingListener != null)
-				settingListener.remove();
+		if(getClient() != null) {
+			getClient().removeStreamListener(this.getName(), streamListener);
 		}
 		
-		this.client = client;
+		super.setClient(client);
 		
 		if(client != null) {
 			GameView game = GameView.getGameViewForClient(client);
@@ -178,72 +141,15 @@ public class StreamText extends WarlockText implements IStreamListener {
 				this.getTextWidget().addVerifyKeyListener(game.getEntry().getVerifyKeyListener());
 			}
 			
-			client.addStreamListener(streamName, streamListener);
-			WarlockClientRegistry.addWarlockClientListener(clientListener);
-			// if client already has settings, we'll unintentially load them twice
-			loadSettings();
+			client.addStreamListener(this.getName(), streamListener);
 			
-			title.set(client.getStreamTitle(streamName));
-			WarlockString history = client.getStreamHistory(streamName);
+			title.set(client.getStreamTitle(this.getName()));
+			WarlockString history = client.getStreamHistory(this.getName());
 			if(history != null)
 				bufferText(history);
 		}
 		
 		this.flushBuffer();
-	}
-	
-	private class WindowSettingsListener implements IWarlockSettingListener {
-		WindowConfigurationProvider provider;
-		IWarlockSettingListener listener = new SWTWarlockSettingListener(this);
-		public WindowSettingsListener(WindowConfigurationProvider provider) {
-			this.provider = provider;
-			provider.addListener(listener);
-		}
-		public void settingChanged(IWarlockSetting setting) {
-			loadSettings();
-		}
-		public void remove() {
-			provider.removeListener(listener);
-		}
-	}
-	
-	private void loadSettings() {
-		if(settingListener != null)
-			settingListener.remove();
-		
-		IClientSettings settings = client.getClientSettings();
-		
-		if(settings == null)
-			return;
-		
-		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-		settingListener = new WindowSettingsListener(provider);
-		
-		// Set to defaults first, then try window settings later
-		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
-		Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
-		IWarlockFont font = provider.getWindowFont(streamName);
-		
-		this.setBackground(background);
-		this.setForeground(foreground);
-
-		if (font.isDefaultFont()) {
-			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
-			int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
-			this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
-		} else {
-			this.setFont(FontUtil.warlockFontToFont(font));
-		}
-		
-		IWindowSettings mainWindow = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings();
-		IWarlockFont columnFont = mainWindow.getColumnFont();
-		if(columnFont == null || columnFont.isDefaultFont()) {
-			this.setColumnFont(null);
-		} else {
-			String fontFace = columnFont.getFamilyName();
-			int fontSize = columnFont.getSize();
-			this.setColumnFont(new Font(getTextWidget().getDisplay(), fontFace, fontSize, SWT.NORMAL));
-		}
 	}
 	
 	public void dispose() {

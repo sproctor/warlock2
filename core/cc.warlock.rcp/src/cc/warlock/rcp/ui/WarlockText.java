@@ -43,10 +43,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.ISharedImages;
@@ -54,15 +56,26 @@ import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
+import cc.warlock.core.client.settings.WindowConfigurationProvider;
+import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingListener;
+import cc.warlock.core.settings.IWindowSettings;
+import cc.warlock.rcp.configuration.GameViewConfiguration;
+import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.util.ColorUtil;
+import cc.warlock.rcp.util.FontUtil;
 import cc.warlock.rcp.util.SoundPlayer;
 
 /**
@@ -72,7 +85,22 @@ import cc.warlock.rcp.util.SoundPlayer;
  */
 public class WarlockText {
 	
-	protected IWarlockClient client;
+	private class WindowSettingsListener implements IWarlockSettingListener {
+		WindowConfigurationProvider provider;
+		IWarlockSettingListener listener = new SWTWarlockSettingListener(this);
+		public WindowSettingsListener(WindowConfigurationProvider provider) {
+			this.provider = provider;
+			provider.addListener(listener);
+		}
+		public void settingChanged(IWarlockSetting setting) {
+			loadSettings();
+		}
+		public void remove() {
+			provider.removeListener(listener);
+		}
+	}
+	
+	private IWarlockClient client;
 	private StyledText textWidget;
 	private Cursor handCursor, defaultCursor;
 	private int lineLimit = 5000;
@@ -81,8 +109,25 @@ public class WarlockText {
 	private boolean ignoreEmptyLines = true;
 	private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
+	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+		@Override
+		public void clientCreated(IWarlockClient client) {}
+		@Override
+		public void clientConnected(IWarlockClient client) {}
+		@Override
+		public void clientDisconnected(IWarlockClient client) {}
+		@Override
+		public void clientSettingsLoaded(IWarlockClient client) {
+			loadSettings();
+		}
+	});
+	private WindowSettingsListener settingListener;
+	final private String streamName;
 	
-	public WarlockText(Composite parent) {
+	
+	public WarlockText(Composite parent, String streamName) {
+		this.streamName = streamName;
+		
 		textWidget = new StyledText(parent, SWT.V_SCROLL);
 
 		textWidget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
@@ -98,6 +143,15 @@ public class WarlockText {
 		defaultCursor = parent.getCursor();
 
 		contextMenu = new Menu(textWidget);
+		MenuItem itemFont = new MenuItem(contextMenu, SWT.PUSH);
+		itemFont.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				FontDialog fontDialog = new FontDialog(textWidget.getShell());
+				fontDialog.setText("Choose normal font");
+				FontData font = fontDialog.open();
+				//IWarlockFont fontSetting = 
+			}
+		});
 		MenuItem itemCopy = new MenuItem(contextMenu, SWT.PUSH);
 		itemCopy.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
@@ -770,5 +824,67 @@ public class WarlockText {
 	
 	public StyledText getTextWidget() {
 		return textWidget;
+	}
+	
+	public void setClient(IWarlockClient client) {
+		if(this.client != null)
+			WarlockClientRegistry.removeWarlockClientListener(clientListener);
+		if(settingListener != null)
+			settingListener.remove();
+		
+		this.client = client;
+		
+		// if client already has settings, we'll unintentially load them twice
+		loadSettings();
+		
+		if(client != null)
+			WarlockClientRegistry.addWarlockClientListener(clientListener);
+	}
+	
+	protected IWarlockClient getClient() {
+		return client;
+	}
+	
+	private void loadSettings() {
+		if(settingListener != null)
+			settingListener.remove();
+		
+		IClientSettings settings = client.getClientSettings();
+		
+		if(settings == null)
+			return;
+		
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		settingListener = new WindowSettingsListener(provider);
+		
+		// Set to defaults first, then try window settings later
+		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
+		Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
+		IWarlockFont font = provider.getWindowFont(streamName);
+		
+		this.setBackground(background);
+		this.setForeground(foreground);
+
+		if (font.isDefaultFont()) {
+			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
+			int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
+			this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
+		} else {
+			this.setFont(FontUtil.warlockFontToFont(font));
+		}
+		
+		IWindowSettings mainWindow = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings();
+		IWarlockFont columnFont = mainWindow.getColumnFont();
+		if(columnFont == null || columnFont.isDefaultFont()) {
+			this.setColumnFont(null);
+		} else {
+			String fontFace = columnFont.getFamilyName();
+			int fontSize = columnFont.getSize();
+			this.setColumnFont(new Font(getTextWidget().getDisplay(), fontFace, fontSize, SWT.NORMAL));
+		}
+	}
+	
+	public String getName() {
+		return streamName;
 	}
 }

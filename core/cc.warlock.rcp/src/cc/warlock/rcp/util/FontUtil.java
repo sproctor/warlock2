@@ -69,4 +69,9 @@ public class FontUtil {
 	{
 		return fontDataToWarlockFont(font.getFontData()[0]);
 	}
+	
+	public static void setWarlockFontFromFontData(IWarlockFont font, FontData data) {
+		font.setFamilyName(data.getName());
+		font.setSize(data.getHeight());
+	}
 }
