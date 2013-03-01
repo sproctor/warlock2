@@ -155,8 +155,8 @@ abstract public class WarlockEntry implements IWarlockEntry {
 	
 	protected void loadSettings() {
 		IClientSettings settings = viewer.getClient().getClientSettings();
-		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
-		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
+		WarlockColor bg = WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor();
+		WarlockColor fg = WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor();
 		
 		widget.setBackground(ColorUtil.warlockColorToColor(bg));
 		widget.setForeground(ColorUtil.warlockColorToColor(fg));

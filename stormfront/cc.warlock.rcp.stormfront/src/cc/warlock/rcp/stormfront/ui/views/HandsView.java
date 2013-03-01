@@ -227,8 +227,8 @@ public class HandsView extends ViewPart
 			return;
 		
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-		Color bg = ColorUtil.warlockColorToColor(provider.getDefaultBackground());
-		Color fg = ColorUtil.warlockColorToColor(provider.getDefaultForeground());
+		Color bg = ColorUtil.warlockColorToColor(provider.getDefaultBackgroundColor());
+		Color fg = ColorUtil.warlockColorToColor(provider.getDefaultForegroundColor());
 		
 		setColors(fg, bg);
 		

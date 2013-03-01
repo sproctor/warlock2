@@ -138,10 +138,10 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		main.setLayout(new GridLayout(3, false));
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		mainBGSelector = colorSelectorWithLabel(main, "Main window background color:");
-		mainFGSelector = colorSelectorWithLabel(main, "Main window foreground color:");
-		mainFontSelector = fontSelectorWithLabel(main, "Main window font:");
-		columnFontSelector = fontSelectorWithLabel(main, "Column font:");
+		mainBGSelector = colorSelectorWithLabel(main, "Default background color:");
+		mainFGSelector = colorSelectorWithLabel(main, "Default foreground color:");
+		mainFontSelector = fontSelectorWithLabel(main, "Default normal font:");
+		columnFontSelector = fontSelectorWithLabel(main, "Default monospace font:");
 		
 		createPresetsTable(main);
 		
@@ -182,10 +182,10 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		}
 
 		mainBGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultBackground()));
+				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor()));
 
 		mainFGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultForeground()));
+				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor()));
 
 		mainFontSelector.setFontData(getDefaultFont());
 		columnFontSelector.setFontData(getDefaultColumnFont());
@@ -385,14 +385,13 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		updatePreview();
 	}
 	
-	private FontData getDefaultFont ()
-	{
-		if (WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont().isDefaultFont())
-		{
+	private FontData getDefaultFont() {
+		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings().getFont();
+		
+		if (font.isDefaultFont()){
 			return JFaceResources.getDefaultFont().getFontData()[0];
 		}
 
-		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getFont();
 		FontData datas[] = new FontData[0];
 		
 		if (font.getFamilyName() != null)
@@ -414,7 +413,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	
 	private FontData getDefaultColumnFont ()
 	{
-		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getColumnFont();
+		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings().getColumnFont();
 		
 		if (font.isDefaultFont())
 		{
@@ -536,22 +535,22 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			}
 		}*/
 		
-		IWindowSettings mainWindow = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings();
+		IWindowSettings defaultSettings = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings();
 		
 		if(newMainFG != null) {
-			mainWindow.setForegroundColor(newMainFG);
+			defaultSettings.setForegroundColor(newMainFG);
 			updateView = true;
 			newMainFG = null;
 		}
 		
 		if(newMainBG != null) {
-			mainWindow.setBackgroundColor(newMainBG);
+			defaultSettings.setBackgroundColor(newMainBG);
 			updateView = true;
 			newMainBG = null;
 		}
 		
 		if(newMainFont != null) {
-			IWarlockFont font = mainWindow.getFont();
+			IWarlockFont font = defaultSettings.getFont();
 			font.setFamilyName(newMainFont.getFamilyName());
 			font.setSize(newMainFont.getSize());
 			updateView = true;
@@ -559,7 +558,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		}
 		
 		if(newColumnFont != null) {
-			IWarlockFont font = mainWindow.getColumnFont();
+			IWarlockFont font = defaultSettings.getColumnFont();
 			font.setFamilyName(newColumnFont.getFamilyName());
 			font.setSize(newColumnFont.getSize());
 			updateView = true;

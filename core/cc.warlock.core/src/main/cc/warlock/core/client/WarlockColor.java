@@ -58,7 +58,7 @@ public class WarlockColor {
 				blue = Integer.parseInt(colorString.substring(5, 7), 16);
 			}
 		} else {
-			// Bad color
+			System.out.println("Bad Color");
 		}
 		
 	}

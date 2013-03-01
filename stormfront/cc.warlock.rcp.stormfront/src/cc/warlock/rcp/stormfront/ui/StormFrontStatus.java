@@ -225,8 +225,8 @@ public class StormFrontStatus extends Composite {
 	
 	private void loadSettings (IClientSettings settings) {
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-		Color bg = ColorUtil.warlockColorToColor(provider.getDefaultBackground());
-		Color fg = ColorUtil.warlockColorToColor(provider.getDefaultForeground());
+		Color bg = ColorUtil.warlockColorToColor(provider.getDefaultBackgroundColor());
+		Color fg = ColorUtil.warlockColorToColor(provider.getDefaultForegroundColor());
 		
 		setColors(fg, bg);
 		

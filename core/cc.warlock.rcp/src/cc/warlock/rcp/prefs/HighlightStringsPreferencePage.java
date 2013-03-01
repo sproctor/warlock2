@@ -464,7 +464,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		customFGSelector.setEnabled(false);
 		WarlockColor color = selectedString.getStyle().getForegroundColor();
 		if(color.isDefault())
-			color = WindowConfigurationProvider.getProvider(settings).getDefaultForeground();
+			color = WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor();
 		customFGSelector.setColorValue(ColorUtil.warlockColorToRGB(color));
 		stringTable.update(selectedString, null);
 		setValid(true);
@@ -481,11 +481,12 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	private void defaultBackgroundSelected ()
 	{
+		// TODO this seems a little off
 		selectedString.getStyle().setBackgroundColor(WindowConfigurationProvider.getProvider(settings).getMainWindowSettings().getBackgroundColor());
 		customBGSelector.setEnabled(false);
 		WarlockColor color = selectedString.getStyle().getBackgroundColor();
 		if(color.isDefault())
-			color = WindowConfigurationProvider.getProvider(settings).getDefaultBackground();
+			color = WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor();
 		customBGSelector.setColorValue(ColorUtil.warlockColorToRGB(color));
 		stringTable.update(selectedString, null);	
 		setValid(true);
@@ -575,7 +576,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(),
 					ColorUtil.warlockColorToRGB(string.getStyle().getBackgroundColor().isDefault() ?
-							WindowConfigurationProvider.getProvider(settings).getDefaultBackground() : string.getStyle().getBackgroundColor()));
+							WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor() : string.getStyle().getBackgroundColor()));
 			
 			return c;
 		}
@@ -584,7 +585,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			HighlightSetting string = (HighlightSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(), 
 					ColorUtil.warlockColorToRGB(string.getStyle().getForegroundColor().isDefault() ?
-							WindowConfigurationProvider.getProvider(settings).getDefaultForeground() : string.getStyle().getForegroundColor()));
+							WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor() : string.getStyle().getForegroundColor()));
 			
 			return c;
 		}

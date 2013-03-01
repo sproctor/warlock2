@@ -45,7 +45,9 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FontDialog;
@@ -125,7 +127,7 @@ public class WarlockText {
 	final private String streamName;
 	
 	
-	public WarlockText(Composite parent, String streamName) {
+	public WarlockText(Composite parent, final String streamName) {
 		this.streamName = streamName;
 		
 		textWidget = new StyledText(parent, SWT.V_SCROLL);
@@ -144,12 +146,57 @@ public class WarlockText {
 
 		contextMenu = new Menu(textWidget);
 		MenuItem itemFont = new MenuItem(contextMenu, SWT.PUSH);
+		itemFont.setText("Change normal font");
 		itemFont.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				FontDialog fontDialog = new FontDialog(textWidget.getShell());
 				fontDialog.setText("Choose normal font");
 				FontData font = fontDialog.open();
-				//IWarlockFont fontSetting = 
+				IClientSettings settings = client.getClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
+				IWarlockFont fontSetting = wsetting.getFont();
+				FontUtil.setWarlockFontFromFontData(fontSetting, font);
+			}
+		});
+		MenuItem itemMonoFont = new MenuItem(contextMenu, SWT.PUSH);
+		itemMonoFont.setText("Change monospace font");
+		itemMonoFont.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				FontDialog fontDialog = new FontDialog(textWidget.getShell());
+				fontDialog.setText("Choose normal font");
+				FontData font = fontDialog.open();
+				IClientSettings settings = client.getClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
+				IWarlockFont fontSetting = wsetting.getColumnFont();
+				FontUtil.setWarlockFontFromFontData(fontSetting, font);
+			}
+		});
+		MenuItem itemBgColor = new MenuItem(contextMenu, SWT.PUSH);
+		itemBgColor.setText("Change background color");
+		itemBgColor.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				ColorDialog colorDialog = new ColorDialog(textWidget.getShell());
+				colorDialog.setText("Choose font color");
+				RGB color = colorDialog.open();
+				IClientSettings settings = client.getClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
+				wsetting.setBackgroundColor(ColorUtil.rgbToWarlockColor(color));
+			}
+		});
+		MenuItem itemFgColor = new MenuItem(contextMenu, SWT.PUSH);
+		itemFgColor.setText("Change font color");
+		itemFgColor.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				ColorDialog colorDialog = new ColorDialog(textWidget.getShell());
+				colorDialog.setText("Choose font color");
+				RGB color = colorDialog.open();
+				IClientSettings settings = client.getClientSettings();
+				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				IWindowSettings wsetting = provider.getOrCreateWindowSettings(streamName);
+				wsetting.setForegroundColor(ColorUtil.rgbToWarlockColor(color));
 			}
 		});
 		MenuItem itemCopy = new MenuItem(contextMenu, SWT.PUSH);
@@ -239,22 +286,6 @@ public class WarlockText {
 	
 	public void pageDown() {
 		textWidget.invokeAction(ST.PAGE_DOWN);
-	}
-	
-	public void setBackground(Color color) {
-		textWidget.setBackground(color);
-	}
-	
-	public void setForeground(Color color) {
-		textWidget.setForeground(color);
-	}
-	
-	public void setFont(Font font) {
-		textWidget.setFont(font);
-	}
-	
-	public void setColumnFont(Font font) {
-		monoFont = font;
 	}
 	
 	public void clearText() {
@@ -862,25 +893,24 @@ public class WarlockText {
 		Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
 		IWarlockFont font = provider.getWindowFont(streamName);
 		
-		this.setBackground(background);
-		this.setForeground(foreground);
+		textWidget.setBackground(background);
+		textWidget.setForeground(foreground);
 
 		if (font.isDefaultFont()) {
 			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
 			int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
-			this.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
+			textWidget.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
 		} else {
-			this.setFont(FontUtil.warlockFontToFont(font));
+			textWidget.setFont(FontUtil.warlockFontToFont(font));
 		}
 		
-		IWindowSettings mainWindow = WindowConfigurationProvider.getProvider(settings).getMainWindowSettings();
-		IWarlockFont columnFont = mainWindow.getColumnFont();
+		IWarlockFont columnFont = provider.getWindowMonoFont(streamName);
 		if(columnFont == null || columnFont.isDefaultFont()) {
-			this.setColumnFont(null);
+			this.monoFont = null;
 		} else {
 			String fontFace = columnFont.getFamilyName();
 			int fontSize = columnFont.getSize();
-			this.setColumnFont(new Font(getTextWidget().getDisplay(), fontFace, fontSize, SWT.NORMAL));
+			this.monoFont = new Font(getTextWidget().getDisplay(), fontFace, fontSize, SWT.NORMAL);
 		}
 	}
 	

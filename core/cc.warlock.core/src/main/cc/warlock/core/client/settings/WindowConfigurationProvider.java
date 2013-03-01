@@ -37,6 +37,7 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 {
 	public static final String ID = "windows";
 	public static final String WINDOW_MAIN = "main";
+	public static final String WINDOW_DEFAULT = "default";
 	
 	// TODO: store these in settings
 	public static WarlockColor defaultBgColor = new WarlockColor("191932");
@@ -78,26 +79,30 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 		return getOrCreateWindowSettings(WINDOW_MAIN);
 	}
 	
+	public IWindowSettings getDefaultWindowSettings() {
+		return getOrCreateWindowSettings(WINDOW_DEFAULT);
+	}
+	
 	public void removeWindowSettings(String id) {
 		windowSettings.remove(id);
 		getNode().remove(id);
 	}
 
-	public WarlockColor getDefaultBackground() {
+	public WarlockColor getDefaultBackgroundColor() {
 		WarlockColor bg = null;
-		IWindowSettings mainWindow = getMainWindowSettings();
-		if(mainWindow != null)
-			bg = mainWindow.getBackgroundColor();
+		IWindowSettings defaultSettings = getDefaultWindowSettings();
+		if(defaultSettings != null)
+			bg = defaultSettings.getBackgroundColor();
 		if(bg == null || bg.isDefault())
 			bg = defaultBgColor;
 		return bg;
 	}
 	
-	public WarlockColor getDefaultForeground() {
+	public WarlockColor getDefaultForegroundColor() {
 		WarlockColor fg = null;
-		IWindowSettings mainWindow = getMainWindowSettings();
-		if(mainWindow != null)
-			fg = mainWindow.getForegroundColor();
+		IWindowSettings defaultSettings = getDefaultWindowSettings();
+		if(defaultSettings != null)
+			fg = defaultSettings.getForegroundColor();
 		if(fg == null || fg.isDefault())
 			fg = defaultFgColor;
 		return fg;
@@ -110,7 +115,7 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 		if(wsettings != null)
 			bg = wsettings.getBackgroundColor();
 		if(bg == null || bg.isDefault())
-			bg = getDefaultBackground();
+			bg = getDefaultBackgroundColor();
 		return bg;
 	}
 	
@@ -120,19 +125,33 @@ public class WindowConfigurationProvider extends WarlockSetting implements IWind
 		if(wsettings != null)
 			fg = wsettings.getForegroundColor();
 		if(fg == null || fg.isDefault())
-			fg = getDefaultForeground();
+			fg = getDefaultForegroundColor();
 		return fg;
 	}
 	
+	// TODO Make this return type unmodifiable
 	public IWarlockFont getWindowFont(String windowId) {
 		IWarlockFont font = null;
 		IWindowSettings wsettings = getWindowSettings(windowId);
 		if(wsettings != null)
 			font = wsettings.getFont();
 		if(font == null || font.isDefaultFont()) {
-			IWindowSettings mainWindow = getMainWindowSettings();
-			if(mainWindow != null)
-				font = mainWindow.getFont();
+			IWindowSettings defaultSettings = getDefaultWindowSettings();
+			if(defaultSettings != null)
+				font = defaultSettings.getFont();
+		}
+		return font;
+	}
+	
+	public IWarlockFont getWindowMonoFont(String windowId) {
+		IWarlockFont font = null;
+		IWindowSettings wsettings = getWindowSettings(windowId);
+		if(wsettings != null)
+			font = wsettings.getColumnFont();
+		if(font == null || font.isDefaultFont()) {
+			IWindowSettings defaultSettings = getDefaultWindowSettings();
+			if(defaultSettings != null)
+				font = defaultSettings.getColumnFont();
 		}
 		return font;
 	}
