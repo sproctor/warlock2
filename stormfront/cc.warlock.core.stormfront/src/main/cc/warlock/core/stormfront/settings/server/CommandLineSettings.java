@@ -26,10 +26,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import cc.warlock.core.client.IWarlockSkin;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.stormfront.client.StormFrontColor;
-import cc.warlock.core.stormfront.settings.skin.DefaultSkin;
 import cc.warlock.core.stormfront.xml.StormFrontAttribute;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
