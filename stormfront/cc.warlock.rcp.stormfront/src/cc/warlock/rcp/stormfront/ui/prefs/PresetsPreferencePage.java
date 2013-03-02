@@ -122,15 +122,17 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	
 	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
 	static {
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_BOLD, "Bold text");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_COMMAND, "Sent commands");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_LINK, "Hyperlinks");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_ROOM_NAME, "Room names");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_SELECTED_LINK, "Selected Hyperlinks");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_SPEECH, "Speech");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_THOUGHT, "Thoughts");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_WATCHING, "Watching");
-		presetDescriptions.put(PresetStyleConfigurationProvider.PRESET_WHISPER, "Whispers");
+		presetDescriptions.put(WarlockStyle.BOLD, "Bold text");
+		presetDescriptions.put(WarlockStyle.COMMAND, "Sent commands");
+		presetDescriptions.put(WarlockStyle.LINK, "Hyperlinks");
+		presetDescriptions.put(WarlockStyle.ROOM_NAME, "Room names");
+		presetDescriptions.put(WarlockStyle.SELECTED_LINK, "Selected Hyperlinks");
+		presetDescriptions.put(WarlockStyle.SPEECH, "Speech");
+		presetDescriptions.put(WarlockStyle.THOUGHT, "Thoughts");
+		presetDescriptions.put(WarlockStyle.WATCHING, "Watching");
+		presetDescriptions.put(WarlockStyle.WHISPER, "Whispers");
+		presetDescriptions.put(WarlockStyle.ECHO, "Echo");
+		presetDescriptions.put(WarlockStyle.DEBUG, "Debug");
 	}
 	
 	@Override
@@ -463,12 +465,12 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		preview.setForeground(mainFG);
 		preview.setFont(new Font(getShell().getDisplay(), mainFontSelector.getFontData()));
 		
-		updatePresetColors(PresetStyleConfigurationProvider.PRESET_ROOM_NAME, roomNameStyleRange);
-		updatePresetColors(PresetStyleConfigurationProvider.PRESET_BOLD, boldStyleRange);
-		updatePresetColors(PresetStyleConfigurationProvider.PRESET_COMMAND, commandStyleRange);
-		updatePresetColors(PresetStyleConfigurationProvider.PRESET_SPEECH, speechStyleRange);
-		updatePresetColors(PresetStyleConfigurationProvider.PRESET_WHISPER, whisperStyleRange);
-		updatePresetColors(PresetStyleConfigurationProvider.PRESET_THOUGHT, thoughtStyleRange);
+		updatePresetColors(WarlockStyle.ROOM_NAME, roomNameStyleRange);
+		updatePresetColors(WarlockStyle.BOLD, boldStyleRange);
+		updatePresetColors(WarlockStyle.COMMAND, commandStyleRange);
+		updatePresetColors(WarlockStyle.SPEECH, speechStyleRange);
+		updatePresetColors(WarlockStyle.WHISPER, whisperStyleRange);
+		updatePresetColors(WarlockStyle.THOUGHT, thoughtStyleRange);
 		
 		columnStyleRange.background = mainBG;
 		columnStyleRange.foreground = mainFG;

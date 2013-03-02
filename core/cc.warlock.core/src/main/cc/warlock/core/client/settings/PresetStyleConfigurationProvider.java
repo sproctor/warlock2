@@ -39,27 +39,19 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 	
 	protected HashMap<String, IWarlockStyle> styleSettings = new HashMap<String, IWarlockStyle>();
 	
-	public static final String PRESET_BOLD = "bold";
-	public static final String PRESET_ROOM_NAME = "roomName";
-	public static final String PRESET_SPEECH = "speech";
-	public static final String PRESET_WHISPER = "whisper";
-	public static final String PRESET_THOUGHT = "thought";
-	public static final String PRESET_WATCHING = "watching";
-	public static final String PRESET_LINK = "link";
-	public static final String PRESET_SELECTED_LINK = "selectedLink";
-	public static final String PRESET_COMMAND = "command";
-	
 	static {
-		setDefaultStyle("bold", "#FFFF00", null, false);
-		setDefaultStyle("roomName", "#FFFFFF", "#0000FF", true);
-		setDefaultStyle("speech", "#80FF80", null, false);
-		setDefaultStyle("thought", "#FF8000", null, false);
-		setDefaultStyle("cmdline", "#FFFFFF", "#000000", false);
-		setDefaultStyle("whisper", "#80FFFF", null, false);
-		setDefaultStyle("watching", "#FFFF00", null, false);
-		setDefaultStyle("link", "#62B0FF", null, false);
-		setDefaultStyle("selectedLink", "#000000", "#62B0FF", false);
-		setDefaultStyle("command", "#FFFFFF", "#404040", false);
+		setDefaultStyle(WarlockStyle.BOLD, "#FFFF00", null, false);
+		setDefaultStyle(WarlockStyle.ROOM_NAME, "#FFFFFF", "#0000FF", true);
+		setDefaultStyle(WarlockStyle.SPEECH, "#80FF80", null, false);
+		setDefaultStyle(WarlockStyle.THOUGHT, "#FF8000", null, false);
+		//setDefaultStyle("cmdline", "#FFFFFF", "#000000", false);
+		setDefaultStyle(WarlockStyle.WHISPER, "#80FFFF", null, false);
+		setDefaultStyle(WarlockStyle.WATCHING, "#FFFF00", null, false);
+		setDefaultStyle(WarlockStyle.LINK, "#62B0FF", null, false);
+		setDefaultStyle(WarlockStyle.SELECTED_LINK, "#000000", "#62B0FF", false);
+		setDefaultStyle(WarlockStyle.COMMAND, "#FFFFFF", "#404040", false);
+		setDefaultStyle(WarlockStyle.ECHO, "#FFFF80", "#000000", false);
+		setDefaultStyle(WarlockStyle.DEBUG, "#FFFFFF", "#800000", false);
 	}
 	
 	public PresetStyleConfigurationProvider(IWarlockSetting parent) {

@@ -27,9 +27,21 @@ import cc.warlock.core.client.WarlockColor;
 
 public class WarlockStyle implements IWarlockStyle {
 
-	public static final WarlockStyle echoStyle = new WarlockStyle("echo");
-	public static final WarlockStyle boldStyle = new WarlockStyle("bold");
-	public static final WarlockStyle commandStyle = new WarlockStyle("command");
+	public static final String BOLD = "bold";
+	public static final String ROOM_NAME = "roomName";
+	public static final String SPEECH = "speech";
+	public static final String WHISPER = "whisper";
+	public static final String THOUGHT = "thought";
+	public static final String WATCHING = "watching";
+	public static final String LINK = "link";
+	public static final String SELECTED_LINK = "selectedLink";
+	public static final String COMMAND = "command";
+	public static final String ECHO = "echo";
+	public static final String DEBUG = "debug";
+	
+	public static final WarlockStyle echoStyle = new WarlockStyle(ECHO);
+	public static final WarlockStyle boldStyle = new WarlockStyle(BOLD);
+	public static final WarlockStyle commandStyle = new WarlockStyle(COMMAND);
 	
 	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
