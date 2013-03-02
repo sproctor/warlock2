@@ -324,8 +324,6 @@ public class WSLScriptContext implements Runnable {
 		matches.add(new WSLMatch(label, match));
 	}
 	
-
-	
 	public void setVariablesFromMatch(IMatch match) {
 		int i = 0;
 		for(String var : match.groups()) {

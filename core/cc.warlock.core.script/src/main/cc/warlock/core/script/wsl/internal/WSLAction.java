@@ -50,6 +50,11 @@ public class WSLAction extends WSLAbstractCommand {
 		
 		public void run() {
 			WSLScriptContext cx = new WSLScriptContext(script, command);
+			int i = 0;
+			for(String var : match.groups()) {
+				cx.setLocalVariable(String.valueOf(i), var);
+				i++;
+			}
 			Thread actionThread = new Thread(cx);
 			actionThread.start();
 		}
