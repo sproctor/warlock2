@@ -1,17 +1,21 @@
 package cc.warlock.rcp.stormfront.ui.views;
 
-import org.eclipse.swt.SWT;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
+import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.rcp.ui.WarlockEntry;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
+import cc.warlock.rcp.util.ColorUtil;
 
 public class StormFrontEntry extends WarlockEntry {
 	private IWarlockClient client;
@@ -21,15 +25,22 @@ public class StormFrontEntry extends WarlockEntry {
 	private SWTPropertyListener<Integer> rtListener;
 	private SWTPropertyListener<Integer> ctListener;
 	
+	private Color rtColor;
+	private Color ctColor;
+	
 	public StormFrontEntry (Composite parent, IWarlockClientViewer viewer) {
 		super(parent, viewer);
 		
 		widget.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
+				if(rt == 0 && ct == 0)
+					return;
 				Rectangle clientArea = widget.getClientArea();
 				
+				if(rtColor == null)
+					rtColor = new Color(e.gc.getDevice(), 139, 0, 0);
 				// Draw RT blocks
-				e.gc.setBackground(widget.getDisplay().getSystemColor(SWT.COLOR_DARK_RED));
+				e.gc.setBackground(rtColor);
 				int height = clientArea.height - 4;
 				if (ct > 0)
 					height = (clientArea.height - 4) / 2 - 1;
@@ -37,8 +48,10 @@ public class StormFrontEntry extends WarlockEntry {
 					e.gc.fillRectangle(2 + i * 20, 2, 16, height);
 				}
 				
+				if(ctColor == null)
+					ctColor = new Color(e.gc.getDevice(), 0, 0, 139);
 				// Draw CT blocks
-				e.gc.setBackground(widget.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+				e.gc.setBackground(ctColor);
 				height = clientArea.height - 4;
 				int y = 2;
 				if (rt > 0) {
@@ -56,6 +69,7 @@ public class StormFrontEntry extends WarlockEntry {
 		});
 	}
 	
+	@Override
 	public void setClient(IWarlockClient client) {
 		if (this.client != null) {
 			this.client.getTimer("roundtime").getProperty().removeListener(rtListener);
@@ -80,5 +94,31 @@ public class StormFrontEntry extends WarlockEntry {
 			client.getTimer("roundtime").getProperty().addListener(rtListener);
 			client.getTimer("casttime").getProperty().addListener(ctListener);
 		}
+	}
+	
+	@Override
+	public void loadSettings(final IClientSettings settings) {
+		if(rtColor != null)
+			rtColor.dispose();
+		rtColor = ColorUtil.warlockColorToColor(settings.getRtColor());
+		if(ctColor != null)
+			ctColor.dispose();
+		ctColor = ColorUtil.warlockColorToColor(settings.getCtColor());
+		settings.getNode().addPreferenceChangeListener(new IPreferenceChangeListener() {
+			@Override
+			public void preferenceChange(PreferenceChangeEvent event) {
+				if (event.getKey().equals("rt-color")) {
+				if(rtColor != null)
+					rtColor.dispose();
+				rtColor = ColorUtil.warlockColorToColor(settings.getRtColor());
+				}
+				if (event.getKey().equals("ct-color")) {
+				if(ctColor != null)
+					ctColor.dispose();
+				ctColor = ColorUtil.warlockColorToColor(settings.getCtColor());
+				}
+			}
+		});
+		super.loadSettings(settings);
 	}
 }

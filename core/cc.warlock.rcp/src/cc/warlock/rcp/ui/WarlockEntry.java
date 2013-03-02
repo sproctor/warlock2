@@ -117,7 +117,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		}
 	}
 	
-	public WarlockEntry(Composite parent, IWarlockClientViewer viewer) {
+	public WarlockEntry(Composite parent, final IWarlockClientViewer viewer) {
 		this.viewer = viewer;
 		
 		widget = new StyledText(parent, SWT.SINGLE); 
@@ -143,11 +143,11 @@ abstract public class WarlockEntry implements IWarlockEntry {
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {
 				if (client == WarlockEntry.this.viewer.getClient()) {
-					loadSettings();
+					loadSettings(client.getClientSettings());
 					WindowConfigurationProvider.getProvider(client.getClientSettings()).addListener(new SWTWarlockSettingListener(new IWarlockSettingListener() {
 						@Override
 						public void settingChanged(IWarlockSetting setting) {
-							loadSettings();
+							loadSettings(viewer.getClient().getClientSettings());
 						}
 					}));
 				}
@@ -160,8 +160,8 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		RCPUtil.addTextContextMenu(widget, viewer, "entry");
 	}
 	
-	protected void loadSettings() {
-		IClientSettings settings = viewer.getClient().getClientSettings();
+	public void loadSettings(IClientSettings settings) {
+		
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
 		WarlockColor bg = provider.getWindowBackground("entry");
 		WarlockColor fg = provider.getWindowForeground("entry");

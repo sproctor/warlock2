@@ -75,11 +75,14 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	public static final String PAGE_ID = "cc.warlock.rcp.stormfront.ui.prefs.presets";
 	
 	private ColorSelector mainBGSelector, mainFGSelector;
+	private ColorSelector rtSelector;
+	private ColorSelector ctSelector;
 	private FontSelector mainFontSelector;
 	private FontSelector columnFontSelector;
 	
 	private WarlockColor newMainBG = null, newMainFG = null;
 	private WarlockFont newMainFont = null, newColumnFont = null;
+	private WarlockColor newCtColor = null, newRtColor = null;
 	
 	private ColorSelector bgSelector, fgSelector;
 	private StyledText preview;
@@ -143,6 +146,9 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		mainFontSelector = fontSelectorWithLabel(main, "Default normal font:");
 		columnFontSelector = fontSelectorWithLabel(main, "Default monospace font:");
 		
+		rtSelector = colorSelectorWithLabel(main, "Roundtime bar color:");
+		ctSelector = colorSelectorWithLabel(main, "Cast time color:");
+		
 		createPresetsTable(main);
 		
 		Group previewGroup = new Group(main, SWT.NONE);
@@ -189,6 +195,9 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		mainFontSelector.setFontData(RCPUtil.getFontList(this.getShell(), provider.getWindowFont(WindowConfigurationProvider.WINDOW_DEFAULT))[0]);
 		columnFontSelector.setFontData(RCPUtil.getFontList(this.getShell(), provider.getWindowMonoFont(WindowConfigurationProvider.WINDOW_DEFAULT))[0]);
 
+		rtSelector.setColorValue(ColorUtil.warlockColorToRGB(settings.getRtColor()));
+		ctSelector.setColorValue(ColorUtil.warlockColorToRGB(settings.getCtColor()));
+		
 		stylesTable.setInput(styles.values());
 		stylesTable.getTable().setBackground(new Color(getShell().getDisplay(), getColor(mainBGSelector)));
 	}
@@ -362,6 +371,14 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		{
 			newMainFG = color;
 		}
+		else if (source == rtSelector)
+		{
+			newRtColor = color;
+		}
+		else if (source == ctSelector)
+		{
+			newCtColor = color;
+		}
 
 		updatePreview();
 	}
@@ -453,9 +470,6 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		updatePresetColors(PresetStyleConfigurationProvider.PRESET_WHISPER, whisperStyleRange);
 		updatePresetColors(PresetStyleConfigurationProvider.PRESET_THOUGHT, thoughtStyleRange);
 		
-//		roomNameStyleRange.background = ColorUtil.warlockColorToColor(styles.get(PresetStyleConfigurationProvider.PRESET_ROOM_NAME).getBackgroundColor());
-//		roomNameStyleRange.foreground = ColorUtil.warlockColorToColor(styles.get(PresetStyleConfigurationProvider.PRESET_ROOM_NAME).getForegroundColor());
-		
 		columnStyleRange.background = mainBG;
 		columnStyleRange.foreground = mainFG;
 		columnStyleRange.font = new Font(getShell().getDisplay(), columnFontSelector.getFontData());
@@ -469,16 +483,6 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	public boolean performOk() {
 		
 		boolean updateView = false;
-		
-		/*for (WarlockStyle style: styles.values())
-		{
-			if (style.needsUpdate())
-			{
-				updateView = true;
-				settings.getHighlightConfigurationProvider().removeNamedStyle(style.getOriginalStyle().getName());
-				settings.getHighlightConfigurationProvider().addNamedStyle(style.getName(), style);
-			}
-		}*/
 		
 		IWindowSettings defaultSettings = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings();
 		
@@ -510,13 +514,15 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			newColumnFont = null;
 		}
 		
-		/*if (mainWindow.needsUpdate())
-		{
-			updateView = true;
-			settings.getWindowSettingsProvider().removeWindowSettings(mainWindow.getOriginalWindowSettings());
-			settings.getWindowSettingsProvider().addWindowSettings(mainWindow);
+		if(newRtColor != null) {
+			settings.setRtColor(newRtColor);
+			newRtColor = null;
 		}
-		*/
+		
+		if(newCtColor != null) {
+			settings.setCtColor(newCtColor);
+			newCtColor = null;
+		}
 		
 		if (updateView) {
 			// FIXME: What to do here?

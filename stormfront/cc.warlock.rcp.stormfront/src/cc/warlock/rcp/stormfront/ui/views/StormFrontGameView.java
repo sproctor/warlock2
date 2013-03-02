@@ -296,6 +296,10 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 			streamText.getTextWidget().redraw();
 		}
 		
+		if(getEntry() != null) {
+			getEntry().loadSettings(settings);
+		}
+		
 		if (HandsView.getDefault() != null) {
 			HandsView.getDefault().loadSettings(settings);
 		}

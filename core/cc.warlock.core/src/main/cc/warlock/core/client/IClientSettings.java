@@ -35,4 +35,8 @@ public interface IClientSettings extends IWarlockSetting
 	public String getCliendId ();
 	public int getMinCommandSize();
 	public void setMinCommandSize(int size);
+	public WarlockColor getRtColor();
+	public void setRtColor(WarlockColor color);
+	public WarlockColor getCtColor();
+	public void setCtColor(WarlockColor color);
 }

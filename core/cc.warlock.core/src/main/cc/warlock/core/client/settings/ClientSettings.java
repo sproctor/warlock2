@@ -29,6 +29,7 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IClientSettings;
+import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingFactory;
@@ -41,8 +42,8 @@ import cc.warlock.core.settings.WarlockSetting;
  * This class includes a single default implementations for each {@link IConfigurationProvider}
  * @author marshall
  */
-public class ClientSettings extends WarlockSetting implements IClientSettings
-{
+public class ClientSettings extends WarlockSetting implements IClientSettings {
+	
 	private static HashMap<String, ClientSettings> clients = new HashMap<String, ClientSettings>();
 	private static Preferences topNode = WarlockPreferencesScope.getInstance().getNode().node("clients");
 	private static HashMap<String, IWarlockSettingFactory> providerFactories = new HashMap<String, IWarlockSettingFactory>();
@@ -52,6 +53,8 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 	
 	private String name;
 	private String clientId;
+	private WarlockColor rtColor;
+	private WarlockColor ctColor;
 	
 	static {
 		
@@ -188,5 +191,30 @@ public class ClientSettings extends WarlockSetting implements IClientSettings
 	
 	public void setMinCommandSize(int size) {
 		getNode().putInt("min-command-size", size);
+		this.notifyListenersChanged();
+	}
+	
+	public WarlockColor getRtColor() {
+		if(rtColor == null)
+			rtColor = new WarlockColor(getNode().get("rt-color", "#8B0000"));
+		return rtColor;
+	}
+	
+	public void setRtColor(WarlockColor color) {
+		rtColor = color;
+		getNode().put("rt-color", color.toString());
+		this.notifyListenersChanged();
+	}
+	
+	public WarlockColor getCtColor() {
+		if(ctColor == null)
+			ctColor = new WarlockColor(getNode().get("ct-color", "#00008B"));
+		return ctColor;
+	}
+	
+	public void setCtColor(WarlockColor color) {
+		ctColor = color;
+		getNode().put("ct-color", color.toString());
+		this.notifyListenersChanged();
 	}
 }

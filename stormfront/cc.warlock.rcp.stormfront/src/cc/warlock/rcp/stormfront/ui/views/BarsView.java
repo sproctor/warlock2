@@ -154,6 +154,7 @@ public class BarsView extends ViewPart {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 		// Don't need to do anything
 	}
