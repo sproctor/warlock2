@@ -24,7 +24,6 @@ package cc.warlock.rcp.stormfront.ui.prefs;
 import java.util.HashMap;
 
 import org.eclipse.jface.preference.ColorSelector;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -64,6 +63,7 @@ import cc.warlock.core.settings.IWindowSettings;
 import cc.warlock.rcp.prefs.PreferencePageUtils;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontSelector;
+import cc.warlock.rcp.util.RCPUtil;
 
 /**
  * 
@@ -181,14 +181,13 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			styles.put(styleName, style);
 		}
 
-		mainBGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor()));
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		mainBGSelector.setColorValue(ColorUtil.warlockColorToRGB(provider.getDefaultBackgroundColor()));
 
-		mainFGSelector.setColorValue(
-				ColorUtil.warlockColorToRGB(WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor()));
+		mainFGSelector.setColorValue(ColorUtil.warlockColorToRGB(provider.getDefaultForegroundColor()));
 
-		mainFontSelector.setFontData(getDefaultFont());
-		columnFontSelector.setFontData(getDefaultColumnFont());
+		mainFontSelector.setFontData(RCPUtil.getFontList(this.getShell(), provider.getWindowFont(WindowConfigurationProvider.WINDOW_DEFAULT))[0]);
+		columnFontSelector.setFontData(RCPUtil.getFontList(this.getShell(), provider.getWindowMonoFont(WindowConfigurationProvider.WINDOW_DEFAULT))[0]);
 
 		stylesTable.setInput(styles.values());
 		stylesTable.getTable().setBackground(new Color(getShell().getDisplay(), getColor(mainBGSelector)));
@@ -383,60 +382,6 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		}
 		
 		updatePreview();
-	}
-	
-	private FontData getDefaultFont() {
-		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings().getFont();
-		
-		if (font.isDefaultFont()){
-			return JFaceResources.getDefaultFont().getFontData()[0];
-		}
-
-		FontData datas[] = new FontData[0];
-		
-		if (font.getFamilyName() != null)
-			datas = getShell().getDisplay().getFontList(font.getFamilyName(), true);
-		
-		FontData data = new FontData();
-		if (datas.length == 0)
-		{
-			return JFaceResources.getDefaultFont().getFontData()[0];
-		}
-		else
-		{
-			data.setName(font.getFamilyName());
-			data.setHeight(font.getSize());
-			
-			return data;
-		}
-	}
-	
-	private FontData getDefaultColumnFont ()
-	{
-		IWarlockFont font = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings().getColumnFont();
-		
-		if (font.isDefaultFont())
-		{
-			return JFaceResources.getTextFont().getFontData()[0];
-		}
-
-		FontData datas[] = new FontData[0];
-		
-		if (font.getFamilyName() != null)
-			datas = getShell().getDisplay().getFontList(font.getFamilyName(), true);
-		
-		FontData data = new FontData();
-		if (datas.length == 0)
-		{
-			return JFaceResources.getTextFont().getFontData()[0];
-		}
-		else
-		{
-			data.setName(font.getFamilyName());
-			data.setHeight(font.getSize());
-			
-			return data;
-		}
 	}
 	
 	private void initPreview ()

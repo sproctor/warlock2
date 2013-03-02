@@ -38,6 +38,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,6 +50,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
@@ -188,15 +190,16 @@ public class RCPUtil {
 				IWarlockClient client = viewer.getClient();
 				FontDialog fontDialog = new FontDialog(text.getShell());
 				fontDialog.setText("Choose normal font");
-				FontData font = fontDialog.open();
-				if(font == null)
-					return;
 				IClientSettings settings = null;
 				if(client != null)
 					settings = client.getClientSettings();
 				if(settings == null)
 					settings = ClientSettings.getGlobalClientSettings();
 				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				fontDialog.setFontList(getFontList(text.getShell(), provider.getWindowFont(name)));
+				FontData font = fontDialog.open();
+				if(font == null)
+					return;
 				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
 				IWarlockFont fontSetting = wsetting.getFont();
 				FontUtil.setWarlockFontFromFontData(fontSetting, font);
@@ -209,15 +212,17 @@ public class RCPUtil {
 				IWarlockClient client = viewer.getClient();
 				FontDialog fontDialog = new FontDialog(text.getShell());
 				fontDialog.setText("Choose normal font");
-				FontData font = fontDialog.open();
-				if(font == null)
-					return;
+				
 				IClientSettings settings = null;
 				if(client != null)
 					settings = client.getClientSettings();
 				if(settings == null)
 					settings = ClientSettings.getGlobalClientSettings();
 				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				fontDialog.setFontList(getFontList(text.getShell(), provider.getWindowMonoFont(name)));
+				FontData font = fontDialog.open();
+				if(font == null)
+					return;
 				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
 				IWarlockFont fontSetting = wsetting.getColumnFont();
 				FontUtil.setWarlockFontFromFontData(fontSetting, font);
@@ -230,15 +235,16 @@ public class RCPUtil {
 				IWarlockClient client = viewer.getClient();
 				ColorDialog colorDialog = new ColorDialog(text.getShell());
 				colorDialog.setText("Choose font color");
-				RGB color = colorDialog.open();
-				if(color == null)
-					return;
 				IClientSettings settings = null;
 				if(client != null)
 					settings = client.getClientSettings();
 				if(settings == null)
 					settings = ClientSettings.getGlobalClientSettings();
 				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				colorDialog.setRGB(ColorUtil.warlockColorToRGB(provider.getWindowBackground(name)));
+				RGB color = colorDialog.open();
+				if(color == null)
+					return;
 				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
 				wsetting.setBackgroundColor(ColorUtil.rgbToWarlockColor(color));
 			}
@@ -250,15 +256,16 @@ public class RCPUtil {
 				IWarlockClient client = viewer.getClient();
 				ColorDialog colorDialog = new ColorDialog(text.getShell());
 				colorDialog.setText("Choose font color");
-				RGB color = colorDialog.open();
-				if(color == null)
-					return;
 				IClientSettings settings = null;
 				if(client != null)
 					settings = client.getClientSettings();
 				if(settings == null)
 					settings = ClientSettings.getGlobalClientSettings();
 				WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+				colorDialog.setRGB(ColorUtil.warlockColorToRGB(provider.getWindowForeground(name)));
+				RGB color = colorDialog.open();
+				if(color == null)
+					return;
 				IWindowSettings wsetting = provider.getOrCreateWindowSettings(name);
 				wsetting.setForegroundColor(ColorUtil.rgbToWarlockColor(color));
 			}
@@ -280,5 +287,27 @@ public class RCPUtil {
 		itemClear.setText("Clear");
 		itemClear.setImage(images.getImage(ISharedImages.IMG_TOOL_DELETE));
 		text.setMenu(contextMenu);
+	}
+	
+	static public FontData[] getFontList(Shell shell, IWarlockFont font) {
+		
+		if (font.isDefaultFont()){
+			return JFaceResources.getDefaultFont().getFontData();
+		}
+
+		FontData datas[] = new FontData[0];
+		
+		if (font.getFamilyName() != null)
+			datas = shell.getDisplay().getFontList(font.getFamilyName(), true);
+		
+		FontData data = new FontData();
+		if (datas.length == 0) {
+			return JFaceResources.getDefaultFont().getFontData();
+		} else {
+			data.setName(font.getFamilyName());
+			data.setHeight(font.getSize());
+			
+			return new FontData[] { data };
+		}
 	}
 }

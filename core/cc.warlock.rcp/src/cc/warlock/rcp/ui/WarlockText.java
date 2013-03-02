@@ -63,7 +63,6 @@ import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
-import cc.warlock.core.settings.IWindowSettings;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
@@ -80,17 +79,17 @@ import cc.warlock.rcp.util.SoundPlayer;
 public class WarlockText {
 	
 	private class WindowSettingsListener implements IWarlockSettingListener {
-		IWindowSettings settings;
+		WindowConfigurationProvider provider;
 		IWarlockSettingListener listener = new SWTWarlockSettingListener(this);
-		public WindowSettingsListener(IWindowSettings settings) {
-			this.settings = settings;
-			settings.addListener(listener);
+		public WindowSettingsListener(WindowConfigurationProvider provider) {
+			this.provider = provider;
+			provider.addListener(listener);
 		}
 		public void settingChanged(IWarlockSetting setting) {
 			loadSettings();
 		}
 		public void remove() {
-			settings.removeListener(listener);
+			provider.removeListener(listener);
 		}
 	}
 	
@@ -807,7 +806,7 @@ public class WarlockText {
 			settings = ClientSettings.getGlobalClientSettings();
 		
 		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
-		settingListener = new WindowSettingsListener(provider.getOrCreateWindowSettings(streamName));
+		settingListener = new WindowSettingsListener(provider);
 		
 		// Set to defaults first, then try window settings later
 		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
