@@ -38,6 +38,8 @@ public class WSLAction extends WSLAbstractCommand {
 		
 		this.command = command;
 		this.when = when;
+		
+		command.setNext(null);
 	}
 	
 	private class WSLActionAdapter implements Runnable {
