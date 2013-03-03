@@ -22,6 +22,7 @@
 package cc.warlock.rcp.ui;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -72,8 +73,7 @@ public class ConnectionCommand implements IConnectionCommand {
 
 	public void run() {
 		try {
-			//TODO instantiating an ExecutionEvent is "bad" ?
-			command.getHandler().execute(null);
+			command.getHandler().execute(new ExecutionEvent());
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
