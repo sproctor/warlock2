@@ -24,7 +24,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.p2.metadata,
  org.eclipse.equinox.p2.operations,
  org.eclipse.equinox.p2.updatechecker,
- org.eclipse.equinox.p2.updatesite
+ org.eclipse.equinox.p2.updatesite,
+ org.eclipse.equinox.ds,
+ org.eclipse.equinox.event
 Bundle-ActivationPolicy: lazy
 Export-Package: cc.warlock.rcp.actions,
  cc.warlock.rcp.application,
