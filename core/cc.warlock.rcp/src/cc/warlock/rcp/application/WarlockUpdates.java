@@ -23,44 +23,37 @@ package cc.warlock.rcp.application;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.operations.ProvisioningSession;
+import org.eclipse.equinox.p2.operations.Update;
+import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.update.configuration.IConfiguredSite;
-import org.eclipse.update.configuration.ILocalSite;
-import org.eclipse.update.core.IFeature;
-import org.eclipse.update.core.IFeatureReference;
-import org.eclipse.update.core.ISite;
-import org.eclipse.update.core.SiteManager;
-import org.eclipse.update.core.VersionedIdentifier;
-import org.eclipse.update.operations.IInstallFeatureOperation;
-import org.eclipse.update.operations.OperationsManager;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 
 import cc.warlock.rcp.plugin.Warlock2Plugin;
 
 public class WarlockUpdates {
 
-	public static List<IFeatureReference> promptUpgrade (Map<IFeatureReference, VersionedIdentifier> newVersions)
-	{
+	public static final String UPDATE_SITE = "warlock.updates.url";
+	public static final String AUTO_UPDATE = "warlock.updates.autoupdate";
+	
+	protected static Properties updateProperties;
+	
+	public static List<Update> promptUpgrade (List<Update> updates) {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		WarlockUpdateDialog dialog = new WarlockUpdateDialog(shell, newVersions);
+		WarlockUpdateDialog dialog = new WarlockUpdateDialog(shell, updates);
 		int response = dialog.open();
 		
 		if (response == Window.OK)
@@ -71,13 +64,7 @@ public class WarlockUpdates {
 		return Collections.emptyList();
 	}
 	
-	
-	public static final String UPDATE_SITE = "warlock.updates.url";
-	public static final String AUTO_UPDATE = "warlock.updates.autoupdate";
-	
-	protected static Properties updateProperties;
-	protected static Properties getUpdateProperties ()
-	{
+	protected static Properties getUpdateProperties () {
 		if (updateProperties == null)
 		{
 			updateProperties = new Properties();
@@ -94,107 +81,32 @@ public class WarlockUpdates {
 		return updateProperties;
 	}
 	
-	public static boolean autoUpdate ()
-	{
+	public static boolean autoUpdate () {
 		boolean autoUpdate = false;
 		Properties updateProperties = getUpdateProperties();
 		
-		if (updateProperties.containsKey(AUTO_UPDATE))
-		{
+		if (updateProperties.containsKey(AUTO_UPDATE)) {
 			autoUpdate = Boolean.parseBoolean(updateProperties.getProperty(AUTO_UPDATE));
 		}
 		return autoUpdate;
 	}
 	
-	public static void checkForUpdates (final IProgressMonitor monitor)
-	{
-		try {
-			Properties properties = getUpdateProperties();
-			String url = properties.getProperty(UPDATE_SITE);
-			if (url == null)
-				return;
-			
-			ISite updateSite = SiteManager.getSite(new URL(url), monitor);
-			IFeatureReference[] featureRefs = updateSite.getFeatureReferences();
-			final ILocalSite localSite = SiteManager.getLocalSite();
-			final IConfiguredSite configuredSite = localSite.getCurrentConfiguration().getConfiguredSites()[0];
-			IFeatureReference[] localFeatureRefs = configuredSite.getConfiguredFeatures();
-			
-			final HashMap<IFeatureReference, VersionedIdentifier> newVersions  = new HashMap<IFeatureReference, VersionedIdentifier>();
-
-			for (int i = 0; i < featureRefs.length; i++) {
-				for (int j = 0; j < localFeatureRefs.length; j++) {
-
-					VersionedIdentifier featureVersion = featureRefs[i].getVersionedIdentifier();
-					VersionedIdentifier localFeatureVersion = localFeatureRefs[j].getVersionedIdentifier();
-
-					if (featureVersion.getIdentifier().equals(localFeatureVersion.getIdentifier())) {
-
-						if (featureVersion.getVersion().isGreaterThan(localFeatureVersion.getVersion())) {
-
-							newVersions.put(featureRefs[i], localFeatureVersion);
-						}
-					}
-				}
-			}
-
-			if (newVersions.size() > 0)
-			{
-				Display.getDefault().syncExec(new Runnable() {
-					public void run () {
-						final List<IFeatureReference> featuresToUpgrade = promptUpgrade(newVersions);
-						
-						ProgressMonitorDialog dialog = new ProgressMonitorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-						dialog.setBlockOnOpen(false);
-						dialog.open();
-						try {
-							dialog.run(true, true, new IRunnableWithProgress () {
-								public void run(IProgressMonitor monitor)
-										throws InvocationTargetException,
-										InterruptedException {
-									try {
-										for (IFeatureReference featureRef : featuresToUpgrade)
-										{
-											IFeature feature = featureRef.getFeature(monitor);
-											
-											IInstallFeatureOperation operation = OperationsManager.getOperationFactory().createInstallOperation(
-												configuredSite, feature, null, null, null);
-											
-											operation.execute(monitor, null);
-										}
-										if (featuresToUpgrade.size() > 0) {
-											localSite.save();
-											
-											IFeatureReference featureRef = featuresToUpgrade.get(0);
-											IFeature feature = featureRef.getFeature(monitor);
-											/* Force a restart. Because everyone reports bugs before restarting. */
-											PlatformUI.getWorkbench().restart();
-										}
-									} catch (CoreException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									} catch (InvocationTargetException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							});
-						} catch (InvocationTargetException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
-			}
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Error updating",
-					"There was an error while attempting to update Warlock: " + e.getMessage());
+	public static void checkForUpdates (final IProgressMonitor monitor) {
+		
+		BundleContext context = FrameworkUtil.getBundle(WarlockUpdates.class).getBundleContext();
+		ServiceReference<?> reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
+		if(reference == null)
+			return;
+		IProvisioningAgent agent = (IProvisioningAgent) context.getService(reference);
+		ProvisioningSession session = new ProvisioningSession(agent);
+		UpdateOperation operation = new UpdateOperation(session);
+		//Update[] updates = operation.getPossibleUpdates();
+		IStatus result = operation.resolveModal(monitor);
+		if(result.isOK()) {
+			operation.getProvisioningJob(monitor).schedule();
+		} else {
+			// TODO Notify that we couldn't update
 		}
+		context.ungetService(reference);
 	}
 }

@@ -26,6 +26,7 @@ public class WarlockWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public void initialize(IWorkbenchConfigurer configurer) {
+	    super.initialize(configurer);
 		configurer.setSaveAndRestore(true);
 		if (WarlockUpdates.autoUpdate())
 		{
@@ -43,17 +44,7 @@ public class WarlockWorkbenchAdvisor extends WorkbenchAdvisor {
 	public IAdaptable getDefaultPageInput() {
 		return null;
 	}
-	
-	@Override
-	public void preStartup() {
-		//WarlockConfiguration.getMainConfiguration().addConfigurationProvider(WarlockPerspectiveLayout.instance());
-	}
-	
-	@Override
-	public void postStartup() {
-		WarlockPerspectiveLayout.instance().loadBounds();
-	}
-	
+
 	@Override
 	public boolean preShutdown() {
 		timer.cancel();

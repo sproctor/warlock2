@@ -24,9 +24,9 @@ package cc.warlock.rcp.application;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.operations.Update;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -48,25 +48,20 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.update.core.IFeatureReference;
-import org.eclipse.update.core.VersionedIdentifier;
 
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class WarlockUpdateDialog extends Dialog {
 
-	protected TableViewer updateTable;
-	protected HashMap<IFeatureReference, Boolean> features = new HashMap<IFeatureReference, Boolean>();
-	protected Map<IFeatureReference, VersionedIdentifier> oldVersions;
+	private TableViewer updateTable;
+	private HashMap<Update, Boolean> updates = new HashMap<Update, Boolean>();
 	
-	public WarlockUpdateDialog (Shell parent, Map<IFeatureReference, VersionedIdentifier> newVersions)
-	{
+	public WarlockUpdateDialog (Shell parent, List<Update> updates) {
 		super(parent);
 		
-		for (IFeatureReference ref : newVersions.keySet())
-			this.features.put(ref, true);
-		
-		this.oldVersions = newVersions;
+		for (Update update : updates) {
+			this.updates.put(update, true);
+		}
 	}
 	
 	@Override
@@ -113,57 +108,51 @@ public class WarlockUpdateDialog extends Dialog {
 		
 		updateTable.setContentProvider(ArrayContentProvider.getInstance());
 		updateTable.setLabelProvider(new ITableLabelProvider() {
-
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				if (columnIndex == 1) return WarlockSharedImages.getImage(WarlockSharedImages.IMG_FEATURE);
 				return null;
 			}
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
-				IFeatureReference ref = (IFeatureReference)element;
+				Update update = (Update)element;
 				
-				if (columnIndex == 1) //name
-				{
-					return ref.getName();
-				}
-				else if (columnIndex == 2) //old version
-				{
-					return oldVersions.get(ref).getVersion().toString();
+				if (columnIndex == 1) { //name
+					return update.replacement.getProperty(IInstallableUnit.PROP_NAME);
+				} else if (columnIndex == 2) { //old version
+					return update.toUpdate.getVersion().toString();
 					
-				}
-				else if (columnIndex == 3) //new version
-				{
-					try {
-						return ref.getVersionedIdentifier().getVersion().toString();
-					} catch (CoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				} else if (columnIndex == 3) { //new version
+					update.replacement.getVersion().toString();
 				}
 				return "";
 			}
 
+			@Override
 			public void addListener(ILabelProviderListener listener) {}
+			@Override
 			public void dispose() {}
+			@Override
 			public boolean isLabelProperty(Object element, String property) {
 				return true;
 			}
+			@Override
 			public void removeListener(ILabelProviderListener listener) {}
 			
 		});
 		updateTable.getTable().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				if (event.detail == SWT.CHECK)
-				{
+				if (event.detail == SWT.CHECK) {
 					TableItem item = (TableItem) event.item;
-					IFeatureReference ref = (IFeatureReference) item.getData();
+					Update update = (Update)item.getData();
 					
-					features.put(ref, !features.get(ref));
-					System.out.println(ref + "=" + features.get(ref));
+					updates.put(update, !updates.get(update));
+					System.out.println(update + "=" + updates.get(update));
 				}
 			}
 		});
-		updateTable.setInput(features.keySet());
+		updateTable.setInput(updates.keySet());
 		updateTable.getTable().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
 		for (TableItem item : updateTable.getTable().getItems())
@@ -190,15 +179,15 @@ public class WarlockUpdateDialog extends Dialog {
 		return main;
 	}
 	
-	public List<IFeatureReference> getSelectedFeatures()
+	public List<Update> getSelectedFeatures()
 	{
-		ArrayList<IFeatureReference> refs = new ArrayList<IFeatureReference>();
+		ArrayList<Update> selected = new ArrayList<Update>();
 		
-		for (IFeatureReference ref : features.keySet()) {
-			if (features.get(ref)) {
-				refs.add(ref);
+		for (Update update : updates.keySet()) {
+			if (updates.get(update)) {
+				selected.add(update);
 			}
 		}
-		return refs;
+		return selected;
 	}
 }

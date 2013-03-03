@@ -16,7 +16,13 @@ public class WarlockWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowMenuBar(true);
 		configurer.setShowCoolBar(false);
 	}
-	
+
+	@Override
+	public void preWindowOpen()
+	{
+	    WarlockPerspectiveLayout.instance().loadBounds();
+	}
+
 	@Override
 	public boolean preWindowShellClose() {
 		IWorkbenchWindow window = getWindowConfigurer().getWindow();

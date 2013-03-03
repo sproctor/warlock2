@@ -59,8 +59,7 @@ public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlock
 		getNode().putInt("height", bounds.height);
 	}
 	
-	public void loadBounds ()
-	{
+	public void loadBounds () {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setBounds(bounds);
 	}
 }

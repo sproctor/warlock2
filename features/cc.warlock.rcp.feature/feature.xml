@@ -486,7 +486,6 @@ DAMAGES.
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.update.core"/>
    </requires>
 
    <plugin
