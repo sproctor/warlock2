@@ -35,9 +35,10 @@ public class WSLScriptContext implements Runnable {
 		private IWSLCommand returnCommand;
 		private HashMap<String, IWSLValue> localVariables;
 		
+		@SuppressWarnings("unchecked")
 		public WSLFrame(IWSLCommand command, HashMap<String, IWSLValue> variables) {
 			this.returnCommand = command;
-			this.localVariables = variables;
+			this.localVariables = (HashMap<String, IWSLValue>)variables.clone();
 		}
 
 		public void restore() {
@@ -144,7 +145,7 @@ public class WSLScriptContext implements Runnable {
 		
 		IWSLCommandDefinition command = WSLScriptCommands.getCommand(commandName);
 		if(command != null) {
-			scriptDebug(2, "Debug: " + line);
+			scriptDebug(3, "command: " + line);
 			command.execute(this, arguments);
 		} else {
 			scriptError("Invalid command on line (" + curCommand.getLineNumber() + "): " + line);
@@ -152,22 +153,20 @@ public class WSLScriptContext implements Runnable {
 	}
 	
 	public void scriptError(String message) {
-		script.getCommands().echo("ERROR " + script.getName() + ":" + curCommand.getLineNumber() + ": \"" + message + "\" line: (" + curCommandString + ")");
-		script.stop();
+		script.getCommands().error(curCommand.getLineNumber(), message, curCommandString);
 	}
 	
 	public void scriptWarning(String message) {
-		script.getCommands().echo("WARNING " + script.getName() + ":" + curCommand.getLineNumber() + ": \"" + message + "\" line: (" + curCommandString + ")");
+		script.getCommands().warning(curCommand.getLineNumber(), message, curCommandString);
 	}
 	
 	public void scriptDebug (int level, String message) {
-		if (level <= script.getDebugLevel()) {
-			script.getCommands().echo("DEBUG " + script.getName() + ":" + curCommand.getLineNumber() + ": " + message);
-		}
+		script.getCommands().debug(level, curCommand.getLineNumber(), message);
 	}
 	
 	protected void deleteLocalVariable(String name) {
 		localVariables.remove(name);
+		scriptDebug(2, "Removed local variable \"" + name + "\"");
 	}
 	
 	public void setLocalVariable(String name, String value) {
@@ -176,15 +175,14 @@ public class WSLScriptContext implements Runnable {
 	
 	public void setLocalVariable(String name, IWSLValue value) {
 		localVariables.put(name, value);
+		scriptDebug(2, "local variable: " + name + "=" + value.toString(this));
 	}
 	
-	protected void gosub (String label, String arguments)
-	{
+	protected void gosub (String label, String arguments) {
+		scriptDebug(2, "gosub: " + label + ", parameter string: " + arguments);
 		WSLFrame frame = new WSLFrame(nextCommand, localVariables);
 		callstack.push(frame);
 
-		// TODO perhaps abstract this
-		localVariables = (HashMap<String, IWSLValue>)localVariables.clone();
 		setLocalVariable("0", arguments);
 
 		// parse the args, splitting on " and ', and leaving in \-escaped quotes
@@ -272,15 +270,10 @@ public class WSLScriptContext implements Runnable {
 				break;
 			nextCommand = script.getLine(line);
 		}
-		
-		// if we're in an action, interrupt execution on the main thread
-		//if(Thread.currentThread() != scriptThread) {
-			//scriptCommands.interrupt();
-		//}
 	}
 	
-	protected void gotoLabel (String label)
-	{
+	protected void gotoLabel (String label) {
+		scriptDebug(2, "goto " + label);
 		// remove ":" from labels
 		int pos = label.indexOf(':');
 		if(pos >= 0)

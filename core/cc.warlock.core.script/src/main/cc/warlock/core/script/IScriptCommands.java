@@ -33,6 +33,7 @@ public interface IScriptCommands extends IRoomListener {
 	public void put (String text, int lineNum) throws InterruptedException;
 	
 	public void echo (String text);
+	public void debug(String text);
 	
 	public void move (String direction, int lineNum) throws InterruptedException;
 	
@@ -83,4 +84,8 @@ public interface IScriptCommands extends IRoomListener {
 	public void removeAction(IMatch action);
 	
 	public void removeAction(String text);
+	
+	public void error(int line, String message, String command);
+	public void warning(int line, String message, String command);
+	public void debug (int level, int line, String message);
 }

@@ -63,4 +63,6 @@ public interface IScript {
 	
 	public IWarlockClientViewer getViewer();
 	
+	public void setDebugLevel(int level);
+	public int getDebugLevel();
 }

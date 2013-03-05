@@ -34,6 +34,7 @@ public abstract class AbstractScript implements IScript {
 	protected Reader reader;
 	protected IScriptInfo info;
 	private IWarlockClientViewer viewer;
+	private int debugLevel = 1;
 	
 	public AbstractScript (IScriptInfo info, IWarlockClientViewer viewer)
 	{
@@ -119,4 +120,20 @@ public abstract class AbstractScript implements IScript {
 	}
 	
 	abstract public IScriptCommands getCommands();
+	
+	/*
+	 * Debug levels:
+	 *   0: No output from script engine
+	 *   1: Normal user output from script engine
+	 *   2: Helpful script debugging output
+	 *   3: Verbose script debugging output
+	 *   4: For Warlock developers, engine debugging output
+	 */
+	public void setDebugLevel(int level) {
+		this.debugLevel = level;
+	}
+	
+	public int getDebugLevel() {
+		return this.debugLevel;
+	}
 }

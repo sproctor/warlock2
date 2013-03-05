@@ -44,6 +44,7 @@ import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.internal.Command;
+import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.script.IMatch;
@@ -160,6 +161,11 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	}
 	
 	@Override
+	public void debug(String text) {
+		getClient().echo("[" + script.getName() + "]: " + text + "\n", WarlockStyle.DEBUG);
+	}
+	
+	@Override
 	public BlockingQueue<String> createLineQueue() {
 		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 		synchronized(textWaiters) {
@@ -250,6 +256,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 
 	@Override
 	public void waitFor(IMatch match) throws InterruptedException {
+		echo("entering waitfor: " + match.getText());
 		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
 		textWaiters.add(queue);
@@ -263,6 +270,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		} finally {
 			textWaiters.remove(queue);
 		}
+		echo("leaving waitfor");
 	}
 
 	@Override
@@ -535,6 +543,24 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 			}
 			if(changed && actionThread != null)
 				actionThread.interrupt();
+		}
+	}
+	
+	@Override
+	public void error(int line, String message, String command) {
+		debug("ERROR on line " + line + ": \"" + message + "\" command: (" + command + ")");
+		script.stop();
+	}
+	
+	@Override
+	public void warning(int line, String message, String command) {
+		debug("WARNING on line " + line + ": \"" + message + "\" line: (" + command + ")");
+	}
+	
+	@Override
+	public void debug(int level, int line, String message) {
+		if (level <= script.getDebugLevel()) {
+			debug("DEBUG on line " + line + ": " + message);
 		}
 	}
 }

@@ -319,5 +319,17 @@ public class ScriptManager extends ViewPart implements IGameViewFocusListener, I
 			// TODO Auto-generated method stub
 			suspended = true;
 		}
+
+		@Override
+		public void setDebugLevel(int level) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public int getDebugLevel() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	}
 }

@@ -38,7 +38,6 @@ import cc.warlock.core.script.AbstractScript;
 import cc.warlock.core.script.IScriptCommands;
 import cc.warlock.core.script.IScriptEngine;
 import cc.warlock.core.script.IScriptInfo;
-import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.core.script.internal.ScriptCommands;
 import cc.warlock.core.script.wsl.internal.ANTLRNoCaseReaderStream;
 import cc.warlock.core.script.wsl.internal.IWSLValue;
@@ -51,7 +50,6 @@ import cc.warlock.core.script.wsl.internal.WSLString;
 
 public class WSLScript extends AbstractScript {
 	
-	private int debugLevel = 0;
 	private HashMap<String, Integer> labels = new HashMap<String, Integer>();
 	private HashMap<String, IWSLValue> specialVariables = new HashMap<String, IWSLValue>();
 	private ArrayList<IWarlockHighlight> highlights = null;
@@ -60,14 +58,9 @@ public class WSLScript extends AbstractScript {
 	private IScriptCommands scriptCommands;
 	private ArrayList<WSLScriptContext> contexts = new ArrayList<WSLScriptContext>();
 	
-	
-	
 	public WSLScript (WSLEngine engine, IScriptInfo info, IWarlockClientViewer viewer) {
 		super(info, viewer);
 		this.engine = engine;
-		
-		if(!ScriptConfiguration.instance().getSupressExceptions().get())
-			debugLevel = 1;
 		
 		scriptCommands = new ScriptCommands(viewer, this);
 		
@@ -275,14 +268,6 @@ public class WSLScript extends AbstractScript {
 	
 	protected void deleteVariable(String name) {
 		scriptCommands.removeStoredVariable(name);
-	}
-	
-	protected void setDebugLevel(int level) {
-		this.debugLevel = level;
-	}
-	
-	protected int getDebugLevel() {
-		return this.debugLevel;
 	}
 	
 	public IScriptEngine getScriptEngine() {
