@@ -92,7 +92,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		public void run() {
 			addThread(this);
 			LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-			textWaiters.add(queue);
+			synchronized(textWaiters) {
+				textWaiters.add(queue);
+			}
 
 			try {
 				while(true) {
@@ -121,7 +123,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 					}
 				}
 			} finally {
-				textWaiters.remove(queue);
+				synchronized(textWaiters) {
+					textWaiters.remove(queue);
+				}
 				removeThread(this);
 				synchronized(actions) {
 					// FIXME What to do for a runtime exception?
@@ -176,7 +180,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public boolean removeLineQueue(BlockingQueue<String> queue) {
-		return textWaiters.remove(queue);
+		synchronized(textWaiters) {
+			return textWaiters.remove(queue);
+		}
 	}
 	
 	@Override
@@ -208,7 +214,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 				}
 			}
 		} finally {
-			textWaiters.remove(matchQueue);
+			synchronized(textWaiters) {
+				textWaiters.remove(matchQueue);
+			}
 		}
 	}
 
@@ -256,10 +264,11 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 
 	@Override
 	public void waitFor(IMatch match) throws InterruptedException {
-		echo("entering waitfor: " + match.getText());
 		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
-		textWaiters.add(queue);
+		synchronized(textWaiters) {
+			textWaiters.add(queue);
+		}
 		try {
 			while(true) {
 				String text = queue.take();
@@ -268,9 +277,10 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 				}
 			}
 		} finally {
-			textWaiters.remove(queue);
+			synchronized(textWaiters) {
+				textWaiters.remove(queue);
+			}
 		}
-		echo("leaving waitfor");
 	}
 
 	@Override
