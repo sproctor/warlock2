@@ -166,7 +166,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void debug(String text) {
-		getClient().echo("[" + script.getName() + "]: " + text + "\n", WarlockStyle.DEBUG);
+		getClient().echo("[" + script.getName() + "]: " + text + "\n", WarlockStyle.debugStyle);
 	}
 	
 	@Override

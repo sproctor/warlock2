@@ -42,6 +42,7 @@ public class WarlockStyle implements IWarlockStyle {
 	public static final WarlockStyle echoStyle = new WarlockStyle(ECHO);
 	public static final WarlockStyle boldStyle = new WarlockStyle(BOLD);
 	public static final WarlockStyle commandStyle = new WarlockStyle(COMMAND);
+	public static final WarlockStyle debugStyle = new WarlockStyle(DEBUG);
 	
 	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
 	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
