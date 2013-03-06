@@ -250,7 +250,11 @@ public class WSLScriptContext implements Runnable {
 				// try all of our matches
 				for(WSLMatch match : matches) {
 					if(match.matches(text)) {
-						scriptDebug(1, "Matched text \"" + match.groups().toArray()[0] + "\"");
+						Object[] matches = match.groups().toArray();
+						if(matches.length > 0)
+							scriptDebug(2, "Matched text \"" + matches[0] + "\"");
+						else
+							scriptWarning("Match with no text?");
 						match.run();
 						return;
 					}
