@@ -119,6 +119,9 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	private StyleRange whisperStyleRange, thoughtStyleRange;
 	
 	private HashMap<String, IWarlockStyle> styles = new HashMap<String, IWarlockStyle>();
+	protected IWarlockStyle currentStyle;
+
+	private StyleRange columnStyleRange;
 	
 	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
 	static {
@@ -179,13 +182,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		this.settings = settings;
 
 		for (String styleName: presetDescriptions.keySet()) {
-			IWarlockStyle style = PresetStyleConfigurationProvider.getProvider(settings).getStyle(styleName);
-			if(style == null) {
-				style = PresetStyleConfigurationProvider.getProvider(settings).getOrCreateStyle(styleName);
-				IWarlockStyle defaultStyle = PresetStyleConfigurationProvider.getDefaultStyle(styleName);
-				style.setBackgroundColor(defaultStyle.getBackgroundColor());
-				style.setForegroundColor(defaultStyle.getForegroundColor());
-			}
+			IWarlockStyle style = PresetStyleConfigurationProvider.getProvider(settings).getOrCreateStyle(styleName);
 			styles.put(styleName, style);
 		}
 
@@ -303,9 +300,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		});
 	}
 	
-	protected IWarlockStyle currentStyle;
-
-	private StyleRange columnStyleRange;
+	
 	protected void presetSelected (IStructuredSelection selection)
 	{
 		currentStyle = (IWarlockStyle) selection.getFirstElement();

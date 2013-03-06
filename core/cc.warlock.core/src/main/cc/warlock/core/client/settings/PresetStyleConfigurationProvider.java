@@ -50,7 +50,7 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 		setDefaultStyle(WarlockStyle.LINK, "#62B0FF", null, false);
 		setDefaultStyle(WarlockStyle.SELECTED_LINK, "#000000", "#62B0FF", false);
 		setDefaultStyle(WarlockStyle.COMMAND, "#FFFFFF", "#404040", false);
-		setDefaultStyle(WarlockStyle.ECHO, "#FFFF80", "#000000", false);
+		setDefaultStyle(WarlockStyle.ECHO, "#FFFF80", null, false);
 		setDefaultStyle(WarlockStyle.DEBUG, "#FFFFFF", "#800000", false);
 	}
 	
