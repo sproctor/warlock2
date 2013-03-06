@@ -422,8 +422,7 @@ public class WSLScriptCommands {
 
 	protected class WSLCommandEcho implements IWSLCommandDefinition {
 
-		public void execute (WSLScriptContext cx, String arguments)
-		{
+		public void execute (WSLScriptContext cx, String arguments) throws InterruptedException {
 			cx.getScript().getCommands().echo(arguments);
 		}
 	}

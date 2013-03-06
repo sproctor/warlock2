@@ -80,13 +80,13 @@ public class JavascriptCommands {
 		this.script = script;
 	}
 	
-	public void echo(String text) {
+	public void echo(String text) throws InterruptedException {
 		script.checkStop();
 		
 		commands.echo(text);
 	}
 	
-	public void echo() {
+	public void echo()  throws InterruptedException {
 		script.checkStop();
 		
 		commands.echo("");
@@ -123,7 +123,7 @@ public class JavascriptCommands {
 					e.printStackTrace();
 				}
 			} else {
-				commands.echo("ERROR:  Cannot include specified file: " + otherScript);
+				commands.debug("ERROR:  Cannot include specified file: " + otherScript);
 			}
 		}
 		return false;
@@ -236,12 +236,12 @@ public class JavascriptCommands {
 
 				jsCommand.exec(script.getContext(), script.getScope());
 			} catch(EcmaError e) {
-				commands.echo(e.getMessage());
+				commands.debug(e.getMessage());
 				this.cancel();
 			} catch(StopException e) {
 				this.cancel();
 			} catch(Exception e) {
-				commands.echo(e.getMessage());
+				commands.debug(e.getMessage());
 				e.printStackTrace();
 				this.cancel();
 			} finally {

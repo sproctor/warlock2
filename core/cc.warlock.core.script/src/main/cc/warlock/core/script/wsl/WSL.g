@@ -31,7 +31,7 @@ package cc.warlock.core.script.wsl.internal;
 	}
 	@Override
 	public void reportError(RecognitionException ex) {
-		script.getCommands().echo("Line: " + ex.line + ":" + ex.charPositionInLine + ": " + ex.toString());
+		script.getCommands().debug("Line: " + ex.line + ":" + ex.charPositionInLine + ": " + ex.toString());
 		script.stop();
 	}
 }
@@ -51,7 +51,7 @@ line
 			if(label != null) {
 				int existingLine = script.labelLineNumber($label.text);
 				if(existingLine != -1)
-					script.getCommands().echo("Redefinition of label \"" + $label.text + "\" on line " + lineNum + ", originally defined on line " + existingLine);
+					script.getCommands().debug("Redefinition of label \"" + $label.text + "\" on line " + lineNum + ", originally defined on line " + existingLine);
 				script.addLabel($label.text, lineNum);
 			}
 			lineNum++;

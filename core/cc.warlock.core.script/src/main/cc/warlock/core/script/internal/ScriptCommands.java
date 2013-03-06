@@ -161,8 +161,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	}
 	
 	@Override
-	public void echo(String text) {
+	public void echo(String text) throws InterruptedException {
 		getClient().echo("[" + script.getName() + "]: " + text + "\n");
+		waitIfNotPrompting();
 	}
 	
 	@Override
@@ -252,6 +253,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void put(String text, int lineNum) throws InterruptedException {
+		waitIfNotPrompting();
 		// this is just to help keep us from sending too many lines at once
 		if(typeAhead >= 2)
 			this.waitForPrompt();
@@ -507,6 +509,10 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	@Override
 	public void waitForRoundtime() throws InterruptedException {
 		getClient().getTimer("roundtime").waitForEnd();
+		
+	}
+	
+	private void waitIfNotPrompting() throws InterruptedException {
 		// the following prevents us from getting echos/commands interleaved in our text
 		//     waits for a prompt if we aren't already at one.
 		while(!atPrompt) {

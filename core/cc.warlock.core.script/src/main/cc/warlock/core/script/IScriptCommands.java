@@ -32,7 +32,7 @@ public interface IScriptCommands extends IRoomListener {
 
 	public void put (String text, int lineNum) throws InterruptedException;
 	
-	public void echo (String text);
+	public void echo (String text) throws InterruptedException;
 	public void debug(String text);
 	
 	public void move (String direction, int lineNum) throws InterruptedException;
