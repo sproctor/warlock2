@@ -161,7 +161,7 @@ public class WSLScriptContext implements Runnable {
 	}
 	
 	public void scriptDebug (int level, String message) {
-		script.getCommands().debug(level, curCommand.getLineNumber(), message);
+		script.getCommands().debug(level, curCommand == null ? -1 : curCommand.getLineNumber(), message);
 	}
 	
 	protected void deleteLocalVariable(String name) {
