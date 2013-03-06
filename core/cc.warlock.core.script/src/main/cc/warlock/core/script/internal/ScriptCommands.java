@@ -518,6 +518,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	@Override
 	public void waitForRoundtime() throws InterruptedException {
 		getClient().getTimer("roundtime").waitForEnd();
+		// the following prevents us from getting echos/commands interleaved in our text
 		waitIfNotPrompting();
 	}
 	
