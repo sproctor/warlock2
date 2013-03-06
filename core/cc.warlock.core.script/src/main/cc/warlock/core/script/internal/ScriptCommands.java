@@ -233,7 +233,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 			int curRoom = room;
 			while (room == curRoom)
 				nextRoom.await();
-			doPromptWait();
+			//doPromptWait();
 		} finally {
 			lock.unlock();
 		}
