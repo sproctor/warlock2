@@ -70,11 +70,12 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	 */
 	private int room = 0;
 	private int prompt = 0;
+	private boolean atPrompt = true;
 	
 	private final Lock lock = new ReentrantLock();
 	private final Condition gotResume = lock.newCondition();
 	private final Condition nextRoom = lock.newCondition();
-	private final Condition atPromptCond = lock.newCondition();
+	private final Condition promptCond = lock.newCondition();
 	
 	private List<Thread> scriptThreads = Collections.synchronizedList(new ArrayList<Thread>());
 
@@ -220,6 +221,17 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 	}
 
+	private void waitIfNotPrompting() throws InterruptedException {
+		while(!atPrompt) {
+			try {
+				lock.lock();
+				promptCond.await();
+			} finally {
+				lock.unlock();
+			}
+		}
+	}
+	
 	@Override
 	public void move(String direction, int lineNum) throws InterruptedException {
 		put(direction, lineNum);
@@ -233,7 +245,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 			int curRoom = room;
 			while (room == curRoom)
 				nextRoom.await();
-			//doPromptWait();
 		} finally {
 			lock.unlock();
 		}
@@ -252,6 +263,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void put(String text, int lineNum) throws InterruptedException {
+		// this is just to help keep us from sending too many lines at once
 		if(typeAhead >= 2)
 			this.waitForPrompt();
 		synchronized(this) {
@@ -285,18 +297,14 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 
 	@Override
 	public void waitForPrompt() throws InterruptedException {
+		int oldPrompt = prompt;
 		lock.lock();
 		try {
-			doPromptWait();
+			while(oldPrompt == prompt)
+				promptCond.await();
 		} finally {
 			lock.unlock();
 		}
-	}
-	
-	private void doPromptWait() throws InterruptedException {
-		int oldPrompt = prompt;
-		while(oldPrompt == prompt)
-			atPromptCond.await();
 	}
 	
 	@Override
@@ -318,8 +326,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		}
 		lock.lock();
 		try {
+			atPrompt = true;
 			this.prompt++;
-			atPromptCond.signalAll();
+			promptCond.signalAll();
 		} finally {
 			lock.unlock();
 		}
@@ -328,16 +337,17 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void streamReceivedCommand(IStream stream, ICommand command) {
-		//atPrompt = false;
 		if(!command.fromScript())
 			receiveText(command.getCommand());
 	}
 	
 	@Override
 	public void streamReceivedText(IStream stream, WarlockString text) {
-		if(text.hasStyleNamed("debug"))
+		if(text.hasStyleNamed(WarlockStyle.DEBUG))
 			return;
 		
+		if(!text.hasStyleNamed(WarlockStyle.ECHO))
+			atPrompt = false;
 		receiveText(text.toString());
 	}
 	
@@ -367,6 +377,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void nextRoom() {
+		atPrompt = false;
 		lock.lock();
 		try {
 			room++;
@@ -507,6 +518,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	@Override
 	public void waitForRoundtime() throws InterruptedException {
 		getClient().getTimer("roundtime").waitForEnd();
+		waitIfNotPrompting();
 	}
 	
 	@Override
