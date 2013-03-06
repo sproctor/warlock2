@@ -44,7 +44,7 @@ public class WarlockWorkbenchAdvisor extends WorkbenchAdvisor {
 	public IAdaptable getDefaultPageInput() {
 		return null;
 	}
-
+	
 	@Override
 	public boolean preShutdown() {
 		timer.cancel();

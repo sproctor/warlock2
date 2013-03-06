@@ -18,8 +18,7 @@ public class WarlockWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	@Override
-	public void preWindowOpen()
-	{
+	public void postWindowCreate() {
 	    WarlockPerspectiveLayout.instance().loadBounds();
 	}
 
