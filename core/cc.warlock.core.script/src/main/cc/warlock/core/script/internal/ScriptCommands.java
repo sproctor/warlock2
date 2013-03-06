@@ -220,17 +220,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 			}
 		}
 	}
-
-	private void waitIfNotPrompting() throws InterruptedException {
-		while(!atPrompt) {
-			try {
-				lock.lock();
-				promptCond.await();
-			} finally {
-				lock.unlock();
-			}
-		}
-	}
 	
 	@Override
 	public void move(String direction, int lineNum) throws InterruptedException {
@@ -519,7 +508,15 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void waitForRoundtime() throws InterruptedException {
 		getClient().getTimer("roundtime").waitForEnd();
 		// the following prevents us from getting echos/commands interleaved in our text
-		waitIfNotPrompting();
+		//     waits for a prompt if we aren't already at one.
+		while(!atPrompt) {
+			try {
+				lock.lock();
+				promptCond.await();
+			} finally {
+				lock.unlock();
+			}
+		}
 	}
 	
 	@Override
