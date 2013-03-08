@@ -18,8 +18,9 @@ package cc.warlock.core.script.wsl.internal;
 
 @parser::members {
 	private WSLScript script;
-	private int lineNum = 0;
+	private int lineNum = 1;
 	private int actionDepth = 0;
+	private IWSLCommand lastCommand = null;
 	public void setScript(WSLScript s) { script = s; }
 	private boolean isNumber(String str) {
 		try {
@@ -49,7 +50,7 @@ line
 		{
 			script.addLine(c);
 			if(label != null) {
-				int existingLine = script.labelLineNumber($label.text);
+				int existingLine = script.labelIndex($label.text);
 				if(existingLine != -1)
 					script.getCommands().debug("Redefinition of label \"" + $label.text + "\" on line " + lineNum + ", originally defined on line " + existingLine);
 				script.addLabel($label.text, lineNum);

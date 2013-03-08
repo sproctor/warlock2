@@ -209,16 +209,15 @@ public class WSLScript extends AbstractScript {
 			}
 		});
 		scriptThread.setName("Wizard Script: " + getName());
+		getCommands().addThread(scriptThread);
 		scriptThread.start();
-		
-		//script.getCommands().addThread(Thread.currentThread());
 	}
 	
-	public void addLabel(String label, Integer line) {
-		labels.put(label.toLowerCase(), line);
+	public void addLabel(String label, int line) {
+		labels.put(label.toLowerCase(), line - 1);
 	}
 	
-	public int labelLineNumber(String label) {
+	public int labelIndex(String label) {
 		Integer line = labels.get(label.toLowerCase());
 		if(line != null)
 			return line;

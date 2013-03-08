@@ -208,7 +208,7 @@ public class WSLScriptContext implements Runnable {
 			i++;
 		}
 
-		Integer line = script.labelLineNumber(label.toLowerCase());
+		Integer line = script.labelIndex(label.toLowerCase());
 
 		if (line != null) {
 			gotoCommand(line);
@@ -283,13 +283,13 @@ public class WSLScriptContext implements Runnable {
 		if(pos >= 0)
 			label = label.substring(0, pos);
 		
-		Integer command = script.labelLineNumber(label.toLowerCase());
+		int command = script.labelIndex(label.toLowerCase());
 		
-		if (command != null) {
+		if (command >= 0) {
 			gotoCommand(command);
 		} else {
-			command = script.labelLineNumber("labelerror");
-			if (command != null) {
+			command = script.labelIndex("labelerror");
+			if (command < 0) {
 				scriptDebug(1, "Label \"" + label + "\" does not exist, going to \"labelerror\"");
 				gotoCommand(command);
 			} else {
