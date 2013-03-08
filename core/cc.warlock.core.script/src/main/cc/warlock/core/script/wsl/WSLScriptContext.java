@@ -80,7 +80,7 @@ public class WSLScriptContext implements Runnable {
 	public WSLScriptContext(WSLScript script) {
 		this.script = script;
 
-		int line = 0;
+		int line = 1;
 		nextCommand = null;
 		while(nextCommand == null) {
 			nextCommand = script.getLine(line);

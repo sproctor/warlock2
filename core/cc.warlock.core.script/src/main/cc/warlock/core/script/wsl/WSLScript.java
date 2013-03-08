@@ -230,7 +230,7 @@ public class WSLScript extends AbstractScript {
 	}
 	
 	public WSLAbstractCommand getLine(int lineNum) {
-		return lines.get(lineNum);
+		return lines.get(lineNum - 1);
 	}
 	
 	public int numLines() {
