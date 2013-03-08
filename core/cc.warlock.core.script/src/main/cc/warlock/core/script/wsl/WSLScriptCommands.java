@@ -290,7 +290,7 @@ public class WSLScriptCommands {
 				String regex = m.group(2);
 				boolean caseInsensitive = m.group(3).contains("i");
 
-				cx.addMatchRe(label, new RegexMatch(regex, caseInsensitive));
+				cx.addMatch(label, new RegexMatch(regex, caseInsensitive));
 			} else {
 				cx.scriptError("Invalid arguments to matchre");
 			}

@@ -50,8 +50,8 @@ line
 		{
 			script.addLine(c);
 			if(label != null) {
-				int existingLine = script.labelIndex($label.text);
-				if(existingLine != -1)
+				Integer existingLine = script.labelLineNumber($label.text);
+				if(existingLine != null)
 					script.getCommands().debug("Redefinition of label \"" + $label.text + "\" on line " + lineNum + ", originally defined on line " + existingLine);
 				script.addLabel($label.text, lineNum);
 			}

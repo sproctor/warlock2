@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cc.warlock.core.script.IMatch;
-import cc.warlock.core.script.internal.RegexMatch;
 import cc.warlock.core.script.wsl.internal.IWSLCommand;
 import cc.warlock.core.script.wsl.internal.IWSLCommandDefinition;
 import cc.warlock.core.script.wsl.internal.IWSLValue;
@@ -208,7 +207,7 @@ public class WSLScriptContext implements Runnable {
 			i++;
 		}
 
-		Integer line = script.labelIndex(label.toLowerCase());
+		Integer line = script.labelLineNumber(label.toLowerCase());
 
 		if (line != null) {
 			gotoCommand(line);
@@ -223,6 +222,10 @@ public class WSLScriptContext implements Runnable {
 		 * after coming out so we don't end up trashing another's queue
 		 * as we come out.
 		 */
+		if(matchQueue == null) {
+			scriptError("MatchWait without any matches");
+			return;
+		}
 		BlockingQueue<String> myQueue = matchQueue;
 		matchQueue = null;
 		
@@ -283,15 +286,15 @@ public class WSLScriptContext implements Runnable {
 		if(pos >= 0)
 			label = label.substring(0, pos);
 		
-		int command = script.labelIndex(label.toLowerCase());
+		Integer lineNum = script.labelLineNumber(label.toLowerCase());
 		
-		if (command >= 0) {
-			gotoCommand(command);
+		if (lineNum != null) {
+			gotoCommand(lineNum);
 		} else {
-			command = script.labelIndex("labelerror");
-			if (command < 0) {
+			lineNum = script.labelLineNumber("labelerror");
+			if (lineNum != null) {
 				scriptDebug(1, "Label \"" + label + "\" does not exist, going to \"labelerror\"");
-				gotoCommand(command);
+				gotoCommand(lineNum);
 			} else {
 				scriptError("Label \"" + label + "\" does not exist");
 			}
@@ -311,13 +314,6 @@ public class WSLScriptContext implements Runnable {
 		if(matchQueue == null)
 			matchQueue = script.getCommands().createLineQueue();
 		
-		matches.add(new WSLMatch(label, match));
-	}
-	
-	protected void addMatchRe(String label, RegexMatch match) {
-		if(matchQueue == null)
-			matchQueue = script.getCommands().createLineQueue();
-	
 		matches.add(new WSLMatch(label, match));
 	}
 	

@@ -213,16 +213,12 @@ public class WSLScript extends AbstractScript {
 		scriptThread.start();
 	}
 	
-	public void addLabel(String label, int line) {
-		labels.put(label.toLowerCase(), line - 1);
+	public void addLabel(String label, int lineNum) {
+		labels.put(label.toLowerCase(), lineNum);
 	}
 	
-	public int labelIndex(String label) {
-		Integer line = labels.get(label.toLowerCase());
-		if(line != null)
-			return line;
-		else
-			return -1;
+	public Integer labelLineNumber(String label) {
+		return labels.get(label.toLowerCase());
 	}
 	
 	public void addLine(WSLAbstractCommand command) {
