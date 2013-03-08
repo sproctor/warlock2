@@ -42,4 +42,8 @@ public class WSLCommand extends WSLAbstractCommand {
 		cx.execute(value.toString(cx));
 	}
 	
+	@Override
+	public String toString() {
+		return value.toString(null);
+	}
 }

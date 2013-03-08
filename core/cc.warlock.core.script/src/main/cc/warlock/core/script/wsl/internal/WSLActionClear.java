@@ -35,4 +35,8 @@ public class WSLActionClear extends WSLAbstractCommand {
 		cx.scriptDebug(2, "Actions cleared");
 	}
 
+	@Override
+	public String toString() {
+		return "action clear";
+	}
 }

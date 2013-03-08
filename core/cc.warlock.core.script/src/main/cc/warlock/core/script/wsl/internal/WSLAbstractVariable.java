@@ -35,6 +35,8 @@ abstract public class WSLAbstractVariable extends WSLAbstractString {
 	
 	@Override
 	public String toString(WSLScriptContext cx) {
+		if(cx == null)
+			return prefix + variableName.toString(cx);
 		IWSLValue value = getVariable(cx);
 		if(value == null) {
 			return prefix + variableName.toString(cx);

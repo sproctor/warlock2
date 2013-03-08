@@ -43,4 +43,9 @@ public class WSLCondition extends WSLAbstractCommand {
 		if(cond)
 			command.execute(cx);
 	}
+	
+	@Override
+	public String toString() {
+		return "if " + condition.toString(null) + " then " + command.toString();
+	}
 }

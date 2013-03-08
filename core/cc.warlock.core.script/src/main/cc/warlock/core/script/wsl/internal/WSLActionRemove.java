@@ -39,4 +39,8 @@ public class WSLActionRemove extends WSLAbstractCommand {
 		cx.scriptDebug(2, "Action removed \"" + when + "\"");
 	}
 
+	@Override
+	public String toString() {
+		return "action remove " + when.toString(null);
+	}
 }
