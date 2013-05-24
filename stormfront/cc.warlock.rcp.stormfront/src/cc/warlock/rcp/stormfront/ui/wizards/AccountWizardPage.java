@@ -30,6 +30,7 @@ package cc.warlock.rcp.stormfront.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -50,9 +51,9 @@ import cc.warlock.core.network.ILineConnectionListener;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.WarlockPreferencesScope;
+import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
-import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.stormfront.adapters.SWTSGEConnectionListenerAdapter;
 import cc.warlock.rcp.stormfront.ui.util.LoginUtil;
 import cc.warlock.rcp.ui.ComboField;
@@ -173,7 +174,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 //		}
 	}
 	
-	private class Listener extends SGEConnectionListener
+	private class Listener implements ISGEConnectionListener
 	{
 		private IProgressMonitor monitor;
 		public void setProgressMonitor(IProgressMonitor monitor)
@@ -207,6 +208,20 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 				monitor.worked(1);
 				monitor.done();
 			}
+		}
+
+		@Override
+		public void charactersReady(SGEConnection connection,
+				Map<String, String> characters) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void readyToPlay(SGEConnection connection,
+				Map<String, String> loginProperties) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	

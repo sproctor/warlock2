@@ -28,6 +28,7 @@
 package cc.warlock.rcp.stormfront.ui.wizards;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,8 +55,9 @@ import cc.warlock.core.client.IProfile;
 import cc.warlock.core.client.internal.Profile;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.ProfileSetting;
+import cc.warlock.core.stormfront.network.ISGEConnectionListener;
+import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
-import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.stormfront.adapters.SWTSGEConnectionListenerAdapter;
 import cc.warlock.rcp.stormfront.ui.util.LoginUtil;
 import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
@@ -185,7 +187,7 @@ public class CharacterSelectWizardPage extends WizardPage {
 		return complete;
 	}
 
-	public class Listener extends SGEConnectionListener {
+	public class Listener implements ISGEConnectionListener {
 		private IProgressMonitor monitor;
 
 		public void setProgressMonitor(IProgressMonitor monitor) {
@@ -241,6 +243,31 @@ public class CharacterSelectWizardPage extends WizardPage {
 
 			StormFrontGameView gameView = LoginUtil.connectAndOpenGameView(loginProperties, getSelectedCharacterName());
 			gameView.setProfile(profile);
+		}
+
+		@Override
+		public void loginReady(SGEConnection connection) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void loginFinished(SGEConnection connection) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void gamesReady(SGEConnection connection,
+				List<? extends ISGEGame> games) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void sgeError(SGEConnection connection, int errorCode) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

@@ -22,6 +22,8 @@
 package cc.warlock.rcp.stormfront.ui.prefs;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceColors;
@@ -37,8 +39,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import cc.warlock.core.stormfront.network.ISGEConnectionListener;
+import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
-import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.stormfront.ui.util.LoginUtil;
 import cc.warlock.rcp.ui.TextField;
 
@@ -135,7 +138,7 @@ public class AccountEditDialog extends Dialog {
 			getButton(OK).setEnabled(false);
 	}
 	
-	protected static class AccountVerifier extends SGEConnectionListener
+	protected static class AccountVerifier implements ISGEConnectionListener
 	{
 		protected String username, password;
 		protected boolean verified, verifying;
@@ -202,6 +205,27 @@ public class AccountEditDialog extends Dialog {
 
 		public int getErrorCode() {
 			return errorCode;
+		}
+
+		@Override
+		public void gamesReady(SGEConnection connection,
+				List<? extends ISGEGame> games) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void charactersReady(SGEConnection connection,
+				Map<String, String> characters) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void readyToPlay(SGEConnection connection,
+				Map<String, String> loginProperties) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	

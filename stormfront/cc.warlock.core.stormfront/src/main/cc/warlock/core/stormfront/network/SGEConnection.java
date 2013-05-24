@@ -84,6 +84,10 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	protected HashMap<String, String> characters, loginProperties;
 	protected ArrayList<SGEGame> games;
 	
+	protected ListIterator<SGEGame> gameIterator;
+	protected SGEGame currentGame;
+	protected boolean retrievingGames = false;
+	
 	public SGEConnection ()
 	{
 		super();
@@ -238,10 +242,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 			}
 		}
 	}
-	
-	protected ListIterator<SGEGame> gameIterator;
-	protected SGEGame currentGame;
-	protected boolean retrievingGames = false;
+
 
 	public void dataReady(IConnection connection, String data) {
 		// TODO Auto-generated method stub
@@ -431,22 +432,25 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	public void disconnected(IConnection connection) {
 	}
 	
-	private static class AutoLoginListener extends SGEConnectionListener
+	private static class AutoLoginListener implements ISGEConnectionListener
 	{
 		public ProfileSetting profile;
 		public boolean loggedIn = false;
 		public Map <String,String> properties = null;
 		
+		@Override
 		public void loginReady(SGEConnection connection) {
 			Account account = AccountProvider.getInstance().getAccountByProfile(profile);
 			connection.login(account.getAccountName(), account.getPassword());
 		}
 		
+		@Override
 		public void gamesReady(SGEConnection connection,
 				List<? extends ISGEGame> games) {
 			connection.selectGame(profile.getGameCode());
 		}
 		
+		@Override
 		public void charactersReady(SGEConnection connection,
 				Map<String, String> characters) {
 			connection.selectCharacter(profile.getCharacterId());
@@ -457,6 +461,18 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 				Map<String, String> loginProperties) {
 			this.properties = loginProperties;
 			this.loggedIn = true;
+		}
+
+		@Override
+		public void loginFinished(SGEConnection connection) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void sgeError(SGEConnection connection, int errorCode) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	

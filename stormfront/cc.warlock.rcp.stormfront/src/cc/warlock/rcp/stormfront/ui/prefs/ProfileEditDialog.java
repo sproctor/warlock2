@@ -40,9 +40,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.ProfileSetting;
+import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
-import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.ui.ComboField;
 
 public class ProfileEditDialog extends Dialog {
@@ -144,7 +144,7 @@ public class ProfileEditDialog extends Dialog {
 		}
 	}
 	
-	protected static class ProfileRetriever extends SGEConnectionListener
+	protected static class ProfileRetriever implements ISGEConnectionListener
 	{
 		protected Account account;
 		protected boolean loggedIn, gettingCharacters;
@@ -227,6 +227,19 @@ public class ProfileEditDialog extends Dialog {
 			}
 			
 			return characters;
+		}
+
+		@Override
+		public void loginFinished(SGEConnection connection) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void readyToPlay(SGEConnection connection,
+				Map<String, String> loginProperties) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	

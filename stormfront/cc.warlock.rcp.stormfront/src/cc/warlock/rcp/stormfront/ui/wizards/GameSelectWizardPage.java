@@ -49,9 +49,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
+import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
-import cc.warlock.core.stormfront.network.SGEConnectionListener;
 import cc.warlock.rcp.stormfront.adapters.SWTSGEConnectionListenerAdapter;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.ui.WarlockSharedImages;
@@ -179,7 +179,7 @@ public class GameSelectWizardPage extends WizardPageWithNotification {
 		}
 	}
 	
-	private class Listener extends SGEConnectionListener {
+	private class Listener implements ISGEConnectionListener {
 		private IProgressMonitor monitor;
 		
 		public void setProgressMonitor (IProgressMonitor monitor)
@@ -200,6 +200,31 @@ public class GameSelectWizardPage extends WizardPageWithNotification {
 				monitor.worked(1);
 				monitor.done();
 			}
+		}
+
+		@Override
+		public void loginReady(SGEConnection connection) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void loginFinished(SGEConnection connection) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void readyToPlay(SGEConnection connection,
+				Map<String, String> loginProperties) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void sgeError(SGEConnection connection, int errorCode) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

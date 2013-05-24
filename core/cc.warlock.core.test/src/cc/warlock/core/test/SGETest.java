@@ -23,14 +23,16 @@ package cc.warlock.core.test;
 
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.ProfileSetting;
+import cc.warlock.core.stormfront.network.ISGEConnectionListener;
+import cc.warlock.core.stormfront.network.ISGEGame;
 import cc.warlock.core.stormfront.network.SGEConnection;
-import cc.warlock.core.stormfront.network.SGEConnectionListener;
 
 public class SGETest {
 	protected Hashtable<String,Boolean> success = new Hashtable<String,Boolean>();
@@ -48,9 +50,42 @@ public class SGETest {
 			Assert.assertNotNull("Profile described by \"" + profileName + "\" was null!", profile);
 			
 			success.put(profileName, false);
-			TestUtil.autoLogin(profile, new SGEConnectionListener(){
+			TestUtil.autoLogin(profile, new ISGEConnectionListener(){
+				@Override
 				public void readyToPlay(SGEConnection connection, java.util.Map<String,String> loginProperties) {
 					success.put(profileName, true);
+				}
+
+				@Override
+				public void loginReady(SGEConnection connection) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void loginFinished(SGEConnection connection) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void gamesReady(SGEConnection connection,
+						List<? extends ISGEGame> games) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void charactersReady(SGEConnection connection,
+						Map<String, String> characters) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void sgeError(SGEConnection connection, int errorCode) {
+					// TODO Auto-generated method stub
+					
 				};
 			});
 			
