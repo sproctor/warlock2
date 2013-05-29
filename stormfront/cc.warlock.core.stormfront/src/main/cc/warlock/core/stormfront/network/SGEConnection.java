@@ -37,8 +37,6 @@ import cc.warlock.core.network.LineConnection;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.ProfileSetting;
-import cc.warlock.core.stormfront.network.ISGEGame.AccountStatus;
-import cc.warlock.core.stormfront.network.ISGEGame.GameURL;
 
 /**
  * @author Marshall
@@ -79,14 +77,14 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	protected int state, errorCode;
 	protected String passwordHash;
 	protected ArrayList<ISGEConnectionListener> sgeListeners;
-	protected boolean retrieveGameInfo = false;
+	private boolean retrieveGameInfo = true;
 	
 	protected HashMap<String, String> characters, loginProperties;
 	protected ArrayList<SGEGame> games;
 	
 	protected ListIterator<SGEGame> gameIterator;
 	protected SGEGame currentGame;
-	protected boolean retrievingGames = false;
+	//protected boolean retrievingGames = false;
 	
 	public SGEConnection ()
 	{
@@ -212,20 +210,25 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 		public AccountStatus accountStatus;
 		public int interval;
 		public String gameCode, gameName;
+		private boolean usable = true;
 		public HashMap<GameURL, String> gameURLs = new HashMap<GameURL, String>();
 		
 		public AccountStatus getAccountStatus() {
 			return accountStatus;
 		}
+		
 		public int getAccountStatusInterval() {
 			return interval;
 		}
+		
 		public String getGameCode() {
 			return gameCode;
 		}
+		
 		public String getGameName() {
 			return gameName;
 		}
+		
 		public String getGameURL(GameURL url) {
 			if (!gameURLs.containsKey(url)) {
 				return null;
@@ -241,6 +244,14 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 				return gameUrl;
 			}
 		}
+		
+		public void setUsable(boolean u) {
+			usable = u;
+		}
+		
+		public boolean isUsable() {
+			return usable;
+		}
 	}
 
 
@@ -252,7 +263,7 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	public void lineReady(IConnection connection, String line) {
 		try {
 			
-			//System.out.println("SGE: " + line);
+			System.out.println("SGE: " + line);
 			
 			if (state == SGE_INITIAL)
 			{
@@ -309,12 +320,12 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 					
 					if (retrieveGameInfo)
 					{
-						retrievingGames = true;
+						//retrievingGames = true;
 						gameIterator = games.listIterator();
 						if (gameIterator.hasNext())
 						{
 							currentGame = gameIterator.next();
-							sendLine("G\t" + currentGame.gameCode);
+							sendLine("N\t" + currentGame.gameCode);
 						}
 					} else {
 						fireEvent(GAMES_READY);
@@ -322,10 +333,23 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 					
 				} break;
 				
+				// Server is responding with game details
+				case 'N':
+					// require production and storm
+					if(!line.contains("PRODUCTION") || !line.contains("STORM"))
+						currentGame.setUsable(false);
+					if (gameIterator.hasNext()) {
+						currentGame = gameIterator.next();
+						sendLine("N\t" + currentGame.gameCode);
+					} else {
+						fireEvent(GAMES_READY);
+					}
+					break;
+					
 				/* Server is responding with Game Details */
 				case 'G':
 				{
-					if (retrievingGames)
+					/*if (retrievingGames)
 					{
 						String tokens[] = line.split("\t");
 						if ("NORMAL".equals(tokens[2])) {
@@ -356,20 +380,20 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 									currentGame.gameURLs.put(url, keyval[1]);
 								}
 							}
-						}
+						}*/
 						
-						if (gameIterator.hasNext())
+						/*if (gameIterator.hasNext())
 						{
-							currentGame = (SGEGame) gameIterator.next();
+							currentGame = gameIterator.next();
 							sendLine("G\t" + currentGame.gameCode);
 						}
 						else {
-							retrievingGames = false;
+							//retrievingGames = false;
 							fireEvent(GAMES_READY);
 						}
-					} else {
+					} else {*/
 						sendLine("C");
-					}
+					//}
 				} break;
 				
 				/* Server is giving us a list of characters in that game */
@@ -512,5 +536,11 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 	public void dataSent(IConnection connection, String data) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void sendLine(String line) throws IOException {
+		System.out.println("SGE out: " + line);
+		super.sendLine(line);
 	}
 }

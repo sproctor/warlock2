@@ -63,4 +63,6 @@ public interface ISGEGame {
 	public int getAccountStatusInterval();
 
 	public String getGameURL(GameURL url);
+
+	public boolean isUsable();
 }

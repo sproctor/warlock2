@@ -42,6 +42,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -114,18 +116,19 @@ public class GameSelectWizardPage extends WizardPageWithNotification {
 				getContainer().showPage(nextPage);
 			}
 		});
-//		gamesViewer.addFilter(new ViewerFilter() {
-//			public boolean select(Viewer viewer, Object parentElement, Object element) {
-//				ISGEGame game = (ISGEGame) element;
-//				
-//				if (game.getAccountStatus() == ISGEGame.AccountStatus.Normal
-//					|| game.getAccountStatus() == ISGEGame.AccountStatus.Trial)
-//				{
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
+		gamesViewer.addFilter(new ViewerFilter() {
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				ISGEGame game = (ISGEGame) element;
+				
+				return game.isUsable();
+				/*if (game.getAccountStatus() == ISGEGame.AccountStatus.Normal
+					|| game.getAccountStatus() == ISGEGame.AccountStatus.Trial)
+				{
+					return true;
+				}
+				return false;*/
+			}
+		});
 		
 		setControl(controls);
 	}
