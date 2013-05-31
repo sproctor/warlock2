@@ -71,7 +71,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 				ProfileConnectAction.this.monitor = monitor;
 
 				SGEConnection connection = new SGEConnection();
-				//connection.setRetrieveGameInfo(false);
+				connection.setRetrieveGameInfo(false);
 				connection.addConnectionListener(new SWTConnectionListenerAdapter(ProfileConnectAction.this));
 				connection.addSGEConnectionListener(new SWTSGEConnectionListenerAdapter(ProfileConnectAction.this));
 				monitor.beginTask("Logging into profile \"" + profile.getName() + "\"...", 5);

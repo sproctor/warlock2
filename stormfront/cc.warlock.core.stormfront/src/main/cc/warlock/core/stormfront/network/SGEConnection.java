@@ -258,7 +258,7 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 	public void dataReady(IConnection connection, String line) {
 		try {
 			
-			System.out.println("SGE: " + line);
+			//System.out.println("SGE: " + line);
 			
 			if (state == SGE_INITIAL)
 			{
@@ -344,52 +344,41 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 				/* Server is responding with Game Details */
 				case 'G':
 				{
-					/*if (retrievingGames)
+					/* TODO: We should check this, it could be useful.
+					String tokens[] = line.split("\t");
+					if ("NORMAL".equals(tokens[2])) {
+						currentGame.accountStatus = AccountStatus.Normal;
+					} else if ("TRIAL".equals(tokens[2])) {
+						currentGame.accountStatus = AccountStatus.Trial;
+					} else if ("EXPIRED".equals(tokens[2])) {
+						currentGame.accountStatus = AccountStatus.Expired;
+					} else {
+						currentGame.accountStatus = AccountStatus.Unknown;
+					}
+
+					int startIndex = 3;
+					if (currentGame.accountStatus != AccountStatus.Unknown)
 					{
-						String tokens[] = line.split("\t");
-						if ("NORMAL".equals(tokens[2])) {
-							currentGame.accountStatus = AccountStatus.Normal;
-						} else if ("TRIAL".equals(tokens[2])) {
-							currentGame.accountStatus = AccountStatus.Trial;
-						} else if ("EXPIRED".equals(tokens[2])) {
-							currentGame.accountStatus = AccountStatus.Expired;
-						} else {
-							currentGame.accountStatus = AccountStatus.Unknown;
-						}
-						
-						int startIndex = 3;
-						if (currentGame.accountStatus != AccountStatus.Unknown)
+						startIndex = 4;
+						currentGame.interval = Integer.parseInt(tokens[3]);
+					}
+
+					for (int i = startIndex; i < tokens.length; i++)
+					{
+						if (tokens[i].indexOf("=") != -1)
 						{
-							startIndex = 4;
-							currentGame.interval = Integer.parseInt(tokens[3]);
-						}
-						
-						for (int i = startIndex; i < tokens.length; i++)
-						{
-							if (tokens[i].indexOf("=") != -1)
-							{
-								String keyval[] = tokens[i].split("=");
-								
-								GameURL url = GameURL.getURL(keyval[0]);
-								if (url != null) {
-									currentGame.gameURLs.put(url, keyval[1]);
-								}
+							String keyval[] = tokens[i].split("=");
+
+							GameURL url = GameURL.getURL(keyval[0]);
+							if (url != null) {
+								currentGame.gameURLs.put(url, keyval[1]);
 							}
-						}*/
-						
-						/*if (gameIterator.hasNext())
-						{
-							currentGame = gameIterator.next();
-							sendLine("G\t" + currentGame.gameCode);
 						}
-						else {
-							//retrievingGames = false;
-							fireEvent(GAMES_READY);
-						}
-					} else {*/
-						sendLine("C");
-					//}
-				} break;
+					}*/
+
+					sendLine("C");
+				}
+				break;
 				
 				/* Server is giving us a list of characters in that game */
 				case 'C':
@@ -437,13 +426,24 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 	{
 		for (ISGEConnectionListener listener : sgeListeners) {
 			switch (event) {
-			case LOGIN_READY: listener.loginReady(SGEConnection.this); break;
-			case LOGIN_FINISHED: listener.loginFinished(SGEConnection.this); break;
-			case GAMES_READY: listener.gamesReady(SGEConnection.this, games); break;
-			case CHARACTERS_READY: listener.charactersReady(SGEConnection.this, characters); break;
-			case READY_TO_PLAY: listener.readyToPlay(SGEConnection.this, loginProperties); break;
-			case SGE_ERROR: listener.sgeError(SGEConnection.this, errorCode); break;
-			default: break;
+			case LOGIN_READY:
+				listener.loginReady(SGEConnection.this);
+				break;
+			case LOGIN_FINISHED:
+				listener.loginFinished(SGEConnection.this);
+				break;
+			case GAMES_READY:
+				listener.gamesReady(SGEConnection.this, games);
+				break;
+			case CHARACTERS_READY:
+				listener.charactersReady(SGEConnection.this, characters);
+				break;
+			case READY_TO_PLAY:
+				listener.readyToPlay(SGEConnection.this, loginProperties);
+				break;
+			case SGE_ERROR:
+				listener.sgeError(SGEConnection.this, errorCode);
+				break;
 			}
 		}	
 	}
@@ -533,9 +533,9 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 		
 	}
 	
-	@Override
+	/*@Override
 	public void sendLine(String line) throws IOException {
 		System.out.println("SGE out: " + line);
 		super.sendLine(line);
-	}
+	}*/
 }
