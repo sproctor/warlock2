@@ -56,15 +56,12 @@ public class LineConnection extends Connection {
 		@Override
 		protected void readData(Reader reader) throws IOException {
 			String line = bufferedReader.readLine();
-			listenersGotLine(line);
-		}
-		
-		private void listenersGotLine (String line)
-		{
+			
+			if(line == null)
+				return;
+			
 			for (IConnectionListener listener : connectionListeners) {
-				if (listener instanceof ILineConnectionListener) {
-					((ILineConnectionListener)listener).lineReady(LineConnection.this, line);
-				}
+					listener.dataReady(LineConnection.this, line);
 			}
 		}
 	}

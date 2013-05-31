@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
 import cc.warlock.core.client.IProfile;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
-import cc.warlock.core.network.ILineConnectionListener;
+import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.stormfront.network.ISGEConnectionListener;
@@ -47,7 +47,7 @@ import cc.warlock.rcp.stormfront.ui.util.LoginUtil;
 import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
 import cc.warlock.rcp.ui.network.SWTConnectionListenerAdapter;
 
-public class ProfileConnectAction extends Action implements ISGEConnectionListener, ILineConnectionListener {
+public class ProfileConnectAction extends Action implements ISGEConnectionListener, IConnectionListener {
 	private IProfile profile;
 	private IProgressMonitor monitor;
 	private boolean finished;
@@ -177,10 +177,6 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 
 	@Override
 	public void dataReady(IConnection connection, String data) {
-	}
-
-	@Override
-	public void lineReady(IConnection connection, String line) {
 	}
 
 	@Override

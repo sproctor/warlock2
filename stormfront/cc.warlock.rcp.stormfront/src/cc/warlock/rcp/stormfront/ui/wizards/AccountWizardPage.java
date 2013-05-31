@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
 
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
-import cc.warlock.core.network.ILineConnectionListener;
+import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.WarlockPreferencesScope;
@@ -68,7 +68,7 @@ import cc.warlock.rcp.wizards.WizardPageWithNotification;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class AccountWizardPage extends WizardPageWithNotification implements ILineConnectionListener {
+public class AccountWizardPage extends WizardPageWithNotification implements IConnectionListener {
 
 	private SGEConnection connection;
 	private ComboField account;
@@ -91,6 +91,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 		connection.addSGEConnectionListener(new SWTSGEConnectionListenerAdapter(listener));
 	}
 	
+	@Override
 	public void createControl(Composite parent) {
 	
 		Composite controls = new Composite(parent, SWT.NONE);
@@ -177,11 +178,13 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 	private class Listener implements ISGEConnectionListener
 	{
 		private IProgressMonitor monitor;
+		
 		public void setProgressMonitor(IProgressMonitor monitor)
 		{
 			this.monitor = monitor;
 		}
 		
+		@Override
 		public void loginReady(SGEConnection connection) {
 			if (monitor != null) {
 				monitor.worked(1);
@@ -190,6 +193,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 			connection.login(account.getText(), password.getText());
 		}
 		
+		@Override
 		public void loginFinished(SGEConnection connection) {
 			if (monitor != null)
 			{
@@ -197,11 +201,13 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 			}
 		}
 		
+		@Override
 		public void sgeError(SGEConnection connection, int errorCode) {
 			LoginUtil.showAuthenticationError(errorCode);
 			getContainer().showPage(AccountWizardPage.this);
 		}
 		
+		@Override
 		public void gamesReady(SGEConnection connection, List<? extends ISGEGame> games) {
 			if (monitor != null)
 			{
@@ -236,16 +242,20 @@ public class AccountWizardPage extends WizardPageWithNotification implements ILi
 		return savedAccount;
 	}
 	
-	
+	@Override
 	public void connectionError(IConnection connection, ErrorType errorType) {
 		getWizard().getContainer().showPage(this);
 		LoginUtil.showConnectionError(errorType);	
 	}
 	
+	@Override
 	public void connected(IConnection connection) {}
+	
+	@Override
 	public void disconnected(IConnection connection) {}
+	
+	@Override
 	public void dataReady(IConnection connection, String data) {}
-	public void lineReady(IConnection connection, String line) {}
 
 	@Override
 	public void dataSent(IConnection connection, String data) {

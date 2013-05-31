@@ -32,7 +32,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import cc.warlock.core.network.IConnection;
-import cc.warlock.core.network.ILineConnectionListener;
+import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.core.network.LineConnection;
 import cc.warlock.core.settings.Account;
 import cc.warlock.core.settings.AccountProvider;
@@ -41,7 +41,7 @@ import cc.warlock.core.settings.ProfileSetting;
 /**
  * @author Marshall
  */
-public class SGEConnection extends LineConnection implements ILineConnectionListener {
+public class SGEConnection extends LineConnection implements IConnectionListener {
 
 	public static final String SGE_SERVER = "eaccess.play.net";
 	public static final int SGE_PORT = 7900;
@@ -253,14 +253,9 @@ public class SGEConnection extends LineConnection implements ILineConnectionList
 			return usable;
 		}
 	}
-
-
-	public void dataReady(IConnection connection, String data) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void lineReady(IConnection connection, String line) {
+	@Override
+	public void dataReady(IConnection connection, String line) {
 		try {
 			
 			System.out.println("SGE: " + line);
