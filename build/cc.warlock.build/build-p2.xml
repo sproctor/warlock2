@@ -31,15 +31,6 @@
   			<include name="**/*.jar"/>
   		</fileset>
   	</foreach>
-  	
-    <target name="repackjar">
-  	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
-        <arg line="-debug -consolelog" />
-        <arg line="-application org.eclipse.update.core.siteOptimizer" />
-        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${buildDirectory}/plugins" />
-        <arg line="${file}" />
-      </java>
-    </target>
 
     <!-- 2. Part -->
     <echo>2. Generate .jar.pack.gz files from a set of conditioned JAR files. Also generate digest.zip</echo>
@@ -66,4 +57,13 @@
   	    <arg line="-vmargs -Xmx256M" />
   	</java>
   </target>
+	
+    <target name="repackjar">
+  	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
+        <arg line="-debug -consolelog" />
+        <arg line="-application org.eclipse.update.core.siteOptimizer" />
+        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${buildDirectory}/plugins" />
+        <arg line="${file}" />
+      </java>
+    </target>
 </project>
