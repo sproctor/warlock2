@@ -20,7 +20,7 @@
     <pathconvert property="LAUNCHER">
       <fileset dir="${eclipseDir}/plugins" includes="org.eclipse.equinox.launcher_*.jar" />
     </pathconvert>
-    <echo>LAUNCHER = '${LAUNCHER}' - when LAUNCHER is empty, create new property 'LAUNCHER'</echo>
+    <echo>LAUNCHER = '${LAUNCHER}'</echo>
 
     <!-- Step 4 and 5 -->
 
@@ -30,6 +30,7 @@
   		<fileset dir="${buildDirectory}/plugins">
   			<include name="**/*.jar"/>
   		</fileset>
+  		<param name="launcher" value="${LAUNCHER}"/>
   	</foreach>
 
     <!-- 2. Part -->
@@ -59,7 +60,7 @@
   </target>
 	
     <target name="repackjar">
-  	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
+  	  <java jar="${launcher}" fork="true" failonerror="true">
         <arg line="-debug -consolelog" />
         <arg line="-application org.eclipse.update.core.siteOptimizer" />
         <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${buildDirectory}/plugins" />
