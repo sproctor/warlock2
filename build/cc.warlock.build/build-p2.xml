@@ -9,6 +9,7 @@
     </classpath>
   </taskdef>
 	
+	<property name="updateDir" value="${buildDirectory}/warlock2-updates/site"/>
   <!-- =====================================================================
        UPDATE SITE OPTIMIZATION
        http://wiki.eclipse.org/Update_Site_Optimization
@@ -27,7 +28,7 @@
     <!-- 1. Part -->
     <echo>1. For each JAR file in question, "condition" or "repack" the JAR file to prepare it for the second part.</echo>
   	<foreach target="repackjar" param="file">
-  		<fileset dir="${buildDirectory}/plugins">
+  		<fileset dir="${updateDir}/plugins">
   			<include name="**/*.jar"/>
   		</fileset>
   		<param name="launcher" value="${LAUNCHER}"/>
@@ -39,18 +40,18 @@
       <arg line="-debug -consolelog" />
       <arg line="-application org.eclipse.update.core.siteOptimizer" />
       <arg line="-digestBuilder" />
-      <arg line="-digestOutputDir=${buildDirectory}" />
-      <arg line="-siteXML=${buildDirectory}/site.xml" />
-      <arg line="-jarProcessor -verbose -pack -outputDir ${buildDirectory} ${buildDirectory}" />
+      <arg line="-digestOutputDir=${updateDir}" />
+      <arg line="-siteXML=${updateDir}/site.xml" />
+      <arg line="-jarProcessor -verbose -pack -outputDir ${updateDir} ${updateDir}" />
     </java>
   	
   	<java jar="${LAUNCHER}" fork="true" failonerror="true">
   		<arg line="-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator" />
-  		<arg line="-updateSite ${buildDirectory}/" />
-  		<arg line="-site file:${buildDirectory}/site.xml" />
-  		<arg line="-metadataRepository file:${buildDirectory}/" />
+  		<arg line="-updateSite ${updateDir}/" />
+  		<arg line="-site file:${updateDir}/site.xml" />
+  		<arg line="-metadataRepository file:${updateDir}/" />
   	    <arg line="-metadataRepositoryName &quot;Warlock 2 Update Site@quot;" />
-  	    <arg line="-artifactRepository file:${buildDirectory}/" />
+  	    <arg line="-artifactRepository file:${updateDir}/" />
   	    <arg line="-artifactRepositoryName @quot;Warlock 2 Artifacts@quot;" />
   	    <arg line="-compress" />
   	    <arg line="-reusePack200Files" />
@@ -63,7 +64,7 @@
   	  <java jar="${launcher}" fork="true" failonerror="true">
         <arg line="-debug -consolelog" />
         <arg line="-application org.eclipse.update.core.siteOptimizer" />
-        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${buildDirectory}/plugins" />
+        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${updateDir}/plugins" />
         <arg line="${file}" />
       </java>
     </target>
