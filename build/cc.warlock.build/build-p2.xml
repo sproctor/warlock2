@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Warlock 2 Update Site" default="optimize" basedir=".">
+	<property file="warlock-build.properties"/>
   <description>Prepare Warlock2 p2 Update Site</description>
 	
   <taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -14,8 +15,6 @@
        http://plosquare.blogspot.com/2009/05/migrating-eclipse-update-sites-to-p2.html
        ===================================================================== -->
   <target name="optimize" description="Site Optimizer">
-    <!-- CUSTOM -->
-    <property name="jar.name" value="org.ucdetector_1.10.0.jar" />
 
     <!-- LAUNCHER -->
     <pathconvert property="LAUNCHER">
