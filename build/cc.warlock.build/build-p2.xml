@@ -26,12 +26,13 @@
 
     <!-- 1. Part -->
     <echo>1. For each JAR file in question, "condition" or "repack" the JAR file to prepare it for the second part.</echo>
-  	<foreach target="repack" param="file">
+  	<foreach target="repackjar" param="file">
   		<fileset dir="${buildDirectory}/plugins">
   			<include name="**/*.jar"/>
   		</fileset>
   	</foreach>
-    <target name="repack">
+  	
+    <target name="repackjar">
   	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
         <arg line="-debug -consolelog" />
         <arg line="-application org.eclipse.update.core.siteOptimizer" />
