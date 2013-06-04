@@ -26,11 +26,10 @@
 
     <!-- 1. Part -->
     <echo>1. For each JAR file in question, "condition" or "repack" the JAR file to prepare it for the second part.</echo>
-  	<foreach>
+  	<foreach target="repack">
   		<fileset dir="${basedir}/plugins">
   			<include name="**/*.jar"/>
   		</fileset>
-  		<antcall target="repack"/>
   	</foreach>
     <target name="repack">
   	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
