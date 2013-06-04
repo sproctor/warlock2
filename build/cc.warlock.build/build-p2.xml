@@ -46,17 +46,16 @@
     </java>
   	
   	<java jar="${LAUNCHER}" fork="true" failonerror="true">
-  		<arg line="-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator" />
-  		<arg line="-updateSite ${updateDir}/" />
-  		<arg line="-site file:${updateDir}/site.xml" />
+  		<arg line="-application org.eclipse.equinox.p2.publisher.UpdateSitePublisher" />
+  		<arg line="-source ${updateDir}/" />
   		<arg line="-metadataRepository file:${updateDir}/" />
-  	    <arg line="-metadataRepositoryName &quot;Warlock 2 Update Site&quot;" />
   	    <arg line="-artifactRepository file:${updateDir}/" />
-  	    <arg line="-artifactRepositoryName &quot;Warlock 2 Artifacts&quot;" />
   	    <arg line="-compress" />
-  	    <arg line="-reusePack200Files" />
+  	    <arg line="-publishArtifacts" />
+  		<arg line="-configs ANY" />
+  	    <!--<arg line="-reusePack200Files" />
   	    <arg line="-noDefaultIUs" />
-  	    <arg line="-vmargs -Xmx256M" />
+  	    <arg line="-vmargs -Xmx256M" />-->
   	</java>
   </target>
 	
