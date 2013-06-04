@@ -2,7 +2,13 @@
 <project name="Warlock 2 Update Site" default="optimize" basedir=".">
   <description>Prepare Warlock2 p2 Update Site</description>
 	
-	<!-- =====================================================================
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+	  <pathelement location="lib/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>
+	
+  <!-- =====================================================================
        UPDATE SITE OPTIMIZATION
        http://wiki.eclipse.org/Update_Site_Optimization
        http://plosquare.blogspot.com/2009/05/migrating-eclipse-update-sites-to-p2.html
@@ -21,12 +27,20 @@
 
     <!-- 1. Part -->
     <echo>1. For each JAR file in question, "condition" or "repack" the JAR file to prepare it for the second part.</echo>
-    <java jar="${LAUNCHER}" fork="true" failonerror="true">
-      <arg line="-debug -consolelog" />
-      <arg line="-application org.eclipse.update.core.siteOptimizer" />
-      <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${basedir}/plugins" />
-      <arg line="${basedir}/plugins/${jar.name}" />
-    </java>
+  	<foreach>
+  		<fileset dir="${basedir}/plugins">
+  			<include name="**/*.jar"/>
+  		</fileset>
+  		<antcall target="repack"/>
+  	</foreach>
+    <target name="repack">
+  	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
+        <arg line="-debug -consolelog" />
+        <arg line="-application org.eclipse.update.core.siteOptimizer" />
+        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${basedir}/plugins" />
+        <arg line="${foreach.file}" />
+      </java>
+    </target>
 
     <!-- 2. Part -->
     <echo>2. Generate .jar.pack.gz files from a set of conditioned JAR files. Also generate digest.zip</echo>
@@ -38,5 +52,19 @@
       <arg line="-siteXML=${basedir}/site.xml" />
       <arg line="-jarProcessor -verbose -pack -outputDir ${basedir} ${basedir}" />
     </java>
+  	
+  	<java jar="${LAUNCHER}" fork="true" failonerror="true">
+  		<arg line="-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator" />
+  		<arg line="-updateSite ${basedir}/" />
+  		<arg line="-site file:${basedir}/site.xml" />
+  		<arg line="-metadataRepository file:${basedir}/" />
+  	    <arg line="-metadataRepositoryName &quot;Warlock 2 Update Site@quot;" />
+  	    <arg line="-artifactRepository file:${basedir}/" />
+  	    <arg line="-artifactRepositoryName @quot;Warlock 2 Artifacts@quot;" />
+  	    <arg line="-compress" />
+  	    <arg line="-reusePack200Files" />
+  	    <arg line="-noDefaultIUs" />
+  	    <arg line="-vmargs -Xmx256M" />
+  	</java>
   </target>
 </project>
