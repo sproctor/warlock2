@@ -29,7 +29,7 @@
     <echo>1. For each JAR file in question, "condition" or "repack" the JAR file to prepare it for the second part.</echo>
   	<foreach target="repackjar" param="file">
   		<fileset dir="${updateDir}/plugins">
-  			<include name="**/*.jar"/>
+  			<include name="**/cc.warlock.*.jar"/>
   		</fileset>
   		<param name="launcher" value="${LAUNCHER}"/>
   	</foreach>
@@ -50,9 +50,9 @@
   		<arg line="-updateSite ${updateDir}/" />
   		<arg line="-site file:${updateDir}/site.xml" />
   		<arg line="-metadataRepository file:${updateDir}/" />
-  	    <arg line="-metadataRepositoryName &quot;Warlock 2 Update Site@quot;" />
+  	    <arg line="-metadataRepositoryName &quot;Warlock 2 Update Site&quot;" />
   	    <arg line="-artifactRepository file:${updateDir}/" />
-  	    <arg line="-artifactRepositoryName @quot;Warlock 2 Artifacts@quot;" />
+  	    <arg line="-artifactRepositoryName &quot;Warlock 2 Artifacts&quot;" />
   	    <arg line="-compress" />
   	    <arg line="-reusePack200Files" />
   	    <arg line="-noDefaultIUs" />
