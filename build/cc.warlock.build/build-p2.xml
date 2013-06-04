@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Warlock 2 Update Site" default="optimize" basedir=".">
+<project name="Warlock 2 Update Site" default="optimize">
 	<property file="warlock-build.properties"/>
   <description>Prepare Warlock2 p2 Update Site</description>
 	
@@ -27,7 +27,7 @@
     <!-- 1. Part -->
     <echo>1. For each JAR file in question, "condition" or "repack" the JAR file to prepare it for the second part.</echo>
   	<foreach target="repack" param="file">
-  		<fileset dir="${basedir}/plugins">
+  		<fileset dir="${buildDirectory}/plugins">
   			<include name="**/*.jar"/>
   		</fileset>
   	</foreach>
@@ -35,7 +35,7 @@
   	  <java jar="${LAUNCHER}" fork="true" failonerror="true">
         <arg line="-debug -consolelog" />
         <arg line="-application org.eclipse.update.core.siteOptimizer" />
-        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${basedir}/plugins" />
+        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${buildDirectory}/plugins" />
         <arg line="${file}" />
       </java>
     </target>
@@ -46,18 +46,18 @@
       <arg line="-debug -consolelog" />
       <arg line="-application org.eclipse.update.core.siteOptimizer" />
       <arg line="-digestBuilder" />
-      <arg line="-digestOutputDir=${basedir}" />
-      <arg line="-siteXML=${basedir}/site.xml" />
-      <arg line="-jarProcessor -verbose -pack -outputDir ${basedir} ${basedir}" />
+      <arg line="-digestOutputDir=${buildDirectory}" />
+      <arg line="-siteXML=${buildDirectory}/site.xml" />
+      <arg line="-jarProcessor -verbose -pack -outputDir ${buildDirectory} ${buildDirectory}" />
     </java>
   	
   	<java jar="${LAUNCHER}" fork="true" failonerror="true">
   		<arg line="-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator" />
-  		<arg line="-updateSite ${basedir}/" />
-  		<arg line="-site file:${basedir}/site.xml" />
-  		<arg line="-metadataRepository file:${basedir}/" />
+  		<arg line="-updateSite ${buildDirectory}/" />
+  		<arg line="-site file:${buildDirectory}/site.xml" />
+  		<arg line="-metadataRepository file:${buildDirectory}/" />
   	    <arg line="-metadataRepositoryName &quot;Warlock 2 Update Site@quot;" />
-  	    <arg line="-artifactRepository file:${basedir}/" />
+  	    <arg line="-artifactRepository file:${buildDirectory}/" />
   	    <arg line="-artifactRepositoryName @quot;Warlock 2 Artifacts@quot;" />
   	    <arg line="-compress" />
   	    <arg line="-reusePack200Files" />
