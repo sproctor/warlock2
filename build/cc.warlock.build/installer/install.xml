@@ -11,7 +11,7 @@
 			<author name="Will Robertson" email="kassah@warlock.cc"/>
 		</authors>
 		<url>http://warlock.cc/</url>
-		<javaversion>1.5</javaversion>
+		<javaversion>1.6</javaversion>
 		<summarylogfilepath>
 			$INSTALL_PATH/InstallSummary.html
 		</summarylogfilepath>
