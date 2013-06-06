@@ -45,6 +45,7 @@
       <arg line="-jarProcessor -verbose -pack -outputDir ${updateDir} ${updateDir}" />
     </java>
   	
+  	<echo>3. Generate content.jar and artifactrs.jar</echo>
   	<java jar="${LAUNCHER}" fork="true" failonerror="true">
   		<arg line="-application org.eclipse.equinox.p2.publisher.UpdateSitePublisher" />
   		<arg line="-source ${updateDir}/" />
