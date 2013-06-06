@@ -23,6 +23,8 @@ package cc.warlock.rcp.application;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -30,11 +32,14 @@ import java.util.Properties;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.Update;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -51,6 +56,18 @@ public class WarlockUpdates {
 	
 	protected static Properties updateProperties;
 	
+	static {
+		updateProperties = new Properties();
+		try {
+			InputStream stream = FileLocator.openStream(Warlock2Plugin.getDefault().getBundle(), new Path("warlock-updates.properties"), false);
+			updateProperties.load(stream);
+			stream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static List<Update> promptUpgrade (List<Update> updates) {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		WarlockUpdateDialog dialog = new WarlockUpdateDialog(shell, updates);
@@ -64,26 +81,8 @@ public class WarlockUpdates {
 		return Collections.emptyList();
 	}
 	
-	protected static Properties getUpdateProperties () {
-		if (updateProperties == null)
-		{
-			updateProperties = new Properties();
-			try {
-				InputStream stream = FileLocator.openStream(Warlock2Plugin.getDefault().getBundle(), new Path("warlock-updates.properties"), false);
-				updateProperties.load(stream);
-				stream.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return updateProperties;
-	}
-	
 	public static boolean autoUpdate () {
 		boolean autoUpdate = false;
-		Properties updateProperties = getUpdateProperties();
 		
 		if (updateProperties.containsKey(AUTO_UPDATE)) {
 			autoUpdate = Boolean.parseBoolean(updateProperties.getProperty(AUTO_UPDATE));
@@ -91,7 +90,9 @@ public class WarlockUpdates {
 		return autoUpdate;
 	}
 	
-	public static void checkForUpdates (final IProgressMonitor monitor) {
+	public static void checkForUpdates (final Shell parent) {
+		
+		String repository_loc = updateProperties.getProperty(UPDATE_SITE);
 		
 		BundleContext context = FrameworkUtil.getBundle(WarlockUpdates.class).getBundleContext();
 		ServiceReference<?> reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
@@ -100,12 +101,40 @@ public class WarlockUpdates {
 		IProvisioningAgent agent = (IProvisioningAgent) context.getService(reference);
 		ProvisioningSession session = new ProvisioningSession(agent);
 		UpdateOperation operation = new UpdateOperation(session);
+		
+		// Create uri
+        URI uri = null;
+        try {
+          uri = new URI(repository_loc);
+        } catch (URISyntaxException e) {
+              System.out.println( "URI invalid: " + e.getMessage());
+        }
+        
+        operation.getProvisioningContext().setArtifactRepositories(new URI[] { uri });
+        operation.getProvisioningContext().setMetadataRepositories(new URI[] { uri });
+        
 		//Update[] updates = operation.getPossibleUpdates();
-		IStatus result = operation.resolveModal(monitor);
-		if(result.isOK()) {
-			operation.getProvisioningJob(monitor).schedule();
+		IProgressMonitor monitor = new NullProgressMonitor();
+		IStatus status = operation.resolveModal(monitor);
+		
+		// Failed to find updates (inform user and exit)
+        if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
+        	MessageDialog.openWarning(parent, "No update",
+        			"No updates for the current installation have been found");
+          return /*Status.CANCEL_STATUS*/;
+        }
+        
+        // found updates, ask user if to install?
+		if(status.isOK() && status.getSeverity() != IStatus.ERROR) {
+			ProvisioningJob job = operation.getProvisioningJob(monitor);
+			if(job == null) {
+				MessageDialog.openInformation(parent, "Resultion", operation.getResolutionDetails()
+						+ "\nLikely cause is from running inside Eclipse.");
+			} else {
+				job.schedule();
+			}
 		} else {
-			// TODO Notify that we couldn't update
+			MessageDialog.openError(parent, "Error updating", operation.getResolutionDetails());
 		}
 		context.ungetService(reference);
 	}

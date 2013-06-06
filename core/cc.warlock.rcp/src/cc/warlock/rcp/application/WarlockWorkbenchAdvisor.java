@@ -3,7 +3,7 @@ package cc.warlock.rcp.application;
 import java.util.Timer;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -33,7 +33,7 @@ public class WarlockWorkbenchAdvisor extends WorkbenchAdvisor {
 			Thread updateTask = new Thread() {
 				public void run ()
 				{
-					WarlockUpdates.checkForUpdates(new NullProgressMonitor());
+					WarlockUpdates.checkForUpdates(Display.getCurrent().getActiveShell());
 				}
 			};
 			updateTask.start();
