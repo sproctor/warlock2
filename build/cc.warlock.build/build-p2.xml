@@ -61,10 +61,11 @@
   </target>
 	
     <target name="repackjar">
+    	<echo>Repacking ${file}</echo>
   	  <java jar="${launcher}" fork="true" failonerror="true">
         <arg line="-debug -consolelog" />
         <arg line="-application org.eclipse.update.core.siteOptimizer" />
-        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${updateDir}/plugins" />
+        <arg line="-jarProcessor -verbose -processAll -repack -outputDir ${updateDir}" />
         <arg line="${file}" />
       </java>
     </target>
