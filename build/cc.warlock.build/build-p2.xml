@@ -34,7 +34,7 @@
   	</foreach>
 
     <!-- Step 5 -->
-    <echo>2. Also generate digest.zip</echo>
+    <echo>2. Generate .jar.pack.gz files from a set of conditioned JAR files. Also generate digest.zip</echo>
     <java jar="${LAUNCHER}" fork="true" failonerror="true">
       <arg line="-debug -consolelog" />
       <arg line="-application org.eclipse.update.core.siteOptimizer" />
