@@ -143,7 +143,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		createProfileDropDown(parent);
 		
 		Composite main = new Composite (parent, SWT.NONE);
-		main.setLayout(new GridLayout(3, false));
+		main.setLayout(new GridLayout(2, false));
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		mainBGSelector = colorSelectorWithLabel(main, "Default background color:");
@@ -159,7 +159,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		Group previewGroup = new Group(main, SWT.NONE);
 		previewGroup.setText("Preview");
 		GridData data = new GridData();
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 2;
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalAlignment = SWT.FILL;
 		data.verticalAlignment = SWT.FILL;
@@ -274,7 +274,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		Group presetsGroup = new Group(main, SWT.NONE);
 		presetsGroup.setLayout(new GridLayout(6, false));
 		GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 2;
 		presetsGroup.setLayoutData(data);
 		presetsGroup.setText("Presets");
 		
@@ -313,9 +313,9 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	{
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(text);
-		GridData data = new GridData();
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
+		//GridData data = new GridData();
+		//data.horizontalSpan = 2;
+		//label.setLayoutData(data);
 		
 		ColorSelector selector = new ColorSelector(parent);
 		selector.addListener(new IPropertyChangeListener () {
@@ -331,9 +331,9 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	{
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(text);
-		GridData data = new GridData();
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
+		//GridData data = new GridData();
+		//data.horizontalSpan = 2;
+		//label.setLayoutData(data);
 		
 		FontSelector selector = new FontSelector(parent);
 		selector.addListener(new IPropertyChangeListener () {
