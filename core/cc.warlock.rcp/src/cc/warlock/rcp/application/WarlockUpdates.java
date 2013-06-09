@@ -128,7 +128,7 @@ public class WarlockUpdates {
 		if(status.isOK() && status.getSeverity() != IStatus.ERROR) {
 			ProvisioningJob job = operation.getProvisioningJob(monitor);
 			if(job == null) {
-				MessageDialog.openInformation(parent, "Resultion", operation.getResolutionDetails()
+				MessageDialog.openInformation(parent, "Resolution", operation.getResolutionDetails()
 						+ "\nLikely cause is from running inside Eclipse.");
 			} else {
 				job.schedule();
