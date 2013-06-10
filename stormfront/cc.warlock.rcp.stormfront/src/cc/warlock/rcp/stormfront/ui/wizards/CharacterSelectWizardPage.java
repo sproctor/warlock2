@@ -48,7 +48,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import cc.warlock.core.client.IProfile;
@@ -92,7 +91,6 @@ public class CharacterSelectWizardPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		// TODO Auto-generated method stub
 		Composite controls = new Composite(parent, SWT.NONE);
 		FillLayout layout = new FillLayout();
 		controls.setLayout(layout);
@@ -127,6 +125,7 @@ public class CharacterSelectWizardPage extends WizardPage {
 
 	private class CharacterContentProvider implements IStructuredContentProvider {
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof Map<?, ?>) {
 				Map<?, ?> characterMap = (Map<?, ?>) inputElement;
@@ -135,14 +134,12 @@ public class CharacterSelectWizardPage extends WizardPage {
 			return null;
 		}
 
+		@Override
 		public void dispose() {
-			// TODO Auto-generated method stub
-
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -223,10 +220,9 @@ public class CharacterSelectWizardPage extends WizardPage {
 				}
 
 				if (profile == null) {
-					Shell shell = getShell();
-					boolean response = MessageDialog.openQuestion(shell, "Save Profile?",
-							"Would you like to save the character \"" + getSelectedCharacterName()
-									+ "\" as a new profile?");
+					boolean response = MessageDialog.openQuestion(getShell(),
+							"Save Profile?", "Would you like to save the character \""
+									+ getSelectedCharacterName() + "\" as a new profile?");
 
 					if (response) {
 						profile = account.getProfileProvider().createProfile(getSelectedCharacterCode(),
