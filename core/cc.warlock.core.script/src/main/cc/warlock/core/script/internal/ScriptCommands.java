@@ -337,8 +337,11 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		if(text.hasStyleNamed(WarlockStyle.DEBUG))
 			return;
 		
-		if(!text.hasStyleNamed(WarlockStyle.ECHO))
+		if(!text.hasStyleNamed(WarlockStyle.ECHO)) {
+			lock.lock();
 			atPrompt = false;
+			lock.unlock();
+		}
 		receiveText(text.toString());
 	}
 	
@@ -368,8 +371,8 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void nextRoom() {
-		atPrompt = false;
 		lock.lock();
+		atPrompt = false;
 		try {
 			room++;
 			nextRoom.signalAll();
@@ -518,7 +521,8 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		while(!atPrompt) {
 			try {
 				lock.lock();
-				promptCond.await();
+				if(!atPrompt)
+					promptCond.await();
 			} finally {
 				lock.unlock();
 			}
