@@ -21,43 +21,39 @@
  */
 package cc.warlock.rcp.ui;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ST;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.Bundle;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockFont;
-import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
-import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
@@ -68,8 +64,6 @@ import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
-import cc.warlock.rcp.util.RCPUtil;
-import cc.warlock.rcp.util.SoundPlayer;
 
 /**
  * This is an extension of the StyledText widget which has special support for
@@ -94,7 +88,7 @@ public class WarlockText {
 	}
 	
 	private IWarlockClient client;
-	private StyledText textWidget;
+	private Browser textWidget;
 	private Cursor handCursor, defaultCursor;
 	private int lineLimit = 5000;
 	private int doScrollDirection = SWT.DOWN;
@@ -120,87 +114,42 @@ public class WarlockText {
 	public WarlockText(Composite parent, IWarlockClientViewer viewer, String streamName) {
 		this.streamName = streamName;
 		
-		textWidget = new StyledText(parent, SWT.V_SCROLL);
+		textWidget = new Browser(parent, SWT.NONE);
 
 		textWidget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-		textWidget.setEditable(false);
-		textWidget.setWordWrap(true);
-		textWidget.setIndent(1);
-		textWidget.setCaret(null);
 
 		Display display = parent.getDisplay();
 		handCursor = new Cursor(display, SWT.CURSOR_HAND);
 		defaultCursor = parent.getCursor();
 
-		RCPUtil.addTextContextMenu(textWidget, viewer, streamName);
-
-		textWidget.addMouseMoveListener(new MouseMoveListener() {
-			public void mouseMove(MouseEvent e) {
-				try {
-					if (!textWidget.isDisposed() && textWidget.isVisible())
-					{
-						Point point = new Point(e.x, e.y);
-						int offset = textWidget.getOffsetAtLocation(point);
-						StyleRange range = textWidget.getStyleRangeAtOffset(offset);
-						if (range != null && range instanceof StyleRangeWithData) {
-							StyleRangeWithData range2 = (StyleRangeWithData) range;
-							if (range2.action != null) {
-								textWidget.setCursor(handCursor);
-								return;
-							}
-
-						}
-						textWidget.setCursor(defaultCursor);
-					}
-				} catch (IllegalArgumentException ex) {
-					// swallow -- this happens if the mouse cursor moves to an
-					// area not covered by the imaginary rectangle surround the
-					// current text
-					textWidget.setCursor(defaultCursor);
-				}
-			}
-		});
-
-		textWidget.addMouseListener(new MouseListener () {
-			public void mouseDoubleClick(MouseEvent e) {}
-			public void mouseDown(MouseEvent e) {}
-			public void mouseUp(MouseEvent e) {
-				try {
-					Point point = new Point(e.x, e.y);
-					int offset = textWidget.getOffsetAtLocation(point);
-					StyleRange range = textWidget.getStyleRangeAtOffset(offset);
-					if (range != null && range instanceof StyleRangeWithData)
-					{
-						StyleRangeWithData range2 = (StyleRangeWithData) range;
-						if (range2.action != null)
-						{
-							range2.action.run();
-						}
-					}
-				} catch (IllegalArgumentException ex) {
-					// swallow -- see note above
-				}
-			}
-		});
+		try {
+			Bundle bundle = Platform.getBundle("cc.warlock.rcp");
+			URL url = FileLocator.find(bundle, new Path("text.html"), null);
+			String urlString = FileLocator.resolve(url).toExternalForm();
+			textWidget.setUrl(urlString);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		//RCPUtil.addTextContextMenu(textWidget, viewer, streamName);
 	}
 	
 	public void selectAll() {
-		textWidget.selectAll();
+		//textWidget.selectAll();
 	}
 	
 	public void copy() {
-		textWidget.copy();
+		//textWidget.copy();
 	}
 	
 	public void pageUp() {
 		if (isAtBottom()) {
-			textWidget.setCaretOffset(textWidget.getCharCount());
+			//textWidget.setCaretOffset(textWidget.getCharCount());
 		}
-		textWidget.invokeAction(ST.PAGE_UP);
+		//textWidget.invokeAction(ST.PAGE_UP);
 	}
 	
 	public void pageDown() {
-		textWidget.invokeAction(ST.PAGE_DOWN);
+		//textWidget.invokeAction(ST.PAGE_DOWN);
 	}
 	
 	public void clearText() {
@@ -215,7 +164,7 @@ public class WarlockText {
 	public void appendRaw(String string) {
 		boolean atBottom = isAtBottom();
 		
-		textWidget.append(string);
+		textWidget.execute("append(\"<br/>\" + " + string + "\")");
 
 		if(atBottom)
 			scrollToEnd();
@@ -223,7 +172,7 @@ public class WarlockText {
 	
 	private Pattern newlinePattern = Pattern.compile("\r?\n");
 	private void removeEmptyLines(int offset) {
-		int line = textWidget.getLineAtOffset(offset);
+		/*int line = textWidget.getLineAtOffset(offset);
 		int start = textWidget.getOffsetAtLine(line);
 		int end = textWidget.getCharCount();
 		if(start >= end)
@@ -253,7 +202,7 @@ public class WarlockText {
 			} else {
 				lineStart = m.end();
 			}
-		}
+		}*/
 	}
 	
 	private void restoreNewlines(int offset, Collection<WarlockStringMarker> markerList) {
@@ -274,11 +223,11 @@ public class WarlockText {
 				continue;
 			
 			// check if we're an empty line
-			if(marker.getStart() == 0 || textWidget.getTextRange(marker.getStart() - 1, 1).equals("\n"))
-				continue;
+			//if(marker.getStart() == 0 || textWidget.getTextRange(marker.getStart() - 1, 1).equals("\n"))
+				//continue;
 			
 			// we're not an empty line, put us back into action
-			textWidget.replaceTextRange(marker.getStart(), 0, "\n");
+			//textWidget.replaceTextRange(marker.getStart(), 0, "\n");
 			// TODO: this should actually just affect markers after us... oh well.
 			WarlockStringMarker.updateMarkers(1, marker, markers);
 			iter.remove();
@@ -371,7 +320,7 @@ public class WarlockText {
 	}
 	
 	private void showStyles(Collection<StyleRange> styles, int start, int end) {
-
+/*
 		try {
 			Collection<StyleRange> finalList = mergeStyleRangeLists(styles, getHighlights(start, end));
 			
@@ -380,10 +329,10 @@ public class WarlockText {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
-	private Collection<StyleRange> getHighlights(int start, int end) {
+	/*private Collection<StyleRange> getHighlights(int start, int end) {
 		ArrayList<StyleRange> highlightList = new ArrayList<StyleRange>();
 		if(client == null)
 			return highlightList;
@@ -439,7 +388,7 @@ public class WarlockText {
 		}
 		
 		return highlightList;
-	}
+	}*/
 	
 	private void getMarkerStyles(WarlockStringMarker marker,
 			StyleRange baseStyle, Collection<StyleRange> resultStyles) {
@@ -467,22 +416,9 @@ public class WarlockText {
 	}
 	
 	public void append(WarlockString wstring) {
-		boolean atBottom = isAtBottom();
+		String script = "append(\"" + StringEscapeUtils.escapeHtml(wstring.toString()).replaceAll("(\r\n|\n)", "<br/>") + "\");";
 		
-		int offset = textWidget.getCharCount();
-		textWidget.append(wstring.toString());
-		/* Break up the ranges and merge overlapping styles because SWT only
-		 * allows 1 style per section
-		 */
-		LinkedList<StyleRange> finishedStyles = new LinkedList<StyleRange>();
-		for(WarlockStringMarker strMarker : wstring.getStyles()) {
-			WarlockStringMarker marker = strMarker.copy(offset);
-			addComponentMarker(marker, marker);
-			getMarkerStyles(marker, new StyleRangeWithData(), finishedStyles);
-		}
-		showStyles(finishedStyles, offset, textWidget.getCharCount());
-
-		postTextChange(atBottom, offset);
+		textWidget.execute(script);
 	}
 	
 	private void addComponentMarker(WarlockStringMarker marker, WarlockStringMarker topLevel) {
@@ -541,8 +477,8 @@ public class WarlockText {
 		styleRange.start = start;
 		styleRange.length = length;
 		
-		if(fullLine)
-			textWidget.setLineBackground(textWidget.getLineAtOffset(styleRange.start), 1, styleRange.background);
+		//if(fullLine)
+			//textWidget.setLineBackground(textWidget.getLineAtOffset(styleRange.start), 1, styleRange.background);
 		if(style.getAction() != null)
 			styleRange.action = style.getAction();
 		if(style.getName() != null)
@@ -592,7 +528,8 @@ public class WarlockText {
 	}
 	
 	public boolean isAtBottom() {
-		return textWidget.getLinePixel(textWidget.getLineCount()) <= textWidget.getClientArea().height;
+		return true;
+		//return textWidget.getLinePixel(textWidget.getLineCount()) <= textWidget.getClientArea().height;
 	}
 	
 	private void postTextChange(boolean atBottom, int offset) {
@@ -609,9 +546,10 @@ public class WarlockText {
 	}
 	
 	public void scrollToEnd() {
-		if(doScrollDirection == SWT.DOWN)
+		/*if(doScrollDirection == SWT.DOWN)
 			textWidget.setTopPixel(textWidget.getTopPixel()
 					+ textWidget.getLinePixel(textWidget.getLineCount()));
+					*/
 	}
 	
 	// this function removes the first "delta" amount of characters
@@ -699,7 +637,7 @@ public class WarlockText {
 		int start = marker.getStart();
 		int length = marker.getEnd() - start;
 		boolean atBottom = isAtBottom();
-		textWidget.replaceTextRange(start, length, text.toString());
+		//textWidget.replaceTextRange(start, length, text.toString());
 		marker.clear();
 		int newLength = text.length();
 		marker.setEnd(start + newLength);
@@ -739,7 +677,7 @@ public class WarlockText {
 	private void constrainLineLimit(boolean atBottom) {
 		// 'status' is a pointer that allows us to change the object in our parent..
 		// in this method... it is intentional.
-		if (lineLimit > 0) {
+		/*if (lineLimit > 0) {
 			int lines = textWidget.getLineCount();
 			if (lines > lineLimit) {
 				int linesToRemove = lines - lineLimit;
@@ -755,7 +693,7 @@ public class WarlockText {
 						textWidget.setTopPixel(-pixelsToRemove);
 				}
 			}
-		}
+		}*/
 	}
 	
 	public void setScrollDirection(int dir) {
@@ -768,7 +706,7 @@ public class WarlockText {
 		this.ignoreEmptyLines = ignoreLines;
 	}
 	
-	public StyledText getTextWidget() {
+	public Browser getTextWidget() {
 		return textWidget;
 	}
 	

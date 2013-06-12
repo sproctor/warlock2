@@ -139,7 +139,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 			if (game == null || game.getEntry() == null) {
 				System.out.println("Couldn't find a gameview for this client! This view won't be setup to send keys over.");
 			} else {
-				this.getTextWidget().addVerifyKeyListener(game.getEntry().getVerifyKeyListener());
+				//this.getTextWidget().addVerifyKeyListener(game.getEntry().getVerifyKeyListener());
 			}
 			
 			client.addStreamListener(this.getName(), streamListener);

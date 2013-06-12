@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Window</title>
+  <script src="jquery-2.0.2.min.js"></script>
+  <script>
+    function append(str) {
+        var element = document.getElementById('text');
+        element.innerHTML += str;
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+  </script>
+</head>
+<body>
+  <div id="text"></div>
+  <script>window.onload = function () { $("#text").text("initial text"); }</script>
+</body>
+</html>
