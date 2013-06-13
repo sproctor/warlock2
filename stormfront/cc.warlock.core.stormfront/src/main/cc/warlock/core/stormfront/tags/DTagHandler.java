@@ -21,8 +21,6 @@
  */
 package cc.warlock.core.stormfront.tags;
 
-import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
@@ -32,21 +30,6 @@ public class DTagHandler extends DefaultTagHandler {
 	WarlockStyle style;
 	String command;
 	boolean gotCommand = false;
-	
-	private class CommandRunner implements Runnable {
-		private IWarlockClient client;
-		private String command;
-		
-		CommandRunner(IWarlockClient client, String command) {
-			this.client = client;
-			this.command = command;
-		}
-		
-		public void run() {
-			client.send(new Command(command, true));
-		}
-
-	}
 	
 	public DTagHandler(IStormFrontProtocolHandler handler) {
 		super(handler);
@@ -68,7 +51,7 @@ public class DTagHandler extends DefaultTagHandler {
 		style = new WarlockStyle();
 		style.setUnderline(true);
 		if(cmd != null) {
-			style.setAction(new CommandRunner(handler.getClient(), cmd));
+			style.setCommand(cmd);
 			gotCommand = true;
 		} else {
 			gotCommand = false;
@@ -91,7 +74,7 @@ public class DTagHandler extends DefaultTagHandler {
 	public void handleEnd(String rawXML) {
 		if(style != null) {
 			if(command != null) {
-				style.setAction(new CommandRunner(handler.getClient(), command));
+				style.setCommand(command);
 			}
 			handler.removeStyle(style);
 			style = null;

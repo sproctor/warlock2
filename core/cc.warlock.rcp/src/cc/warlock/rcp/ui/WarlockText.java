@@ -33,8 +33,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.StatusTextEvent;
+import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
@@ -117,6 +120,15 @@ public class WarlockText {
 		textWidget = new Browser(parent, SWT.NONE);
 
 		textWidget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		textWidget.addStatusTextListener(new StatusTextListener() {
+
+			@Override
+			public void changed(StatusTextEvent event) {
+				if(event.text.startsWith("command"))
+					MessageDialog.openInformation(textWidget.getShell(), "status message", event.text);
+			}
+			
+		});
 
 		Display display = parent.getDisplay();
 		handCursor = new Cursor(display, SWT.CURSOR_HAND);
@@ -162,12 +174,8 @@ public class WarlockText {
 	}
 	
 	public void appendRaw(String string) {
-		boolean atBottom = isAtBottom();
 		
 		textWidget.execute("append(\"<br/>\" + " + string + "\")");
-
-		if(atBottom)
-			scrollToEnd();
 	}
 	
 	private Pattern newlinePattern = Pattern.compile("\r?\n");
@@ -416,7 +424,29 @@ public class WarlockText {
 	}
 	
 	public void append(WarlockString wstring) {
-		String script = "append(\"" + StringEscapeUtils.escapeHtml(wstring.toString()).replaceAll("(\r\n|\n)", "<br/>") + "\");";
+		// FIXME this needs to be moved, it fucks up the offsets
+		String text = StringEscapeUtils.escapeHtml(wstring.toString());
+		
+		int offset = 0;
+		for(WarlockStringMarker marker: wstring.getStyles()) {
+			
+			String action = marker.getStyle().getCommand();
+			if(action != null) {
+				String openTag = "<a href='#' onclick='window.status=\\\\'command:"+action+"\\\\''>";
+				String closeTag = "</a>";
+				int origLength = text.length();
+				
+				text = text.substring(0, marker.getStart() + offset)
+						+ openTag
+						+ text.substring(marker.getStart() + offset, marker.getEnd() + offset)
+						+ closeTag
+						+ text.substring(marker.getEnd() + offset);
+				offset += text.length() - origLength;
+				System.out.println("text: " + text);
+				
+			}
+		}
+		String script = "append(\"" + text.replaceAll("(\r\n|\n)", "<br/>") + "\");";
 		
 		textWidget.execute(script);
 	}
@@ -479,8 +509,8 @@ public class WarlockText {
 		
 		//if(fullLine)
 			//textWidget.setLineBackground(textWidget.getLineAtOffset(styleRange.start), 1, styleRange.background);
-		if(style.getAction() != null)
-			styleRange.action = style.getAction();
+		//if(style.getCommand() != null)
+			//styleRange.action = style.getCommand();
 		if(style.getName() != null)
 			styleRange.data.put("name", style.getName());
 		

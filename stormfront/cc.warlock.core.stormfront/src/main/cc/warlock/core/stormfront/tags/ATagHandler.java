@@ -24,36 +24,12 @@ package cc.warlock.core.stormfront.tags;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class ATagHandler extends DefaultTagHandler {
 
 	WarlockStyle style;
 	boolean requestedList = false;
-	
-	private class CommandRunner implements Runnable {
-		private IStormFrontClient client;
-		private String coord;
-		private String noun;
-		
-		CommandRunner(IStormFrontClient client, String coord, String noun) {
-			this.client = client;
-			this.coord = coord;
-			this.noun = noun;
-		}
-		
-		public void run() {
-			String command = client.getCommand(coord);
-			if(command != null) {
-				if(noun != null) {
-					command = command.replaceAll("@", noun);
-				}
-				client.send(new Command(command, true));
-			}
-		}
-
-	}
 	
 	public ATagHandler(IStormFrontProtocolHandler handler) {
 		super(handler);
@@ -76,7 +52,14 @@ public class ATagHandler extends DefaultTagHandler {
 		style.setUnderline(true);
 		if(coord != null) {
 			String noun = attributes.getValue("noun");
-			style.setAction(new CommandRunner(handler.getClient(), coord, noun));
+			String command = handler.getClient().getCommand(coord);
+			if(command != null) {
+				if(noun != null) {
+					command = command.replaceAll("@", noun);
+				}
+				style.setCommand(command);
+			}
+			
 			if(!requestedList) {
 				handler.getClient().send(new Command("_menu update 1", true));
 				requestedList = true;

@@ -88,7 +88,8 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 		this.notifyListenersChanged();
 	}
 
-	public Runnable getAction() {
+	@Override
+	public String getCommand() {
 		return null;
 	}
 
@@ -104,7 +105,8 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 		return "";
 	}
 
-	public void setAction(Runnable action) {
+	@Override
+	public void setCommand(String action) {
 		// FIXME: this should probably throw an exception
 	}
 

@@ -29,8 +29,6 @@ package cc.warlock.core.client;
  */
 public interface IWarlockStyle {
 
-	public Runnable getAction();
-	
 	public WarlockColor getForegroundColor();
 	public WarlockColor getBackgroundColor();
 	// public WarlockFont getFont();
@@ -43,8 +41,9 @@ public interface IWarlockStyle {
 	public String getName();
 	public String getComponentName();
 	public String getSound();
+	public String getCommand();
 
-	public void setAction(Runnable action);
+	public void setCommand(String action);
 	public void setForegroundColor(WarlockColor color);
 	public void setBackgroundColor(WarlockColor color);
 	public void setFullLine(boolean fullLine);

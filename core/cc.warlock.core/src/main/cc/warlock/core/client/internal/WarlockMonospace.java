@@ -18,7 +18,7 @@ public class WarlockMonospace implements IWarlockStyle {
 	}
 
 	@Override
-	public Runnable getAction() {
+	public String getCommand() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -79,7 +79,7 @@ public class WarlockMonospace implements IWarlockStyle {
 	}
 
 	@Override
-	public void setAction(Runnable action) {
+	public void setCommand(String action) {
 		
 	}
 
