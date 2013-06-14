@@ -40,7 +40,6 @@ import org.eclipse.swt.browser.StatusTextEvent;
 import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -92,9 +91,6 @@ public class WarlockText {
 	
 	private IWarlockClient client;
 	private Browser textWidget;
-	private Cursor handCursor, defaultCursor;
-	private int lineLimit = 5000;
-	private int doScrollDirection = SWT.DOWN;
 	private boolean ignoreEmptyLines = true;
 	private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
@@ -124,15 +120,11 @@ public class WarlockText {
 
 			@Override
 			public void changed(StatusTextEvent event) {
-				if(event.text.startsWith("command"))
+				if(event.text.contains("command"))
 					MessageDialog.openInformation(textWidget.getShell(), "status message", event.text);
 			}
 			
 		});
-
-		Display display = parent.getDisplay();
-		handCursor = new Cursor(display, SWT.CURSOR_HAND);
-		defaultCursor = parent.getCursor();
 
 		try {
 			Bundle bundle = Platform.getBundle("cc.warlock.rcp");
@@ -170,7 +162,7 @@ public class WarlockText {
 	}
 	
 	public void setLineLimit(int limit) {
-		lineLimit = limit;
+		//lineLimit = limit;
 	}
 	
 	public void appendRaw(String string) {
@@ -327,19 +319,6 @@ public class WarlockText {
 		return resultList;
 	}
 	
-	private void showStyles(Collection<StyleRange> styles, int start, int end) {
-/*
-		try {
-			Collection<StyleRange> finalList = mergeStyleRangeLists(styles, getHighlights(start, end));
-			
-			for(StyleRange style : finalList) {
-				textWidget.setStyleRange(style);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}*/
-	}
-	
 	/*private Collection<StyleRange> getHighlights(int start, int end) {
 		ArrayList<StyleRange> highlightList = new ArrayList<StyleRange>();
 		if(client == null)
@@ -423,29 +402,31 @@ public class WarlockText {
 		}
 	}
 	
-	public void append(WarlockString wstring) {
-		// FIXME this needs to be moved, it fucks up the offsets
-		String text = StringEscapeUtils.escapeHtml(wstring.toString());
-		
+	public String markupString(WarlockString wstring) {
 		int offset = 0;
+		String text = "";
 		for(WarlockStringMarker marker: wstring.getStyles()) {
-			
-			String action = marker.getStyle().getCommand();
-			if(action != null) {
-				String openTag = "<a href='#' onclick='window.status=\\\\'command:"+action+"\\\\''>";
-				String closeTag = "</a>";
-				int origLength = text.length();
-				
-				text = text.substring(0, marker.getStart() + offset)
-						+ openTag
-						+ text.substring(marker.getStart() + offset, marker.getEnd() + offset)
-						+ closeTag
-						+ text.substring(marker.getEnd() + offset);
-				offset += text.length() - origLength;
-				System.out.println("text: " + text);
-				
+			String openTag = "";
+			String closeTag = "";
+			String command = marker.getStyle().getCommand();
+			if(command != null) {
+				openTag = "<a href=\\\"javascript:\\\" onclick=\\\"window.status='command:"+command+"'\\\">";
+				closeTag = "</a>";
 			}
+			
+			String before = StringEscapeUtils.escapeHtml(wstring.toString().substring(offset, marker.getStart()));
+			offset = marker.getEnd();
+			
+			// This trashes the marker
+			String substring = markupString(wstring.getMarkerContents(marker));
+			
+			text += before + openTag + substring + closeTag;
 		}
+		return text + StringEscapeUtils.escapeHtml(wstring.toString().substring(offset));
+	}
+	
+	public void append(WarlockString wstring) {
+		String text = markupString(wstring);
 		String script = "append(\"" + text.replaceAll("(\r\n|\n)", "<br/>") + "\");";
 		
 		textWidget.execute(script);
@@ -685,7 +666,7 @@ public class WarlockText {
 		markerWithStyle.setStyle(baseStyle);
 		LinkedList<StyleRange> newStyles = new LinkedList<StyleRange>();
 		getMarkerStyles(markerWithStyle, new StyleRangeWithData(), newStyles);
-		showStyles(newStyles, marker.getStart(), marker.getEnd());
+		//showStyles(newStyles, marker.getStart(), marker.getEnd());
 		
 		postTextChange(atBottom, start);
 	}
@@ -724,12 +705,6 @@ public class WarlockText {
 				}
 			}
 		}*/
-	}
-	
-	public void setScrollDirection(int dir) {
-		if (dir == SWT.DOWN || dir == SWT.UP)
-			doScrollDirection = dir;
-		// TODO: Else throw an error
 	}
 	
 	public void setIgnoreEmptyLines(boolean ignoreLines) {
