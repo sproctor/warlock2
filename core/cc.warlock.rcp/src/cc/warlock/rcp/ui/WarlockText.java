@@ -734,6 +734,18 @@ public class WarlockText {
 		return client;
 	}
 	
+	public void setForeground(String color) {
+		String text = "$('body').css('color', '"+color+"')";
+		if(!textWidget.execute(text))
+			System.err.println("Error setting \""+streamName+"\" fg color: \""+text+"\"");
+	}
+	
+	public void setBackground(String color) {
+		String text = "$('body').css('background-color', '"+color+"')";
+		if(!textWidget.execute(text))
+			System.err.println("Error setting \""+streamName+"\" bg color: \""+text+"\"");
+	}
+	
 	private void loadSettings() {
 		if(settingListener != null)
 			settingListener.remove();
@@ -752,12 +764,12 @@ public class WarlockText {
 		settingListener = new WindowSettingsListener(provider);
 		
 		// Set to defaults first, then try window settings later
-		Color background = ColorUtil.warlockColorToColor(provider.getWindowBackground(streamName));
-		Color foreground = ColorUtil.warlockColorToColor(provider.getWindowForeground(streamName));
+		String background = provider.getWindowBackground(streamName).toString();
+		String foreground = provider.getWindowForeground(streamName).toString();
 		IWarlockFont font = provider.getWindowFont(streamName);
 		
-		textWidget.setBackground(background);
-		textWidget.setForeground(foreground);
+		setBackground(background);
+		setForeground(foreground);
 
 		if (font.isDefaultFont()) {
 			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
