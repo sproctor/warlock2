@@ -240,28 +240,21 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	public void showPopup (WarlockPopupAction popup)
 	{
-		boolean atBottom = streamText.isAtBottom();
 		popupPageBook.showPage(popup);
 		popupPageBook.setVisible(true);
 		((GridData)popupPageBook.getLayoutData()).exclude = false;
 		
 		mainComposite.layout();
-		
-		if(atBottom)
-			streamText.scrollToEnd();
+
 	}
 	
 	public void hidePopup (WarlockPopupAction popup)
 	{
-		boolean atBottom = streamText.isAtBottom();
 		popupPageBook.showPage(emptyPopup);		
 		popupPageBook.setVisible(false);
 		((GridData)popupPageBook.getLayoutData()).exclude = true;
 		
 		mainComposite.layout();
-		
-		if(atBottom)
-			streamText.scrollToEnd();
 	}
 	
 	public void pageDown() {

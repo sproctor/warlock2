@@ -551,16 +551,6 @@ public class WarlockText {
 		}
 		
 		constrainLineLimit(atBottom);
-		
-		if(atBottom)
-			scrollToEnd();
-	}
-	
-	public void scrollToEnd() {
-		/*if(doScrollDirection == SWT.DOWN)
-			textWidget.setTopPixel(textWidget.getTopPixel()
-					+ textWidget.getLinePixel(textWidget.getLineCount()));
-					*/
 	}
 	
 	// this function removes the first "delta" amount of characters

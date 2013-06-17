@@ -4,8 +4,17 @@
   <title>Text Window</title>
   <script src="jquery-2.0.2.min.js"></script>
   <script>
+    var atBottom = true;
+    $(document).ready(function () {
+        $(window).resize(function() {
+            if(atBottom)
+              window.scrollTo(0, document.body.scrollHeight);
+        });
+        $(window).scroll(function() {
+            atBottom = $(window).height() + $(window).scrollTop() >= $(document).height();
+        });
+    });
     function append(str) {
-      var atBottom = $(window).height() + $(window).scrollTop() >= $(document).height();
       var element = document.getElementById('text');
       element.innerHTML += str;
       if(atBottom)
