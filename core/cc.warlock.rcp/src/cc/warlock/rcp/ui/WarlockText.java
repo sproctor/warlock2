@@ -36,10 +36,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.browser.StatusTextEvent;
 import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -68,9 +69,9 @@ import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
 
 /**
- * This is an extension of the StyledText widget which has special support for
- *  embedding of arbitrary Controls/Links
- * @author Marshall
+ * This is a replacement of the StyledText widget which adds the features we
+ *   need to implement
+ * @author Sean Proctor
  */
 public class WarlockText {
 	
@@ -91,8 +92,9 @@ public class WarlockText {
 	
 	private IWarlockClient client;
 	private Browser textWidget;
+	private boolean browserLoaded = false;
 	private boolean ignoreEmptyLines = true;
-	private Font monoFont = null;
+	//private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
 	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
 		@Override
@@ -109,21 +111,26 @@ public class WarlockText {
 	private WindowSettingsListener settingListener;
 	final private String streamName;
 	
-	
 	public WarlockText(Composite parent, IWarlockClientViewer viewer, String streamName) {
 		this.streamName = streamName;
 		
 		textWidget = new Browser(parent, SWT.NONE);
+		textWidget.addProgressListener(new ProgressListener() {
+			@Override
+			public void changed(ProgressEvent event) {}
+			@Override
+			public void completed(ProgressEvent event) {
+				browserLoaded = true;
+			}
+		});
 
 		textWidget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		textWidget.addStatusTextListener(new StatusTextListener() {
-
 			@Override
 			public void changed(StatusTextEvent event) {
-				if(event.text.contains("command"))
+				if(event.text.startsWith("command:"))
 					MessageDialog.openInformation(textWidget.getShell(), "status message", event.text);
 			}
-			
 		});
 
 		try {
@@ -131,6 +138,11 @@ public class WarlockText {
 			URL url = FileLocator.find(bundle, new Path("text.html"), null);
 			String urlString = FileLocator.resolve(url).toExternalForm();
 			textWidget.setUrl(urlString);
+			
+			// Wait for the browser to finish loading
+			while(!browserLoaded) {
+				Display.getDefault().readAndDispatch();
+			}
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -167,7 +179,7 @@ public class WarlockText {
 	
 	public void appendRaw(String string) {
 		
-		textWidget.execute("append(\"<br/>\" + " + string + "\")");
+		textWidget.execute("append(\"" + string + "\")");
 	}
 	
 	private Pattern newlinePattern = Pattern.compile("\r?\n");
@@ -409,9 +421,18 @@ public class WarlockText {
 			String openTag = "";
 			String closeTag = "";
 			String command = marker.getStyle().getCommand();
+			String name = marker.getStyle().getName();
+			String tagClass = "";
+			if(name != null) {
+				tagClass = " class=\\\""+name+"\\\"";
+			}
 			if(command != null) {
-				openTag = "<a href=\\\"javascript:\\\" onclick=\\\"window.status='command:"+command+"'\\\">";
+				openTag = "<a href=\\\"javascript:\\\""+tagClass+" onclick=\\\"window.status='command:"+command+"'\\\">";
 				closeTag = "</a>";
+			} else if(name != null) {
+				openTag = "<span" + tagClass + ">";
+				closeTag = "</span>";
+				System.out.println("Printing style: " + tagClass);
 			}
 			
 			String before = StringEscapeUtils.escapeHtml(wstring.toString().substring(offset, marker.getStart()));
@@ -468,9 +489,10 @@ public class WarlockText {
 			fullLine |= presetStyle.isFullLine();
 		}
 		
+		/*
 		if(monoFont != null && style.isMonospace()) {
 			styleRange.font = monoFont;
-		}
+		}*/
 		
 		
 		styleRange.fontStyle = SWT.NORMAL;
@@ -736,6 +758,31 @@ public class WarlockText {
 			System.err.println("Error setting \""+streamName+"\" bg color: \""+text+"\"");
 	}
 	
+	public void setFont(String name, int size) {
+		String text = "$('body').css('font', '"+(size > 0 ? size : "")+" "+name+"')";
+		if(!textWidget.execute(text))
+			System.err.println("Error setting \""+streamName+"\" bg color: \""+text+"\"");
+	}
+	
+	public void setForeground(String name, String color) {
+		String text = "$('."+name+"').css('color', '"+color+"')";
+		if(!textWidget.execute(text))
+			System.err.println("Error setting \""+streamName+"\" fg color: \""+text+"\"");
+	}
+	
+	public void setBackground(String name, String color) {
+		String text = "$('."+name+"').css('background-color', '"+color+"')";
+		if(!textWidget.execute(text))
+			System.err.println("Error setting \""+streamName+"\" bg color: \""+text+"\"");
+	}
+	
+	public void setFont(String name, String fontName, int size) {
+		String text = "$('."+name+"').css('font', '"+(size > 0 ? size+"px" : "inherit")+" "+fontName+"')";
+		if(!textWidget.execute(text))
+			System.err.println("Error setting \""+streamName+"\" bg color: \""+text+"\"");
+		System.out.println("Setting font: " + text);
+	}
+	
 	private void loadSettings() {
 		if(settingListener != null)
 			settingListener.remove();
@@ -764,18 +811,18 @@ public class WarlockText {
 		if (font.isDefaultFont()) {
 			String defaultFontFace = GameViewConfiguration.getProvider(settings).getDefaultFontFace();
 			int defaultFontSize = GameViewConfiguration.getProvider(settings).getDefaultFontSize();
-			textWidget.setFont(new Font(Display.getDefault(), defaultFontFace, defaultFontSize, SWT.NORMAL));
+			setFont(defaultFontFace, defaultFontSize);
 		} else {
-			textWidget.setFont(FontUtil.warlockFontToFont(font));
+			setFont(font.getFamilyName(), font.getSize());
 		}
 		
 		IWarlockFont columnFont = provider.getWindowMonoFont(streamName);
 		if(columnFont == null || columnFont.isDefaultFont()) {
-			this.monoFont = null;
+			setFont("mono", "monospace", GameViewConfiguration.getProvider(settings).getDefaultFontSize());
 		} else {
 			String fontFace = columnFont.getFamilyName();
 			int fontSize = columnFont.getSize();
-			this.monoFont = new Font(getTextWidget().getDisplay(), fontFace, fontSize, SWT.NORMAL);
+			setFont("mono", fontFace, fontSize);
 		}
 	}
 	
