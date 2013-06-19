@@ -69,7 +69,9 @@ public class StreamText extends WarlockText implements IStreamListener {
 
 	private void flushBuffer() {
 		if(textBuffer != null) {
-			append(textBuffer);
+			for(WarlockString line : textBuffer.split("\\r?\\n")) {
+				appendLine(line);
+			}
 			textBuffer = null;
 		}
 	}
@@ -84,15 +86,11 @@ public class StreamText extends WarlockText implements IStreamListener {
 		flushBuffer();
 		if(!isPrompting) {
 			isPrompting = true;
-			if(prompt != null)
-				showPrompt(prompt);
+			showPrompt(prompt);
 		} else {
 			// if the new prompt is the same as the old one, do nothing.
-			// if the new prompt is null, just print the newline.
-			if(prompt == null) {
-				if(this.prompt != null)
-					showPrompt("\n");
-			} else if(this.prompt == null || !this.prompt.equals(prompt)) {
+			// otherwise print a newline and the prompt
+			if(!this.prompt.equals(prompt)) {
 				showPrompt("\n" + prompt);
 			}	
 		}
@@ -104,11 +102,11 @@ public class StreamText extends WarlockText implements IStreamListener {
 		
 		WarlockString string = new WarlockString(command.getText(), WarlockStyle.commandStyle);
 		
-		if(!isPrompting && prompt != null)
-			append(new WarlockString(prompt));
-		
 		append(string);
-		isPrompting = false;
+		
+		if(!isPrompting) {
+			showPrompt(prompt);
+		}
 	}
 
 	public void streamReceivedText(IStream stream, WarlockString text) {

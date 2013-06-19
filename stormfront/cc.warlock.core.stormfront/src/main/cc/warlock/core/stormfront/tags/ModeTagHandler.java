@@ -52,9 +52,12 @@ public class ModeTagHandler extends DefaultTagHandler {
 			if (id.equals("CMGR"))
 			{
 				((StormFrontConnection)client.getConnection()).passThrough();
-				client.prompt(null);
+				client.prompt("\n");
+			} else if(id.equals("GAME")) {
+				// possibly handle version numbers?
 			} else {
-				// Shouldn't get here
+				System.err.println("This line should not be reached.");
+				new Throwable().printStackTrace();
 			}
 		}
 	}

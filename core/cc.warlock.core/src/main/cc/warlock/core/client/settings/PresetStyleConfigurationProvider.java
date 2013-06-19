@@ -21,7 +21,9 @@
  */
 package cc.warlock.core.client.settings;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockStyle;
@@ -96,6 +98,10 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 		getNode().remove(id);
 	}
 	
+	public Map<String, IWarlockStyle> getStyles() {
+		return Collections.unmodifiableMap(styleSettings);
+	}
+	
 	private static void setDefaultStyle(String name, String fg, String bg, boolean fullLine) {
 		IWarlockStyle style = new WarlockStyle(name);
 		style.setForegroundColor(fg == null ? WindowConfigurationProvider.defaultFgColor : new WarlockColor(fg));
@@ -110,5 +116,9 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 	
 	public static PresetStyleConfigurationProvider getProvider(IClientSettings clientSettings) {
 		return (PresetStyleConfigurationProvider)clientSettings.getProvider(ID);
+	}
+	
+	public static Map<String, IWarlockStyle> getDefaultStyles() {
+		return Collections.unmodifiableMap(defaultStyles);
 	}
 }

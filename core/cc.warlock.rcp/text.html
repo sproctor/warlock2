@@ -13,17 +13,56 @@
         $(window).scroll(function() {
             atBottom = $(window).height() + $(window).scrollTop() >= $(document).height();
         });
+        window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+          window.status = "error:"+lineNumber+":"+errorMsg;
+          return false;
+        }
     });
     function append(str) {
-      var element = document.getElementById('text');
-      element.innerHTML += str;
+      var top = document.getElementById('text');
+      top.innerHTML += str;
       if(atBottom)
         window.scrollTo(0, document.body.scrollHeight);
     }
+    function appendLine(str) {
+        var main = document.getElementById('text');
+        var element = document.createElement('div');
+        element.className = 'line';
+        element.innerHTML = str;
+        main.appendChild(element);
+        var bg = $(element).children('.full-line:not(:empty)').css('background-color');
+        if(bg) {
+        	$(element).css('background-color', bg);
+        	window.status="bg is " + bg;
+        }
+        if(atBottom)
+          window.scrollTo(0, document.body.scrollHeight);
+      }
+    function setStyle(name, property, value) {
+      window.status="changing style";
+      var rules = document.styleSheets[0].cssRules;
+      var ruleExists = false;
+      var myclass = '.'+name;
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i].selectorText == myclass) {
+			rules[i].style.setProperty(property, value, null);
+			ruleExists = true;
+			window.status="set property";
+			break;
+		}
+      }
+      if(!ruleExists) {
+        var rule = myclass+" { "+property+": "+value+" }";
+        document.styleSheets[0].insertRule(rule, 0);
+        window.status=rule;
+      }
+      window.status="changed style";
+    }
   </script>
+  <style></style>
 </head>
 <body>
-  <div id="text"></div>
-  <script>window.onload = function () { $("#text").text("initial text"); }</script>
+  <div id="text"><div class="line"></div></div>
+  <script>$(function() { append("initial text"); });</script>
 </body>
 </html>

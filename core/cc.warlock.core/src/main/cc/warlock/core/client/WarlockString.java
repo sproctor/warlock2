@@ -185,11 +185,10 @@ public class WarlockString {
 		return count;
 	}
 	
-	// Warning: this totally hoses the marker from the original string
 	public WarlockString getMarkerContents(WarlockStringMarker marker) {
 		WarlockString string = new WarlockString(this.toString().substring(marker.getStart(), marker.getEnd()));
-		marker.move(-marker.getStart());
-		string.styles = marker.getSubMarkers();
+		WarlockStringMarker newMarker = marker.copy(-marker.getStart(), marker.getEnd() - marker.getStart());
+		string.styles = newMarker.getSubMarkers();
 		return string;
 	}
 }

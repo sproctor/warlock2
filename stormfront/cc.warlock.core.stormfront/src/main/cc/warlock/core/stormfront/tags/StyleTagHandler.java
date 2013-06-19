@@ -29,6 +29,7 @@ package cc.warlock.core.stormfront.tags;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
@@ -60,12 +61,12 @@ public class StyleTagHandler extends DefaultTagHandler {
 			currentStyle = null;
 		}
 		
-		String styleId = attributes.getValue("id");
+		String id = attributes.getValue("id");
 		
-		if (styleId != null && styleId.length() > 0)
-		{
-			IWarlockStyle style = new WarlockStyle(styleId);
-			currentStyle = style;
+		if (id != null && id.length() > 0) {
+			currentStyle = PresetStyleConfigurationProvider.getProvider(handler.getClient().getClientSettings()).getStyle(id);
+			if(currentStyle == null)
+				currentStyle = new WarlockStyle(id);
 			handler.addStyle(currentStyle);
 		}
 	}

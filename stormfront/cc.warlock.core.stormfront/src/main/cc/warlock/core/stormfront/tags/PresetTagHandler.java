@@ -25,6 +25,7 @@ import java.util.Stack;
 
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
@@ -45,10 +46,16 @@ public class PresetTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		String id = attributes.getValue("id");
-		IWarlockStyle style = new WarlockStyle(id);
-
-		styles.push(style);
-		handler.addStyle(style);
+		if(id != null) {
+			IWarlockStyle style = PresetStyleConfigurationProvider.getProvider(handler.getClient().getClientSettings()).getStyle(id);
+			if(style == null) {
+				style = new WarlockStyle(id);
+				System.err.println("Undefined preset style \"" + id + "\"");
+			}
+			
+			styles.push(style);
+			handler.addStyle(style);
+		}
 	}
 	
 	@Override
