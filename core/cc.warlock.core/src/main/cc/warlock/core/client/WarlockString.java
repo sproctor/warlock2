@@ -145,10 +145,11 @@ public class WarlockString {
 		while (m.find(start) && (i + 1 < limit || limit <= 0)) {
 			int end = m.start();
 			// make sure that we actually have a substring to add
-			if(end != start) {
+			// FIXME not sure why this was here. sometimes we need an empty string
+			//if(end != start) {
 				parts.add(this.substring(start, end));
 				++i;
-			}
+			//}
 			// set the start of the next substring
 			start = m.end();
 		}

@@ -55,7 +55,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 	
 	public void componentUpdated(IStream stream, String id, WarlockString value) {
 		flushBuffer();
-		replaceMarker(id, value);
+		replaceComponent(id, value);
 	}
 
 	public void streamCleared(IStream stream) {
@@ -69,6 +69,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 
 	private void flushBuffer() {
 		if(textBuffer != null) {
+			if(this.getName().equals("experience"))
+				System.out.println("exp");
 			for(WarlockString line : textBuffer.split("\\r?\\n")) {
 				appendLine(line);
 			}

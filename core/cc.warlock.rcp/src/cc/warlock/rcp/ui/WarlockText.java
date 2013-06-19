@@ -42,7 +42,6 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.browser.StatusTextEvent;
 import org.eclipse.swt.browser.StatusTextListener;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -169,8 +168,8 @@ public class WarlockText {
 	}
 	
 	public void clearText() {
-		textWidget.setText("");
-		markers.clear();
+		//textWidget.setText("");
+		//markers.clear();
 	}
 	
 	public void setLineLimit(int limit) {
@@ -317,21 +316,22 @@ public class WarlockText {
 			String classString = "";
 			String name = marker.getStyle().getName();
 			if(name != null)
-				tagClasses.add(name);
-			if("roomName".equals(name))
-				System.out.println("roomname");
+				tagClasses.add(name.replace(' ', '-'));
 			if(marker.getStyle().isFullLine()) {
 				tagClasses.add("full-line");
-				System.out.println("added full-line");
 			}
-			if(name != null) {
+			if(!tagClasses.isEmpty()) {
 				classString = " class=\\\""+StringUtils.join(tagClasses, ' ')+"\\\"";
 			}
+			String compName = marker.getStyle().getComponentName();
+			String idString = "";
+			if(compName != null && !compName.isEmpty())
+				idString = " id=\\\"" + compName.replace(' ', '-') + "\\\"";
 			if(command != null) {
-				openTag = "<a href=\\\"javascript:\\\""+classString+" onclick=\\\"window.status='command:"+command+"'\\\">";
+				openTag = "<a href=\\\"javascript:\\\""+classString+idString+" onclick=\\\"window.status='command:"+command+"'\\\">";
 				closeTag = "</a>";
-			} else if(name != null) {
-				openTag = "<span" + classString + ">";
+			} else if(!classString.isEmpty() || !idString.isEmpty()) {
+				openTag = "<span" + classString + idString + ">";
 				closeTag = "</span>";
 			}
 			
@@ -346,17 +346,22 @@ public class WarlockText {
 	}
 	
 	public void appendLine(WarlockString wstring) {
+		if(streamName.equals("experience"))
+			System.out.println("appending to "+streamName);
 		String text = markupString(wstring);
 		String script = "appendLine(\"" + text.replaceAll("(\r\n|\n)", "<br/>") + "\");";
 		
-		textWidget.execute(script);
+		if(!textWidget.execute(script))
+			System.err.println("Error in appendLine from "+streamName+": " +script);
 	}
 	
 	public void append(WarlockString wstring) {
 		String text = markupString(wstring);
 		String script = "append(\"" + text.replaceAll("(\r\n|\n)", "<br/>") + "\");";
 		
-		textWidget.execute(script);
+
+		if(!textWidget.execute(script))
+			System.err.println("Error in append from "+streamName+": " +script);
 	}
 	
 	private void addComponentMarker(WarlockStringMarker marker, WarlockStringMarker topLevel) {
@@ -379,7 +384,7 @@ public class WarlockText {
 			restoreNewlines(offset, markers);
 		}
 		
-		constrainLineLimit(atBottom);
+		//constrainLineLimit(atBottom);
 	}
 	
 	// this function removes the first "delta" amount of characters
@@ -451,77 +456,13 @@ public class WarlockText {
 		}
 	}
 	
-	public void replaceMarker(String name, WarlockString text) {
-		WarlockStringMarker marker = null;
-		IWarlockStyle baseStyle = null;
-		for(WarlockStringMarker subMarker : markers) {
-			marker = getMarkerByComponent(name, subMarker);
-			if(marker != null) {
-				baseStyle = subMarker.getBaseStyle(marker);
-				break;
-			}
-		}
-		if(marker == null)
-			return;
-		
-		int start = marker.getStart();
-		int length = marker.getEnd() - start;
-		//textWidget.replaceTextRange(start, length, text.toString());
-		marker.clear();
-		int newLength = text.length();
-		marker.setEnd(start + newLength);
-		WarlockStringMarker.updateMarkers(newLength - length, marker, markers);
-		
-		// Add the new styles to the existing marker
-		for(WarlockStringMarker newMarker : text.getStyles()) {
-			marker.addMarker(newMarker.copy(start));
-		}
-		
-		/* Break up the ranges and merge overlapping styles because SWT only
-		 * allows 1 style per section
-		 */
-		WarlockStringMarker markerWithStyle = marker.clone();
-		markerWithStyle.setStyle(baseStyle);
-		LinkedList<StyleRange> newStyles = new LinkedList<StyleRange>();
-		//getMarkerStyles(markerWithStyle, new StyleRangeWithData(), newStyles);
-		//showStyles(newStyles, marker.getStart(), marker.getEnd());
-		
-	}
-	
-	private WarlockStringMarker getMarkerByComponent(String componentName,
-			WarlockStringMarker marker) {
-		String myName = marker.getComponentName();
-		if(myName != null && myName.equals(componentName))
-			return marker;
-		
-		for(WarlockStringMarker subMarker : marker.getSubMarkers()) {
-			WarlockStringMarker result = getMarkerByComponent(componentName, subMarker);
-			if(result != null)
-				return result;
-		}
-		return null;
-	}
-	
-	private void constrainLineLimit(boolean atBottom) {
-		// 'status' is a pointer that allows us to change the object in our parent..
-		// in this method... it is intentional.
-		/*if (lineLimit > 0) {
-			int lines = textWidget.getLineCount();
-			if (lines > lineLimit) {
-				int linesToRemove = lines - lineLimit;
-				int charsToRemove = textWidget.getOffsetAtLine(linesToRemove);
-				if(atBottom) {
-					textWidget.replaceTextRange(0, charsToRemove, "");
-					updateMarkers(-charsToRemove);
-				} else {
-					int pixelsToRemove = textWidget.getLinePixel(linesToRemove);
-					textWidget.replaceTextRange(0, charsToRemove, "");
-					updateMarkers(-charsToRemove);
-					if(pixelsToRemove < 0)
-						textWidget.setTopPixel(-pixelsToRemove);
-				}
-			}
-		}*/
+	public void replaceComponent(String name, WarlockString str) {
+		String html = markupString(str).replaceAll("(\r\n|\n)", "<br/>");
+		String id = name.replace(' ', '-');
+		String text = "replaceComponent(\""+id+"\", \""+html+"\")";
+		if(!textWidget.execute(text))
+			System.err.println("Error executing: "+text);
+		System.out.println("replaced component " + id + " in " + streamName);
 	}
 	
 	public void setIgnoreEmptyLines(boolean ignoreLines) {

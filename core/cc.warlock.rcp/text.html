@@ -20,7 +20,7 @@
     });
     function append(str) {
       var top = document.getElementById('text');
-      top.innerHTML += str;
+      top.innerHTML += str + '\n';
       if(atBottom)
         window.scrollTo(0, document.body.scrollHeight);
     }
@@ -28,7 +28,7 @@
         var main = document.getElementById('text');
         var element = document.createElement('div');
         element.className = 'line';
-        element.innerHTML = str;
+        element.innerHTML = str + '\n';
         main.appendChild(element);
         var bg = $(element).children('.full-line:not(:empty)').css('background-color');
         if(bg) {
@@ -58,11 +58,18 @@
       }
       window.status="changed style";
     }
+    function replaceComponent(name, value) {
+      var element = document.getElementById(name);
+      element.innerHTML = value;
+      if(atBottom)
+          window.scrollTo(0, document.body.scrollHeight);
+    }
   </script>
   <style></style>
 </head>
 <body>
-  <div id="text"><div class="line"></div></div>
-  <script>$(function() { append("initial text"); });</script>
+  <div id="text"></div>
+  <script>$(function() { appendLine("initial text"); });</script>
+  <div style="position:fixed;top:0;right:0;" onclick="window.status=document.getElementById('text').innerHTML">show debug</div>
 </body>
 </html>

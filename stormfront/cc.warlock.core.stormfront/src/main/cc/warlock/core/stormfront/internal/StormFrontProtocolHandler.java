@@ -354,9 +354,10 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		WarlockStringMarker marker = styleStack.pop();
 		marker.setEnd(buffer.length());
 		
-		if(styleStack.empty() && tagStack.empty()) {
-			flushBuffer();
-		}
+		// FIXME why? should we add output to this list?
+		//if(styleStack.empty() && tagStack.empty()) {
+			//flushBuffer();
+		//}
 	}
 	
 	public void flushBuffer() {
