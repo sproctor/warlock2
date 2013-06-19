@@ -82,7 +82,7 @@ public class WarlockStringMarker {
 		WarlockStringMarker copy = new WarlockStringMarker(style, newStart, newEnd);
 		
 		for(WarlockStringMarker marker : subMarkers) {
-			if(marker.getEnd() + offset > 0)
+			if(marker.getEnd() + offset > 0 && marker.getStart() + offset < length)
 				copy.addMarker(marker.copy(offset, length));
 		}
 		
