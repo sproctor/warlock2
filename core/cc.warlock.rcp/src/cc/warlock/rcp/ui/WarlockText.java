@@ -66,7 +66,6 @@ import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
-import cc.warlock.rcp.util.ColorUtil;
 
 /**
  * This is a replacement of the StyledText widget which adds the features we
@@ -159,9 +158,9 @@ public class WarlockText {
 	}
 	
 	public void pageUp() {
-		if (isAtBottom()) {
+		//if (isAtBottom()) {
 			//textWidget.setCaretOffset(textWidget.getCharCount());
-		}
+		//}
 		//textWidget.invokeAction(ST.PAGE_UP);
 	}
 	
@@ -248,91 +247,6 @@ public class WarlockText {
 		}
 	}
 	
-	private Collection<StyleRange> mergeStyleRangeLists(Collection<StyleRange> list1, Collection<StyleRange> list2) {
-		LinkedList<StyleRange> resultList = new LinkedList<StyleRange>();
-		for(StyleRange style : list1) {
-			resultList.add(style);
-		}
-		
-		mergeLoop: for(StyleRange mergingStyle : list2) {
-			if(mergingStyle == null)
-				continue;
-			for(ListIterator<StyleRange> iter = resultList.listIterator();
-			iter.hasNext(); )
-			{
-				StyleRange style = iter.next();
-				if(style == null)
-					continue;
-				
-				// if the mergeStyle came before the current style, add the
-				//   mergeStyle before it and go to the next mergeStyle
-				if(style.start >= mergingStyle.start + mergingStyle.length) {
-					iter.previous();
-					iter.add(mergingStyle);
-					continue mergeLoop;
-				}
-				
-				// If the mergeStyle came after the current style, continue on
-				if(mergingStyle.start >= style.start + style.length)
-					continue;
-				
-				iter.remove();
-				
-				int subStart;
-				
-				if(style.start < mergingStyle.start) {
-					// Add the style before they overlap
-					StyleRange newStyle = (StyleRange)style.clone();
-					newStyle.length = mergingStyle.start - style.start;
-					iter.add(newStyle);
-					
-					subStart = mergingStyle.start;
-				} else if(mergingStyle.start < style.start) {
-					// Add the style before they overlap
-					StyleRange newStyle = (StyleRange)mergingStyle.clone();
-					newStyle.length = style.start - mergingStyle.start;
-					iter.add(newStyle);
-					
-					subStart = style.start;
-				} else {
-					subStart = style.start;
-				}
-				
-				int subEnd;
-				if(style.start + style.length < mergingStyle.start + mergingStyle.length) {
-					subEnd = style.start + style.length;
-				} else {
-					subEnd = mergingStyle.start + mergingStyle.length;
-				}
-				
-				StyleRange newStyle = this.mergeStyleRanges(style, mergingStyle);
-				newStyle.start = subStart;
-				newStyle.length = subEnd - subStart;
-				iter.add(newStyle);
-				
-				if(style.start + style.length < mergingStyle.start + mergingStyle.length) {
-					int length = mergingStyle.start + mergingStyle.length - subEnd;
-					mergingStyle.start = subEnd;
-					mergingStyle.length = length;
-					continue;
-				} else if(mergingStyle.start + mergingStyle.length < style.start + style.length) {
-					StyleRange endStyle = (StyleRange)style.clone();
-					endStyle.start = subEnd;
-					endStyle.length = style.start + style.length - subEnd;
-					iter.add(endStyle);
-				}
-				// else both styles end at the same time
-				
-				// We matched a style and inserted the new style, so we're done
-				continue mergeLoop;
-			}
-			
-			resultList.add(mergingStyle);
-		}
-		
-		return resultList;
-	}
-	
 	/*private Collection<StyleRange> getHighlights(int start, int end) {
 		ArrayList<StyleRange> highlightList = new ArrayList<StyleRange>();
 		if(client == null)
@@ -390,31 +304,6 @@ public class WarlockText {
 		
 		return highlightList;
 	}*/
-	
-	private void getMarkerStyles(WarlockStringMarker marker,
-			StyleRange baseStyle, Collection<StyleRange> resultStyles) {
-		int pos = marker.getStart();
-		for(WarlockStringMarker subMarker : marker.getSubMarkers()) {
-			
-			int nextPos = subMarker.getStart();
-			
-			StyleRange styleRange = mergeStyleRanges(baseStyle,
-					warlockStyleToStyleRange(marker.getStyle(), pos, nextPos - pos));
-			
-			if(nextPos > pos)
-				resultStyles.add(styleRange);
-			
-			getMarkerStyles(subMarker, styleRange, resultStyles);
-
-			pos = subMarker.getEnd();
-		}
-		
-		if(marker.getEnd() > pos) {
-			StyleRange styleRange = mergeStyleRanges(baseStyle,
-					warlockStyleToStyleRange(marker.getStyle(), pos, marker.getEnd() - pos));
-			resultStyles.add(styleRange);
-		}
-	}
 	
 	public String markupString(WarlockString wstring) {
 		int offset = 0;
@@ -481,105 +370,6 @@ public class WarlockText {
 				addComponentMarker(subMarker, topLevel);
 			}
 		}
-	}
-	
-	private StyleRangeWithData warlockStyleToStyleRange(IWarlockStyle style, int start, int length) {
-		StyleRangeWithData styleRange = new StyleRangeWithData();
-		
-		WarlockColor foreground = style.getForegroundColor();
-		WarlockColor background = style.getBackgroundColor();
-		boolean underline = style.isUnderline();
-		boolean fullLine = style.isFullLine();
-		
-		IClientSettings settings = null;
-		if(client != null)
-			settings = client.getClientSettings();
-		if(settings == null)
-			settings = ClientSettings.getGlobalClientSettings();
-		IWarlockStyle presetStyle = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName());
-		if(presetStyle != null) {
-			if(background == null || background.isDefault())
-				background = presetStyle.getBackgroundColor();
-			if(foreground == null || foreground.isDefault())
-				foreground = presetStyle.getForegroundColor();
-			underline |= presetStyle.isUnderline();
-			fullLine |= presetStyle.isFullLine();
-		}
-		
-		/*
-		if(monoFont != null && style.isMonospace()) {
-			styleRange.font = monoFont;
-		}*/
-		
-		
-		styleRange.fontStyle = SWT.NORMAL;
-		if (style.isBold())
-			styleRange.fontStyle |= SWT.BOLD;
-		if (style.isItalic())
-			styleRange.fontStyle |= SWT.ITALIC;
-		styleRange.underline = underline;
-		
-		if (foreground != null && !foreground.isDefault())
-			styleRange.foreground = ColorUtil.warlockColorToColor(foreground);
-		if (background != null && !background.isDefault())
-			styleRange.background = ColorUtil.warlockColorToColor(background);
-
-		styleRange.start = start;
-		styleRange.length = length;
-		
-		//if(fullLine)
-			//textWidget.setLineBackground(textWidget.getLineAtOffset(styleRange.start), 1, styleRange.background);
-		//if(style.getCommand() != null)
-			//styleRange.action = style.getCommand();
-		if(style.getName() != null)
-			styleRange.data.put("name", style.getName());
-		
-		return styleRange;
-	}
-	
-	private StyleRange mergeStyleRanges(StyleRange style1, StyleRange style2) {
-		if(style1 == null)
-			return style2;
-		if(style2 == null)
-			return style1;
-		
-		StyleRange newStyle;
-		// start with a cloned style1, unless style2 has data, but style1 doesn't
-		if(style2 instanceof StyleRangeWithData && !(style1 instanceof StyleRangeWithData))
-			newStyle = new StyleRangeWithData(style1);
-		else
-			newStyle = (StyleRange)style1.clone();
-		
-		newStyle.start = style2.start;
-		newStyle.length = style2.length;
-		if(style2.font != null)
-			newStyle.font = style2.font;
-		if(style2.background != null)
-			newStyle.background = style2.background;
-		if(style2.foreground != null)
-			newStyle.foreground = style2.foreground;
-		if(style2.fontStyle != SWT.NORMAL)
-			newStyle.fontStyle = style2.fontStyle;
-		if(style2.strikeout) newStyle.strikeout = true;
-		if(style2.underline) newStyle.underline = true;
-		
-		if(style2 instanceof StyleRangeWithData) {
-			StyleRangeWithData _newStyle = (StyleRangeWithData)newStyle;
-			StyleRangeWithData _style2 = (StyleRangeWithData)style2;
-			
-			_newStyle.data.putAll(_style2.data);
-			if(_style2.action != null)
-				_newStyle.action = _style2.action;
-			if(_style2.tooltip != null)
-				_newStyle.tooltip = _style2.tooltip;
-		}
-		
-		return newStyle;
-	}
-	
-	public boolean isAtBottom() {
-		return true;
-		//return textWidget.getLinePixel(textWidget.getLineCount()) <= textWidget.getClientArea().height;
 	}
 	
 	private void postTextChange(boolean atBottom, int offset) {
@@ -676,7 +466,6 @@ public class WarlockText {
 		
 		int start = marker.getStart();
 		int length = marker.getEnd() - start;
-		boolean atBottom = isAtBottom();
 		//textWidget.replaceTextRange(start, length, text.toString());
 		marker.clear();
 		int newLength = text.length();
@@ -694,10 +483,9 @@ public class WarlockText {
 		WarlockStringMarker markerWithStyle = marker.clone();
 		markerWithStyle.setStyle(baseStyle);
 		LinkedList<StyleRange> newStyles = new LinkedList<StyleRange>();
-		getMarkerStyles(markerWithStyle, new StyleRangeWithData(), newStyles);
+		//getMarkerStyles(markerWithStyle, new StyleRangeWithData(), newStyles);
 		//showStyles(newStyles, marker.getStart(), marker.getEnd());
 		
-		postTextChange(atBottom, start);
 	}
 	
 	private WarlockStringMarker getMarkerByComponent(String componentName,
