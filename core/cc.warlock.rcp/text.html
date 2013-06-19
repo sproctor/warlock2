@@ -20,7 +20,7 @@
     });
     function append(str) {
       var top = document.getElementById('text');
-      top.innerHTML += str + '\n';
+      top.innerHTML += str;
       if(atBottom)
         window.scrollTo(0, document.body.scrollHeight);
     }
@@ -28,7 +28,7 @@
         var main = document.getElementById('text');
         var element = document.createElement('div');
         element.className = 'line';
-        element.innerHTML = str + '\n';
+        element.innerHTML = str;
         main.appendChild(element);
         var bg = $(element).children('.full-line:not(:empty)').css('background-color');
         if(bg) {
@@ -65,7 +65,11 @@
           window.scrollTo(0, document.body.scrollHeight);
     }
   </script>
-  <style></style>
+  <style>
+    #text {
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
   <div id="text"></div>

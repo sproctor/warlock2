@@ -525,7 +525,7 @@ public class WarlockText {
 	}
 	
 	public void setFont(String name, String fontName, int size) {
-		String value = (size > 0 ? size  +"px" : "inherit") + "  " + fontName;
+		String value = (size > 0 ? (int)(size * 4 / 3) + "px" : "inherit") + "  " + fontName;
 		String text = "setStyle('"+name+"', 'font', '"+value+"')";
 		if(!textWidget.execute(text))
 			System.err.println("Error setting \""+streamName+"\" font: \""+text+"\"");
