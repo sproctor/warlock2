@@ -34,8 +34,9 @@ import java.util.Random;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewPart;
@@ -148,28 +149,22 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		Composite mainComposite = new Composite (parent, SWT.NONE);
-		GridLayout mainLayout = new GridLayout(1, false);
-		mainLayout.marginHeight = 0;
-		mainLayout.marginWidth = 0;
-		mainLayout.horizontalSpacing = 0;
-		mainLayout.verticalSpacing = 0;
-		mainComposite.setLayout(mainLayout);
+		streamText = new StreamText(parent, this, IWarlockClient.MAIN_STREAM_NAME);
+		streamText.getTextWidget().setLayout(new FormLayout());
+		streamText.setIgnoreEmptyLines(false);
 		
 		// create a pagebook for the popups
-		popupPageBook = new PageBook(mainComposite, SWT.NONE);
-		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
-		data.exclude = true;
+		popupPageBook = new PageBook(streamText.getTextWidget(), SWT.NONE);
+		FormData data = new FormData();
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(0, 0);
+		data.right = new FormAttachment(100, 0);
 		popupPageBook.setLayoutData(data);
 		
 		emptyPopup = new Label(popupPageBook, SWT.NONE);
 		
 		popupPageBook.showPage(emptyPopup);
 		popupPageBook.setVisible(false);
-		
-		streamText = new StreamText(mainComposite, this, IWarlockClient.MAIN_STREAM_NAME);
-		streamText.getTextWidget().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		streamText.setIgnoreEmptyLines(false);
 		
 		openViews.add(this);
 		this.setFocus();
@@ -178,7 +173,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 			loadClientSettings(client.getClientSettings());
 		}
 
-		mainComposite.addDisposeListener(new DisposeListener() {
+		parent.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				if (client != null) {
@@ -242,7 +237,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		
 		popupPageBook.showPage(popup);
 		popupPageBook.setVisible(true);
-		((GridData)popupPageBook.getLayoutData()).exclude = false;
 		
 		popupPageBook.getParent().layout();
 		
@@ -256,7 +250,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		
 		popupPageBook.showPage(emptyPopup);		
 		popupPageBook.setVisible(false);
-		((GridData)popupPageBook.getLayoutData()).exclude = true;
 		
 		popupPageBook.getParent().layout();
 		
