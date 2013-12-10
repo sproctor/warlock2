@@ -23,6 +23,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 	
 	private WarlockString textBuffer;
 	
+	private static final WarlockString basicPrompt = new WarlockString(">");
+	
 	public StreamText(Composite parent, IWarlockClientViewer viewer, String streamName) {
 		super(parent, viewer, streamName);
 	}
@@ -105,7 +107,12 @@ public class StreamText extends WarlockText implements IStreamListener {
 		WarlockString string = new WarlockString(command.getText(), WarlockStyle.commandStyle);
 		
 		if(!isPrompting && prompt != null)
-			append(new WarlockString(prompt));
+			showPrompt(prompt);
+		
+		// If we're suppressing prompts, prepend one to the command.
+		if(GameViewConfiguration.getProvider(getClient().getClientSettings()).getSuppressPrompt()) {
+			append(basicPrompt);
+		}
 		
 		append(string);
 		isPrompting = false;
@@ -113,7 +120,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 
 	public void streamReceivedText(IStream stream, WarlockString text) {
 		if (isPrompting && text.length() > 0) {
-			bufferText("\n");
+			showPrompt("\n");
 			isPrompting = false;
 		}
 		
