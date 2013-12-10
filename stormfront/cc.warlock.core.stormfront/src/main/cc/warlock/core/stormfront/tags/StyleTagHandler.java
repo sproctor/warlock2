@@ -55,17 +55,15 @@ public class StyleTagHandler extends DefaultTagHandler {
 
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
-		if(currentStyle != null) {
+		if (currentStyle != null) {
 			handler.removeStyle(currentStyle);
 			currentStyle = null;
 		}
 		
-		String styleId = attributes.getValue("id");
+		String id = attributes.getValue("id");
 		
-		if (styleId != null && styleId.length() > 0)
-		{
-			IWarlockStyle style = new WarlockStyle(styleId);
-			currentStyle = style;
+		if (id != null && id.length() > 0) {
+			currentStyle = new WarlockStyle(id);
 			handler.addStyle(currentStyle);
 		}
 	}

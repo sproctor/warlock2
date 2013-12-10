@@ -285,10 +285,16 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	public void addStreamListener(String streamName, IStreamListener listener) {
 		IStream stream = streams.get(streamName);
-		if(stream != null)
+		if(stream != null) {
 			stream.addStreamListener(listener);
-		else
-			streamListeners.add(new Pair<String, IStreamListener>(streamName, listener));
+		} else {
+			if(streamName == null) {
+				// WTF?
+				return;
+			} else {
+				streamListeners.add(new Pair<String, IStreamListener>(streamName, listener));
+			}
+		}
 	}
 	
 	public void removeStreamListener(String streamName, IStreamListener listener) {
