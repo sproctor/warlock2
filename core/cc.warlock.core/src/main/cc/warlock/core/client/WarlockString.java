@@ -136,19 +136,17 @@ public class WarlockString {
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(toString());
 		ArrayList<WarlockString> parts = new ArrayList<WarlockString>();
-		int i = 0;
+		int n = 0;
 		int start = 0;
 
 		// if limit is non-positive, there is no limit
 		// always stop with one substring less than the limit,
 		// so we don't go over the limit by adding the remainder
-		while (m.find(start) && (i + 1 < limit || limit <= 0)) {
+		while (m.find(start) && (n + 1 < limit || limit <= 0)) {
 			int end = m.start();
-			// make sure that we actually have a substring to add
-			if(end != start) {
-				parts.add(this.substring(start, end));
-				++i;
-			}
+			parts.add(this.substring(start, end));
+			n++;
+
 			// set the start of the next substring
 			start = m.end();
 		}
