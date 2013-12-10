@@ -42,7 +42,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
@@ -122,7 +121,6 @@ public class WarlockText {
 		
 		textWidget = new StyledText(parent, SWT.V_SCROLL);
 
-		textWidget.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		textWidget.setEditable(false);
 		textWidget.setWordWrap(true);
 		textWidget.setIndent(1);

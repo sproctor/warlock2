@@ -28,8 +28,7 @@ import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -104,21 +103,17 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	public void createPartControl(Composite parent) {
 		// Create main composite
 		Composite mainComposite = new Composite (parent, SWT.NONE);
-		GridLayout layout = new GridLayout(1, false);
+		FillLayout layout = new FillLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.horizontalSpacing = 0;
-		layout.verticalSpacing = 0;
+		layout.spacing = 0;
 		mainComposite.setLayout(layout);
 		
 		// Create page book
 		book = new PageBook(mainComposite, SWT.NONE);
-		book.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
 		nullTextWidget = new StyledText(book, SWT.V_SCROLL);
-		nullTextWidget.setLayout(new GridLayout(1, false));
-		nullTextWidget.setLayoutData(new GridData(GridData.FILL,
-				GridData.FILL, true, true));
+		nullTextWidget.setLayout(new FillLayout());
 		nullTextWidget.setEditable(false);
 		nullTextWidget.setWordWrap(true);
 		nullTextWidget.setIndent(1);
@@ -146,7 +141,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	
 	protected void addClient(IWarlockClient client) {
 		StreamText streamText = createStreamText(book, client);
-		streamText.getTextWidget().setLayout(new GridLayout(1, false));
+		streamText.getTextWidget().setLayout(new FillLayout());
 		streams.put(client, streamText);
 		streamText.setClient(client);
 		

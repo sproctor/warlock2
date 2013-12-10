@@ -79,7 +79,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	private WarlockEntry entry;
 	private final SWTWarlockClientViewer wrapper;
 	private IWarlockClient client;
-	private Composite mainComposite;
 	private ArrayList<IWarlockClientViewerListener> listeners = new ArrayList<IWarlockClientViewerListener>();
 	
 	private IProfile profile;
@@ -149,8 +148,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		// Create main composite
-		mainComposite = new Composite (parent, SWT.NONE);
+		Composite mainComposite = new Composite (parent, SWT.NONE);
 		GridLayout mainLayout = new GridLayout(1, false);
 		mainLayout.marginHeight = 0;
 		mainLayout.marginWidth = 0;
@@ -160,7 +158,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		
 		// create a pagebook for the popups
 		popupPageBook = new PageBook(mainComposite, SWT.NONE);
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
+		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
 		data.exclude = true;
 		popupPageBook.setLayoutData(data);
 		
@@ -170,7 +168,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		popupPageBook.setVisible(false);
 		
 		streamText = new StreamText(mainComposite, this, IWarlockClient.MAIN_STREAM_NAME);
-		streamText.getTextWidget().setLayout(new GridLayout(1, false));
+		streamText.getTextWidget().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		streamText.setIgnoreEmptyLines(false);
 		
 		openViews.add(this);
@@ -241,11 +239,12 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public void showPopup (WarlockPopupAction popup)
 	{
 		boolean atBottom = streamText.isAtBottom();
+		
 		popupPageBook.showPage(popup);
 		popupPageBook.setVisible(true);
 		((GridData)popupPageBook.getLayoutData()).exclude = false;
 		
-		mainComposite.layout();
+		popupPageBook.getParent().layout();
 		
 		if(atBottom)
 			streamText.scrollToEnd();
@@ -254,11 +253,12 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public void hidePopup (WarlockPopupAction popup)
 	{
 		boolean atBottom = streamText.isAtBottom();
+		
 		popupPageBook.showPage(emptyPopup);		
 		popupPageBook.setVisible(false);
 		((GridData)popupPageBook.getLayoutData()).exclude = true;
 		
-		mainComposite.layout();
+		popupPageBook.getParent().layout();
 		
 		if(atBottom)
 			streamText.scrollToEnd();
