@@ -364,19 +364,6 @@ public class WarlockText {
 			System.err.println("Error in append from "+streamName+": " +script);
 	}
 	
-	private void addComponentMarker(WarlockStringMarker marker, WarlockStringMarker topLevel) {
-		if(marker.getComponentName() != null) {
-			this.addMarker(marker);
-			IWarlockStyle baseStyle = topLevel.getBaseStyle(marker);
-			if(baseStyle != null)
-				marker.setStyle(baseStyle);
-		} else {
-			for(WarlockStringMarker subMarker : marker.getSubMarkers()) {
-				addComponentMarker(subMarker, topLevel);
-			}
-		}
-	}
-	
 	private void postTextChange(boolean atBottom, int offset) {
 		
 		if(ignoreEmptyLines) {
