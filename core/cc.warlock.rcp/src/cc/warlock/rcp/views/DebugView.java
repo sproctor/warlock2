@@ -29,8 +29,8 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -125,13 +125,14 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite main = new Composite(parent, SWT.NONE);
-		main.setLayout(new FillLayout());
+		main.setLayout(new GridLayout(1, false));
 
 		copyAll = new Button(main, SWT.PUSH);
 		copyAll.setText("Copy All");
 		
 		book = new PageBook(main, SWT.NONE);
-		//book.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		//book.setLayout(new FillLayout());
+		book.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		
 		copyAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -151,6 +152,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 			}
 		});
 		entry.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+
 		GameView view = GameView.getGameViewInFocus();
 		if(view != null) {
 			setClient(view.getClient());
