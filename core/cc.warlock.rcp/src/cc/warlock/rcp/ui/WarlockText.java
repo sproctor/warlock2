@@ -140,13 +140,9 @@ public class WarlockText {
 						Point point = new Point(e.x, e.y);
 						int offset = textWidget.getOffsetAtLocation(point);
 						StyleRange range = textWidget.getStyleRangeAtOffset(offset);
-						if (range != null && range instanceof StyleRangeWithData) {
-							StyleRangeWithData range2 = (StyleRangeWithData) range;
-							if (range2.action != null) {
-								textWidget.setCursor(handCursor);
-								return;
-							}
-
+						if (range != null && range.data != null) {
+							textWidget.setCursor(handCursor);
+							return;
 						}
 						textWidget.setCursor(defaultCursor);
 					}
@@ -167,13 +163,8 @@ public class WarlockText {
 					Point point = new Point(e.x, e.y);
 					int offset = textWidget.getOffsetAtLocation(point);
 					StyleRange range = textWidget.getStyleRangeAtOffset(offset);
-					if (range != null && range instanceof StyleRangeWithData)
-					{
-						StyleRangeWithData range2 = (StyleRangeWithData) range;
-						if (range2.action != null)
-						{
-							range2.action.run();
-						}
+					if (range.data != null && range.data instanceof Runnable) {
+						((Runnable)range.data).run();
 					}
 				} catch (IllegalArgumentException ex) {
 					// swallow -- see note above
@@ -420,8 +411,7 @@ public class WarlockText {
 						highlightLength = textWidget.getOffsetAtLine(lineNum + 1) - highlightStart;
 				}
 				
-				StyleRangeWithData styleRange = warlockStyleToStyleRange(style,
-						highlightStart, highlightLength);
+				StyleRange styleRange = warlockStyleToStyleRange(style, highlightStart, highlightLength);
 				if(styleRange == null)
 					continue;
 				highlightList.add(styleRange);
@@ -476,7 +466,7 @@ public class WarlockText {
 		for(WarlockStringMarker strMarker : wstring.getStyles()) {
 			WarlockStringMarker marker = strMarker.copy(offset);
 			addComponentMarker(marker, marker);
-			getMarkerStyles(marker, new StyleRangeWithData(), finishedStyles);
+			getMarkerStyles(marker, new StyleRange(), finishedStyles);
 		}
 		showStyles(finishedStyles, offset, textWidget.getCharCount());
 
@@ -496,8 +486,8 @@ public class WarlockText {
 		}
 	}
 	
-	private StyleRangeWithData warlockStyleToStyleRange(IWarlockStyle style, int start, int length) {
-		StyleRangeWithData styleRange = new StyleRangeWithData();
+	private StyleRange warlockStyleToStyleRange(IWarlockStyle style, int start, int length) {
+		StyleRange styleRange = new StyleRange();
 		
 		WarlockColor foreground = style.getForegroundColor();
 		WarlockColor background = style.getBackgroundColor();
@@ -542,9 +532,7 @@ public class WarlockText {
 		if(fullLine)
 			textWidget.setLineBackground(textWidget.getLineAtOffset(styleRange.start), 1, styleRange.background);
 		if(style.getAction() != null)
-			styleRange.action = style.getAction();
-		if(style.getName() != null)
-			styleRange.data.put("name", style.getName());
+			styleRange.data = style.getAction();
 		
 		return styleRange;
 	}
@@ -555,12 +543,7 @@ public class WarlockText {
 		if(style2 == null)
 			return style1;
 		
-		StyleRange newStyle;
-		// start with a cloned style1, unless style2 has data, but style1 doesn't
-		if(style2 instanceof StyleRangeWithData && !(style1 instanceof StyleRangeWithData))
-			newStyle = new StyleRangeWithData(style1);
-		else
-			newStyle = (StyleRange)style1.clone();
+		StyleRange newStyle = new StyleRange(style1);
 		
 		newStyle.start = style2.start;
 		newStyle.length = style2.length;
@@ -574,18 +557,10 @@ public class WarlockText {
 			newStyle.fontStyle = style2.fontStyle;
 		if(style2.strikeout) newStyle.strikeout = true;
 		if(style2.underline) newStyle.underline = true;
-		
-		if(style2 instanceof StyleRangeWithData) {
-			StyleRangeWithData _newStyle = (StyleRangeWithData)newStyle;
-			StyleRangeWithData _style2 = (StyleRangeWithData)style2;
 			
-			_newStyle.data.putAll(_style2.data);
-			if(_style2.action != null)
-				_newStyle.action = _style2.action;
-			if(_style2.tooltip != null)
-				_newStyle.tooltip = _style2.tooltip;
-		}
-		
+		if(style2.data != null)
+			newStyle.data = style2.data;
+
 		return newStyle;
 	}
 	
@@ -714,7 +689,7 @@ public class WarlockText {
 		WarlockStringMarker markerWithStyle = marker.clone();
 		markerWithStyle.setStyle(baseStyle);
 		LinkedList<StyleRange> newStyles = new LinkedList<StyleRange>();
-		getMarkerStyles(markerWithStyle, new StyleRangeWithData(), newStyles);
+		getMarkerStyles(markerWithStyle, new StyleRange(), newStyles);
 		showStyles(newStyles, marker.getStart(), marker.getEnd());
 		
 		postTextChange(atBottom, start);
