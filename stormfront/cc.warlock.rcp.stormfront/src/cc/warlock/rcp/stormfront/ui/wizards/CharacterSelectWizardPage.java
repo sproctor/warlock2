@@ -213,7 +213,8 @@ public class CharacterSelectWizardPage extends WizardPage {
 			IProfile profile = null;
 			if (account != null && !getSelectedCharacterCode().equals(SGEConnection.NEW_CHARACTER_CODE)) {
 				for (ProfileSetting curProfile : account.getProfiles()) {
-					if (getSelectedCharacterName().equals(curProfile.getName())) {
+					if (selectedCharacterCode.equals(curProfile.getCharacterId())
+							&& gameSelectPage.getSelectedGameCode().equals(curProfile.getGameCode())) {
 						profile = curProfile;
 						break;
 					}
