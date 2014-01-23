@@ -39,14 +39,14 @@ public class AccountProvider extends ArrayConfigurationProvider<Account> {
 		return null;
 	}
 	
-	public ProfileSetting getProfileByCharacterName (String characterName) {
+	/*public ProfileSetting getProfileByCharacterName (String characterName) {
 		for (Account account : this.getSettings()) {
 			ProfileSetting profile = account.getProfileProvider().getProfileByCharacterName(characterName);
 			if (profile != null)
 				return profile;
 		}
 		return null;
-	}
+	}*/
 	
 	public ProfileSetting getProfileByViewId (String viewId) {
 		for (Account account : this.getSettings()) {

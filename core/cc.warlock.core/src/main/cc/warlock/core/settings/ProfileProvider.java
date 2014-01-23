@@ -38,7 +38,7 @@ public class ProfileProvider extends ArrayConfigurationProvider<ProfileSetting> 
 	
 	public ProfileSetting createProfile (String id, String name, String gameCode, String gameName) {
 		ProfileSetting profile = createSetting();
-		profile.setCharacterId(id); //character id
+		profile.setCharacterId(id);
 		profile.setName(name);
 		profile.setGameCode(gameCode);
 		profile.setGameName(gameName);
@@ -47,14 +47,14 @@ public class ProfileProvider extends ArrayConfigurationProvider<ProfileSetting> 
 		return profile;
 	}
 	
-	public ProfileSetting getProfileByCharacterName (String characterName)
+	/*public ProfileSetting getProfileByCharacterName (String characterName)
 	{	
 		for (ProfileSetting profile : getSettings()) {
 			if (characterName.equals(profile.getName()))
 				return profile;
 		}
 		return null;
-	}
+	}*/
 	
 	public ProfileSetting getProfileByViewId (String viewId)
 	{	
