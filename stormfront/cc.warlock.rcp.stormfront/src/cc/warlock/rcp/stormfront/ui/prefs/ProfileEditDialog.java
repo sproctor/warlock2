@@ -116,7 +116,7 @@ public class ProfileEditDialog extends Dialog {
 		characterField = new ComboField(main, SWT.BORDER);
 		characterField.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		if (profile != null)
-			characterField.getCombo().setText(profile.getName());
+			characterField.getCombo().setText(profile.getCharacterName());
 		
 		statusLabel = new Label(main, SWT.NONE);
 		data = new GridData(SWT.FILL, SWT.FILL, true, false);

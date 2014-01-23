@@ -68,7 +68,7 @@ public class StormFrontRCPPlugin extends AbstractUIPlugin {
 			
 			for (ProfileSetting profile : ProfileProvider.getAllProfiles())
 			{
-				if (WarlockApplication.instance().getStartWithProfile().equals(profile.getName()))
+				if (WarlockApplication.instance().getStartWithProfile().equals(profile.getCharacterName()))
 				{
 					connectToProfile = profile;
 				}

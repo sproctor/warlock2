@@ -40,7 +40,7 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 			if (client instanceof StormFrontClient) {
 				StormFrontClient sfClient = (StormFrontClient) client;
 				
-				if (sfClient.getCharacterName().equals(profile.getName())) {
+				if (sfClient.getCharacterName().equals(profile.getCharacterName())) {
 					//clientSettings = (StormFrontClientSettings) sfClient.getStormFrontClientSettings();
 					//serverSettings = sfClient.getServerSettings();
 					profileClient = sfClient;

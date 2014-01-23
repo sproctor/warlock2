@@ -50,12 +50,12 @@ public class Profile implements IProfile {
 	}
 
 	@Override
-	public String getName() {
+	public String getCharacterName() {
 		return name;
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setCharacterName(String name) {
 		this.name = name;
 	}
 

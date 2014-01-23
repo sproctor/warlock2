@@ -189,7 +189,8 @@ public class AccountsPreferencePage extends PropertyPage implements
 				if (element instanceof Account) {
 					return ((Account)element).getAccountName();
 				} else if (element instanceof ProfileSetting) {
-					return ((ProfileSetting)element).getName();
+					ProfileSetting profile = (ProfileSetting)element;
+					return profile.getGameName() + " - " + profile.getCharacterName();
 				}
 				return "";
 			}

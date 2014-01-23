@@ -143,7 +143,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	}
 	
 	private void setReconnectProfile (final IProfile profile) {
-		String characterName = profile.getName();
+		String characterName = profile.getCharacterName();
 		reconnectLabel.setText("You are currently disconnected.");
 		reconnectLabel.setBackground(reconnectPopup.getBackground());
 
@@ -198,7 +198,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		for (final ProfileSetting profile : ProfileProvider.getAllProfiles())
 		{
 			MenuItem item = new MenuItem (menu, SWT.PUSH);
-			item.setText(profile.getName());
+			item.setText(profile.getCharacterName());
 			item.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_CHARACTER));
 			item.addSelectionListener(new SelectionAdapter () {
 				public void widgetSelected(SelectionEvent e) {

@@ -90,12 +90,12 @@ public class ProfileSetting extends WarlockSetting implements IProfile {
 	}
 	
 	@Override
-	public String getName() {
+	public String getCharacterName() {
 		return name;
 	}
 	
 	@Override
-	public void setName(String name) {
+	public void setCharacterName(String name) {
 		getNode().put("name", name);
 		this.name = name;
 	}

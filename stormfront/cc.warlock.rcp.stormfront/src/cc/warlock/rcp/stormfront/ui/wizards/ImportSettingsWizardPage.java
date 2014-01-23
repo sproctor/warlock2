@@ -149,7 +149,7 @@ class ImportSettingsWizardPage extends WizardPageWithNotification
 				return WarlockSharedImages.getImage(WarlockSharedImages.IMG_CHARACTER);
 			}
 			public String getText(Object element) {
-				return ((ProfileSetting)element).getName();
+				return ((ProfileSetting)element).getCharacterName();
 			}
 			public boolean isLabelProperty(Object element, String property) { return true; }
 			public void removeListener(ILabelProviderListener listener) {}

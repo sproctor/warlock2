@@ -39,7 +39,7 @@ public class ProfileProvider extends ArrayConfigurationProvider<ProfileSetting> 
 	public ProfileSetting createProfile (String id, String name, String gameCode, String gameName) {
 		ProfileSetting profile = createSetting();
 		profile.setCharacterId(id);
-		profile.setName(name);
+		profile.setCharacterName(name);
 		profile.setGameCode(gameCode);
 		profile.setGameName(gameName);
 		

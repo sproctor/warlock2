@@ -9,8 +9,8 @@ public interface IProfile {
 	public void setGameName(String gameName);
 	public String getCharacterId();
 	public void setCharacterId(String id);
-	public String getName();
-	public void setName(String name);
+	public String getCharacterName();
+	public void setCharacterName(String name);
 	public String getViewId();
 	public void setViewId(String viewId);
 	public Account getAccount();

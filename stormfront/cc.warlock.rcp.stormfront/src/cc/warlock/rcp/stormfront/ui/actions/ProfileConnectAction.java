@@ -55,8 +55,8 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 	private StormFrontGameView gameView;
 
 	public ProfileConnectAction(IProfile profile) {
-		super(profile.getName(), StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
-		setDescription(profile.getGameName() + " character \"" + profile.getName() + "\"");
+		super(profile.getCharacterName(), StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
+		setDescription(profile.getGameName() + " character \"" + profile.getCharacterName() + "\"");
 
 		this.profile = profile;
 	}
@@ -66,7 +66,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		finished = false;
 		status = Status.OK_STATUS;
 
-		Job connectJob = new Job("Logging into profile \"" + profile.getName() + "\"...") {
+		Job connectJob = new Job("Logging into profile \"" + profile.getCharacterName() + "\"...") {
 			protected IStatus run(IProgressMonitor monitor) {
 				ProfileConnectAction.this.monitor = monitor;
 
@@ -74,7 +74,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 				connection.setRetrieveGameInfo(false);
 				connection.addConnectionListener(new SWTConnectionListenerAdapter(ProfileConnectAction.this));
 				connection.addSGEConnectionListener(new SWTSGEConnectionListenerAdapter(ProfileConnectAction.this));
-				monitor.beginTask("Logging into profile \"" + profile.getName() + "\"...", 5);
+				monitor.beginTask("Logging into profile \"" + profile.getCharacterName() + "\"...", 5);
 
 				connection.connect();
 
@@ -141,7 +141,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 			// Check to see if there is an open gameView, and if it's connected.
 			// If it is, open a new one.
 			if (gameView == null) {
-				gameView = LoginUtil.connectAndOpenGameView(loginProperties, profile.getName());
+				gameView = LoginUtil.connectAndOpenGameView(loginProperties, profile.getCharacterName());
 				gameView.setProfile(profile);
 			} else {
 				LoginUtil.connect(gameView, loginProperties);

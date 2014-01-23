@@ -78,7 +78,7 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 	public String getDescription(IHandler handler) {
 		ProfileConnectAction phandler = (ProfileConnectAction)handler;
 		
-		return phandler.getProfile().getGameName() + ": " + phandler.getProfile().getName(); 
+		return phandler.getProfile().getGameName() + ": " + phandler.getProfile().getCharacterName(); 
 	}
 	
 	public Image getImage(IHandler handler) {
@@ -86,6 +86,6 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 	}
 	
 	public String getLabel(IHandler handler) {
-		return ((ProfileConnectAction)handler).getProfile().getName();
+		return ((ProfileConnectAction)handler).getProfile().getCharacterName();
 	}
 }
