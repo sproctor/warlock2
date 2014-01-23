@@ -144,10 +144,10 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	
 	private void setReconnectProfile (final IProfile profile) {
 		String characterName = profile.getName();
-		reconnectLabel.setText("The character \"" + characterName + "\" is currently disconnected.");
+		reconnectLabel.setText("You are currently disconnected.");
 		reconnectLabel.setBackground(reconnectPopup.getBackground());
 
-		reconnect.setText("Login as \"" + characterName + "\"");
+		reconnect.setText("Connect to " + profile.getGameName() + " with " + characterName);
 		reconnect.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_RECONNECT));
 		if (currentListener != null)
 			reconnect.removeSelectionListener(currentListener);
