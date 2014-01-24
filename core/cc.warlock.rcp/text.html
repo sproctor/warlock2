@@ -8,7 +8,7 @@
     $(document).ready(function () {
         $(window).resize(function() {
             if(atBottom)
-              window.scrollTo(0, document.body.scrollHeight);
+              window.scroll(0, document.body.scrollHeight);
         });
         $(window).scroll(function() {
             atBottom = $(window).height() + $(window).scrollTop() >= $(document).height();
@@ -18,11 +18,14 @@
           return false;
         }
     });
+    function autoscroll() {
+      if(atBottom && $(window).height() + $(window).scrollTop() < $(document).height())
+        window.scroll(0, document.body.scrollHeight);
+    }
     function append(str) {
       var top = document.getElementById('text');
       top.innerHTML += str;
-      if(atBottom)
-        window.scrollTo(0, document.body.scrollHeight);
+      autoscroll();
     }
     function appendLine(str) {
         var main = document.getElementById('text');
@@ -36,10 +39,9 @@
         	window.status="bg is " + bg;
         }
         if(atBottom)
-          window.scrollTo(0, document.body.scrollHeight);
+          window.scroll(0, document.body.scrollHeight);
       }
     function setStyle(name, property, value) {
-      window.status="changing style";
       var rules = document.styleSheets[0].cssRules;
       var ruleExists = false;
       var myclass = '.'+name;
@@ -47,7 +49,6 @@
         if (rules[i].selectorText == myclass) {
 			rules[i].style.setProperty(property, value, null);
 			ruleExists = true;
-			window.status="set property";
 			break;
 		}
       }
@@ -56,18 +57,32 @@
         document.styleSheets[0].insertRule(rule, 0);
         window.status=rule;
       }
-      window.status="changed style";
     }
     function replaceComponent(name, value) {
       var element = document.getElementById(name);
       element.innerHTML = value;
-      if(atBottom)
-          window.scrollTo(0, document.body.scrollHeight);
+      autoscroll();
+    }
+    function ignoreEmptyLines(ignoreLines) {
+      var value = '0';
+      if(!ignoreLines)
+        value = '1em';
+      var rules = document.styleSheets[0].cssRules;
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i].selectorText == '.line') {
+			rules[i].style.setProperty('min-height', value, null);
+			window.status='set height to '+value;
+			break;
+		}
+      }
     }
   </script>
   <style>
     #text {
       white-space: pre-wrap;
+    }
+    .line {
+      min-height: 0; // Something for ignoreEmptyLines to find
     }
   </style>
 </head>

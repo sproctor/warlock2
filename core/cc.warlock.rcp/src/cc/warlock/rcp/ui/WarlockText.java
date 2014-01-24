@@ -24,12 +24,7 @@ package cc.warlock.rcp.ui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -91,9 +86,7 @@ public class WarlockText {
 	private IWarlockClient client;
 	private Browser textWidget;
 	private boolean browserLoaded = false;
-	private boolean ignoreEmptyLines = true;
-	//private Font monoFont = null;
-	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
+	
 	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
 		@Override
 		public void clientCreated(IWarlockClient client) {}
@@ -168,8 +161,10 @@ public class WarlockText {
 	}
 	
 	public void clearText() {
-		//textWidget.setText("");
-		//markers.clear();
+		String script = "document.getElementById('text').innerHTML = ''";
+		
+		if(!textWidget.execute(script))
+			System.err.println("Error in clearText from "+streamName+": " +script);
 	}
 	
 	public void setLineLimit(int limit) {
@@ -180,70 +175,6 @@ public class WarlockText {
 		String text = StringEscapeUtils.escapeHtml(string).replaceAll("(\r\n|\n)", "<br/>");
 		if(!textWidget.execute("append(\"" + text + "\")"))
 			System.err.println("Problem appending: " + text);
-	}
-	
-	private Pattern newlinePattern = Pattern.compile("\r?\n");
-	private void removeEmptyLines(int offset) {
-		/*int line = textWidget.getLineAtOffset(offset);
-		int start = textWidget.getOffsetAtLine(line);
-		int end = textWidget.getCharCount();
-		if(start >= end)
-			return;
-		String str = textWidget.getTextRange(start, end - start);
-		Matcher m = newlinePattern.matcher(str);
-		
-		int lineStart = 0;
-		while(m.find(lineStart)) {
-			if(lineStart == m.start()) {
-				int matchPos = start + m.start();
-				int matchLen = m.end() - m.start();
-				// Add the newline marker. We give it an initial length of 1
-				//   so it gets added correctly into the tree of markers
-				WarlockStringMarker marker = new WarlockStringMarker(
-						new WarlockStyle("newline"), matchPos, matchPos + matchLen);
-				this.addInternalMarker(marker, markers);
-				
-				// then remove the newline from the text
-				textWidget.replaceTextRange(matchPos, matchLen, "");
-				// and shrink down the newline marker because the actual newline is no longer there.
-				marker.setEnd(matchPos);
-				WarlockStringMarker.updateMarkers(-matchLen, marker, markers);
-				// Recursive call. if this could be a tail call, that would be awesome.
-				removeEmptyLines(start);
-				break;
-			} else {
-				lineStart = m.end();
-			}
-		}*/
-	}
-	
-	private void restoreNewlines(int offset, Collection<WarlockStringMarker> markerList) {
-		for(Iterator<WarlockStringMarker> iter = markerList.iterator();
-		iter.hasNext(); )
-		{
-			WarlockStringMarker marker = iter.next();
-		
-			Collection<WarlockStringMarker> subList = marker.getSubMarkers();
-			if(subList != null)
-				restoreNewlines(offset, subList);
-			
-			// check to make sure we're a newline in the appropriate area
-			if(marker.getStart() < offset)
-				continue;
-			String name = marker.getName();
-			if(name == null || !name.equals("newline"))
-				continue;
-			
-			// check if we're an empty line
-			//if(marker.getStart() == 0 || textWidget.getTextRange(marker.getStart() - 1, 1).equals("\n"))
-				//continue;
-			
-			// we're not an empty line, put us back into action
-			//textWidget.replaceTextRange(marker.getStart(), 0, "\n");
-			// TODO: this should actually just affect markers after us... oh well.
-			WarlockStringMarker.updateMarkers(1, marker, markers);
-			iter.remove();
-		}
 	}
 	
 	/*private Collection<StyleRange> getHighlights(int start, int end) {
@@ -346,8 +277,6 @@ public class WarlockText {
 	}
 	
 	public void appendLine(WarlockString wstring) {
-		if(streamName.equals("experience"))
-			System.out.println("appending to "+streamName);
 		String text = markupString(wstring);
 		String script = "appendLine(\"" + text.replaceAll("(\r\n|\n)", "<br/>") + "\");";
 		
@@ -364,109 +293,20 @@ public class WarlockText {
 			System.err.println("Error in append from "+streamName+": " +script);
 	}
 	
-	private void addComponentMarker(WarlockStringMarker marker, WarlockStringMarker topLevel) {
-		if(marker.getComponentName() != null) {
-			this.addMarker(marker);
-			IWarlockStyle baseStyle = topLevel.getBaseStyle(marker);
-			if(baseStyle != null)
-				marker.setStyle(baseStyle);
-		} else {
-			for(WarlockStringMarker subMarker : marker.getSubMarkers()) {
-				addComponentMarker(subMarker, topLevel);
-			}
-		}
-	}
-	
-	private void postTextChange(boolean atBottom, int offset) {
-		
-		if(ignoreEmptyLines) {
-			removeEmptyLines(offset);
-			restoreNewlines(offset, markers);
-		}
-		
-		//constrainLineLimit(atBottom);
-	}
-	
-	// this function removes the first "delta" amount of characters
-	private void updateMarkers(int delta) {
-		for(Iterator<WarlockStringMarker> iter = markers.iterator();
-		iter.hasNext(); )
-		{
-			WarlockStringMarker marker = iter.next();
-			
-			// If the marker is moved off the beginning, remove it
-			if(marker.getEnd() + delta < 0) {
-				iter.remove();
-				continue;
-			}
-			// move us accordingly
-			marker.move(delta);
-		}
-	}
-	
-	public void addInternalMarker(WarlockStringMarker marker,
-			LinkedList<WarlockStringMarker> markerList) {
-		ListIterator<WarlockStringMarker> iter = markerList.listIterator();
-		try {
-			while(true) {
-				if(!iter.hasNext()) {
-					iter.add(marker);
-					break;
-				}
-				WarlockStringMarker cur = iter.next();
-				if(cur.getEnd() > marker.getStart()) {
-					if(marker.getEnd() > cur.getStart()) {
-						addInternalMarker(marker, cur.getSubMarkers());
-						return;
-					}
-
-					iter.previous();
-					iter.add(marker);
-					break;
-				}
-			}
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
-	public void addMarker(WarlockStringMarker marker) {
-		ListIterator<WarlockStringMarker> iter = markers.listIterator();
-		try {
-			while(true) {
-				if(!iter.hasNext()) {
-					iter.add(marker);
-					break;
-				}
-				WarlockStringMarker cur = iter.next();
-				if(cur.getEnd() > marker.getStart()) {
-					if(marker.getEnd() > cur.getStart()) {
-						throw new Exception("Bad marker!");
-					}
-
-					iter.previous();
-					iter.add(marker);
-					break;
-				}
-			}
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
 	public void replaceComponent(String name, WarlockString str) {
 		String html = markupString(str).replaceAll("(\r\n|\n)", "<br/>");
 		String id = name.replace(' ', '-');
 		String text = "replaceComponent(\""+id+"\", \""+html+"\")";
 		if(!textWidget.execute(text))
 			System.err.println("Error executing: "+text);
-		System.out.println("replaced component " + id + " in " + streamName);
 	}
 	
 	public void setIgnoreEmptyLines(boolean ignoreLines) {
-		this.ignoreEmptyLines = ignoreLines;
+		String script = "ignoreEmptyLines(" + ignoreLines + ");";
+		
+		System.out.println("Setting empty lines in "+streamName);
+		if(!textWidget.execute(script))
+			System.err.println("Error in setIgnoreEmptyLines from "+streamName+": " +script);
 	}
 	
 	public Browser getTextWidget() {
