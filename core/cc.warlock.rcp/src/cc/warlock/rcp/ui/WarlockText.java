@@ -163,7 +163,7 @@ public class WarlockText {
 					Point point = new Point(e.x, e.y);
 					int offset = textWidget.getOffsetAtLocation(point);
 					StyleRange range = textWidget.getStyleRangeAtOffset(offset);
-					if (range.data != null && range.data instanceof Runnable) {
+					if (range != null && range.data != null && range.data instanceof Runnable) {
 						((Runnable)range.data).run();
 					}
 				} catch (IllegalArgumentException ex) {
