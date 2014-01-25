@@ -55,7 +55,8 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 	private StormFrontGameView gameView;
 
 	public ProfileConnectAction(IProfile profile) {
-		super(profile.getCharacterName(), StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
+		super(profile.getGameName() + " - " + profile.getCharacterName(),
+				StormFrontSharedImages.getImageDescriptor(StormFrontSharedImages.IMG_CHARACTER));
 		setDescription(profile.getGameName() + " character \"" + profile.getCharacterName() + "\"");
 
 		this.profile = profile;
@@ -94,6 +95,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		connectJob.schedule();
 	}
 
+	@Override
 	public void loginReady(SGEConnection connection) {
 		monitor.worked(1);
 
@@ -106,16 +108,19 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		}
 	}
 
+	@Override
 	public void loginFinished(SGEConnection connection) {
 		monitor.worked(1);
 	}
 
+	@Override
 	public void sgeError(SGEConnection connection, int errorCode) {
 		LoginUtil.showAuthenticationError(errorCode);
 		this.status = new Status(IStatus.ERROR, Warlock2Plugin.PLUGIN_ID, LoginUtil.getAuthenticationError(errorCode));
 		finished = true;
 	}
 
+	@Override
 	public void gamesReady(SGEConnection connection, List<? extends ISGEGame> games) {
 		monitor.worked(1);
 
@@ -127,12 +132,14 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		}
 	}
 
+	@Override
 	public void charactersReady(SGEConnection connection, Map<String, String> characters) {
 		monitor.worked(1);
 
 		connection.selectCharacter(profile.getCharacterId());
 	}
 
+	@Override
 	public void readyToPlay(SGEConnection connection, Map<String, String> loginProperties) {
 		monitor.worked(1);
 		monitor.done();
@@ -167,6 +174,7 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 		return profile;
 	}
 
+	@Override
 	public void connectionError(IConnection connection, ErrorType errorType) {
 		LoginUtil.showConnectionError(errorType);
 	}

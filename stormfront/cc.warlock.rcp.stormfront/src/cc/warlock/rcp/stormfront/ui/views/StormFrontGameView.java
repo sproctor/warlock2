@@ -27,20 +27,14 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuAdapter;
-import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -53,8 +47,6 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.settings.ProfileProvider;
-import cc.warlock.core.settings.ProfileSetting;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
@@ -81,8 +73,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		
-		//textBorder = new StormFrontTextBorder(text);
 		
 		IProfile profile = getProfile();
 		if(profile == null) {
@@ -126,18 +116,15 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		reconnect = new Button(buttons, SWT.PUSH);
 		
 		final Button connections = new Button(buttons, SWT.TOGGLE);
-		connections.setText("Connections...");
+		connections.setText("All Connections...");
 		connections.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_CONNECT));
-
-		final Menu profileMenu = createProfileMenu(connections);
-		
 		connections.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				Rectangle rect = connections.getBounds();
-				Point pt = new Point(rect.x, rect.y + rect.height);
-				pt = buttons.toDisplay(pt);
-				profileMenu.setLocation(pt.x, pt.y);
-				profileMenu.setVisible(true);
+				try {
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ConnectionView.VIEW_ID);
+				} catch (PartInitException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 	}
@@ -182,48 +169,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		};
 		
 		reconnect.addSelectionListener(currentListener);
-	}
-	
-	private Menu createProfileMenu (final Button connections) {
-		Menu menu = new Menu(connections);
-		menu.addMenuListener(new MenuAdapter() {
-			public void menuShown(MenuEvent e) {
-				connections.setSelection(true);
-			}
-			public void menuHidden(MenuEvent e) {
-				connections.setSelection(false);
-			}
-		});
-		
-		for (final ProfileSetting profile : ProfileProvider.getAllProfiles())
-		{
-			MenuItem item = new MenuItem (menu, SWT.PUSH);
-			item.setText(profile.getCharacterName());
-			item.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_CHARACTER));
-			item.addSelectionListener(new SelectionAdapter () {
-				public void widgetSelected(SelectionEvent e) {
-					ProfileConnectAction action = new ProfileConnectAction(profile);
-					action.setGameView(StormFrontGameView.this);
-					action.run();
-					hidePopup(reconnectPopup);
-				}
-			});
-		}
-		
-		MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
-		item = new MenuItem(menu, SWT.PUSH);
-		item.setText("All Connections...");
-		item.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_CONNECT));
-		item.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ConnectionView.VIEW_ID);
-				} catch (PartInitException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		return menu;
 	}
 	
 	public void startedDownloadingServerSettings() {

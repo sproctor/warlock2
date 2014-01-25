@@ -84,8 +84,4 @@ public class ProfileConnectContributionItem extends CompoundContributionItem imp
 	public Image getImage(IHandler handler) {
 		return StormFrontSharedImages.getImage(StormFrontSharedImages.IMG_CHARACTER);
 	}
-	
-	public String getLabel(IHandler handler) {
-		return ((ProfileConnectAction)handler).getProfile().getCharacterName();
-	}
 }

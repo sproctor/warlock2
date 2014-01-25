@@ -48,6 +48,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 
 import cc.warlock.core.client.IProfile;
@@ -219,9 +220,9 @@ public class CharacterSelectWizardPage extends WizardPage {
 						break;
 					}
 				}
-
+				
 				if (profile == null) {
-					boolean response = MessageDialog.openQuestion(getShell(),
+					boolean response = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
 							"Save Profile?", "Would you like to save the character \""
 									+ getSelectedCharacterName() + "\" as a new profile?");
 
