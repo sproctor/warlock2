@@ -13,6 +13,7 @@ import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.rcp.ui.WarlockEntry;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.util.ColorUtil;
@@ -104,7 +105,7 @@ public class StormFrontEntry extends WarlockEntry {
 		if(ctColor != null)
 			ctColor.dispose();
 		ctColor = ColorUtil.warlockColorToColor(settings.getCtColor());
-		settings.getNode().addPreferenceChangeListener(new IPreferenceChangeListener() {
+		WarlockPreferencesScope.addPreferenceChangeListener(settings.getNode(), new IPreferenceChangeListener() {
 			@Override
 			public void preferenceChange(PreferenceChangeEvent event) {
 				if (event.getKey().equals("rt-color")) {

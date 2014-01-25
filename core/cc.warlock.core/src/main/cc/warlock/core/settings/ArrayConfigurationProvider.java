@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.NodeChangeEvent;
 import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 
 public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> extends WarlockSetting implements IArraySettingProvider<T> {
@@ -42,7 +41,7 @@ public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> exte
 			T curr = iter.next();
 			if(curr != null) {
 				if(n != id)
-					curr.getNode().move(Integer.toString(n));
+					move(curr.getNode(), Integer.toString(n));
 				n++;
 			} else {
 				iter.remove();
@@ -51,6 +50,34 @@ public abstract class ArrayConfigurationProvider<T extends IWarlockSetting> exte
 		}
 	}
 	
+	private void move(Preferences preferences, String path) {
+		try {
+			Preferences newPrefs = preferences.parent().node(path);
+			for (String key : preferences.keys()) {
+				newPrefs.put(key, preferences.get(key, null));
+			}
+			for (String name : preferences.childrenNames()) {
+				reparent(preferences.node(name), newPrefs);
+			}
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void reparent(Preferences preferences, Preferences parent) {
+		try {
+			Preferences newPrefs = parent.node(preferences.name());
+			for (String key : preferences.keys()) {
+				newPrefs.put(key, preferences.get(key, null));
+			}
+			for (String name : preferences.childrenNames()) {
+				reparent(preferences.node(name), newPrefs);
+			}
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
 	private void add(int id, T setting) {
 		while(id > settings.size()) {
 			settings.add(null);

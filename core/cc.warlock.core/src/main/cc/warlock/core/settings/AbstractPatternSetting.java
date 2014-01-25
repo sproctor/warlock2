@@ -42,7 +42,7 @@ abstract public class AbstractPatternSetting<T extends WarlockPattern> extends W
 		boolean caseSensitive = getNode().getBoolean("case-sensitive", false);
 		boolean fullWord = getNode().getBoolean("full-word", true);
 		pattern = createPattern(text, literal, caseSensitive, fullWord);
-		WarlockPreferencesScope.getInstance().addPreferenceChangeListener(this, new IPreferenceChangeListener() {
+		WarlockPreferencesScope.addPreferenceChangeListener(this.getNode(), new IPreferenceChangeListener() {
 			public void preferenceChange(PreferenceChangeEvent event) {
 				if(event.getKey().equals("pattern")) {
 					if(!pattern.getText().equals(event.getNewValue()))

@@ -36,7 +36,7 @@ public class WarlockSetting implements IWarlockSetting {
 
 	//private Preferences parentNode;
 	private IWarlockSetting parent;
-	private WarlockPreferences node;
+	private Preferences node;
 	private boolean newSetting;
 	private ArrayList<IWarlockSettingListener> listeners = null;
 	
@@ -48,15 +48,10 @@ public class WarlockSetting implements IWarlockSetting {
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
-		Preferences n = getParentNode().node(path);
-		if(n instanceof WarlockPreferences) {
-			node = (WarlockPreferences)n;
-		} else {
-			node = new WarlockPreferences(n);
-		}
+		node = getParentNode().node(path);
 	}
 	
-	public WarlockPreferences getNode() {
+	public Preferences getNode() {
 		return node;
 	}
 	
@@ -66,12 +61,7 @@ public class WarlockSetting implements IWarlockSetting {
 		} catch(BackingStoreException e) {
 			e.printStackTrace();
 		}
-		Preferences n = getParentNode().node(path);
-		if(n instanceof WarlockPreferences) {
-			node = (WarlockPreferences)n;
-		} else {
-			node = new WarlockPreferences(n);
-		}
+		node = getParentNode().node(path);
 	}
 	
 	public boolean isNewSetting() {

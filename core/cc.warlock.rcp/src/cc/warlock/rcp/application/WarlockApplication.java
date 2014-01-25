@@ -27,9 +27,13 @@ package cc.warlock.rcp.application;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -87,6 +91,14 @@ public class WarlockApplication implements IApplication, IAdaptable {
 		parseArguments(arguments);
 		
 		Display display = PlatformUI.createDisplay();
+		
+		Location instanceLocation = Platform.getInstanceLocation();
+		
+		if (!instanceLocation.lock()) {
+			MessageDialog.openError(new Shell(display), "Warlock 2", "Another instance of Warlock is currently running.");
+			return EXIT_OK;
+		}
+		
 		advisor = new WarlockWorkbenchAdvisor();
 		int ret = PlatformUI.createAndRunWorkbench(display, advisor);
 		

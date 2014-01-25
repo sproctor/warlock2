@@ -21,13 +21,15 @@
  */
 package cc.warlock.core.settings;
 
+import org.osgi.service.prefs.Preferences;
+
 
 /**
  * @author Sean Proctor
  *
  */
 public interface IWarlockSetting {
-	public WarlockPreferences getNode();
+	public Preferences getNode();
 	public void flush();
 	public boolean isNewSetting();
 	public void notifyListenersChanged(); // Should only be called by its children

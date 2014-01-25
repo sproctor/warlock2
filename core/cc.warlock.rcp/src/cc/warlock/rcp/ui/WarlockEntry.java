@@ -57,6 +57,7 @@ import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
@@ -177,7 +178,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		widget.setBackground(ColorUtil.warlockColorToColor(bg));
 		widget.setForeground(ColorUtil.warlockColorToColor(fg));
 		minCommandSize = settings.getMinCommandSize();
-		settings.getNode().addPreferenceChangeListener(new IPreferenceChangeListener() {
+		WarlockPreferencesScope.addPreferenceChangeListener(settings.getNode(), new IPreferenceChangeListener() {
 			@Override
 			public void preferenceChange(PreferenceChangeEvent event) {
 				if (event.getKey().equals("min-command-size"))

@@ -1,21 +1,21 @@
 package cc.warlock.core.settings;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 
 public class WarlockPreferencesScope {
 	
 	private static final WarlockPreferencesScope instance = new WarlockPreferencesScope();
 	
-	private final IScopeContext scope = ConfigurationScope.INSTANCE;
-	private WarlockPreferences preferences = new WarlockPreferences(scope.getNode("cc.warlock"));
+	private IEclipsePreferences preferences = ConfigurationScope.INSTANCE.getNode("cc.warlock");
 	
 	protected WarlockPreferencesScope() {
-		System.out.println("Configuration location: " + scope.getLocation());
+		System.out.println("Configuration location: " + ConfigurationScope.INSTANCE.getLocation());
 		try {
 			preferences.sync();
 		} catch(BackingStoreException e) {
@@ -27,16 +27,16 @@ public class WarlockPreferencesScope {
 		return instance;
 	}
 	
-	public WarlockPreferences getNode() {
+	public IEclipsePreferences getNode() {
 		return preferences;
 	}
 	
-	public void addNodeChangeListener(IWarlockSetting setting, INodeChangeListener listener) {
-		scope.getNode(setting.getNode().absolutePath()).addNodeChangeListener(listener);
+	public static void addNodeChangeListener(Preferences node, INodeChangeListener listener) {
+		ConfigurationScope.INSTANCE.getNode(node.absolutePath()).addNodeChangeListener(listener);
 	}
 	
-	public void addPreferenceChangeListener(IWarlockSetting setting, IPreferenceChangeListener listener) {
-		scope.getNode(setting.getNode().absolutePath()).addPreferenceChangeListener(listener);
+	public static void addPreferenceChangeListener(Preferences node, IPreferenceChangeListener listener) {
+		ConfigurationScope.INSTANCE.getNode(node.absolutePath()).addPreferenceChangeListener(listener);
 	}
 	
 	public void flush() {
