@@ -34,8 +34,8 @@ public class SpellTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "spell" };
+	public String getTagName() {
+		return "spell";
 	}
 	
 	@Override

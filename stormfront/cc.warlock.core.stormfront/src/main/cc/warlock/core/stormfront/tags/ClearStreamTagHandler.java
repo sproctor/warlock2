@@ -35,8 +35,8 @@ public class ClearStreamTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "clearStream"};
+	public String getTagName() {
+		return "clearStream";
 	}
 	
 	@Override

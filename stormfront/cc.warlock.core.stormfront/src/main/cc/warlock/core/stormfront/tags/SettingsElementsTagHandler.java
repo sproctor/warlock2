@@ -34,8 +34,8 @@ public class SettingsElementsTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { };
+	public String getTagName() {
+		return "FIXME";
 		/*return new String[] {
 				"presets", "strings", "stream", "scripts",
 				"names", "macros", "palette", "vars", "dialog",
@@ -59,7 +59,7 @@ public class SettingsElementsTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().receivedServerSetting(getCurrentTag());
+		//handler.getClient().receivedServerSetting(getCurrentTag());
 		settings.append(rawXML);
 	}
 

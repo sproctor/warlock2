@@ -28,40 +28,28 @@ import cc.warlock.core.stormfront.IStormFrontTagHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 abstract public class BaseTagHandler implements IStormFrontTagHandler {
-	private String currentTag;
+	
 	private Map<String, IStormFrontTagHandler> tagHandlers;
 	
-	public abstract String[] getTagNames();
-	
+	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) { }
 
+	@Override
 	public void handleEnd(String rawXML) { }
 
+	@Override
 	public boolean handleCharacters(String characters) {
 		return false;
 	}
 	
-	public String getCurrentTag() {
-		return currentTag;
-	}
-	
-	public void setCurrentTag(String tagName) {
-		this.currentTag = tagName;
-	}
-	
-	private void addTagHandler(String tagName, IStormFrontTagHandler tagHandler) {
+	protected void addTagHandler(IStormFrontTagHandler tagHandler) {
 		if(tagHandlers == null) {
 			tagHandlers = new HashMap<String, IStormFrontTagHandler>();
 		}
-		tagHandlers.put(tagName, tagHandler);
+		tagHandlers.put(tagHandler.getTagName(), tagHandler);
 	}
 	
-	protected void addTagHandler(IStormFrontTagHandler tagHandler) {
-		for(String tagName : tagHandler.getTagNames()) {
-			addTagHandler(tagName, tagHandler);
-		}
-	}
-	
+	@Override
 	public IStormFrontTagHandler getTagHandler(String tagName) {
 		if(tagHandlers == null)
 			return null;

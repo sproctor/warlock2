@@ -152,10 +152,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	 * This function is to register handlers for xml tags
 	 */
 	public void registerHandler(IStormFrontTagHandler tagHandler) {
-		for (String tagName : tagHandler.getTagNames())
-		{
-			defaultTagHandlers.put(tagName, tagHandler);
-		}
+		defaultTagHandlers.put(tagHandler.getTagName(), tagHandler);
 	}
 	
 	/*
@@ -227,7 +224,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		
 			IStormFrontTagHandler tagHandler = getTagHandlerForElement(tagName);
 			if(tagHandler != null) {
-				tagHandler.setCurrentTag(tagName);
+				//tagHandler.setCurrentTag(tagName);
 				// if the handler handled the characters, we're done
 				if(tagHandler.handleCharacters(characters))
 					return true;
@@ -250,7 +247,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		// call the method for the object
 		IStormFrontTagHandler tagHandler = getTagHandlerForElement(name);
 		if(tagHandler != null) {
-			tagHandler.setCurrentTag(name);
+			//tagHandler.setCurrentTag(name);
 			tagHandler.handleEnd(rawXML);
 		}
 		
@@ -268,7 +265,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		tagStack.push(name);
 		
 		if(tagHandler != null) {
-			tagHandler.setCurrentTag(name);
+			//tagHandler.setCurrentTag(name);
 			tagHandler.handleStart(attributes, rawXML);
 		} else {
 			System.err.println("Unhandled tag \"" + name + "\". Probably an unsupported tag.");
@@ -375,14 +372,6 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 			WarlockStringMarker marker = styleStack.pop();
 			marker.setEnd(buffer.length());
 		}
-	}
-	
-	public IStormFrontTagHandler getTagHandler(Class<? extends IStormFrontTagHandler> handlerType) {
-		for (IStormFrontTagHandler handler : defaultTagHandlers.values()) {
-			if (handler.getClass().equals(handlerType))
-				return handler;
-		}
-		return null;
 	}
 	
 	public void resetMonsterCount() {

@@ -21,8 +21,8 @@ public class CasttimeTagHandler extends DefaultTagHandler {
 	 * @see cc.warlock.core.stormfront.internal.BaseTagHandler#getTagNames()
 	 */
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "castTime" };
+	public String getTagName() {
+		return "castTime";
 	}
 
 	@Override

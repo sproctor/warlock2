@@ -38,8 +38,8 @@ public class AppTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "app" };
+	public String getTagName() {
+		return "app";
 	}
 	
 	@Override

@@ -34,8 +34,8 @@ public class OutputTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] {"output"};
+	public String getTagName() {
+		return "output";
 	}
 
 	@Override

@@ -32,8 +32,8 @@ public class IndicatorTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "indicator" };
+	public String getTagName() {
+		return "indicator";
 	}
 	
 	@Override

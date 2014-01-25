@@ -35,8 +35,8 @@ public class SettingsTagHandler extends DefaultTagHandler {
 	
 	public class NullTagHandler extends BaseTagHandler {
 		@Override
-		public String[] getTagNames() {
-			return new String[] { };
+		public String getTagName() {
+			return "";
 		}
 
 		@Override
@@ -52,8 +52,8 @@ public class SettingsTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "settings" };
+	public String getTagName() {
+		return "settings";
 	}
 	
 	@Override

@@ -35,8 +35,8 @@ public class ComponentTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "component" };
+	public String getTagName() {
+		return "component";
 	}
 	
 	@Override

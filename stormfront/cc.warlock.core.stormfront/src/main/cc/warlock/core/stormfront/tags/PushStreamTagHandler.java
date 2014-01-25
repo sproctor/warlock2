@@ -41,8 +41,8 @@ public class PushStreamTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "pushStream" };
+	public String getTagName() {
+		return "pushStream";
 	}
 	
 	@Override

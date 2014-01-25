@@ -35,8 +35,8 @@ public class DialogDataTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "dialogData" };
+	public String getTagName() {
+		return "dialogData";
 	}
 
 	@Override

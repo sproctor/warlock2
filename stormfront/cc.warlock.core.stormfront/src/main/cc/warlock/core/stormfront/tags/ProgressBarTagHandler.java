@@ -46,8 +46,8 @@ public class ProgressBarTagHandler extends BaseTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "progressBar" };
+	public String getTagName() {
+		return "progressBar";
 	}
 
 	@Override

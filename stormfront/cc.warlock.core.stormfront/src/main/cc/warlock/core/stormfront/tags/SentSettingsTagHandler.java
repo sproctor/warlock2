@@ -33,8 +33,8 @@ public class SentSettingsTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "sentSettings" };
+	public String getTagName() {
+		return "sentSettings";
 	}
 
 	@Override

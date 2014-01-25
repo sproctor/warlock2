@@ -44,8 +44,8 @@ public class RoundtimeTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "roundTime" };
+	public String getTagName() {
+		return "roundTime";
 	}
 	
 	@Override

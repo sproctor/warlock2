@@ -53,8 +53,8 @@ public class DTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] {"d"};
+	public String getTagName() {
+		return "d";
 	}
 
 	@Override

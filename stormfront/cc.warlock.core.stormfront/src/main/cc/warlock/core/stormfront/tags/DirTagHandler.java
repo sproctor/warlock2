@@ -35,8 +35,8 @@ public class DirTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "dir" };
+	public String getTagName() {
+		return "dir";
 	}
 
 	@Override

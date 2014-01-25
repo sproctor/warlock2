@@ -60,8 +60,8 @@ public class ATagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] {"a"};
+	public String getTagName() {
+		return "a";
 	}
 
 	@Override

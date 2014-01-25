@@ -34,8 +34,8 @@ public class StreamWindowTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "streamWindow" };
+	public String getTagName() {
+		return "streamWindow";
 	}
 
 	@Override

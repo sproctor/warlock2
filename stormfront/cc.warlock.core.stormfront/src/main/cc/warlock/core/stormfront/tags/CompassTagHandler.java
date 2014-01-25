@@ -49,8 +49,8 @@ public class CompassTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "compass" };
+	public String getTagName() {
+		return "compass";
 	}
 
 	@Override

@@ -34,8 +34,8 @@ public class StreamTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "stream" };
+	public String getTagName() {
+		return "stream";
 	}
 
 	 @Override

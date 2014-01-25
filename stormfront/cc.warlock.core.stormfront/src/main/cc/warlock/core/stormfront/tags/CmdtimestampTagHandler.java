@@ -34,8 +34,8 @@ public class CmdtimestampTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] {"cmdtimestamp"};
+	public String getTagName() {
+		return "cmdtimestamp";
 	}
 
 	@Override

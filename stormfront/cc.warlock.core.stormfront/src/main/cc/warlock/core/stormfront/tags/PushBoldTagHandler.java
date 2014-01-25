@@ -33,8 +33,8 @@ public class PushBoldTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "pushBold" };
+	public String getTagName() {
+		return "pushBold";
 	}
 	
 	@Override

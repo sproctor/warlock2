@@ -40,8 +40,8 @@ public class PromptTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "prompt" };
+	public String getTagName() {
+		return "prompt";
 	}
 	
 	@Override

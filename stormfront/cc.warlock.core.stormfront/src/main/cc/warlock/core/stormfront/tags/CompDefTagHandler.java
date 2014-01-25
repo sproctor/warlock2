@@ -49,8 +49,8 @@ public class CompDefTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "compDef" };
+	public String getTagName() {
+		return "compDef";
 	}
 
 	@Override

@@ -57,8 +57,6 @@ public interface IStormFrontProtocolHandler extends IStormFrontXMLHandler {
 	public void incrementMonsterCount();
 	public int getMonsterCount();
 	
-	public IStormFrontTagHandler getTagHandler(Class<? extends IStormFrontTagHandler> handlerType);
-	
 	public void flushBuffer();
 	public WarlockString getBuffer();
 	public void clearBuffer();

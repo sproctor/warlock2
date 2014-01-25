@@ -34,8 +34,8 @@ public class LaunchURLTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "LaunchURL" };
+	public String getTagName() {
+		return "LaunchURL";
 	}
 	
 	@Override

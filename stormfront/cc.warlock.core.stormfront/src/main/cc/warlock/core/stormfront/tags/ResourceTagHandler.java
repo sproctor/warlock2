@@ -31,8 +31,8 @@ public class ResourceTagHandler extends DefaultTagHandler {
 		super(handler);
 	}
 	
-	public String[] getTagNames() {
-		return new String[] { "resource" };
+	public String getTagName() {
+		return "resource";
 	}
 	
 	@Override

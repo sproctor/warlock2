@@ -35,8 +35,8 @@ public class PopStreamTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "popStream" };
+	public String getTagName() {
+		return "popStream";
 	}
 	
 	@Override

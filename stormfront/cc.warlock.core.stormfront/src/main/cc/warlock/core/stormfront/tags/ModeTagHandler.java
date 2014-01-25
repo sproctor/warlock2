@@ -35,8 +35,8 @@ public class ModeTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "mode" };
+	public String getTagName() {
+		return "mode";
 	}
 
 	@Override

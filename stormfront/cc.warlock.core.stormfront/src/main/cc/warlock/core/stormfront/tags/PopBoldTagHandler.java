@@ -32,8 +32,8 @@ public class PopBoldTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "popBold" };
+	public String getTagName() {
+		return "popBold";
 	}
 	
 	@Override

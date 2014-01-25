@@ -49,8 +49,8 @@ public class StyleTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "style" };
+	public String getTagName() {
+		return "style";
 	}
 
 	@Override

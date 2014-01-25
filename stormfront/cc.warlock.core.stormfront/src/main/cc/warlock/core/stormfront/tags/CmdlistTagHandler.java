@@ -41,8 +41,8 @@ public class CmdlistTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "cmdlist" };
+	public String getTagName() {
+		return "cmdlist";
 	}
 	
 	public void writeOut(String timestamp) {

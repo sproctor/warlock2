@@ -20,8 +20,8 @@ public class ClearContainerTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "clearContainer"};
+	public String getTagName() {
+		return "clearContainer";
 	}
 	
 	@Override

@@ -31,8 +31,8 @@ public class NavTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "nav" };
+	public String getTagName() {
+		return "nav";
 	}
 	
 	@Override

@@ -36,8 +36,8 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "settingsInfo" };
+	public String getTagName() {
+		return "settingsInfo";
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 			// This is a character that has no server settings, we need to immediately send our own
 			// StormFrontServerSettings.sendInitialServerSettings(handler.getClient());
 			
-			PromptTagHandler promptHandler = (PromptTagHandler) handler.getTagHandler(PromptTagHandler.class);
+			//PromptTagHandler promptHandler = (PromptTagHandler) handler.getTagHandler(PromptTagHandler.class);
 			// promptHandler.setWaitingForInitialStreams(true);
 			return;
 		}

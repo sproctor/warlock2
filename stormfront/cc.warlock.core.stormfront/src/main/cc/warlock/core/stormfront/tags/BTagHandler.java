@@ -33,8 +33,8 @@ public class BTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "b" };
+	public String getTagName() {
+		return "b";
 	}
 	
 	@Override

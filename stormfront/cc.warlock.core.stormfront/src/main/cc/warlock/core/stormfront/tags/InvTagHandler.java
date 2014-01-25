@@ -33,8 +33,8 @@ public class InvTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "inv" };
+	public String getTagName() {
+		return "inv";
 	}
 	
 	@Override

@@ -34,8 +34,8 @@ public class LeftTagHandler extends DefaultTagHandler {
 	}
 	
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "left" };
+	public String getTagName() {
+		return "left";
 	}
 
 	@Override

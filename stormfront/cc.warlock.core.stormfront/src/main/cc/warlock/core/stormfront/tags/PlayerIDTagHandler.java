@@ -33,8 +33,8 @@ public class PlayerIDTagHandler extends DefaultTagHandler {
 	}
 
 	@Override
-	public String[] getTagNames() {
-		return new String[] { "playerID" };
+	public String getTagName() {
+		return "playerID";
 	}
 	
 	@Override

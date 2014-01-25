@@ -39,10 +39,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
  */
 public interface IStormFrontTagHandler {
 	
-	public String[] getTagNames();
-	
-	public String getCurrentTag();
-	public void setCurrentTag(String tagName);
+	public String getTagName();
 	
 	public IStormFrontTagHandler getTagHandler(String tagName);
 	
