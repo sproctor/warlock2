@@ -127,47 +127,6 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 		return playerId;
 	}
 	
-	/*@Override
-	public IWarlockStyle getCommandStyle() {
-		IWarlockStyle style = getNamedStyle(PresetStyleConfigurationProvider.PRESET_COMMAND);
-		if (style == null) {
-			return new WarlockStyle();
-		}
-		return style;
-	}*/
-	
-	public void loadCmdlist()
-	{
-		try {
-			commands  = new HashMap<String, String>();
-			FileInputStream stream = new FileInputStream(ConfigurationUtil.getConfigurationFile("cmdlist1.xml"));
-			StormFrontDocument document = new StormFrontDocument(stream);
-			stream.close();
-			
-			StormFrontElement cmdlist = document.getRootElement();
-			for (StormFrontElement cliElement : cmdlist.elements())
-			{
-				if(cliElement.getName().equals("cli")) {
-					String coord = cliElement.attributeValue("coord");
-					String command = cliElement.attributeValue("command");
-					
-					if(coord != null && command != null)
-						commands.put(coord, command);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public String getCommand(String coord) {
-		if(commands == null) return null;
-		return commands.get(coord);
-	}
-	
 	@Override
 	public void launchURL(String url) {
 		try {

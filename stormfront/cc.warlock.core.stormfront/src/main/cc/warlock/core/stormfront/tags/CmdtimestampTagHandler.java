@@ -22,15 +22,13 @@
 package cc.warlock.core.stormfront.tags;
 
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
+import cc.warlock.core.stormfront.settings.CmdlistSettings;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class CmdtimestampTagHandler extends DefaultTagHandler {
 
-	CmdlistTagHandler cmdList;
-	
-	public CmdtimestampTagHandler(IStormFrontProtocolHandler handler, CmdlistTagHandler cmdList) {
+	public CmdtimestampTagHandler(IStormFrontProtocolHandler handler) {
 		super(handler);
-		this.cmdList = cmdList;
 	}
 	
 	@Override
@@ -42,7 +40,7 @@ public class CmdtimestampTagHandler extends DefaultTagHandler {
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		String timestamp = attributes.getValue("data");
 		if(timestamp != null) {
-			cmdList.writeOut(timestamp);
+			CmdlistSettings.getProvider(handler.getClient().getClientSettings()).setTimestamp(timestamp);
 		}
 	}
 }

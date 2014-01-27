@@ -25,6 +25,7 @@ import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
+import cc.warlock.core.stormfront.settings.CmdlistSettings;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class ATagHandler extends DefaultTagHandler {
@@ -36,19 +37,43 @@ public class ATagHandler extends DefaultTagHandler {
 		private IStormFrontClient client;
 		private String coord;
 		private String noun;
+		private String exist;
 		
-		CommandRunner(IStormFrontClient client, String coord, String noun) {
+		CommandRunner(IStormFrontClient client, String coord, String noun, String exist) {
 			this.client = client;
 			this.coord = coord;
 			this.noun = noun;
+			this.exist = exist;
 		}
 		
 		public void run() {
-			String command = client.getCommand(coord);
+			String command = CmdlistSettings.getProvider(client.getClientSettings()).getCli(coord).getCommand();
 			if(command != null) {
 				if(noun != null) {
 					command = command.replaceAll("@", noun);
 				}
+				client.send(new Command(command, true));
+			}
+			
+			// TODO generate the menu here
+		}
+
+	}
+	
+	private class CommandMenuRunner implements Runnable {
+		private IStormFrontClient client;
+		private String noun;
+		private String exist;
+		
+		CommandMenuRunner(IStormFrontClient client, String noun, String exist) {
+			this.client = client;
+			this.noun = noun;
+			this.exist = exist;
+		}
+		
+		public void run() {
+			if(exist != null) {
+				String command = "_menu #" + exist;
 				client.send(new Command(command, true));
 			}
 		}
@@ -71,16 +96,21 @@ public class ATagHandler extends DefaultTagHandler {
 			style = null;
 		}
 		String coord = attributes.getValue("coord");
+		String noun = attributes.getValue("noun");
+		String exist = attributes.getValue("exist");
 
 		style = new WarlockStyle();
 		style.setUnderline(true);
 		if(coord != null) {
-			String noun = attributes.getValue("noun");
-			style.setAction(new CommandRunner(handler.getClient(), coord, noun));
+			style.setAction(new CommandRunner(handler.getClient(), coord, noun, exist));
+			
+			// TODO this should probably be done elsewhere
 			if(!requestedList) {
 				handler.getClient().send(new Command("_menu update 1", true));
 				requestedList = true;
 			}
+		} else {
+			style.setAction(new CommandMenuRunner(handler.getClient(), noun, exist));
 		}
 		handler.addStyle(style);
 	}

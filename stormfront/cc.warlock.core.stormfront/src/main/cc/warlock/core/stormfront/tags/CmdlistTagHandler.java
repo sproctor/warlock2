@@ -33,11 +33,11 @@ import cc.warlock.core.stormfront.xml.StormFrontDocument;
 
 
 public class CmdlistTagHandler extends DefaultTagHandler {
-
-	private StringBuffer buffer = new StringBuffer();
 	
 	public CmdlistTagHandler(IStormFrontProtocolHandler handler) {
 		super(handler);
+		
+		addTagHandler(new CliTagHandler(handler));
 	}
 
 	@Override
@@ -45,33 +45,10 @@ public class CmdlistTagHandler extends DefaultTagHandler {
 		return "cmdlist";
 	}
 	
-	public void writeOut(String timestamp) {
-		
-		File cmdList = ConfigurationUtil.getConfigurationFile("cmdlist1.xml");
-		try {
-			FileWriter writer = new FileWriter(cmdList);
-
-			buffer.insert(0, "<cmdlist timestamp=\"" + timestamp + "\">");
-			buffer.append("</cmdlist>");
-			
-			InputStream inStream = new ByteArrayInputStream(buffer.toString().getBytes());
-			StormFrontDocument document = new StormFrontDocument(inStream);
-			document.saveTo(writer, true);
-			inStream.close();
-			
-			writer.close();
-			buffer.setLength(0);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		handler.getClient().loadCmdlist();
-	}
-	
 	@Override
 	public boolean handleCharacters(String characters) {
 		System.out.print(characters);
-		buffer.append(characters);
+		//buffer.append(characters);
 		return true;
 	}
 }

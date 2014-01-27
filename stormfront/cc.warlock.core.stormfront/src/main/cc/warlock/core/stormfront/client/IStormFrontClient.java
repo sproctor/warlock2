@@ -43,9 +43,9 @@ public interface IStormFrontClient extends IWarlockClient, IRoomListener
 	
 	public void setPlayerId(String playerId);
 	
-	public void loadCmdlist();
+	//public void loadCmdlist();
 	
-	public String getCommand(String coord);
+	//public String getCommand(String coord);
 	
 	public void launchURL(String url);
 	

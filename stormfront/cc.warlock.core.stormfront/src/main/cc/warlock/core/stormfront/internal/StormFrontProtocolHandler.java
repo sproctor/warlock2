@@ -43,7 +43,6 @@ import cc.warlock.core.stormfront.tags.BTagHandler;
 import cc.warlock.core.stormfront.tags.CasttimeTagHandler;
 import cc.warlock.core.stormfront.tags.ClearContainerTagHandler;
 import cc.warlock.core.stormfront.tags.ClearStreamTagHandler;
-import cc.warlock.core.stormfront.tags.CmdlistTagHandler;
 import cc.warlock.core.stormfront.tags.CmdtimestampTagHandler;
 import cc.warlock.core.stormfront.tags.CompDefTagHandler;
 import cc.warlock.core.stormfront.tags.CompassTagHandler;
@@ -104,7 +103,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		new ModeTagHandler(this);
 		new SettingsTagHandler(this);
 		new SettingsInfoTagHandler(this);
-		new CmdtimestampTagHandler(this, new CmdlistTagHandler(this));
+		new CmdtimestampTagHandler(this);
 		new SentSettingsTagHandler(this);
 		
 		// Register the handlers
