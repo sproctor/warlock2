@@ -1,16 +1,26 @@
 package cc.warlock.core.stormfront.settings;
 
 import cc.warlock.core.client.IClientSettings;
+import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.IWarlockSettingFactory;
 
 public class CmdlistSettings extends ArrayConfigurationProvider<CliSetting> {
 	public static final String ID = "cmdlist";
 	
 	private String timestamp;
 	
+	static {
+		ClientSettings.registerProviderFactory("cmdlist", new IWarlockSettingFactory() {
+			public IWarlockSetting createSetting(IWarlockSetting parent) {
+				return new CmdlistSettings(parent);
+			}
+		});
+	}
+	
 	// TODO: Make this a per game or account setting rather than per profile
-	public CmdlistSettings(IWarlockSetting parent, String path) {
+	public CmdlistSettings(IWarlockSetting parent) {
 		super(parent, ID);
 		timestamp = getNode().get("timestamp", "1");
 	}

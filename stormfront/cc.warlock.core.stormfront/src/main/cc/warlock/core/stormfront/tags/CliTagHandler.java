@@ -24,7 +24,8 @@ public class CliTagHandler extends BaseTagHandler {
 		String command = attributes.getValue("command");
 		String menu_cat = attributes.getValue("menu_cat");
 		
-		CliSetting setting = CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getCli(coord);
+		CmdlistSettings provider = CmdlistSettings.getProvider(handler.getClient().getClientSettings());
+		CliSetting setting = provider.getCli(coord);
 		setting.setCommand(command);
 		setting.setMenu(menu);
 		setting.setMenuCat(menu_cat);

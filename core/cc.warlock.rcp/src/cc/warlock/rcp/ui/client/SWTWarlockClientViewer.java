@@ -136,6 +136,29 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 		}
 	}
 	
+	private class CreateMenuWrapper implements Runnable {
+		public void run() {
+			viewer.createMenu();
+		}
+	}
+	
+	private class AddMenuItemWrapper implements Runnable {
+		private String id;
+		private String text;
+		private Runnable runner;
+		
+		public AddMenuItemWrapper(String id, String text, Runnable runner) {
+			this.id = id;
+			this.text = text;
+			this.runner = runner;
+		}
+		 
+		@Override
+		public void run() {
+			viewer.addMenuItem(id, text, runner);
+		}
+	}
+	
 	protected void run(Runnable runnable) {
 		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
 	}
@@ -201,6 +224,16 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	@Override
 	public void removeClientViewerListener(IWarlockClientViewerListener listener) {
 		viewer.removeClientViewerListener(listener);
+	}
+
+	@Override
+	public void createMenu() {
+		run(new CreateMenuWrapper());
+	}
+
+	@Override
+	public void addMenuItem(String id, String text, Runnable runner) {
+		run(new AddMenuItemWrapper(id, text, runner));
 	}
 	
 }

@@ -34,11 +34,15 @@ import java.util.Random;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -85,6 +89,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	private IProfile profile;
 	
 	private HashMap<String, StreamText> customStreams = new HashMap<String, StreamText>();
+	
+	private int menuCount = 0;
+	private HashMap<String, Menu> menuMap = new HashMap<String, Menu>();
 	
 	public GameView () {
 		super();
@@ -355,5 +362,29 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	public String getViewId() {
 		return getViewSite().getId() + ":" + getViewSite().getSecondaryId();
+	}
+	
+	@Override
+	public void createMenu() {
+		String id = String.valueOf(menuCount);
+		Menu popupMenu = new Menu(this.streamText.getTextWidget());
+		menuMap.put(id, popupMenu);
+		menuCount++;
+	}
+	
+	@Override
+	public void addMenuItem(String id, String text, final Runnable runner) {
+		Menu menu = menuMap.get(id);
+		if(menu == null) {
+			System.err.print("No menu found");
+			return;
+		}
+		MenuItem item = new MenuItem(menu, SWT.NONE);
+		item.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				runner.run();
+			}
+		});
 	}
 }

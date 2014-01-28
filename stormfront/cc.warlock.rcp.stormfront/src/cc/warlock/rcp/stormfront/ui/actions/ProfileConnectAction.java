@@ -156,7 +156,8 @@ public class ProfileConnectAction extends Action implements ISGEConnectionListen
 			}
 			IProfile curProfile;
 			while ((curProfile = AccountProvider.getInstance().getProfileByViewId(gameView.getViewId())) != null) {
-				curProfile.setViewId(null);
+				curProfile.setViewId("");
+				// FIXME this was null, changed it to empty. what should be here?
 			}
 			profile.setViewId(gameView.getViewId());
 		} else {

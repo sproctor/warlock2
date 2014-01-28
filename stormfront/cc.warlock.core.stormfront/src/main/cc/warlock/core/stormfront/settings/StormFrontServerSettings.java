@@ -31,7 +31,6 @@ package cc.warlock.core.stormfront.settings;
  * @author marshall
  *
  */
-@SuppressWarnings("deprecation")
 public class StormFrontServerSettings {
 /*	
 	protected String clientVersion, majorVersion, crc;

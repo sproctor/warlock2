@@ -310,5 +310,4 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	public IMacroCommand getMacroCommand(String id) {
 		return MacroRegistry.instance().getMacroCommand(id);
 	}
-	
 }

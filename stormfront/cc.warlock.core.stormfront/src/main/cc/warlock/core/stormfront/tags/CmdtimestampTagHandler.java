@@ -40,7 +40,8 @@ public class CmdtimestampTagHandler extends DefaultTagHandler {
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		String timestamp = attributes.getValue("data");
 		if(timestamp != null) {
-			CmdlistSettings.getProvider(handler.getClient().getClientSettings()).setTimestamp(timestamp);
+			CmdlistSettings cmdlist = CmdlistSettings.getProvider(handler.getClient().getClientSettings());
+			cmdlist.setTimestamp(timestamp);
 		}
 	}
 }

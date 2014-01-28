@@ -70,4 +70,7 @@ public interface IWarlockClientViewer
 	 * @param url The URL to launch
 	 */
 	public void launchURL (URL url);
+	
+	public void createMenu();
+	public void addMenuItem(String id, String text, final Runnable runner);
 }

@@ -22,13 +22,7 @@
 
 package cc.warlock.core.stormfront.client.internal;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -40,13 +34,10 @@ import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
-import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.settings.MacroSetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
-import cc.warlock.core.stormfront.xml.StormFrontDocument;
-import cc.warlock.core.stormfront.xml.StormFrontElement;
 
 /**
  * @author Marshall
@@ -145,45 +136,4 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 			e.printStackTrace();
 		}
 	}
-
-	public void startedDownloadingServerSettings() {
-		//if (viewer instanceof IStormFrontClientViewer)
-			//((IStormFrontClientViewer)viewer).startedDownloadingServerSettings();
-	}
-	
-	public void finishedDownloadingServerSettings(String str) {
-		File settingsFile = ConfigurationUtil.getConfigurationFile("serverSettings_" + getClientId() + ".xml");
-		InputStream inStream = new ByteArrayInputStream(str.getBytes());
-		
-		try {
-			FileWriter writer = new FileWriter(settingsFile);
-
-			StormFrontDocument document = new StormFrontDocument(inStream);
-			document.saveTo(writer, true);
-			
-			writer.close();
-			inStream.close();
-			//buffer.setLength(0);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			InputStream stream = new FileInputStream(settingsFile);
-			
-			//serverSettings.importServerSettings(stream, clientSettings);
-			stream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		//if (viewer instanceof IStormFrontClientViewer)
-			//((IStormFrontClientViewer)viewer).finishedDownloadingServerSettings();
-	}
-	
-	public void receivedServerSetting(String setting) {
-		//if (viewer instanceof IStormFrontClientViewer)
-			//((IStormFrontClientViewer)viewer).receivedServerSetting(setting);
-	}
-	
 }

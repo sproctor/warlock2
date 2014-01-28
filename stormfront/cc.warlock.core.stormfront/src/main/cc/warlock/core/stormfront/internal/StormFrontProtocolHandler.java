@@ -43,6 +43,7 @@ import cc.warlock.core.stormfront.tags.BTagHandler;
 import cc.warlock.core.stormfront.tags.CasttimeTagHandler;
 import cc.warlock.core.stormfront.tags.ClearContainerTagHandler;
 import cc.warlock.core.stormfront.tags.ClearStreamTagHandler;
+import cc.warlock.core.stormfront.tags.CmdlistTagHandler;
 import cc.warlock.core.stormfront.tags.CmdtimestampTagHandler;
 import cc.warlock.core.stormfront.tags.CompDefTagHandler;
 import cc.warlock.core.stormfront.tags.CompassTagHandler;
@@ -53,6 +54,7 @@ import cc.warlock.core.stormfront.tags.IndicatorTagHandler;
 import cc.warlock.core.stormfront.tags.InvTagHandler;
 import cc.warlock.core.stormfront.tags.LaunchURLTagHandler;
 import cc.warlock.core.stormfront.tags.LeftTagHandler;
+import cc.warlock.core.stormfront.tags.MenuTagHandler;
 import cc.warlock.core.stormfront.tags.ModeTagHandler;
 import cc.warlock.core.stormfront.tags.NavTagHandler;
 import cc.warlock.core.stormfront.tags.OutputTagHandler;
@@ -72,7 +74,6 @@ import cc.warlock.core.stormfront.tags.SettingsTagHandler;
 import cc.warlock.core.stormfront.tags.SpellTagHandler;
 import cc.warlock.core.stormfront.tags.StreamTagHandler;
 import cc.warlock.core.stormfront.tags.StreamWindowTagHandler;
-import cc.warlock.core.stormfront.tags.StubTagHandler;
 import cc.warlock.core.stormfront.tags.StyleTagHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
@@ -103,6 +104,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		new ModeTagHandler(this);
 		new SettingsTagHandler(this);
 		new SettingsInfoTagHandler(this);
+		new CmdlistTagHandler(this);
 		new CmdtimestampTagHandler(this);
 		new SentSettingsTagHandler(this);
 		
@@ -115,6 +117,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		new CompDefTagHandler(this); // for the room stream
 		new NavTagHandler(this); // for nextRoom notification
 		new CompassTagHandler(this);
+		new MenuTagHandler(this);
 		
 		// stream handlers
 		new PushStreamTagHandler(this);
@@ -144,7 +147,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 		new BTagHandler(this);
 		new DTagHandler(this);
 		
-		new StubTagHandler(this); // handles known tags that don't have an implementation.
+		//new StubTagHandler(this); // handles known tags that don't have an implementation.
 	}
 	
 	/*

@@ -67,7 +67,7 @@ public class SettingsTagHandler extends DefaultTagHandler {
 		buffer.setLength(0);
 		buffer.append(rawXML);
 		
-		handler.getClient().startedDownloadingServerSettings();
+		//handler.getClient().startedDownloadingServerSettings();
 	}
 	
 	@Override
@@ -77,7 +77,7 @@ public class SettingsTagHandler extends DefaultTagHandler {
 		
 		buffer.append(rawXML);
 		
-		handler.getClient().finishedDownloadingServerSettings(buffer.toString());
+		//handler.getClient().finishedDownloadingServerSettings(buffer.toString());
 	}
 	
 	@Override

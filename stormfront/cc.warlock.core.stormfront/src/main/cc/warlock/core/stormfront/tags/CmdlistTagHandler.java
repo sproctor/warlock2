@@ -21,15 +21,7 @@
  */
 package cc.warlock.core.stormfront.tags;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-
-import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
-import cc.warlock.core.stormfront.xml.StormFrontDocument;
 
 
 public class CmdlistTagHandler extends DefaultTagHandler {
@@ -43,12 +35,5 @@ public class CmdlistTagHandler extends DefaultTagHandler {
 	@Override
 	public String getTagName() {
 		return "cmdlist";
-	}
-	
-	@Override
-	public boolean handleCharacters(String characters) {
-		System.out.print(characters);
-		//buffer.append(characters);
-		return true;
 	}
 }

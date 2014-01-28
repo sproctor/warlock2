@@ -55,7 +55,6 @@ public class ATagHandler extends DefaultTagHandler {
 				client.send(new Command(command, true));
 			}
 			
-			// TODO generate the menu here
 		}
 
 	}
@@ -75,6 +74,8 @@ public class ATagHandler extends DefaultTagHandler {
 			if(exist != null) {
 				String command = "_menu #" + exist;
 				client.send(new Command(command, true));
+
+				client.getViewer().createMenu();
 			}
 		}
 
@@ -106,7 +107,8 @@ public class ATagHandler extends DefaultTagHandler {
 			
 			// TODO this should probably be done elsewhere
 			if(!requestedList) {
-				handler.getClient().send(new Command("_menu update 1", true));
+				String command = "_menu update " + CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getTimestamp();
+				handler.getClient().send(new Command(command, true));
 				requestedList = true;
 			}
 		} else {
