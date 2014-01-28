@@ -137,8 +137,12 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	}
 	
 	private class CreateMenuWrapper implements Runnable {
+		String id;
+		public CreateMenuWrapper(String id) {
+			this.id = id;
+		}
 		public void run() {
-			viewer.createMenu();
+			viewer.createMenu(id);
 		}
 	}
 	
@@ -227,8 +231,8 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	}
 
 	@Override
-	public void createMenu() {
-		run(new CreateMenuWrapper());
+	public void createMenu(String id) {
+		run(new CreateMenuWrapper(id));
 	}
 
 	@Override

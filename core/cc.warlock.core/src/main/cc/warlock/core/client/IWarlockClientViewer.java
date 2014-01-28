@@ -71,6 +71,6 @@ public interface IWarlockClientViewer
 	 */
 	public void launchURL (URL url);
 	
-	public void createMenu();
+	public void createMenu(String id);
 	public void addMenuItem(String id, String text, final Runnable runner);
 }

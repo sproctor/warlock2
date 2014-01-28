@@ -80,7 +80,7 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 		}
 		*/
 		
-		String playerId = handler.getClient().getPlayerId();
+		/*String playerId = handler.getClient().getPlayerId();
 		
 		File serverSettings = ConfigurationUtil.getConfigurationFile("serverSettings_" + playerId + ".xml", false);
 		if (!serverSettings.exists())
@@ -96,6 +96,6 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 }

@@ -15,7 +15,7 @@ public class CliSetting extends WarlockSetting {
 		this.coord = getNode().get("coord", null);
 		this.command = getNode().get("command", null);
 		this.menu = getNode().get("menu", null);
-		this.menu_cat = getNode().get("menu_cat", null);
+		this.menu_cat = getNode().get("menu-cat", null);
 	}
 
 	public void setCood(String coord) {
@@ -37,6 +37,8 @@ public class CliSetting extends WarlockSetting {
 	}
 	
 	public void setMenuCat(String menu_cat) {
+		getNode().put("menu-cat", menu);
+		
 		this.menu_cat = menu_cat;
 	}
 	

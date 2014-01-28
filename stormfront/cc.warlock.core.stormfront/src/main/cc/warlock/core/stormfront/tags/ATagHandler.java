@@ -32,6 +32,7 @@ public class ATagHandler extends DefaultTagHandler {
 
 	WarlockStyle style;
 	boolean requestedList = false;
+	int menuCount = 0;
 	
 	private class CommandRunner implements Runnable {
 		private IStormFrontClient client;
@@ -72,10 +73,12 @@ public class ATagHandler extends DefaultTagHandler {
 		
 		public void run() {
 			if(exist != null) {
-				String command = "_menu #" + exist;
+				menuCount++;
+				String id = String.valueOf(menuCount);
+				String command = "_menu #" + exist + " " + id;
 				client.send(new Command(command, true));
 
-				client.getViewer().createMenu();
+				client.getViewer().createMenu(id);
 			}
 		}
 

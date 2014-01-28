@@ -135,7 +135,7 @@ public abstract class WarlockClient implements IWarlockClient {
 			String commandString = command.getCommand();
 			lastCommand = commandString;
 			if(connection != null)
-				connection.send(commandString);
+				connection.sendLine(commandString);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

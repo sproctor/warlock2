@@ -90,7 +90,6 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	private HashMap<String, StreamText> customStreams = new HashMap<String, StreamText>();
 	
-	private int menuCount = 0;
 	private HashMap<String, Menu> menuMap = new HashMap<String, Menu>();
 	
 	public GameView () {
@@ -365,26 +364,28 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	}
 	
 	@Override
-	public void createMenu() {
-		String id = String.valueOf(menuCount);
+	public void createMenu(String id) {
 		Menu popupMenu = new Menu(this.streamText.getTextWidget());
 		menuMap.put(id, popupMenu);
-		menuCount++;
+		this.streamText.getTextWidget().setMenu(popupMenu);
 	}
 	
 	@Override
 	public void addMenuItem(String id, String text, final Runnable runner) {
 		Menu menu = menuMap.get(id);
 		if(menu == null) {
-			System.err.print("No menu found");
+			System.err.println("No menu found");
 			return;
 		}
+		System.out.println("menu item: " + text);
 		MenuItem item = new MenuItem(menu, SWT.NONE);
+		item.setText(text);
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				runner.run();
 			}
 		});
+		menu.setVisible(true);
 	}
 }
