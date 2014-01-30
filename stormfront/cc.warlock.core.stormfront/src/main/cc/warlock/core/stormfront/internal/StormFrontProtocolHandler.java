@@ -94,6 +94,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	protected int monsterCount = 0;
 	private boolean lineHasTag = false;
 	private boolean lineHasContent = false;
+	private HashMap<String, String> menuData = new HashMap<String, String>();
 	
  	public StormFrontProtocolHandler(IStormFrontClient client) {
 		
@@ -404,5 +405,13 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	public void setOutputStyle(IWarlockStyle style) {
 		flushBuffer();
 		outputStyle = style;
+	}
+	
+	public void setMenuData(String id, String data) {
+		menuData.put(id, data);
+	}
+	
+	public String getMenuData(String id) {
+		return menuData.get(id);
 	}
 }

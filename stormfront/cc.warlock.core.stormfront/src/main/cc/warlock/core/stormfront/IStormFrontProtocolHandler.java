@@ -57,6 +57,9 @@ public interface IStormFrontProtocolHandler extends IStormFrontXMLHandler {
 	public void incrementMonsterCount();
 	public int getMonsterCount();
 	
+	public void setMenuData(String id, String data);
+	public String getMenuData(String id);
+	
 	public void flushBuffer();
 	public WarlockString getBuffer();
 	public void clearBuffer();

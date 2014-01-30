@@ -22,6 +22,11 @@ public class MenuTagHandler extends DefaultTagHandler {
 		id = attributes.getValue("id");
 	}
 	
+	@Override
+	public void handleEnd(String rawXML) {
+		handler.getClient().getViewer().displayMenu(id);
+	}
+	
 	public String getId() {
 		return id;
 	}

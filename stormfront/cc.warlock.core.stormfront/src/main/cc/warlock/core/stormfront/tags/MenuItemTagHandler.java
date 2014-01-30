@@ -1,5 +1,6 @@
 package cc.warlock.core.stormfront.tags;
 
+import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.settings.CliSetting;
 import cc.warlock.core.stormfront.settings.CmdlistSettings;
@@ -18,21 +19,32 @@ public class MenuItemTagHandler extends DefaultTagHandler {
 	public String getTagName() {
 		return "mi";
 	}
-
+	
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		String id = menuHandler.getId();
 		String coord = attributes.getValue("coord");
-		final CliSetting cli = CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getCli(coord);
+		String noun = attributes.getValue("noun");
+		CliSetting cli = CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getCli(coord);
 		if(cli == null) {
 			System.err.print("Bad coord in menu item.");
 			return;
 		}
-		handler.getClient().getViewer().addMenuItem(id, cli.getMenuCat() + " " + cli.getMenu(), new Runnable() {
+		//System.out.println("menu item: category - " + cli.getCategory() + ", menu text - " + cli.getMenu()
+		//		+ ", command - " + cli.getCommand());
+		String menuText = cli.getMenu().replace("@", "");
+		if(noun != null)
+			menuText = menuText.replace("%", noun);
+		String tempCommand = cli.getMenu().replace("@", handler.getMenuData(id));
+		if(noun != null)
+			tempCommand = tempCommand.replace("%", noun);
+		final String command = tempCommand;
+		handler.getClient().getViewer().addMenuItem(id, cli.getCategory(), menuText, new Runnable() {
 			@Override
 			public void run() {
-				System.out.print("Running command: " + cli.getCommand());
-				//cli.getCommand();
+				System.out.print("Running command: " + command);
+				
+				handler.getClient().send(new Command(command));
 			}
 		});
 	}

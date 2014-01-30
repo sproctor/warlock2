@@ -140,6 +140,10 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	}
 	
 	protected void addClient(IWarlockClient client) {
+		if(book == null) {
+			System.err.println("Adding client before intializing StreamView");
+			return;
+		}
 		StreamText streamText = createStreamText(book, client);
 		streamText.getTextWidget().setLayout(new FillLayout());
 		streams.put(client, streamText);

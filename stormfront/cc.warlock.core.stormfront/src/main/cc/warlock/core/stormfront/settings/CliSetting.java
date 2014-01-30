@@ -7,7 +7,7 @@ public class CliSetting extends WarlockSetting {
 	private String coord;
 	private String command;
 	private String menu;
-	private String menu_cat;
+	private String category;
 	
 	public CliSetting(IWarlockSetting parent, String path) {
 		super(parent, path);
@@ -15,7 +15,7 @@ public class CliSetting extends WarlockSetting {
 		this.coord = getNode().get("coord", null);
 		this.command = getNode().get("command", null);
 		this.menu = getNode().get("menu", null);
-		this.menu_cat = getNode().get("menu-cat", null);
+		this.category = getNode().get("category", null);
 	}
 
 	public void setCood(String coord) {
@@ -36,10 +36,10 @@ public class CliSetting extends WarlockSetting {
 		this.menu = menu;
 	}
 	
-	public void setMenuCat(String menu_cat) {
-		getNode().put("menu-cat", menu);
+	public void setCategory(String category) {
+		getNode().put("category", category);
 		
-		this.menu_cat = menu_cat;
+		this.category = category;
 	}
 	
 	public String getCoord() {
@@ -54,7 +54,7 @@ public class CliSetting extends WarlockSetting {
 		return menu;
 	}
 	
-	public String getMenuCat() {
-		return menu_cat;
+	public String getCategory() {
+		return category;
 	}
 }

@@ -28,6 +28,6 @@ public class CliTagHandler extends BaseTagHandler {
 		CliSetting setting = provider.getCli(coord);
 		setting.setCommand(command);
 		setting.setMenu(menu);
-		setting.setMenuCat(menu_cat);
+		setting.setCategory(menu_cat);
 	}
 }

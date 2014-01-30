@@ -79,6 +79,7 @@ public class ATagHandler extends DefaultTagHandler {
 				client.send(new Command(command, true));
 
 				client.getViewer().createMenu(id);
+				handler.setMenuData(id, noun);
 			}
 		}
 
@@ -107,17 +108,18 @@ public class ATagHandler extends DefaultTagHandler {
 		style.setUnderline(true);
 		if(coord != null) {
 			style.setAction(new CommandRunner(handler.getClient(), coord, noun, exist));
-			
-			// TODO this should probably be done elsewhere
-			if(!requestedList) {
-				String command = "_menu update " + CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getTimestamp();
-				handler.getClient().send(new Command(command, true));
-				requestedList = true;
-			}
 		} else {
 			style.setAction(new CommandMenuRunner(handler.getClient(), noun, exist));
 		}
 		handler.addStyle(style);
+		
+		// TODO this should probably be done elsewhere
+		if(!requestedList) {
+			String command = "_menu update 1";
+					//+ CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getTimestamp();
+			handler.getClient().send(new Command(command, true));
+			requestedList = true;
+		}
 	}
 	
 	@Override

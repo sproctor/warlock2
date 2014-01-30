@@ -148,18 +148,30 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	
 	private class AddMenuItemWrapper implements Runnable {
 		private String id;
+		private String category;
 		private String text;
 		private Runnable runner;
 		
-		public AddMenuItemWrapper(String id, String text, Runnable runner) {
+		public AddMenuItemWrapper(String id, String category, String text, Runnable runner) {
 			this.id = id;
 			this.text = text;
 			this.runner = runner;
+			this.category = category;
 		}
 		 
 		@Override
 		public void run() {
-			viewer.addMenuItem(id, text, runner);
+			viewer.addMenuItem(id, category, text, runner);
+		}
+	}
+	
+	private class DisplayMenuWrapper implements Runnable {
+		String id;
+		public DisplayMenuWrapper(String id) {
+			this.id = id;
+		}
+		public void run() {
+			viewer.displayMenu(id);
 		}
 	}
 	
@@ -236,8 +248,12 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	}
 
 	@Override
-	public void addMenuItem(String id, String text, Runnable runner) {
-		run(new AddMenuItemWrapper(id, text, runner));
+	public void addMenuItem(String id, String category, String text, Runnable runner) {
+		run(new AddMenuItemWrapper(id, category, text, runner));
 	}
 	
+	@Override
+	public void displayMenu(String id) {
+		run(new DisplayMenuWrapper(id));
+	}
 }

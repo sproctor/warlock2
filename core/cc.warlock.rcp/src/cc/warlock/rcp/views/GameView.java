@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -370,15 +372,50 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		this.streamText.getTextWidget().setMenu(popupMenu);
 	}
 	
+	// TODO make this non-SF specific
 	@Override
-	public void addMenuItem(String id, String text, final Runnable runner) {
+	public void addMenuItem(String id, String category, String text, final Runnable runner) {
 		Menu menu = menuMap.get(id);
 		if(menu == null) {
 			System.err.println("No menu found");
 			return;
 		}
-		System.out.println("menu item: " + text);
-		MenuItem item = new MenuItem(menu, SWT.NONE);
+		MenuItem item;
+		if(category.contains("_")) {
+			Menu subMenu = menuMap.get(id + " " + category);
+			if(subMenu == null) {
+				Pattern catPat = Pattern.compile("[a-zA-Z]+$");
+				Matcher m = catPat.matcher(category);
+				if(!m.find()) {
+					System.err.println("Bad category");
+					return;
+				}
+				System.out.println("id: " + id + ", category: " + category + ", text: " + text);
+				String title = m.group();
+				Pattern parentPat = Pattern.compile("^(\\d+[_-].+)[_-]\\w+$");
+				m = parentPat.matcher(category);
+				Menu parentMenu;
+				if(m.find()) {
+					parentMenu = menuMap.get(id + " " + m.group(1));
+					if(parentMenu == null) {
+						System.err.println("Bad parent category: " + id + " " + m.group(1));
+						return;
+					}
+				} else {
+					parentMenu = menu;
+				}
+				subMenu = new Menu(parentMenu);
+				menuMap.put(id + " " + category, subMenu);
+				System.out.println("added menu: " + id + " " + category);
+				
+				MenuItem subItem = new MenuItem(parentMenu, SWT.CASCADE);
+				subItem.setMenu(subMenu);
+				subItem.setText(title);
+			}
+			item = new MenuItem(subMenu, SWT.NONE);
+		} else {
+			item = new MenuItem(menu, SWT.NONE);
+		}
 		item.setText(text);
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -386,6 +423,15 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 				runner.run();
 			}
 		});
+	}
+	
+	@Override
+	public void displayMenu(String id) {
+		Menu menu = menuMap.get(id);
+		if(menu == null) {
+			System.err.println("No menu found");
+			return;
+		}
 		menu.setVisible(true);
 	}
 }
