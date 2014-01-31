@@ -48,7 +48,7 @@ public interface ICommand {
 	public String getText();
 	
 	/**
-	 * @return Whether or not the command emanated from a script.
+	 * @return Whether or not the command should be displayed
 	 */
-	public boolean fromScript();
+	public boolean isVisible();
 }

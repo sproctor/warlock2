@@ -39,6 +39,6 @@ public class SentSettingsTagHandler extends DefaultTagHandler {
 
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().send(new Command("", true));
+		handler.getClient().send(new Command("", false));
 	}
 }

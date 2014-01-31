@@ -381,7 +381,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 			return;
 		}
 		MenuItem item;
-		if(category.contains("_")) {
+		if(category != null && category.contains("_")) {
 			Menu subMenu = menuMap.get(id + " " + category);
 			if(subMenu == null) {
 				Pattern catPat = Pattern.compile("[a-zA-Z]+$");

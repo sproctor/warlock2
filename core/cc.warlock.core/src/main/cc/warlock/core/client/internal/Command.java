@@ -39,7 +39,7 @@ public class Command implements ICommand, Serializable {
 
 	protected String command;
 	protected Date timestamp;
-	protected boolean fromScript = false;
+	protected boolean visible = true;
 	protected String prefix;
 	
 	public Command(String command) {
@@ -47,9 +47,9 @@ public class Command implements ICommand, Serializable {
 		timestamp = new Date();
 	}
 	
-	public Command(String command, boolean fromScript) {
+	public Command(String command, boolean visible) {
 		this(command);
-		this.fromScript = fromScript;
+		this.visible = visible;
 	}
 	
 	public void setCommand(String command) {
@@ -81,7 +81,7 @@ public class Command implements ICommand, Serializable {
 			return command;
 	}
 	
-	public boolean fromScript() {
-		return fromScript;
+	public boolean isVisible() {
+		return visible;
 	}
 }

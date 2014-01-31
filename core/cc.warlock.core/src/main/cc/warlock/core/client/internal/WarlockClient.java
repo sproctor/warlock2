@@ -61,17 +61,15 @@ import cc.warlock.core.util.Pair;
  */
 public abstract class WarlockClient implements IWarlockClient {
 
-	protected IConnection connection;
-	protected IWarlockClientViewer viewer;
-	protected IWarlockClientListener listener;
+	private IWarlockClientViewer viewer;
+	private IWarlockClientListener listener;
 	private String lastCommand;
-	protected String streamPrefix;
 	private Collection<IRoomListener> roomListeners = Collections.synchronizedCollection(new ArrayList<IRoomListener>());
-	protected Property<ICompass> compass = new Property<ICompass>(null);
-	protected SimpleLogger logger;
-	protected HashMap<String, IStream> streams = new HashMap<String, IStream>();
-	protected final IStream mainStream;
-	protected ArrayList<Pair<String, IStreamListener>> streamListeners = new ArrayList<Pair<String, IStreamListener>>();
+	private Property<ICompass> compass = new Property<ICompass>(null);
+	private SimpleLogger logger;
+	private HashMap<String, IStream> streams = new HashMap<String, IStream>();
+	private final IStream mainStream;
+	private ArrayList<Pair<String, IStreamListener>> streamListeners = new ArrayList<Pair<String, IStreamListener>>();
 	private ArrayList<Collection<? extends IWarlockHighlight>> highlightLists = new ArrayList<Collection<? extends IWarlockHighlight>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
@@ -79,10 +77,10 @@ public abstract class WarlockClient implements IWarlockClient {
 	private HashMap<String, String> componentStreams = new HashMap<String, String>();
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
+
 	protected ClientSettings clientSettings;
 	
 	public WarlockClient () {
-		streamPrefix = "client:" + hashCode() + ":";
 		logger = new SimpleLogger(this);
 		mainStream = createStream(IWarlockClient.MAIN_STREAM_NAME);
 		
@@ -129,11 +127,13 @@ public abstract class WarlockClient implements IWarlockClient {
 	public abstract void connect(String server, int port, String key) throws IOException;
 	
 	public synchronized void send(ICommand command) {
-		mainStream.sendCommand(command);
+		if(command.isVisible())
+			mainStream.sendCommand(command);
 		
 		try {
 			String commandString = command.getCommand();
 			lastCommand = commandString;
+			IConnection connection = this.getConnection();
 			if(connection != null)
 				connection.sendLine(commandString);
 		} catch(IOException e) {
@@ -161,10 +161,6 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	public Collection<IStream> getStreams() {
 		return streams.values();
-	}
-	
-	public IConnection getConnection() {
-		return connection;
 	}
 	
 	public void flushStreams() {

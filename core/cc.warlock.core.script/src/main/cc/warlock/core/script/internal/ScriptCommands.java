@@ -260,7 +260,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		synchronized(this) {
 			typeAhead++;
 		}
-		Command command = new Command(text, true);
+		Command command = new Command(text);
 		command.setPrefix("[" + script.getName() + ":" + lineNum + "]: ");
 		getClient().send(command);
 	}
@@ -328,8 +328,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	
 	@Override
 	public void streamReceivedCommand(IStream stream, ICommand command) {
-		if(!command.fromScript())
-			receiveText(command.getCommand());
+		receiveText(command.getCommand());
 	}
 	
 	@Override

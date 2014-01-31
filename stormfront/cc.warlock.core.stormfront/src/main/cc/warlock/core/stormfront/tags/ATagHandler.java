@@ -76,7 +76,7 @@ public class ATagHandler extends DefaultTagHandler {
 				menuCount++;
 				String id = String.valueOf(menuCount);
 				String command = "_menu #" + exist + " " + id;
-				client.send(new Command(command, true));
+				client.send(new Command(command, false));
 
 				client.getViewer().createMenu(id);
 				handler.setMenuData(id, noun);
@@ -115,9 +115,9 @@ public class ATagHandler extends DefaultTagHandler {
 		
 		// TODO this should probably be done elsewhere
 		if(!requestedList) {
-			String command = "_menu update 1";
-					//+ CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getTimestamp();
-			handler.getClient().send(new Command(command, true));
+			String command = "_menu update "
+					+ CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getTimestamp();
+			handler.getClient().send(new Command(command, false));
 			requestedList = true;
 		}
 	}

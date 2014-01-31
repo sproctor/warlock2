@@ -34,6 +34,7 @@ import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMacro;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;
+import cc.warlock.core.network.IConnection;
 import cc.warlock.core.settings.MacroSetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.stormfront.client.IStormFrontClient;
@@ -44,6 +45,7 @@ import cc.warlock.core.stormfront.network.StormFrontConnection;
  */
 public class StormFrontClient extends WarlockClient implements IStormFrontClient, IRoomListener {
 
+	private StormFrontConnection connection;
 	//protected StringBuffer buffer = new StringBuffer();
 	//protected Property<String> roomDescription = new Property<String>();
 	protected String gameCode, playerId;
@@ -119,9 +121,14 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	}
 	
 	@Override
+	public IConnection getConnection() {
+		return connection;
+	}
+	
+	@Override
 	public void launchURL(String url) {
 		try {
-			viewer.launchURL(new URL(url));
+			getViewer().launchURL(new URL(url));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -131,7 +138,7 @@ public class StormFrontClient extends WarlockClient implements IStormFrontClient
 	public void appendImage(String pictureId) {
 		try {
 			URL url = new URL("http://www.play.net/bfe/DR-art/" + pictureId + "_t.jpg");
-			viewer.appendImage(url);
+			getViewer().appendImage(url);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
