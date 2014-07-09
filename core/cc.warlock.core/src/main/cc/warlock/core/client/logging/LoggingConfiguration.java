@@ -35,9 +35,9 @@ public class LoggingConfiguration extends WarlockSetting
 	public static final String LOG_FORMAT_TEXT = "text";
 	public static final String LOG_FORMAT_HTML = "html";
 	
-	protected String logFormat;
-	protected boolean enableLogging;
-	protected File logDirectory;
+	private String logFormat;
+	private boolean enableLogging;
+	private File logDirectory;
 	
 	public LoggingConfiguration (IWarlockSetting parent) {
 		super(parent, ID);

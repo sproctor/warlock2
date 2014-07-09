@@ -25,10 +25,10 @@ import java.util.Collection;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.settings.ArrayConfigurationProvider;
-import cc.warlock.core.settings.HighlightSetting;
 import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.PatternSetting;
 
-public class HighlightConfigurationProvider extends ArrayConfigurationProvider<HighlightSetting>
+public class HighlightConfigurationProvider extends ArrayConfigurationProvider<PatternSetting>
 {
 	public static String ID = "highlights";
 	
@@ -36,15 +36,15 @@ public class HighlightConfigurationProvider extends ArrayConfigurationProvider<H
 		super(parent, ID);
 	}
 	
-	protected HighlightSetting loadSetting(String id) {
-		return new HighlightSetting(this, id);
+	protected PatternSetting loadSetting(String id) {
+		return new PatternSetting(this, id);
 	}
 	
 	public static HighlightConfigurationProvider getProvider(IClientSettings clientSettings) {
 		return (HighlightConfigurationProvider)clientSettings.getProvider(ID);
 	}
 	
-	public static Collection<HighlightSetting> getHighlights(IClientSettings clientSettings) {
+	public static Collection<PatternSetting> getHighlights(IClientSettings clientSettings) {
 		return getProvider(clientSettings).getSettings();
 	}
 }

@@ -101,9 +101,9 @@ public interface IWarlockClient extends IRoomListener {
 	 */
 	public IClientSettings getClientSettings();
 	
-	public Iterator<? extends IWarlockHighlight> getHighlightsIterator();
-	public void addHighlights(Collection<IWarlockHighlight> highlights);
-	public boolean removeHighlights(Collection<IWarlockHighlight> highlights);
+	public Iterator<IWarlockPattern> getHighlightsIterator();
+	public void addHighlights(Collection<IWarlockPattern> highlights);
+	public boolean removeHighlights(Collection<IWarlockPattern> highlights);
 	
 	/**
 	 * @return A unique string identifying this client (this string should be a constant that can be restored from at a later time)

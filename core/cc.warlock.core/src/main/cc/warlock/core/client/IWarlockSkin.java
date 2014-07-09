@@ -48,6 +48,6 @@ public interface IWarlockSkin {
 	public WarlockColor getDefaultBackgroundColor (String styleName);
 	
 
-	public WarlockColor getBackgroundColor(IWarlockHighlight string);
-	public WarlockColor getForegroundColor(IWarlockHighlight string);
+	public WarlockColor getBackgroundColor(IWarlockPattern string);
+	public WarlockColor getForegroundColor(IWarlockPattern string);
 }

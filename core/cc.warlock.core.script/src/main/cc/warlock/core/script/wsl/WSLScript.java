@@ -33,7 +33,7 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.script.AbstractScript;
 import cc.warlock.core.script.IScriptCommands;
 import cc.warlock.core.script.IScriptEngine;
@@ -52,7 +52,7 @@ public class WSLScript extends AbstractScript {
 	
 	private HashMap<String, Integer> labels = new HashMap<String, Integer>();
 	private HashMap<String, IWSLValue> specialVariables = new HashMap<String, IWSLValue>();
-	private ArrayList<IWarlockHighlight> highlights = null;
+	private ArrayList<IWarlockPattern> highlights = null;
 	private ArrayList<WSLAbstractCommand> lines = new ArrayList<WSLAbstractCommand>();
 	private WSLEngine engine;
 	private IScriptCommands scriptCommands;
@@ -273,9 +273,9 @@ public class WSLScript extends AbstractScript {
 		return scriptCommands;
 	}
 	
-	public void addHighlight(IWarlockHighlight highlight) {
+	public void addHighlight(IWarlockPattern highlight) {
 		if(highlights == null) {
-			highlights = new ArrayList<IWarlockHighlight>();
+			highlights = new ArrayList<IWarlockPattern>();
 		} else {
 			// remove to reload highlights
 			getClient().removeHighlights(highlights);
@@ -291,9 +291,9 @@ public class WSLScript extends AbstractScript {
 		if(highlights == null)
 			return false;
 		
-		Iterator<IWarlockHighlight> iter = highlights.iterator();
+		Iterator<IWarlockPattern> iter = highlights.iterator();
 		while(iter.hasNext()) {
-			IWarlockHighlight highlight = iter.next();
+			IWarlockPattern highlight = iter.next();
 			if(highlight.getText().equalsIgnoreCase(text)) {
 				iter.remove();
 				// remove and add to rebuild cache

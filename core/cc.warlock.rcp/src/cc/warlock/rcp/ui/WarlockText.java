@@ -50,7 +50,7 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockFont;
-import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
@@ -378,9 +378,9 @@ public class WarlockText {
 		String text = textWidget.getTextRange(start, end - start);
 		
 		
-		for (Iterator<? extends IWarlockHighlight> iter = client.getHighlightsIterator();
+		for (Iterator<? extends IWarlockPattern> iter = client.getHighlightsIterator();
 				iter.hasNext(); ) {
-			IWarlockHighlight highlight = iter.next();
+			IWarlockPattern highlight = iter.next();
 			if(highlight == null)
 				continue;
 			Pattern p;

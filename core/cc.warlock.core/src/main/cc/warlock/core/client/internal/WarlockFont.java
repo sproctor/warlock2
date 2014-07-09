@@ -31,8 +31,8 @@ public class WarlockFont implements IWarlockFont {
 		DEFAULT_FONT.setSize(-1);
 	}
 	
-	protected String familyName;
-	protected int size;
+	private String familyName;
+	private int size;
 	
 	public WarlockFont () { }
 	public WarlockFont (WarlockFont other)

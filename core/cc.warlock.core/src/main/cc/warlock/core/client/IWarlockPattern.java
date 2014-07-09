@@ -39,4 +39,7 @@ public interface IWarlockPattern {
 	
 	public boolean isFullWordMatch();
 	public void setFullWordMatch(boolean fullWordMatch);
+	
+	public IWarlockStyle getStyle();
+	public void setStyle(IWarlockStyle style);
 }

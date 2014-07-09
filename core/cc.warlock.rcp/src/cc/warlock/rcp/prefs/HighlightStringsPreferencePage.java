@@ -67,8 +67,8 @@ import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.settings.HighlightConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
-import cc.warlock.core.settings.HighlightSetting;
 import cc.warlock.core.settings.IWindowSettings;
+import cc.warlock.core.settings.PatternSetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.WarlockSharedImages;
@@ -87,9 +87,9 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	protected Button addString, removeString, soundButton;
 	protected Text filterText;
 	protected Text soundText; 
-	protected HighlightSetting selectedString;
-	protected ArrayList<HighlightSetting> addedStrings = new ArrayList<HighlightSetting>();
-	protected ArrayList<HighlightSetting> removedStrings = new ArrayList<HighlightSetting>();
+	protected PatternSetting selectedString;
+	protected ArrayList<PatternSetting> addedStrings = new ArrayList<PatternSetting>();
+	protected ArrayList<PatternSetting> removedStrings = new ArrayList<PatternSetting>();
 	
 	@Override
 	protected Control createContents(Composite parent) {
@@ -151,12 +151,12 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			}
 
 			public Object getValue(Object element, String property) {
-				return ((HighlightSetting)element).getText();
+				return ((PatternSetting)element).getText();
 			}
 
 			public void modify(Object element, String property, Object value) {
 				TableItem item = (TableItem)element;
-				HighlightSetting string = (HighlightSetting)item.getData();
+				PatternSetting string = (PatternSetting)item.getData();
 				String pattern = ((String)value).trim();
 				
 				try {
@@ -171,7 +171,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		stringTable.addFilter(new ViewerFilter () {
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				
-				HighlightSetting string = (HighlightSetting) element;
+				PatternSetting string = (PatternSetting) element;
 				String str = string.getText();
 				
 				if (str.equals("")) return true;
@@ -192,7 +192,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		stringTable.addSelectionChangedListener(new ISelectionChangedListener () {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				HighlightSetting string = (HighlightSetting) selection.getFirstElement();
+				PatternSetting string = (PatternSetting) selection.getFirstElement();
 				
 				if (string != selectedString)
 				{
@@ -307,7 +307,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		return "Highlight Strings";
 	}
 	
-	private void highlightStringSelected (HighlightSetting string)
+	private void highlightStringSelected (PatternSetting string)
 	{
 		if (string == null) {
 			// No string selected, disable all fields
@@ -501,16 +501,16 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	
 	private void removeStringSelected() {
 		// Grab selected string.
-		HighlightSetting string = selectedString;
+		PatternSetting string = selectedString;
 		
 		// Select Next (or Previous if last) Highlight in line
 		int index = stringTable.getTable().getSelectionIndex();
 		if (stringTable.getElementAt(index + 1) != null) {
 			stringTable.getTable().setSelection(index + 1);
-			highlightStringSelected((HighlightSetting) stringTable.getElementAt(index + 1));
+			highlightStringSelected((PatternSetting) stringTable.getElementAt(index + 1));
 		} else if (stringTable.getElementAt(index - 1) != null) {
 			stringTable.getTable().setSelection(index - 1);
-			highlightStringSelected((HighlightSetting) stringTable.getElementAt(index - 1));
+			highlightStringSelected((PatternSetting) stringTable.getElementAt(index - 1));
 		}
 		
 		// Mark string removed in our changelog to commit to prefs
@@ -524,7 +524,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 	}
 
 	private void addStringSelected() {
-		HighlightSetting newString = (HighlightSetting)HighlightConfigurationProvider.getProvider(settings).createSetting();
+		PatternSetting newString = (PatternSetting)HighlightConfigurationProvider.getProvider(settings).createSetting();
 		newString.setText("<Highlight Text>");
 		
 		addedStrings.add(newString);
@@ -559,7 +559,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
-			return ((HighlightSetting)element).getText();
+			return ((PatternSetting)element).getText();
 		}
 
 		public void addListener(ILabelProviderListener listener) {	}
@@ -573,7 +573,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		public void removeListener(ILabelProviderListener listener) {}
 
 		public Color getBackground(Object element, int columnIndex) {
-			HighlightSetting string = (HighlightSetting)element;
+			PatternSetting string = (PatternSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(),
 					ColorUtil.warlockColorToRGB(string.getStyle().getBackgroundColor().isDefault() ?
 							WindowConfigurationProvider.getProvider(settings).getDefaultBackgroundColor() : string.getStyle().getBackgroundColor()));
@@ -582,7 +582,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 		}
 
 		public Color getForeground(Object element, int columnIndex) {
-			HighlightSetting string = (HighlightSetting)element;
+			PatternSetting string = (PatternSetting)element;
 			Color c = new Color(HighlightStringsPreferencePage.this.getShell().getDisplay(), 
 					ColorUtil.warlockColorToRGB(string.getStyle().getForegroundColor().isDefault() ?
 							WindowConfigurationProvider.getProvider(settings).getDefaultForegroundColor() : string.getStyle().getForegroundColor()));
@@ -614,7 +614,7 @@ public class HighlightStringsPreferencePage extends PreferencePageUtils implemen
 			}
 		}*/
 		
-		for (HighlightSetting string : removedStrings)
+		for (PatternSetting string : removedStrings)
 		{
 			HighlightConfigurationProvider.getProvider(settings).removeSetting(string);
 		}

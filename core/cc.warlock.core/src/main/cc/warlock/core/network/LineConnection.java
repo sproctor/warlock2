@@ -60,7 +60,7 @@ public abstract class LineConnection extends Connection {
 			if(line == null)
 				return;
 			
-			for (IConnectionListener listener : connectionListeners) {
+			for (IConnectionListener listener : getConnectionListeners()) {
 					listener.dataReady(LineConnection.this, line);
 			}
 		}

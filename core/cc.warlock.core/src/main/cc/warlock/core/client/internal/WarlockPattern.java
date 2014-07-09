@@ -5,16 +5,18 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import cc.warlock.core.client.IWarlockPattern;
+import cc.warlock.core.client.IWarlockStyle;
 
 public class WarlockPattern implements IWarlockPattern {
 
-	protected Pattern pattern;
+	private Pattern pattern;
 	
-	protected String text;
-	protected boolean literal = false;
-	protected boolean fullWord = true;
-	protected boolean caseSensitive = false;
-	protected boolean updateDeferred = true;
+	private String text;
+	private boolean literal = false;
+	private boolean fullWord = true;
+	private boolean caseSensitive = false;
+	private boolean updateDeferred = true;
+	private IWarlockStyle style;
 	
 	public WarlockPattern() { }
 	
@@ -27,6 +29,15 @@ public class WarlockPattern implements IWarlockPattern {
 		this.literal = literal;
 		this.caseSensitive = caseSensitive;
 		this.fullWord = fullWord;
+	}
+	
+	public WarlockPattern(String text, boolean literal, boolean caseSensitive, boolean fullWord, IWarlockStyle style)
+	{
+		this.text = text;
+		this.literal = literal;
+		this.caseSensitive = caseSensitive;
+		this.fullWord = fullWord;
+		this.style = style;
 	}
 	
 	protected void update() throws PatternSyntaxException {
@@ -100,4 +111,11 @@ public class WarlockPattern implements IWarlockPattern {
 		this.fullWord = fullWordMatch;
 	}
 
+	public IWarlockStyle getStyle() {
+		return style;
+	}
+	
+	public void setStyle(IWarlockStyle style) {
+		this.style = style;
+	}
 }

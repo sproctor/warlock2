@@ -46,7 +46,7 @@ import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
-import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
@@ -76,7 +76,7 @@ public class WarlockClient implements IWarlockClient {
 	private HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	private final IStream mainStream;
 	private ArrayList<Pair<String, IStreamListener>> streamListeners = new ArrayList<Pair<String, IStreamListener>>();
-	private ArrayList<Collection<? extends IWarlockHighlight>> highlightLists = new ArrayList<Collection<? extends IWarlockHighlight>>();
+	private ArrayList<Collection<? extends IWarlockPattern>> highlightLists = new ArrayList<Collection<? extends IWarlockPattern>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
 	private HashMap<String, String> components = new HashMap<String, String>();
@@ -251,16 +251,16 @@ public class WarlockClient implements IWarlockClient {
 	    }
 	}
 	
-	public Iterator<? extends IWarlockHighlight> getHighlightsIterator() {
-		return new MultiIterator<IWarlockHighlight>(highlightLists);
+	public Iterator<IWarlockPattern> getHighlightsIterator() {
+		return new MultiIterator<IWarlockPattern>(highlightLists);
 	}
 	
 	@Override
-	public void addHighlights(Collection<IWarlockHighlight> highlights) {
+	public void addHighlights(Collection<IWarlockPattern> highlights) {
 		highlightLists.add(highlights);
 	}
 	
-	public boolean removeHighlights(Collection<IWarlockHighlight> highlights) {
+	public boolean removeHighlights(Collection<IWarlockPattern> highlights) {
 		return highlightLists.remove(highlights);
 	}
 	

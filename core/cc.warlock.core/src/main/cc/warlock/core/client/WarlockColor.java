@@ -30,7 +30,7 @@ public class WarlockColor {
 
 	public static final WarlockColor DEFAULT_COLOR = new WarlockColor(-1, -1, -1);
 	
-	protected int red, green, blue;
+	private int red, green, blue;
 	
 	public WarlockColor () { }
 	

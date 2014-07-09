@@ -45,13 +45,13 @@ import cc.warlock.core.client.internal.WarlockClient;
  */
 public class SimpleLogger implements IStreamListener {
 
-	protected IWarlockClient client;
-	protected int maxBufferSize = 2000;
-	protected StringBuffer buffer = new StringBuffer(maxBufferSize);
-	protected boolean nextlineStamp = false;
+	private IWarlockClient client;
+	private int maxBufferSize = 2000;
+	private StringBuffer buffer = new StringBuffer(maxBufferSize);
+	private boolean nextlineStamp = false;
 	
-	protected static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-	protected static final DateFormat timeFormat = new SimpleDateFormat("[H:m:s] ");
+	private static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+	private static final DateFormat timeFormat = new SimpleDateFormat("[H:m:s] ");
 	
 	public SimpleLogger (IWarlockClient client) {
 		this.client = client;

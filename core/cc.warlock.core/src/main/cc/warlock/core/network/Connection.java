@@ -28,6 +28,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import cc.warlock.core.client.IWarlockClient;
 
@@ -36,12 +37,12 @@ import cc.warlock.core.client.IWarlockClient;
  */
 public abstract class Connection implements IConnection {
 
-	protected Socket socket;
-	protected ArrayList<IConnectionListener> connectionListeners = new ArrayList<IConnectionListener>();
-	protected boolean connected = false;
+	private Socket socket;
+	private ArrayList<IConnectionListener> connectionListeners = new ArrayList<IConnectionListener>();
+	private boolean connected = false;
 	
-	protected String host = null;
-	protected int port = -1;
+	private String host = null;
+	private int port = -1;
 	
 	public void connect (String host, int port)
 		throws IOException
@@ -208,5 +209,9 @@ public abstract class Connection implements IConnection {
 			
 			return true; // If we reach here... we're most likely still connected
 		}
+	}
+	
+	protected Collection<IConnectionListener> getConnectionListeners() {
+		return connectionListeners;
 	}
 }

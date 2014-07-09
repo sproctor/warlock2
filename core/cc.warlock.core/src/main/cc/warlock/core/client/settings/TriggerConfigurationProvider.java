@@ -29,7 +29,7 @@ import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.PatternSetting;
 
-public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IWarlockPatternSetting>
+public class TriggerConfigurationProvider extends ArrayConfigurationProvider<PatternSetting>
 {
 	public static final String ID = "triggers";
 	
@@ -38,7 +38,7 @@ public class TriggerConfigurationProvider extends ArrayConfigurationProvider<IWa
 		super(parent, ID);
 	}
 	
-	public IWarlockPatternSetting loadSetting(String id) {
+	public PatternSetting loadSetting(String id) {
 		return new PatternSetting(this, id);
 	}
 	

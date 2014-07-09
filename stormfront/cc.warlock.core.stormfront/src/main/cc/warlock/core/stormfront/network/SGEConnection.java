@@ -109,7 +109,7 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 	public void connect ()
 	{
 		try {
-			if (!connected) {
+			if (!isConnected()) {
 				resetState();
 				connect (SGE_SERVER, SGE_PORT);
 			}

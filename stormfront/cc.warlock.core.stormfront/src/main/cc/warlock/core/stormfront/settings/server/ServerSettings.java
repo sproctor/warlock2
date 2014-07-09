@@ -35,7 +35,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockHighlight;
+import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
@@ -345,7 +345,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 		return presets.get(name).getStyle();
 	}
 	
-	public List<? extends IWarlockHighlight> getHighlightStrings ()
+	public List<? extends IWarlockPattern> getHighlightStrings ()
 	{	
 		return /*highlightStrings*/null;
 	}

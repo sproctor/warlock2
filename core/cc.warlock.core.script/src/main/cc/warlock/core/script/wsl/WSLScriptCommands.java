@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockHighlight;
+import cc.warlock.core.client.internal.WarlockPattern;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.ScriptEngineRegistry;
@@ -796,7 +796,7 @@ public class WSLScriptCommands {
 				style.setBackgroundColor(new WarlockColor(bgcolor));
 			style.setFullLine(fullLine);
 			
-			WarlockHighlight highlight = new WarlockHighlight(string);
+			WarlockPattern highlight = new WarlockPattern(string);
 			highlight.setLiteral(literal);
 			highlight.setFullWordMatch(fullWord);
 			highlight.setCaseSensitive(caseSensitive);

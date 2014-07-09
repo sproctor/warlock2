@@ -29,7 +29,7 @@ import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.PatternSetting;
 
-public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWarlockPatternSetting>
+public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<PatternSetting>
 {
 	public static final String ID = "ignores";
 	
@@ -38,7 +38,7 @@ public class IgnoreConfigurationProvider extends ArrayConfigurationProvider<IWar
 		super(parent, ID);
 	}
 	
-	public IWarlockPatternSetting loadSetting(String id) {
+	public PatternSetting loadSetting(String id) {
 		return new PatternSetting(this, id);
 	}
 

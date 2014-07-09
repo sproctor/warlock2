@@ -23,12 +23,13 @@ package cc.warlock.core.client.settings;
 
 import cc.warlock.core.settings.ArrayConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
+import cc.warlock.core.settings.PatternSetting;
 
 /**
  * @author marshall
  *
  */
-public abstract class PatternConfigurationProvider extends ArrayConfigurationProvider<IWarlockPatternSetting> {
+public abstract class PatternConfigurationProvider extends ArrayConfigurationProvider<PatternSetting> {
 
 	public PatternConfigurationProvider (IWarlockSetting parent, String path)
 	{
