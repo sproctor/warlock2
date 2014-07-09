@@ -1,1 +1,5 @@
 warlock2-build
+*.class
+*.swp
+*.tokens
+bin
