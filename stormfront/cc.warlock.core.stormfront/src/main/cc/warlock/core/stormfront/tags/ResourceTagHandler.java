@@ -44,7 +44,9 @@ public class ResourceTagHandler extends DefaultTagHandler {
 		else if (attributes.getValue("id") != null)
 			pictureId = attributes.getValue("id");
 		
-		if (pictureId != null)
-			handler.getClient().appendImage(pictureId);
+		if (pictureId != null) {
+			String gameCode = handler.getClient().getGameCode();
+			handler.getClient().appendImage("http://www.play.net/bfe/" + gameCode + "-art/" + pictureId + "_t.jpg");
+		}
 	}
 }

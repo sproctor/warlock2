@@ -31,12 +31,12 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.IStormFrontTagHandler;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.tags.ATagHandler;
 import cc.warlock.core.stormfront.tags.AppTagHandler;
 import cc.warlock.core.stormfront.tags.BTagHandler;
@@ -83,7 +83,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
  */
 public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
-	protected IStormFrontClient client;
+	protected IWarlockClient client;
 	protected HashMap<String, IStormFrontTagHandler> defaultTagHandlers = new HashMap<String, IStormFrontTagHandler>();
 	protected Stack<String> tagStack = new Stack<String>();
 	private Stack<String> streamStack = new Stack<String>();
@@ -96,7 +96,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	private boolean lineHasContent = false;
 	private HashMap<String, String> menuData = new HashMap<String, String>();
 	
- 	public StormFrontProtocolHandler(IStormFrontClient client) {
+ 	public StormFrontProtocolHandler(IWarlockClient client) {
 		
 		this.client = client;
 		
@@ -161,7 +161,7 @@ public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	/*
 	 * The purpose of this function is painfully obvious.
 	 */
-	public IStormFrontClient getClient() {
+	public IWarlockClient getClient() {
 		return client;
 	}
 	

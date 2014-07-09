@@ -22,7 +22,6 @@
 package cc.warlock.core.client;
 
 public interface IWarlockClientListener {
-	public void clientCreated(IWarlockClient client);
 
 	public void clientConnected(IWarlockClient client);
 

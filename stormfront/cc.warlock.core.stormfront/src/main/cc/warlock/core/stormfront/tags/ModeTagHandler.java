@@ -21,9 +21,8 @@
  */
 package cc.warlock.core.stormfront.tags;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
-import cc.warlock.core.stormfront.client.internal.StormFrontClient;
-import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class ModeTagHandler extends DefaultTagHandler {
@@ -47,11 +46,11 @@ public class ModeTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleEnd(String rawXML) {
 		if(id != null) {
-			StormFrontClient client = (StormFrontClient) handler.getClient();
+			IWarlockClient client = handler.getClient();
 
 			if (id.equals("CMGR"))
 			{
-				((StormFrontConnection)client.getConnection()).passThrough();
+				client.getConnection().passThrough();
 				client.prompt("\n");
 			} else if (id.equals("GAME")) {
 				// handle version numbers?

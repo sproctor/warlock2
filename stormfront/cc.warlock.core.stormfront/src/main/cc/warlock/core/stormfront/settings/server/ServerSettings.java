@@ -34,10 +34,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockHighlight;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.settings.ConfigurationUtil;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.xml.StormFrontDocument;
 import cc.warlock.core.stormfront.xml.StormFrontElement;
 
@@ -61,7 +61,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 	public static final String SETTING_UPDATE_PREFIX = "<stgupd>";
 	public static final String IGNORES_TEXT = "<<m><ignores disable=\"n\"></ignores><ignores disable=\"n\"></ignores></<m>";
 	
-	private IStormFrontClient client;
+	private IWarlockClient client;
 	private String playerId, clientVersion, crc;
 	private int majorVersion;
 	private StormFrontDocument document;
@@ -83,7 +83,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 	
 	private StormFrontElement streamElement, paletteElement, presetsElement, stringsElement, namesElement, ignoresElement;
 	
-	public ServerSettings (IStormFrontClient client)
+	public ServerSettings (IWarlockClient client)
 	{
 		this.client = client;
 		
@@ -768,7 +768,7 @@ public class ServerSettings implements Comparable<ServerSettings>
 		return crc;
 	}
 
-	public IStormFrontClient getClient() {
+	public IWarlockClient getClient() {
 		return client;
 	}
 }

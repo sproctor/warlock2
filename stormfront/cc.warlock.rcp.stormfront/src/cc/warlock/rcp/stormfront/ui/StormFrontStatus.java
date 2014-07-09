@@ -96,8 +96,6 @@ public class StormFrontStatus extends Composite {
 	});
 	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
 		@Override
-		public void clientCreated(IWarlockClient client) {}
-		@Override
 		public void clientConnected(IWarlockClient client) {}
 		@Override
 		public void clientDisconnected(IWarlockClient client) {}

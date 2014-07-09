@@ -22,14 +22,15 @@
 package cc.warlock.core.client.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import cc.warlock.core.client.IProperty;
 import cc.warlock.core.client.IPropertyListener;
 
 public class Property<T> implements IProperty<T> {
 
-	protected T data;
-	protected ArrayList<IPropertyListener<T>> listeners = new ArrayList<IPropertyListener<T>>();
+	private T data;
+	private ArrayList<IPropertyListener<T>> listeners = new ArrayList<IPropertyListener<T>>();
 	
 	public Property() {}
 	
@@ -56,5 +57,9 @@ public class Property<T> implements IProperty<T> {
 	
 	public boolean removeListener(IPropertyListener<T> listener) {
 		return listeners.remove(listener);
+	}
+	
+	protected Collection<IPropertyListener<T>> getListeners() {
+		return listeners;
 	}
 }

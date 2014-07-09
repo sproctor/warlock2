@@ -47,15 +47,6 @@ public class WarlockClientRegistry {
 			listeners.remove(listener);
 	}
 	
-	public static void clientCreated (IWarlockClient client) {
-		if (!clients.contains(client))
-			clients.add(client);
-		
-		for (IWarlockClientListener listener : listeners) {
-			listener.clientCreated(client);
-		}
-	}
-	
 	public static void clientConnected (IWarlockClient client)
 	{
 		for (IWarlockClientListener listener : listeners)

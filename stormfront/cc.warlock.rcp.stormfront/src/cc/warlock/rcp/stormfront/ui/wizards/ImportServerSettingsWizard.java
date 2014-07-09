@@ -13,7 +13,6 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.settings.ProfileSetting;
-import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.rcp.wizards.WizardWithNotification;
 
@@ -33,19 +32,15 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 		
 		StormFrontServerSettings serverSettings = null;
 		ClientSettings clientSettings = null;
-		StormFrontClient profileClient = null;
+		IWarlockClient profileClient = null;
 		
 		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) 
 		{
-			if (client instanceof StormFrontClient) {
-				StormFrontClient sfClient = (StormFrontClient) client;
-				
-				if (sfClient.getCharacterName().equals(profile.getCharacterName())) {
+				if (client.getCharacterName().equals(profile.getCharacterName())) {
 					//clientSettings = (StormFrontClientSettings) sfClient.getStormFrontClientSettings();
 					//serverSettings = sfClient.getServerSettings();
-					profileClient = sfClient;
+					profileClient = client;
 				}
-			}
 		}
 		
 		if (clientSettings != null && serverSettings != null && profileClient != null) {

@@ -27,9 +27,9 @@
  */
 package cc.warlock.core.stormfront;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.xml.IStormFrontXMLHandler;
 
 /**
@@ -42,7 +42,7 @@ public interface IStormFrontProtocolHandler extends IStormFrontXMLHandler {
 	
 	public void registerHandler(IStormFrontTagHandler tagHandler);
 	
-	public IStormFrontClient getClient();
+	public IWarlockClient getClient();
 	public void pushStream(String name);
 	public void popStream();
 	public void clearStreams();

@@ -33,7 +33,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
  */
 public class PromptTagHandler extends DefaultTagHandler {
 	
-	protected String prompt;
+	private String prompt;
 	
 	public PromptTagHandler (IStormFrontProtocolHandler handler) {
 		super(handler);

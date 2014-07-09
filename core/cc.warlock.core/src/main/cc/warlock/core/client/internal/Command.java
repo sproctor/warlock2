@@ -37,10 +37,10 @@ import cc.warlock.core.client.ICommand;
 public class Command implements ICommand, Serializable {
 	private static final long serialVersionUID = 51L;
 
-	protected String command;
-	protected Date timestamp;
-	protected boolean visible = true;
-	protected String prefix;
+	private String command;
+	private Date timestamp;
+	private boolean visible = true;
+	private String prefix;
 	
 	public Command(String command) {
 		this.command = command + "\n";

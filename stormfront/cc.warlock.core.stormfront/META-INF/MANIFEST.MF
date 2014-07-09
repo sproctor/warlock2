@@ -11,7 +11,6 @@ Bundle-ClassPath: warlock2-stormfront-core.jar,
  warlock2-stormfront-core-eclipse.jar
 Export-Package: cc.warlock.core.stormfront,
  cc.warlock.core.stormfront.client,
- cc.warlock.core.stormfront.client.internal,
  cc.warlock.core.stormfront.internal,
  cc.warlock.core.stormfront.network,
  cc.warlock.core.stormfront.settings,

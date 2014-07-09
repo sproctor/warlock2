@@ -43,13 +43,12 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptListener;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.ui.client.SWTScriptListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.scribe.ui.ScribeSharedImages;
 
 public class ScriptControlView extends ViewPart implements IScriptListener {
-	protected ArrayList<IStormFrontClient> clients = new ArrayList<IStormFrontClient>();
+	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
 	protected SWTScriptListener wrapper = new SWTScriptListener(this);
 	protected Composite main, scriptComposite;
 	protected ToolBar buttonsToolbar;
@@ -58,7 +57,7 @@ public class ScriptControlView extends ViewPart implements IScriptListener {
 	protected int duration = 0;
 	protected IScript currentScript;
 
-	protected void listenToClient (IStormFrontClient client)
+	protected void listenToClient (IWarlockClient client)
 	{
 		if (!clients.contains(client)) {
 			client.addScriptListener(wrapper);
@@ -72,22 +71,18 @@ public class ScriptControlView extends ViewPart implements IScriptListener {
 		{
 			for (IWarlockClient client : WarlockClientRegistry.getActiveClients())
 			{
-				if (client instanceof IStormFrontClient)
-				{
-					listenToClient((IStormFrontClient) client);
-				}
+					listenToClient(client);
 			}
 		} else {
 			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(
 			new IWarlockClientListener() {
-				public void clientCreated(IWarlockClient client) {
-					if (client instanceof IStormFrontClient)
-					{
-						listenToClient((IStormFrontClient) client);
-					}
+				@Override
+				public void clientConnected(IWarlockClient client) {
+					listenToClient(client);
 				}
-				public void clientConnected(IWarlockClient client) {}
+				@Override
 				public void clientDisconnected(IWarlockClient client) {}
+				@Override
 				public void clientSettingsLoaded(IWarlockClient client) {}
 			}));
 		}

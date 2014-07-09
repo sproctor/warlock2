@@ -29,11 +29,15 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
+import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMonospace;
+import cc.warlock.core.network.Connection;
+import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
+import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.rcp.application.WarlockPerspectiveFactory;
-import cc.warlock.rcp.telnet.core.client.TelnetClientFactory;
 import cc.warlock.rcp.telnet.ui.views.TelnetGameView;
 import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.GameView;
@@ -49,12 +53,33 @@ public class LoginUtil {
 		String server = gameHost;
 		int port = Integer.parseInt (gamePort);
 
-		IWarlockClient client = TelnetClientFactory.createTelnetClient(); //Warlock2Plugin.getDefault().getCurrentClient();
+		final IWarlockClient client = new WarlockClient(); //Warlock2Plugin.getDefault().getCurrentClient();
 		gameView.setClient(client);
 		
 		try {
 			System.out.println("Connecting!");
-			client.connect(server, port, null);
+			Connection connection = new Connection();
+			connection.addConnectionListener(new IConnectionListener () {
+				public void connected(IConnection connection) {
+					WarlockClientRegistry.clientConnected(client);
+				}
+				public void connectionError(IConnection connection,
+						ErrorType errorType) {
+				}
+				public void dataReady(IConnection connection, String data) {
+					// Push the raw input into the Stream
+					WarlockString string = new WarlockString(data);
+					string.addStyle(WarlockMonospace.getInstance());
+					getMainStream().put(string);
+				}
+				public void dataSent (IConnection connection, String data) {
+					
+				}
+				public void disconnected(IConnection connection) {
+					WarlockClientRegistry.clientDisconnected(client);
+				}
+			});
+			connection.connect(server, port);
 			gameView.setFocus();
 		} catch (IOException e) {
 			String errorConnectMessage =

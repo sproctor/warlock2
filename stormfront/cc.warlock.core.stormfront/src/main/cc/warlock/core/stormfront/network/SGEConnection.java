@@ -538,4 +538,9 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 		System.out.println("SGE out: " + line);
 		super.sendLine(line);
 	}*/
+	
+	@Override
+	public void passThrough() {
+		// makes no sense for us
+	}
 }

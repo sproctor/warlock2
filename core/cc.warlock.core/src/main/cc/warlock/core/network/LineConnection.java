@@ -33,7 +33,7 @@ import java.net.Socket;
 /**
  * @author marshall
  */
-public class LineConnection extends Connection {
+public abstract class LineConnection extends Connection {
 	
 	@Override
 	protected Runnable createPollingRunnable(Socket socket) throws IOException {

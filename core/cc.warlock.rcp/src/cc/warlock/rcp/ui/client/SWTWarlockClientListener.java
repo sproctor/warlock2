@@ -35,18 +35,6 @@ public class SWTWarlockClientListener implements IWarlockClientListener {
 		this.listener = listener;
 	}
 	
-	private class ActivatedListener implements Runnable {
-		private IWarlockClient client;
-
-		public ActivatedListener(IWarlockClient client) {
-			this.client = client;
-		}
-		
-		public void run () {
-			listener.clientCreated(client);
-		}
-	}
-	
 	private class ConnectedListener implements Runnable {
 		private IWarlockClient client;
 		
@@ -85,11 +73,6 @@ public class SWTWarlockClientListener implements IWarlockClientListener {
 	
 	protected void run(Runnable runnable) {
 		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
-	}
-	
-	@Override
-	public void clientCreated(IWarlockClient client) {
-		run(new ActivatedListener(client));
 	}
 
 	@Override

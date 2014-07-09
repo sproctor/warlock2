@@ -21,10 +21,10 @@
  */
 package cc.warlock.core.stormfront.tags;
 
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.settings.CmdlistSettings;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
@@ -35,12 +35,12 @@ public class ATagHandler extends DefaultTagHandler {
 	int menuCount = 0;
 	
 	private class CommandRunner implements Runnable {
-		private IStormFrontClient client;
+		private IWarlockClient client;
 		private String coord;
 		private String noun;
 		private String exist;
 		
-		CommandRunner(IStormFrontClient client, String coord, String noun, String exist) {
+		CommandRunner(IWarlockClient client, String coord, String noun, String exist) {
 			this.client = client;
 			this.coord = coord;
 			this.noun = noun;
@@ -61,11 +61,11 @@ public class ATagHandler extends DefaultTagHandler {
 	}
 	
 	private class CommandMenuRunner implements Runnable {
-		private IStormFrontClient client;
+		private IWarlockClient client;
 		private String noun;
 		private String exist;
 		
-		CommandMenuRunner(IStormFrontClient client, String noun, String exist) {
+		CommandMenuRunner(IWarlockClient client, String noun, String exist) {
 			this.client = client;
 			this.noun = noun;
 			this.exist = exist;

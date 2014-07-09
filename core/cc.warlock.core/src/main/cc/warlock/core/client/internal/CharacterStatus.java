@@ -29,7 +29,7 @@ import cc.warlock.core.client.IWarlockClient;
 
 public class CharacterStatus extends Property<String> implements ICharacterStatus {
 	
-	protected HashMap<StatusType, Boolean> status = new HashMap<StatusType, Boolean>();
+	private HashMap<StatusType, Boolean> status = new HashMap<StatusType, Boolean>();
 	
 	public CharacterStatus (IWarlockClient client) {
 		super(null);
@@ -44,7 +44,7 @@ public class CharacterStatus extends Property<String> implements ICharacterStatu
 		
 		if (statusType != null) {
 			status.put(statusType, true);
-			for (IPropertyListener<String> listener : listeners) {
+			for (IPropertyListener<String> listener : getListeners()) {
 				listener.propertyChanged(this.get());
 			}
 		}
@@ -55,7 +55,7 @@ public class CharacterStatus extends Property<String> implements ICharacterStatu
 		
 		if (statusType != null) {
 			status.put(statusType, false);
-			for (IPropertyListener<String> listener : listeners) {
+			for (IPropertyListener<String> listener : getListeners()) {
 				listener.propertyChanged(this.get());
 			}
 		}

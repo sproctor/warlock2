@@ -23,7 +23,7 @@ package cc.warlock.rcp.stormfront.adapters;
 
 import java.util.ArrayList;
 
-import cc.warlock.core.stormfront.client.IStormFrontClient;
+import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.client.WarlockClientAdapterFactory;
 
 public class StormFrontClientAdapterFactory extends WarlockClientAdapterFactory {
@@ -35,7 +35,7 @@ public class StormFrontClientAdapterFactory extends WarlockClientAdapterFactory 
 		for (Class c : super.getAdapterList())
 			classes.add(c);
 		
-		classes.add(IStormFrontClient.class);
+		classes.add(IWarlockClient.class);
 		
 		return classes.toArray(new Class[classes.size()]);
 	}

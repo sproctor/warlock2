@@ -40,10 +40,9 @@ import cc.warlock.core.client.WarlockString;
  */
 public class Stream implements IStream {
 	
-	protected IWarlockClient client;
-	
-	protected String title;
-	protected String subtitle;
+	private IWarlockClient client;
+	private String title;
+	private String subtitle;
 	private ArrayList<IStreamListener> listeners = new ArrayList<IStreamListener>();
 	private String closedStyle;
 	private String closedTarget = "main";

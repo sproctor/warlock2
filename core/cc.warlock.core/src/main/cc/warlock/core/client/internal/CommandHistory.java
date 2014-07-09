@@ -45,10 +45,10 @@ import cc.warlock.core.client.ICommandHistoryListener;
  */
 public class CommandHistory implements ICommandHistory {
 
-	protected int position = -1;
-	protected LinkedList<ICommand> commands = new LinkedList<ICommand>();
-	protected ArrayList<ICommandHistoryListener> listeners = new ArrayList<ICommandHistoryListener>();
-	static Preferences prefs = Preferences.userNodeForPackage(Command.class);
+	private int position = -1;
+	private LinkedList<ICommand> commands = new LinkedList<ICommand>();
+	private ArrayList<ICommandHistoryListener> listeners = new ArrayList<ICommandHistoryListener>();
+	static private Preferences prefs = Preferences.userNodeForPackage(Command.class);
 	
 	public CommandHistory () {
 		// load saved history

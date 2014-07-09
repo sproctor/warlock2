@@ -55,4 +55,7 @@ public interface IConnection {
 	public boolean isConnected();
 	public String getHost();
 	public int getPort();
+	
+	// Hack for CMGR mode in StormFront
+	public void passThrough();
 }

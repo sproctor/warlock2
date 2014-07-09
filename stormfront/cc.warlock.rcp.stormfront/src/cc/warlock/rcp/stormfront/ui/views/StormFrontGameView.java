@@ -47,7 +47,6 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.settings.AccountProvider;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
@@ -208,8 +207,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
 			@Override
-			public void clientCreated(IWarlockClient client) {}
-			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override
 			public void clientDisconnected(IWarlockClient client) {
@@ -283,7 +280,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class adapter) {
-		if (IStormFrontClient.class.equals(adapter)) {
+		if (IWarlockClient.class.equals(adapter)) {
 			return getClient();
 		}
 		return super.getAdapter(adapter);

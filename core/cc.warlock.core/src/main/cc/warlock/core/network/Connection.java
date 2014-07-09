@@ -34,7 +34,7 @@ import cc.warlock.core.client.IWarlockClient;
 /**
  * @author marshall
  */
-public class Connection implements IConnection {
+public abstract class Connection implements IConnection {
 
 	protected Socket socket;
 	protected ArrayList<IConnectionListener> connectionListeners = new ArrayList<IConnectionListener>();

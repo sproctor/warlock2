@@ -33,7 +33,6 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.internal.WarlockMonospace;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnectionListener;
-import cc.warlock.core.stormfront.client.IStormFrontClient;
 import cc.warlock.core.stormfront.internal.ParseException;
 import cc.warlock.core.stormfront.internal.StormFrontProtocolHandler;
 import cc.warlock.core.stormfront.internal.StormFrontProtocolParser;
@@ -49,14 +48,14 @@ public class StormFrontConnection implements IConnection
 	protected StormFrontProtocolHandler handler;
 	private StormFrontReader reader;
 	private StormFrontProtocolParser parser;
-	protected IStormFrontClient client;
+	protected IWarlockClient client;
 	protected String key, host;
 	protected int port;
 	protected ArrayList<IConnectionListener> listeners = new ArrayList<IConnectionListener>();
 	protected Socket socket;
 	protected boolean connected = false;
 	
-	public StormFrontConnection (IStormFrontClient client, String key) {
+	public StormFrontConnection (IWarlockClient client, String key) {
 		this.client = client;
 		this.key = key;
 		this.handler = new StormFrontProtocolHandler(client);

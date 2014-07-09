@@ -136,8 +136,6 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		
 		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
 			@Override
-			public void clientCreated(IWarlockClient client) {}
-			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override
 			public void clientDisconnected(IWarlockClient client) {}

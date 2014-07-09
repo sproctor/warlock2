@@ -102,8 +102,6 @@ public class WarlockText {
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
 	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
 		@Override
-		public void clientCreated(IWarlockClient client) {}
-		@Override
 		public void clientConnected(IWarlockClient client) {}
 		@Override
 		public void clientDisconnected(IWarlockClient client) {}

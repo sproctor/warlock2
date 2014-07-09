@@ -30,10 +30,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.client.internal.WarlockMonospace;
 import cc.warlock.core.network.IConnection.ErrorType;
-import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.network.SGEConnection;
+import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.rcp.stormfront.ui.StormFrontPerspectiveFactory;
 import cc.warlock.rcp.stormfront.ui.views.BarsView;
 import cc.warlock.rcp.stormfront.ui.views.HandsView;
@@ -59,13 +61,17 @@ public class LoginUtil {
 			e.printStackTrace();
 		}
 		
-		StormFrontClient client = new StormFrontClient(loginProperties.get("GAMECODE"));
+		WarlockClient client = new WarlockClient();
+		client.setGameCode(loginProperties.get("GAMECODE"));
 		gameView.setClient(client);
 		
 		try {
-			client.connect(server, port, key);
-			gameView.setFocus();
+			StormFrontConnection connection = new StormFrontConnection(client, key);
+			client.setConnection(connection);
+			connection.connect(server, port);
+			WarlockClientRegistry.clientConnected(client);
 			
+			gameView.setFocus();
 		} catch (IOException e) {
 			String errorConnectMessage =
 			"******************************************************************\n" +

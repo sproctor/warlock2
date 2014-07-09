@@ -38,7 +38,7 @@ import cc.warlock.core.client.IWarlockEntry;
  */
 public class CommandMacroHandler implements IMacroHandler {
 
-	protected String command;
+	private String command;
 	
 	public CommandMacroHandler (String command)
 	{

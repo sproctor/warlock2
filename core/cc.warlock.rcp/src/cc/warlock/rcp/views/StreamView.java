@@ -44,7 +44,7 @@ import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.util.ColorUtil;
 
-public class StreamView extends WarlockView implements IGameViewFocusListener, IWarlockClientListener {
+public class StreamView extends WarlockView implements IGameViewFocusListener {
 	
 	public static final String STREAM_VIEW_PREFIX = "cc.warlock.rcp.views.stream.";
 	
@@ -69,9 +69,18 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 		super();
 		
 		openViews.add(this);
-		
+
 		GameView.addGameViewFocusListener(this);
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(this));
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+			@Override
+			public void clientConnected(IWarlockClient client) {
+				addClient(client);
+			}
+			@Override
+			public void clientDisconnected(IWarlockClient client) {}
+			@Override
+			public void clientSettingsLoaded(IWarlockClient client) {}
+		}));
 	}
 
 	public static StreamView getViewForStream (String prefix, String streamName) {
@@ -238,26 +247,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener, I
 	@Override
 	public void pageDown() {
 		activeStream.pageDown();
-	}
-
-	public void clientCreated(IWarlockClient client) {
-		addClient(client);
-		//if(activeClient == null || activeClient == client || activeStream == null)
-			//setClient(client);
-	}
-
-	public void clientConnected(IWarlockClient client) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void clientDisconnected(IWarlockClient client) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void clientSettingsLoaded(IWarlockClient client) {
-		// Not interested
 	}
 	
 	public StreamText getStreamTextForClient(IWarlockClient client) {

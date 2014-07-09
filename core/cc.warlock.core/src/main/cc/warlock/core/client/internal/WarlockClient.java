@@ -26,6 +26,8 @@ package cc.warlock.core.client.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,15 +54,19 @@ import cc.warlock.core.client.WarlockTimer;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.HighlightConfigurationProvider;
+import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.network.IConnection;
+import cc.warlock.core.settings.MacroSetting;
+import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.util.Pair;
 
 
 /**
  * @author Marshall
  */
-public abstract class WarlockClient implements IWarlockClient {
+public class WarlockClient implements IWarlockClient {
 
+	private IConnection connection;
 	private IWarlockClientViewer viewer;
 	private IWarlockClientListener listener;
 	private String lastCommand;
@@ -77,8 +83,10 @@ public abstract class WarlockClient implements IWarlockClient {
 	private HashMap<String, String> componentStreams = new HashMap<String, String>();
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
+	private String gameCode;
+	private String playerId;
 
-	protected ClientSettings clientSettings;
+	private ClientSettings clientSettings;
 	
 	public WarlockClient () {
 		logger = new SimpleLogger(this);
@@ -93,8 +101,6 @@ public abstract class WarlockClient implements IWarlockClient {
 					logger.flush();
 				}
 			}
-			@Override
-			public void clientCreated(IWarlockClient client) {}
 			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override
@@ -124,7 +130,13 @@ public abstract class WarlockClient implements IWarlockClient {
 	
 	// IWarlockClient methods
 	
-	public abstract void connect(String server, int port, String key) throws IOException;
+	public IConnection getConnection() {
+		return connection;
+	}
+	
+	public void setConnection(IConnection connection) {
+		this.connection = connection;
+	}
 	
 	public synchronized void send(ICommand command) {
 		if(command.isVisible())
@@ -382,7 +394,60 @@ public abstract class WarlockClient implements IWarlockClient {
 		property.set(value);
 	}
 	
-	abstract public String getGameCode();
+	
+	@Override
+	public String getGameCode() {
+		return gameCode;
+	}
+	
+	@Override
+	public void setGameCode(String gameCode) {
+		this.gameCode = gameCode;
+	}
+	
+	@Override
+	public String getPlayerId() {
+		return playerId;
+	}
+	
+	@Override
+	public void setPlayerId(String playerId) {
+		this.playerId = playerId;
+		
+		clientSettings = ClientSettings.getClientSettings(playerId);
+		
+		if(clientSettings.isNewSetting()) {
+			for(WarlockMacro macro : DefaultMacros.instance().getCollection()) {
+				MacroSetting smacro = MacroConfigurationProvider.getProvider(clientSettings).createSetting();
+				smacro.setCommand(macro.getCommand());
+				smacro.setKeyString(macro.getKeyString());
+			}
+			WarlockPreferencesScope.getInstance().flush();
+		}
+		// TODO: import server settings
+		//serverSettings = new StormFrontServerSettings();
+		//clientSettings.addChildProvider(serverSettings);
+		
+		WarlockClientRegistry.clientSettingsLoaded(this);
+	}
+	
+	@Override
+	public String getCharacterName() {
+		if (clientSettings == null)
+			return null;
+		return clientSettings.getName();
+	}
+	
+	@Override
+	public void setCharacterName(String name) {
+		if (clientSettings != null)
+			clientSettings.setName(name);
+	}
+	
+	@Override
+	public String getClientId() {
+		return getGameCode() + getPlayerId();
+	}
 	
 	public IClientSettings getClientSettings() {
 		return clientSettings;
@@ -458,5 +523,24 @@ public abstract class WarlockClient implements IWarlockClient {
 	public synchronized WarlockString getStreamHistory(String streamName) {
 		IStream stream = streams.get(streamName);
 		return stream == null ? null : stream.getHistory();
+	}
+	
+	@Override
+	public void launchURL(String url) {
+		try {
+			getViewer().launchURL(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void appendImage(String urlString) {
+		try {
+			URL url = new URL(urlString);
+			getViewer().appendImage(url);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 }

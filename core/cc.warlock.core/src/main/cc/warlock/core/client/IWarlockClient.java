@@ -24,7 +24,6 @@
  */
 package cc.warlock.core.client;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
@@ -43,12 +42,6 @@ import cc.warlock.core.network.IConnection;
 public interface IWarlockClient extends IRoomListener {
 	
 	public static final String MAIN_STREAM_NAME = "main";
-	
-	/**
-	 * Connect and handshake with the Simutronics server
-	 * @param key
-	 */
-	public void connect(String server, int gamePort, String key) throws IOException;
 	
 	/**
 	 * Send command to the game.
@@ -164,6 +157,15 @@ public interface IWarlockClient extends IRoomListener {
 	 */
 	public String getGameCode();
 	
+	public void setGameCode(String gameCode);
+	
+	/**
+	 * @return The player ID of the current player
+	 */
+	public String getPlayerId();
+	
+	public void setPlayerId(String playerId);
+	
 	/**
 	 * @param name
 	 * @return The named timer
@@ -218,4 +220,8 @@ public interface IWarlockClient extends IRoomListener {
 	public String getStreamTitle(String streamName);
 	
 	public WarlockString getStreamHistory(String streamName);
+	
+	public void launchURL(String url);
+	
+	public void appendImage(String url);
 }

@@ -82,8 +82,6 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 				});
 			}
 			@Override
-			public void clientCreated(IWarlockClient client) {}
-			@Override
 			public void clientDisconnected(IWarlockClient client) {}
 			@Override
 			public void clientSettingsLoaded(IWarlockClient client) {}
