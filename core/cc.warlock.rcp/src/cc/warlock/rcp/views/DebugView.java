@@ -52,9 +52,9 @@ import cc.warlock.rcp.ui.network.SWTConnectionListenerAdapter;
 
 public class DebugView extends WarlockView implements IConnectionListener, IGameViewFocusListener {
 
-	protected PageBook book;
-	protected Text entry;
-	protected Button copyAll;
+	private PageBook book;
+	private Text entry;
+	private Button copyAll;
 	private HashMap<IWarlockClient, WarlockText> clientStreams = new HashMap<IWarlockClient, WarlockText>();
 	private IWarlockClient activeClient;
 	private WarlockText activeText;

@@ -47,11 +47,11 @@ import cc.warlock.rcp.ui.TextField;
 
 public class AccountEditDialog extends Dialog {
 
-	protected static int TEST_ACCOUNT = 3;
-	protected String username, password;
-	protected TextField usernameField;
-	protected TextField passwordField;
-	protected Label statusLabel;
+	private static int TEST_ACCOUNT = 3;
+	private String username, password;
+	private TextField usernameField;
+	private TextField passwordField;
+	private Label statusLabel;
 	
 	public AccountEditDialog (Shell parentShell)
 	{
@@ -140,9 +140,9 @@ public class AccountEditDialog extends Dialog {
 	
 	protected static class AccountVerifier implements ISGEConnectionListener
 	{
-		protected String username, password;
-		protected boolean verified, verifying;
-		protected int errorCode;
+		private String username, password;
+		private boolean verified, verifying;
+		private int errorCode;
 		
 		public AccountVerifier (String username, String password)
 		{

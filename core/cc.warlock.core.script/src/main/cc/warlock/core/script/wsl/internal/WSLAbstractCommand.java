@@ -29,13 +29,13 @@ abstract public class WSLAbstractCommand implements IWSLCommand {
 	
 	private int lineNumber;
 	private boolean instant = false;
-	protected WSLScript script;
+	private WSLScript script;
 	private boolean hasNext;
 	private WSLAbstractCommand nextCommand = null;
 	
 	public WSLAbstractCommand(int lineNumber, WSLScript script) {
 		this.lineNumber = lineNumber;
-		this.script = script;
+		this.setScript(script);
 	}
 	
 	public int getLineNumber() {
@@ -57,8 +57,8 @@ abstract public class WSLAbstractCommand implements IWSLCommand {
 			return nextCommand;
 		WSLAbstractCommand next = null;
 		int i = this.getLineNumber() + 1;
-		while(next == null && i < script.numLines()) {
-			next = script.getLine(i);
+		while(next == null && i < getScript().numLines()) {
+			next = getScript().getLine(i);
 			i++;
 		}
 		return next;
@@ -67,5 +67,13 @@ abstract public class WSLAbstractCommand implements IWSLCommand {
 	public void setNext(WSLAbstractCommand command) {
 		nextCommand = command;
 		hasNext = true;
+	}
+
+	public WSLScript getScript() {
+		return script;
+	}
+
+	public void setScript(WSLScript script) {
+		this.script = script;
 	}
 }

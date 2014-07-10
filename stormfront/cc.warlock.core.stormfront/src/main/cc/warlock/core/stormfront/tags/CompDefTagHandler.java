@@ -40,9 +40,9 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
  */
 public class CompDefTagHandler extends DefaultTagHandler {
 	
-	protected String id;
-	protected StringBuffer buffer;
-	protected WarlockStyle style;
+	private String id;
+	private StringBuffer buffer;
+	private WarlockStyle style;
 	
 	public CompDefTagHandler (IStormFrontProtocolHandler handler) {
 		super(handler);
@@ -56,7 +56,7 @@ public class CompDefTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		if(style != null) {
-			handler.removeStyle(style);
+			getHandler().removeStyle(style);
 			style = null;
 		}
 		buffer = new StringBuffer();
@@ -65,11 +65,11 @@ public class CompDefTagHandler extends DefaultTagHandler {
 		if(id == null)
 			return;
 		if(id.equals("room objs"))
-			handler.resetMonsterCount();
+			getHandler().resetMonsterCount();
 		
 		style = new WarlockStyle();
 		style.setComponentName(id);
-		handler.addStyle(style);
+		getHandler().addStyle(style);
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class CompDefTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleEnd(String rawXML) {
 		if(style != null) {
-			handler.removeStyle(style);
+			getHandler().removeStyle(style);
 			style = null;
 		}
 		
@@ -92,10 +92,10 @@ public class CompDefTagHandler extends DefaultTagHandler {
 			return;
 		
 		if(id.equals("room objs")) {
-			int count = handler.getMonsterCount();
-			handler.getClient().setProperty("monstercount", String.valueOf(count));
+			int count = getHandler().getMonsterCount();
+			getHandler().getClient().setProperty("monstercount", String.valueOf(count));
 		}
 		
-		handler.getClient().setComponent(id, buffer.toString(), handler.getCurrentStream());
+		getHandler().getClient().setComponent(id, buffer.toString(), getHandler().getCurrentStream());
 	}
 }

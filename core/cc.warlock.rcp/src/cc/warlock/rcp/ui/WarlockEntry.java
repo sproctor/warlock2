@@ -70,7 +70,7 @@ import cc.warlock.rcp.views.GameView;
 
 abstract public class WarlockEntry implements IWarlockEntry {
 	
-	protected StyledText widget;
+	private StyledText widget;
 	private IWarlockClientViewer viewer;
 	private boolean searchMode = false;
 	private StringBuffer searchText = new StringBuffer();

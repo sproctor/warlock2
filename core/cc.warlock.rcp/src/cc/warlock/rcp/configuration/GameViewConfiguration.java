@@ -40,9 +40,9 @@ public class GameViewConfiguration extends WarlockSetting
 	private int bufferLines;
 	private WarlockColor defaultBackground = defaultDefaultBgColor;
 	private WarlockColor defaultForeground = defaultDefaultFgColor;
-	protected String defaultFontFace;
-	protected int defaultFontSize;
-	protected boolean suppressPrompt;
+	private String defaultFontFace;
+	private int defaultFontSize;
+	private boolean suppressPrompt;
 	
 	static {
 		ClientSettings.registerProviderFactory(ID, new IWarlockSettingFactory() {

@@ -28,7 +28,9 @@ import cc.warlock.core.client.IProperty;
 
 public class JavascriptProperty<T> extends ScriptableObject {
 
-	protected IProperty<T> property;
+	private static final long serialVersionUID = 4212122542100105899L;
+	
+	private IProperty<T> property;
 	
 	public JavascriptProperty (Scriptable scope, IProperty<T> property)
 	{
@@ -38,7 +40,7 @@ public class JavascriptProperty<T> extends ScriptableObject {
 	}
 
 	@Override
-	public Object getDefaultValue(Class typeHint) {
+	public Object getDefaultValue(Class<?> typeHint) {
 		return property.get();
 	}
 	

@@ -45,15 +45,15 @@ import cc.warlock.core.stormfront.internal.StormFrontProtocolParser;
  */
 public class StormFrontConnection implements IConnection
 {
-	protected StormFrontProtocolHandler handler;
+	private StormFrontProtocolHandler handler;
 	private StormFrontReader reader;
 	private StormFrontProtocolParser parser;
-	protected IWarlockClient client;
-	protected String key, host;
-	protected int port;
-	protected ArrayList<IConnectionListener> listeners = new ArrayList<IConnectionListener>();
-	protected Socket socket;
-	protected boolean connected = false;
+	private IWarlockClient client;
+	private String key, host;
+	private int port;
+	private ArrayList<IConnectionListener> listeners = new ArrayList<IConnectionListener>();
+	private Socket socket;
+	private boolean connected = false;
 	
 	public StormFrontConnection (IWarlockClient client, String key) {
 		this.client = client;

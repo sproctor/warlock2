@@ -35,9 +35,9 @@ import cc.warlock.core.client.internal.WarlockMacro;
 
 public class MacroSetting extends WarlockSetting implements IMacro, IWarlockSetting
 {
-	protected String keyString;
+	private String keyString;
 	private String command;
-	protected IMacroHandler handler;
+	private IMacroHandler handler;
 	private boolean updateDeferred;
 	
 	public MacroSetting (IWarlockSetting parent, String path)

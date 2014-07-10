@@ -112,7 +112,7 @@ public class UserStream extends StreamView {
 	
 	@Override
 	protected StreamText createStreamText(Composite container, IWarlockClient client) {
-		return new UserStreamText(container, client.getViewer(), streamName);
+		return new UserStreamText(container, client.getViewer(), getStreamName());
 	}
 	
 	protected IStreamFilter[] getEventsFilters ()

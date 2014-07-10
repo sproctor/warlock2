@@ -16,9 +16,9 @@ import cc.warlock.rcp.views.GameView;
 
 public class StreamText extends WarlockText implements IStreamListener {
 
-	protected boolean isPrompting = false;
-	protected String prompt = null;
-	protected Property<String> title = new Property<String>();
+	private boolean isPrompting = false;
+	private String prompt = null;
+	private Property<String> title = new Property<String>();
 	private IStreamListener streamListener = new SWTStreamListener(this);
 	
 	private WarlockString textBuffer;

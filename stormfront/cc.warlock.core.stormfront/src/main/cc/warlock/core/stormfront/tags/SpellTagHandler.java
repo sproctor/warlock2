@@ -51,7 +51,7 @@ public class SpellTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().setProperty("spell", spellText.toString());
+		getHandler().getClient().setProperty("spell", spellText.toString());
 		
 		spellText = null;
 	}

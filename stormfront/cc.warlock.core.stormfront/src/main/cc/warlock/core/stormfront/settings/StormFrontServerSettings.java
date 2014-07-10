@@ -33,8 +33,8 @@ package cc.warlock.core.stormfront.settings;
  */
 public class StormFrontServerSettings {
 /*	
-	protected String clientVersion, majorVersion, crc;
-	protected IStormFrontMacroImporter macroImporter;
+	private String clientVersion, majorVersion, crc;
+	private IStormFrontMacroImporter macroImporter;
 	
 	public StormFrontServerSettings ()
 	{

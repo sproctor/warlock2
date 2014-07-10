@@ -32,9 +32,9 @@ import cc.warlock.rcp.wizards.WizardPageWithNotification;
 
 class ImportSettingsWizardPage extends WizardPageWithNotification
 {
-	protected TableViewer profileTable;
-	protected Button serverButton;
-	protected Button fileButton;
+	private TableViewer profileTable;
+	private Button serverButton;
+	private Button fileButton;
 	private Group grpSelectFileTo;
 	private Text fileText;
 	private Button browseFilesButton;

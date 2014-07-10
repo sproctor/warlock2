@@ -35,7 +35,8 @@ public interface ISGEGame {
 		BillingInfo("BILLINGINFO"), Games("GAMES"), Feedback("FEEDBACK"),
 		Signup("SIGNUP"), SignupAgain("SIGNUPA");
 		
-		protected String key;
+		private String key;
+		
 		GameURL (String key)
 		{
 			this.key = key;

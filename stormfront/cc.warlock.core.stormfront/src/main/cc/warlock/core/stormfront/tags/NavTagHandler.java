@@ -37,7 +37,7 @@ public class NavTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().nextRoom();
+		getHandler().getClient().nextRoom();
 	}
 
 }

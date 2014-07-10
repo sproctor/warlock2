@@ -39,7 +39,7 @@ public class PushBoldTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.addStyle(WarlockStyle.boldStyle);
-		handler.incrementMonsterCount();
+		getHandler().addStyle(WarlockStyle.boldStyle);
+		getHandler().incrementMonsterCount();
 	}
 }

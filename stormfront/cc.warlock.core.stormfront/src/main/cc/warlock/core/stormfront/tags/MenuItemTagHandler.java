@@ -25,7 +25,7 @@ public class MenuItemTagHandler extends DefaultTagHandler {
 		String id = menuHandler.getId();
 		String coord = attributes.getValue("coord");
 		String noun = attributes.getValue("noun");
-		CliSetting cli = CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getCli(coord);
+		CliSetting cli = CmdlistSettings.getProvider(getHandler().getClient().getClientSettings()).getCli(coord);
 		if(cli == null) {
 			System.err.print("Bad coord in menu item.");
 			return;
@@ -35,16 +35,16 @@ public class MenuItemTagHandler extends DefaultTagHandler {
 		String menuText = cli.getMenu().replace("@", "");
 		if(noun != null)
 			menuText = menuText.replace("%", noun);
-		String tempCommand = cli.getMenu().replace("@", handler.getMenuData(id));
+		String tempCommand = cli.getMenu().replace("@", getHandler().getMenuData(id));
 		if(noun != null)
 			tempCommand = tempCommand.replace("%", noun);
 		final String command = tempCommand;
-		handler.getClient().getViewer().addMenuItem(id, cli.getCategory(), menuText, new Runnable() {
+		getHandler().getClient().getViewer().addMenuItem(id, cli.getCategory(), menuText, new Runnable() {
 			@Override
 			public void run() {
 				System.out.print("Running command: " + command);
 				
-				handler.getClient().send(new Command(command));
+				getHandler().getClient().send(new Command(command));
 			}
 		});
 	}

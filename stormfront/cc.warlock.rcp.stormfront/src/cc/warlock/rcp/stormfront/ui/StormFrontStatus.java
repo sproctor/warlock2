@@ -49,16 +49,16 @@ import cc.warlock.rcp.views.GameView;
 
 public class StormFrontStatus extends Composite {
 
-	protected Label[] statusLabels = new Label[6];
+	private Label[] statusLabels = new Label[6];
 	private GameView viewer;
-	protected SWTPropertyListener<String> statusListener = new SWTPropertyListener<String>(new IPropertyListener<String>() {
+	private SWTPropertyListener<String> statusListener = new SWTPropertyListener<String>(new IPropertyListener<String>() {
 		@Override
 		public void propertyChanged(String value) {
 			updateStatus();
 		}
 	});
-	protected DecorationOverlayIcon multipleStatus;
-	protected Image multipleStatusImage;
+	private DecorationOverlayIcon multipleStatus;
+	private Image multipleStatusImage;
 	private final SWTPropertyListener<Integer> rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
 		public void propertyChanged(Integer value) {
 			if (value == 0)

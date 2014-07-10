@@ -26,7 +26,7 @@ import java.io.StringReader;
 
 public class StringScriptInfo implements IScriptInfo {
 
-	protected String string, name;
+	private String string, name;
 	
 	public StringScriptInfo (String name, String string)
 	{

@@ -29,8 +29,8 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import cc.warlock.rcp.application.WarlockApplication;
 
 public class NewScriptAction extends Action {
-	protected IWorkbenchPage page;
-	protected ICommonActionExtensionSite site;
+	private IWorkbenchPage page;
+	private ICommonActionExtensionSite site;
 	
 	public NewScriptAction (IWorkbenchPage page, ICommonActionExtensionSite site)
 	{

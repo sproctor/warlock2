@@ -40,9 +40,7 @@ import cc.warlock.core.settings.DirectorySetting;
 
 public class FilesystemScriptProvider implements IScriptProvider {
 	
-	protected static FilesystemScriptProvider instance = new FilesystemScriptProvider();
-	protected boolean forcedScan = false;
-	protected Thread scanningThread;
+	private static FilesystemScriptProvider instance = new FilesystemScriptProvider();
 	
 	static {
 		ScriptEngineRegistry.addScriptProvider(instance());

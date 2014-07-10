@@ -30,7 +30,6 @@ public class StreamWindowTagHandler extends DefaultTagHandler {
 
 	public StreamWindowTagHandler(IStormFrontProtocolHandler handler) {
 		super(handler);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class StreamWindowTagHandler extends DefaultTagHandler {
 		if(id == null)
 			return;
 		
-		IStream stream = handler.getClient().createStream(id);
+		IStream stream = getHandler().getClient().createStream(id);
 		
 		if(stream == null)
 			return;

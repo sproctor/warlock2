@@ -76,7 +76,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ICo
 	private Listener listener;
 	private SWTConnectionListenerAdapter connectionListener;
 	private Account savedAccount;
-	protected String accountName;
+	//private String accountName;
 	
 	public AccountWizardPage (SGEConnection connection)
 	{
@@ -137,7 +137,7 @@ public class AccountWizardPage extends WizardPageWithNotification implements ICo
 	public void pageExited(int button) {
 //		if (button == WizardWithNotification.NEXT)
 //		{	
-			accountName = account.getText();
+			//accountName = account.getText();
 			savedAccount = AccountProvider.getInstance().getAccount(account.getText());
 			if (savedAccount == null)
 			{

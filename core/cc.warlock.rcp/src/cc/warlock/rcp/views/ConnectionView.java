@@ -62,9 +62,9 @@ public class ConnectionView extends ViewPart {
 
 	public static final String VIEW_ID = "cc.warlock.rcp.views.ConnectionView"; //$NON-NLS-1$
 	
-	protected FormToolkit toolkit;
-	protected ScrolledForm form;
-	protected Button closeButton;
+	private FormToolkit toolkit;
+	private ScrolledForm form;
+	private Button closeButton;
 	
 	HashMap <String, ArrayList<CommandDescription>> groups = new HashMap<String, ArrayList<CommandDescription>>();
 	public static boolean closeAfterConnect = true;
@@ -243,8 +243,6 @@ public class ConnectionView extends ViewPart {
 		section.setTitleBarGradientBackground(new Color(Display.getDefault(), 25, 25, 50));
 		return section;
 	}
-	
-	protected static boolean checkedForUpdates = false;
 	
 	@Override
 	public void dispose() {

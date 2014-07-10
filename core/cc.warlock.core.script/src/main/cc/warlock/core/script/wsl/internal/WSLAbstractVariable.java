@@ -25,7 +25,7 @@ import cc.warlock.core.script.wsl.WSLScriptContext;
 
 abstract public class WSLAbstractVariable extends WSLAbstractString {
 	
-	protected IWSLValue variableName;
+	private IWSLValue variableName;
 	private String prefix;
 	
 	public WSLAbstractVariable(IWSLValue var, String prefix) {
@@ -49,6 +49,10 @@ abstract public class WSLAbstractVariable extends WSLAbstractString {
 		if(!variableExists(cx))
 			return false;
 		return super.toBoolean(cx);
+	}
+	
+	public String getVariableName(WSLScriptContext cx) {
+		return variableName.toString(cx);
 	}
 	
 	abstract protected IWSLValue getVariable(WSLScriptContext cx);

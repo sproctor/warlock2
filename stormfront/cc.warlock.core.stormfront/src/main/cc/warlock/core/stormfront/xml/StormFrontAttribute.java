@@ -25,8 +25,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 public class StormFrontAttribute {
 
-	protected String name;
-	protected String value;
+	private String name;
+	private String value;
 
 	public StormFrontAttribute () { }
 	public StormFrontAttribute (StormFrontAttribute other)

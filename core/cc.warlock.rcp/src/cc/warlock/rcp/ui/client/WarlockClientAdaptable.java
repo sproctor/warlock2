@@ -30,7 +30,7 @@ import cc.warlock.rcp.ui.WarlockSharedImages;
 
 public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 
-	protected IWarlockClient client;
+	private IWarlockClient client;
 	
 	public WarlockClientAdaptable (IWarlockClient client)
 	{

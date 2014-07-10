@@ -39,14 +39,14 @@ public class BTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
-		handler.addStyle(WarlockStyle.boldStyle);
+		getHandler().addStyle(WarlockStyle.boldStyle);
 	}
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.removeStyle(WarlockStyle.boldStyle);
+		getHandler().removeStyle(WarlockStyle.boldStyle);
 		
 		// this will be off if we get nested b's.
-		handler.incrementMonsterCount();
+		getHandler().incrementMonsterCount();
 	}
 }

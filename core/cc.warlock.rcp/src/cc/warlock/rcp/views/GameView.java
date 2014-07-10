@@ -79,7 +79,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	private static GameView gameInFocus;
 	private static final Random generator = new Random(new Date().getTime());
 	
-	protected StreamText streamText;
+	private StreamText streamText;
 	
 	private PageBook popupPageBook;
 	private Label emptyPopup;
@@ -433,5 +433,9 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 			return;
 		}
 		menu.setVisible(true);
+	}
+	
+	protected StreamText getStreamText() {
+		return streamText;
 	}
 }

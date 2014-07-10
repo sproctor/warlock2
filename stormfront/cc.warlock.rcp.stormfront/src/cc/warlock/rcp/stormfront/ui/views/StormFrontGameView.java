@@ -50,6 +50,7 @@ import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.stormfront.ui.actions.ProfileConnectAction;
 import cc.warlock.rcp.stormfront.ui.wizards.SGEConnectWizard;
+import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
@@ -233,6 +234,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 	
 	@Override
 	protected void loadClientSettings(IClientSettings settings) {
+		StreamText streamText = getStreamText();
 		if(streamText != null) {
 			streamText.setClient(getClient());
 			streamText.getTextWidget().redraw();

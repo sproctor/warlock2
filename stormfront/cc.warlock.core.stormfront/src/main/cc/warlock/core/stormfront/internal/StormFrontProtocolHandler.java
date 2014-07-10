@@ -83,15 +83,14 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
  */
 public class StormFrontProtocolHandler implements IStormFrontProtocolHandler {
 	
-	protected IWarlockClient client;
-	protected HashMap<String, IStormFrontTagHandler> defaultTagHandlers = new HashMap<String, IStormFrontTagHandler>();
-	protected Stack<String> tagStack = new Stack<String>();
+	private IWarlockClient client;
+	private HashMap<String, IStormFrontTagHandler> defaultTagHandlers = new HashMap<String, IStormFrontTagHandler>();
+	private Stack<String> tagStack = new Stack<String>();
 	private Stack<String> streamStack = new Stack<String>();
-	protected Stack<WarlockStringMarker> styleStack = new Stack<WarlockStringMarker>();
+	private Stack<WarlockStringMarker> styleStack = new Stack<WarlockStringMarker>();
 	private IWarlockStyle outputStyle = null;
 	private WarlockString buffer = new WarlockString();
-	protected int currentSpacing = 0;
-	protected int monsterCount = 0;
+	private int monsterCount = 0;
 	private boolean lineHasTag = false;
 	private boolean lineHasContent = false;
 	private HashMap<String, String> menuData = new HashMap<String, String>();

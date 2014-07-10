@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
-import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 
@@ -61,26 +60,22 @@ public class WarlockPreferencePage extends PreferencePageUtils implements IWorkb
 		minCommandWidget.setMinimum(0);
 		minCommandWidget.setMaximum(100);
 		
-		if (settings == null)
-			settings = getDefaultSettings();
-		
-		setData(settings);
+		updateData();
 		
 		return main;
 	}
 	
-	protected void setData (IClientSettings settings) {
-		this.settings = settings;
-		promptButton.setSelection(GameViewConfiguration.getProvider(settings).getSuppressPrompt());
+	protected void updateData () {
+		promptButton.setSelection(GameViewConfiguration.getProvider(getSettings()).getSuppressPrompt());
 		suppressButton.setSelection(ScriptConfiguration.instance().getSupressExceptions().get());
-		minCommandWidget.setSelection(settings.getMinCommandSize());
+		minCommandWidget.setSelection(getSettings().getMinCommandSize());
 	}
 	
 	@Override
 	public boolean performOk() {
-		GameViewConfiguration.getProvider(settings).setSuppressPrompt(promptButton.getSelection());
+		GameViewConfiguration.getProvider(getSettings()).setSuppressPrompt(promptButton.getSelection());
 		ScriptConfiguration.instance().getSupressExceptions().set(suppressButton.getSelection());
-		settings.setMinCommandSize(minCommandWidget.getSelection());
+		getSettings().setMinCommandSize(minCommandWidget.getSelection());
 		return true;
 	}
 }

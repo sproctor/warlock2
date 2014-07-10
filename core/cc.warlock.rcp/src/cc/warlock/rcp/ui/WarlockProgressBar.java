@@ -43,13 +43,13 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class WarlockProgressBar extends Canvas
 {
-	protected Font progressFont;
-	protected String label;
-	protected Color foreground, background, borderColor;
-	protected int min, max, selection;
-	protected int width, height;
-	protected int borderWidth;
-	protected boolean showText;
+	private Font progressFont;
+	private String label;
+	private Color foreground, background, borderColor;
+	private int min, max, selection;
+	private int width, height;
+	private int borderWidth;
+	private boolean showText;
 	
 	public WarlockProgressBar (Composite composite, int style)
 	{

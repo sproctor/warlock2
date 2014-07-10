@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.settings.IVariable;
 import cc.warlock.core.settings.Variable;
@@ -67,15 +66,15 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 
 	public static final String PAGE_ID = "cc.warlock.rcp.prefs.variables";
 	
-	//protected ClientSettings settings;
+	//private ClientSettings settings;
 	
-	protected Text filterText;
-	protected TableViewer variableTable;
-	//protected ArrayList<Variable> variables = new ArrayList<Variable>();
-	protected ArrayList<Variable> addedVariables = new ArrayList<Variable>();
-	protected ArrayList<Variable> removedVariables = new ArrayList<Variable>();
-	protected Variable currentVariable;
-	protected Button removeButton;
+	private Text filterText;
+	private TableViewer variableTable;
+	//private ArrayList<Variable> variables = new ArrayList<Variable>();
+	private ArrayList<Variable> addedVariables = new ArrayList<Variable>();
+	//private ArrayList<Variable> removedVariables = new ArrayList<Variable>();
+	private Variable currentVariable;
+	private Button removeButton;
 	
 	public VariablesPreferencePage() {
 		// TODO Auto-generated constructor stub
@@ -205,24 +204,19 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 			}
 		}*/
 		
-		if (settings == null)
-			settings = getDefaultSettings();
-		
-		setData(settings);
+		updateData();
 		
 		return main;
 	}
 	
-	protected void setData (IClientSettings settings) {
-		this.settings = settings;
-		
-		variableTable.setInput(VariableConfigurationProvider.getProvider(settings).getVariables());
+	protected void updateData () {
+		variableTable.setInput(VariableConfigurationProvider.getProvider(getSettings()).getVariables());
 		variableTable.refresh();
 	}
 	
 	protected void addVariableSelected ()
 	{
-		IVariable var = VariableConfigurationProvider.getProvider(settings).addVariable("", "");
+		IVariable var = VariableConfigurationProvider.getProvider(getSettings()).addVariable("", "");
 		//addedVariables.add(var);
 		//variables.add(var);
 		// FIXME: do we need the following?
@@ -237,7 +231,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		
 		//if (variables.remove(currentVariable))
 			//removedVariables.add(currentVariable);
-		VariableConfigurationProvider.getProvider(settings).removeVariable(currentVariable.getIdentifier());
+		VariableConfigurationProvider.getProvider(getSettings()).removeVariable(currentVariable.getIdentifier());
 		
 		variableTable.remove(currentVariable);
 	}
@@ -267,7 +261,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 
 	protected abstract static class TextEditingSupport extends EditingSupport
 	{
-		protected TextCellEditor editor;
+		private TextCellEditor editor;
 		public TextEditingSupport (TableViewer viewer) {
 			super(viewer);
 			
@@ -301,7 +295,7 @@ public class VariablesPreferencePage extends PreferencePageUtils {
 		}
 		
 		for (Variable var : addedVariables) {
-			settings.getVariableConfigurationProvider().addVariable(var);
+			getSettings().getVariableConfigurationProvider().addVariable(var);
 		}*/
 		
 		return true;

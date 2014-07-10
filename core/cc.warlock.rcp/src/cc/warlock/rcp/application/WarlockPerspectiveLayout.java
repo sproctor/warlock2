@@ -30,7 +30,7 @@ import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.settings.WarlockSetting;
 
 public class WarlockPerspectiveLayout extends WarlockSetting implements IWarlockSetting {
-	protected Rectangle bounds = new Rectangle(25, 25, 1024, 768);
+	private Rectangle bounds = new Rectangle(25, 25, 1024, 768);
 	private static WarlockPerspectiveLayout instance = new WarlockPerspectiveLayout();
 	
 	public static WarlockPerspectiveLayout instance() {

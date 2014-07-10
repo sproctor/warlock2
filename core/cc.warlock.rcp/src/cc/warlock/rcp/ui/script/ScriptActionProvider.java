@@ -34,8 +34,8 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 
 public class ScriptActionProvider extends CommonActionProvider {
 
-	protected Action openAction;
-	protected Action newScriptAction;
+	private Action openAction;
+	private Action newScriptAction;
 	
 	public ScriptActionProvider() {
 		// TODO Auto-generated constructor stub

@@ -19,8 +19,8 @@ import cc.warlock.rcp.util.FontSelector;
 
 public abstract class PreferencePageUtils extends PropertyPage implements SelectionListener, IPropertyChangeListener
 {
-	protected IClientSettings settings;
-	protected Combo dropDown;
+	private IClientSettings settings;
+	private Combo dropDown;
 	
 	public Button createButton(Composite parent, int flags)
 	{
@@ -132,10 +132,10 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 	protected Combo createProfileDropDown (Composite parent) {
 		dropDown = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
 		
-		for (ClientSettings settings : ClientSettings.getAllClientSettings()) {
-			String name = settings.getName();
+		for (ClientSettings clientSettings : ClientSettings.getAllClientSettings()) {
+			String name = clientSettings.getName();
 			if (name == null)
-				name = settings.getCliendId();
+				name = clientSettings.getCliendId();
 			dropDown.add(name);
 		}
 		
@@ -162,7 +162,8 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 		
 		for (ClientSettings s : ClientSettings.getAllClientSettings()) {
 			if (name.equals(s.getName()) || name.equals(s.getCliendId())) {
-				setData(s);
+				settings = s;
+				updateData();
 				break;
 			}
 		}
@@ -183,5 +184,11 @@ public abstract class PreferencePageUtils extends PropertyPage implements Select
 		return ClientSettings.getAllClientSettings().iterator().next();
 	}
 	
-	abstract protected void setData (IClientSettings settings);
+	abstract protected void updateData ();
+	
+	protected IClientSettings getSettings() {
+		if (settings == null)
+			return getDefaultSettings();
+		return settings;
+	}
 }

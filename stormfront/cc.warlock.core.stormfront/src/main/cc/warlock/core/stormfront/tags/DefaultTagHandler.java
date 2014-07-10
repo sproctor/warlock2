@@ -24,10 +24,14 @@ package cc.warlock.core.stormfront.tags;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 
 abstract public class DefaultTagHandler extends BaseTagHandler {
-	protected IStormFrontProtocolHandler handler;
+	private IStormFrontProtocolHandler handler;
 	
 	public DefaultTagHandler(IStormFrontProtocolHandler handler) {
 		this.handler = handler;
 		handler.registerHandler(this);
+	}
+	
+	protected IStormFrontProtocolHandler getHandler() {
+		return handler;
 	}
 }

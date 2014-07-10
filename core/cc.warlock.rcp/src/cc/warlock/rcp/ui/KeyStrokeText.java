@@ -41,9 +41,11 @@ import org.eclipse.swt.widgets.Text;
  */
 public class KeyStrokeText {
 	
-	protected Text keyText;
-	protected KeyStroke keyStroke;
-	protected ArrayList<KeyStrokeLockListener> listeners = new ArrayList<KeyStrokeLockListener>();
+	private Text keyText;
+	private KeyStroke keyStroke;
+	private ArrayList<KeyStrokeLockListener> listeners = new ArrayList<KeyStrokeLockListener>();
+	
+	private boolean keyStrokeLocked = false;
 	
 	public static interface KeyStrokeLockListener {
 		public void keyStrokeLocked();
@@ -71,8 +73,6 @@ public class KeyStrokeText {
 			}
 		}
 	}
-	
-	protected boolean keyStrokeLocked = false;
 	
 	private class KeyPressListener implements KeyListener {
 		public void keyPressed(KeyEvent e) {

@@ -8,8 +8,8 @@ import cc.warlock.core.stormfront.xml.StormFrontAttribute;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class StormFrontProtocolParser {
-	protected IStormFrontXMLHandler handler;
-	protected StormFrontAttributeList currentAttributes = new StormFrontAttributeList();
+	private IStormFrontXMLHandler handler;
+	private StormFrontAttributeList currentAttributes = new StormFrontAttributeList();
 	
 	public void setHandler (IStormFrontXMLHandler handler)
 	{

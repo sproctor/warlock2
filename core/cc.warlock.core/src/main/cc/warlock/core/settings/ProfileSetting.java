@@ -33,7 +33,7 @@ import cc.warlock.core.client.IProfile;
  */
 public class ProfileSetting extends WarlockSetting implements IProfile {
 
-	protected String characterId, name, gameCode, gameName, viewId;
+	private String characterId, name, gameCode, gameName, viewId;
 	
 	public ProfileSetting (IWarlockSetting parent, String path) {
 		super(parent, path);

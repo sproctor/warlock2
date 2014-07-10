@@ -54,11 +54,11 @@ import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
  */
 public class ContentAssistCellEditor extends CellEditor 
 {
-	protected ContentProposalAdapter adapter;
+	private ContentProposalAdapter adapter;
 	
-	protected IContentProposalProvider contentProposalProvider; 
+	private IContentProposalProvider contentProposalProvider; 
     
-	protected char[] completionProposalAutoActivationCharacters;
+	private char[] completionProposalAutoActivationCharacters;
 	
     private ModifyListener modifyListener;
     

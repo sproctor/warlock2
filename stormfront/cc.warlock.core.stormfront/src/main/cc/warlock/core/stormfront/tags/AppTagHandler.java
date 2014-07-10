@@ -49,6 +49,6 @@ public class AppTagHandler extends DefaultTagHandler {
 		
 		// this should set the program name
 		//handler.getClient().getDefaultStream().getTitle().set("[" + gameName + "] " + characterName);
-		handler.getClient().setCharacterName(characterName);
+		getHandler().getClient().setCharacterName(characterName);
 	}
 }

@@ -58,33 +58,33 @@ public class SGEConnection extends LineConnection implements IConnectionListener
 	
 	public static final String NEW_CHARACTER_CODE = "0";
 	
-	protected static final int SGE_NONE = 0;
-	protected static final int SGE_INITIAL = 1;
-	protected static final int SGE_ACCOUNT = 2;
-	protected static final int SGE_MENU = 3;
-	protected static final int SGE_GAME = 4;
-	protected static final int SGE_PICK = 5;
-	protected static final int SGE_CHARACTERS = 6;
-	protected static final int SGE_LOAD = 7;
+	public static final int SGE_NONE = 0;
+	public static final int SGE_INITIAL = 1;
+	public static final int SGE_ACCOUNT = 2;
+	public static final int SGE_MENU = 3;
+	public static final int SGE_GAME = 4;
+	public static final int SGE_PICK = 5;
+	public static final int SGE_CHARACTERS = 6;
+	public static final int SGE_LOAD = 7;
 	
-	protected static final int LOGIN_READY = 0;
-	protected static final int LOGIN_FINISHED = 1;
-	protected static final int GAMES_READY = 2;
-	protected static final int CHARACTERS_READY = 3;
-	protected static final int READY_TO_PLAY = 4;
-	protected static final int SGE_ERROR = 5;
+	public static final int LOGIN_READY = 0;
+	public static final int LOGIN_FINISHED = 1;
+	public static final int GAMES_READY = 2;
+	public static final int CHARACTERS_READY = 3;
+	public static final int READY_TO_PLAY = 4;
+	public static final int SGE_ERROR = 5;
 	
-	protected int state, errorCode;
-	protected String passwordHash;
-	protected ArrayList<ISGEConnectionListener> sgeListeners;
+	private int state, errorCode;
+	private String passwordHash;
+	private ArrayList<ISGEConnectionListener> sgeListeners;
 	private boolean retrieveGameInfo = true;
 	
-	protected HashMap<String, String> characters, loginProperties;
-	protected ArrayList<SGEGame> games;
+	private HashMap<String, String> characters, loginProperties;
+	private ArrayList<SGEGame> games;
 	
-	protected ListIterator<SGEGame> gameIterator;
-	protected SGEGame currentGame;
-	//protected boolean retrievingGames = false;
+	private ListIterator<SGEGame> gameIterator;
+	private SGEGame currentGame;
+	//private boolean retrievingGames = false;
 	
 	public SGEConnection ()
 	{

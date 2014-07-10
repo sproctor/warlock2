@@ -14,7 +14,6 @@ Export-Package: cc.warlock.core.stormfront,
  cc.warlock.core.stormfront.internal,
  cc.warlock.core.stormfront.network,
  cc.warlock.core.stormfront.settings,
- cc.warlock.core.stormfront.settings.server,
  cc.warlock.core.stormfront.tags,
  cc.warlock.core.stormfront.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

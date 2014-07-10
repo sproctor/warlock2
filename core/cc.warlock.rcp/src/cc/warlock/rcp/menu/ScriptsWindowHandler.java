@@ -38,7 +38,7 @@ import cc.warlock.rcp.application.WarlockApplication;
 public class ScriptsWindowHandler extends SimpleCommandHandler implements
 		IHandler {
 	
-	protected static IWorkbenchWindow window;
+	private static IWorkbenchWindow window;
 	
 	public static void activate() {
 		window.getShell().forceActive();

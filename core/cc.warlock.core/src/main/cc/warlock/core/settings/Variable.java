@@ -24,7 +24,7 @@ package cc.warlock.core.settings;
 
 public class Variable extends WarlockSetting implements IVariable {
 
-	protected String identifier, value;
+	private String identifier, value;
 	
 	public Variable (IWarlockSetting parent, String identifier) {
 		super(parent, identifier);

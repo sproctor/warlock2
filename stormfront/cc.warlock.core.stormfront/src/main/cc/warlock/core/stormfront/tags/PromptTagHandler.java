@@ -47,13 +47,13 @@ public class PromptTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		prompt = "";
-		handler.flushBuffer();
-		handler.clearStyles();
-		handler.clearStreams();
+		getHandler().flushBuffer();
+		getHandler().clearStyles();
+		getHandler().clearStreams();
 		
 		String time = attributes.getValue("time");
 		if (time != null)
-			handler.getClient().syncTime(new Long(time));
+			getHandler().getClient().syncTime(new Long(time));
 	}
 	
 	@Override
@@ -64,6 +64,6 @@ public class PromptTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().prompt(prompt);
+		getHandler().getClient().prompt(prompt);
 	}
 }

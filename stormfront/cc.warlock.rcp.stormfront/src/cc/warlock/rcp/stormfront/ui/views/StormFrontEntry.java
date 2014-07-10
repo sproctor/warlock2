@@ -32,11 +32,11 @@ public class StormFrontEntry extends WarlockEntry {
 	public StormFrontEntry (Composite parent, IWarlockClientViewer viewer) {
 		super(parent, viewer);
 		
-		widget.addPaintListener(new PaintListener() {
+		getWidget().addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				if(rt == 0 && ct == 0)
 					return;
-				Rectangle clientArea = widget.getClientArea();
+				Rectangle clientArea = getWidget().getClientArea();
 				
 				if(rtColor == null)
 					rtColor = new Color(e.gc.getDevice(), 139, 0, 0);
@@ -64,8 +64,8 @@ public class StormFrontEntry extends WarlockEntry {
 				}
 				
 				// Redraw the text
-				Point pos = widget.getLocationAtOffset(0);
-				e.gc.drawText(widget.getText(), pos.x, pos.y, true);
+				Point pos = getWidget().getLocationAtOffset(0);
+				e.gc.drawText(getWidget().getText(), pos.x, pos.y, true);
 			}
 		});
 	}
@@ -82,14 +82,14 @@ public class StormFrontEntry extends WarlockEntry {
 				rtListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
 					public void propertyChanged(Integer value) {
 						rt = value;
-						widget.redraw();
+						getWidget().redraw();
 					}
 				});
 			if(ctListener == null)
 				ctListener = new SWTPropertyListener<Integer>(new IPropertyListener<Integer>() {
 					public void propertyChanged(Integer value) {
 						ct = value;
-						widget.redraw();
+						getWidget().redraw();
 					}
 				});
 			client.getTimer("roundtime").getProperty().addListener(rtListener);

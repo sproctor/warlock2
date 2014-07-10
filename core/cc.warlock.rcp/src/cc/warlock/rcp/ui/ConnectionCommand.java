@@ -33,8 +33,8 @@ import org.eclipse.ui.commands.ICommandService;
 
 public class ConnectionCommand implements IConnectionCommand {
 
-	protected Command command;
-	protected Image image;
+	private Command command;
+	private Image image;
 	
 	public ConnectionCommand (String commandId)
 	{

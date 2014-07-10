@@ -21,9 +21,7 @@
  */
 package cc.warlock.core.script.configuration;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 import org.osgi.service.prefs.Preferences;
 
@@ -35,13 +33,13 @@ import cc.warlock.core.settings.WarlockSetting;
 
 public class ScriptConfiguration extends WarlockSetting {
 
-	protected ScriptDirectoryConfiguration directoryConf;
-	protected Property<Boolean> suppressExceptions;
-	//protected String scriptPrefix;
+	private ScriptDirectoryConfiguration directoryConf;
+	private Property<Boolean> suppressExceptions;
+	//private String scriptPrefix;
 	
-	protected HashMap<String, ArrayList<String>> engineExtensions = new HashMap<String, ArrayList<String>>();
+	//private HashMap<String, ArrayList<String>> engineExtensions = new HashMap<String, ArrayList<String>>();
 	
-	protected static ScriptConfiguration instance = new ScriptConfiguration();
+	private static ScriptConfiguration instance = new ScriptConfiguration();
 	
 	public static ScriptConfiguration instance() {
 		return instance;

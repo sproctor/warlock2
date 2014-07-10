@@ -48,8 +48,8 @@ public class KeyStrokeCellEditor extends CellEditor {
 		super(parent, style);
 	}
 	
-	protected KeyStrokeText keyText;
-	protected Button ok, cancel;
+	private KeyStrokeText keyText;
+	private Button ok, cancel;
 	
 	@Override
 	protected Control createControl(Composite parent) {

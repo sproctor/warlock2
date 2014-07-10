@@ -28,7 +28,7 @@ import cc.warlock.core.script.IScriptListener;
 
 public class SWTScriptListener implements IScriptListener {
 
-	protected IScriptListener listener;
+	private IScriptListener listener;
 	
 	public SWTScriptListener (IScriptListener listener)
 	{

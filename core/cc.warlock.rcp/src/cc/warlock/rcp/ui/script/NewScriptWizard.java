@@ -33,8 +33,8 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 
 public class NewScriptWizard extends Wizard {
 	
-	protected NewScriptWizardPage page1;
-	protected IWorkbenchPage page;
+	private NewScriptWizardPage page1;
+	private IWorkbenchPage page;
 	
 	
 	public NewScriptWizard (IWorkbenchPage page)

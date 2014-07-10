@@ -51,11 +51,11 @@ import cc.warlock.rcp.views.IGameViewFocusListener;
 public class HandsView extends ViewPart
 {
 	public static final String VIEW_ID = "cc.warlock.rcp.stormfront.ui.views.HandsView";
-	protected static HandsView _instance;
+	private static HandsView _instance;
 	
-	protected GradientInfo leftHandInfo, rightHandInfo, spellInfo;
-	protected IWarlockClient activeClient;
-	protected ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
+	private GradientInfo leftHandInfo, rightHandInfo, spellInfo;
+	private IWarlockClient activeClient;
+	private ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
 	private IWarlockSettingListener settingListener;
 	
 	public HandsView () {
@@ -70,9 +70,9 @@ public class HandsView extends ViewPart
 	
 	private class GradientInfo extends Canvas implements PaintListener
 	{
-		protected String text;
-		protected Image image;
-		protected Color background, foreground, gradientColor;
+		private String text;
+		private Image image;
+		private Color background, foreground, gradientColor;
 		
 		public GradientInfo (Composite parent, Image image)
 		{

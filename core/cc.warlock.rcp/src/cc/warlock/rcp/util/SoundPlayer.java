@@ -242,7 +242,7 @@ public class SoundPlayer
 		}
 	}
 	
-	protected static SoundPlayer instance = null;
+	private static SoundPlayer instance = null;
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(20);;
 	private QueueRunner runner;
 	

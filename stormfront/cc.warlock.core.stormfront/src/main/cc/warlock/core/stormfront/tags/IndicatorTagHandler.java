@@ -41,9 +41,9 @@ public class IndicatorTagHandler extends DefaultTagHandler {
 		if (attributes.getAttribute("id") != null && attributes.getAttribute("visible") != null)
 		{
 			if ("y".equalsIgnoreCase(attributes.getValue("visible")))
-				handler.getClient().getCharacterStatus().set(attributes.getValue("id"));
+				getHandler().getClient().getCharacterStatus().set(attributes.getValue("id"));
 			else
-				handler.getClient().getCharacterStatus().unset(attributes.getValue("id"));
+				getHandler().getClient().getCharacterStatus().unset(attributes.getValue("id"));
 		}
 	}
 

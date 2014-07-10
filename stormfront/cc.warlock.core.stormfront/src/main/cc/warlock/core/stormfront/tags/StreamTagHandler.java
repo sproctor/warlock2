@@ -45,14 +45,14 @@ public class StreamTagHandler extends DefaultTagHandler {
 		 {
 			String streamId = id;
 			
-			handler.pushStream(streamId);
+			getHandler().pushStream(streamId);
 		 }
 	}
 	 
 	 @Override
 	public void handleEnd(String rawXML) {
 		 // TODO We used to append a newline here. should we still?
-		 handler.flushBuffer();
-		 handler.popStream();
+		 getHandler().flushBuffer();
+		 getHandler().popStream();
 	}
 }

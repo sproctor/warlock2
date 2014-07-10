@@ -41,8 +41,8 @@ import org.apache.commons.codec.binary.Base64;
 
 public class Account extends WarlockSetting {
 
-	protected String accountName, password;
-	protected ProfileProvider profileProvider;
+	private String accountName, password;
+	private ProfileProvider profileProvider;
 	
 	public static String decryptPassword (byte[] encrypted)
 	{
@@ -60,13 +60,13 @@ public class Account extends WarlockSetting {
 		return encrypter.encrypt(password);
 	}
 	
-	protected static class DESEncrypter {
-		protected Cipher eCipher, dCipher;
-		protected byte[] salt = {
+	private static class DESEncrypter {
+		private Cipher eCipher, dCipher;
+		static final private byte[] salt = {
 			(byte)0x98, (byte)0x93, (byte)0xA7, (byte)0x44,
 			(byte)0x32, (byte)0x12, (byte)0x34, (byte)0xF3
 		};
-		protected int iterations = 12;
+		static final private int iterations = 12;
 		
 		public DESEncrypter (String password)
 		{

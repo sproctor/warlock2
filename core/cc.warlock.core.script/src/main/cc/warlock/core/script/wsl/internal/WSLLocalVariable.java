@@ -31,11 +31,11 @@ public class WSLLocalVariable extends WSLAbstractVariable {
 	
 	@Override
 	public IWSLValue getVariable(WSLScriptContext cx) {
-		return cx.getLocalVariable(variableName.toString(cx));
+		return cx.getLocalVariable(getVariableName(cx));
 	}
 	
 	@Override
 	public boolean variableExists(WSLScriptContext cx) {
-		return cx.localVariableExists(variableName.toString(cx));
+		return cx.localVariableExists(getVariableName(cx));
 	}
 }

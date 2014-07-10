@@ -48,12 +48,12 @@ public class PresetTagHandler extends DefaultTagHandler {
 		IWarlockStyle style = new WarlockStyle(id);
 
 		styles.push(style);
-		handler.addStyle(style);
+		getHandler().addStyle(style);
 	}
 	
 	@Override
 	public void handleEnd(String rawXML) {
 		IWarlockStyle style = styles.pop();
-		handler.removeStyle(style);
+		getHandler().removeStyle(style);
 	}
 }

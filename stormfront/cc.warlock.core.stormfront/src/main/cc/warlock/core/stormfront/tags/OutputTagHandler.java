@@ -49,9 +49,9 @@ public class OutputTagHandler extends DefaultTagHandler {
 			if(className.equals("mono"))
 				currentStyle.setMonospace(true);
 			
-			handler.setOutputStyle(currentStyle);
+			getHandler().setOutputStyle(currentStyle);
 		} else {
-			handler.setOutputStyle(null);
+			getHandler().setOutputStyle(null);
 		}
 	}
 }

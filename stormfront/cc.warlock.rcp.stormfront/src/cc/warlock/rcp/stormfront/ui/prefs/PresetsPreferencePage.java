@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
-import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
@@ -119,11 +118,11 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	private StyleRange whisperStyleRange, thoughtStyleRange;
 	
 	private HashMap<String, IWarlockStyle> styles = new HashMap<String, IWarlockStyle>();
-	protected IWarlockStyle currentStyle;
+	private IWarlockStyle currentStyle;
 
 	private StyleRange columnStyleRange;
 	
-	protected static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
+	private static final HashMap<String, String> presetDescriptions = new HashMap<String, String>();
 	static {
 		presetDescriptions.put(WarlockStyle.BOLD, "Bold text");
 		presetDescriptions.put(WarlockStyle.COMMAND, "Sent commands");
@@ -169,24 +168,20 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		preview = new StyledText(previewGroup, SWT.BORDER);
 		preview.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		if (settings == null)
-			settings = getDefaultSettings();
-		
-		setData(settings);
+		updateData();
 		initPreview();
 		
 		return main;
 	}
 	
-	protected void setData (IClientSettings settings) {
-		this.settings = settings;
+	protected void updateData () {
 
 		for (String styleName: presetDescriptions.keySet()) {
-			IWarlockStyle style = PresetStyleConfigurationProvider.getProvider(settings).getOrCreateStyle(styleName);
+			IWarlockStyle style = PresetStyleConfigurationProvider.getProvider(getSettings()).getOrCreateStyle(styleName);
 			styles.put(styleName, style);
 		}
 
-		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(settings);
+		WindowConfigurationProvider provider = WindowConfigurationProvider.getProvider(getSettings());
 		mainBGSelector.setColorValue(ColorUtil.warlockColorToRGB(provider.getDefaultBackgroundColor()));
 
 		mainFGSelector.setColorValue(ColorUtil.warlockColorToRGB(provider.getDefaultForegroundColor()));
@@ -194,8 +189,8 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		mainFontSelector.setFontData(RCPUtil.getFontList(this.getShell(), provider.getWindowFont(WindowConfigurationProvider.WINDOW_DEFAULT))[0]);
 		columnFontSelector.setFontData(RCPUtil.getFontList(this.getShell(), provider.getWindowMonoFont(WindowConfigurationProvider.WINDOW_DEFAULT))[0]);
 
-		rtSelector.setColorValue(ColorUtil.warlockColorToRGB(settings.getRtColor()));
-		ctSelector.setColorValue(ColorUtil.warlockColorToRGB(settings.getCtColor()));
+		rtSelector.setColorValue(ColorUtil.warlockColorToRGB(getSettings().getRtColor()));
+		ctSelector.setColorValue(ColorUtil.warlockColorToRGB(getSettings().getCtColor()));
 		
 		stylesTable.setInput(styles.values());
 		stylesTable.getTable().setBackground(new Color(getShell().getDisplay(), getColor(mainBGSelector)));
@@ -209,7 +204,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			if (color == null || color.isDefault())
 			{
 				if (style.getName() != null) {
-					color = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName()).getBackgroundColor();
+					color = PresetStyleConfigurationProvider.getProvider(getSettings()).getStyle(style.getName()).getBackgroundColor();
 				}
 			}
 		}
@@ -228,7 +223,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			if (color.isDefault())
 			{
 				if (style.getName() != null) {
-					color = PresetStyleConfigurationProvider.getProvider(settings).getStyle(style.getName()).getForegroundColor();
+					color = PresetStyleConfigurationProvider.getProvider(getSettings()).getStyle(style.getName()).getForegroundColor();
 				}
 			}
 		}
@@ -481,7 +476,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		
 		boolean updateView = false;
 		
-		IWindowSettings defaultSettings = WindowConfigurationProvider.getProvider(settings).getDefaultWindowSettings();
+		IWindowSettings defaultSettings = WindowConfigurationProvider.getProvider(getSettings()).getDefaultWindowSettings();
 		
 		if(newMainFG != null) {
 			defaultSettings.setForegroundColor(newMainFG);
@@ -512,18 +507,18 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		}
 		
 		if(newRtColor != null) {
-			settings.setRtColor(newRtColor);
+			getSettings().setRtColor(newRtColor);
 			newRtColor = null;
 		}
 		
 		if(newCtColor != null) {
-			settings.setCtColor(newCtColor);
+			getSettings().setCtColor(newCtColor);
 			newCtColor = null;
 		}
 		
 		if (updateView) {
 			// FIXME: What to do here?
-			//WarlockClientRegistry.clientSettingsLoaded(settings.getClient());
+			//WarlockClientRegistry.clientSettingsLoaded(getSettings().getClient());
 		}
 		
 		return true;

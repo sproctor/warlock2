@@ -26,7 +26,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 public class LaunchURLTagHandler extends DefaultTagHandler {
 
-	protected String url;
+	private String url;
 	
 	public LaunchURLTagHandler (IStormFrontProtocolHandler handler)
 	{
@@ -45,7 +45,7 @@ public class LaunchURLTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().launchURL(url);
+		getHandler().getClient().launchURL(url);
 	}
 
 }

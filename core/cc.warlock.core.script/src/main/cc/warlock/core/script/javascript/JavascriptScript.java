@@ -27,8 +27,6 @@
  */
 package cc.warlock.core.script.javascript;
 
-import java.io.Reader;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
@@ -82,10 +80,6 @@ public class JavascriptScript extends AbstractScript {
 	
 	public IScriptEngine getScriptEngine() {
 		return engine;
-	}
-	
-	public Reader getReader() {
-		return reader;
 	}
 	
 	public void execute(String command) { }

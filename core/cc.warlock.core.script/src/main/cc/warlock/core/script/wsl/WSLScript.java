@@ -134,7 +134,7 @@ public class WSLScript extends AbstractScript {
 	}
 	
 	private class WSLComponent extends WSLAbstractString {
-		protected String componentName;
+		private String componentName;
 		public WSLComponent(String componentName) {
 			this.componentName = componentName;
 		}
@@ -181,7 +181,7 @@ public class WSLScript extends AbstractScript {
 			@Override
 			public void run() {
 				try {
-					Reader scriptReader = info.openReader();
+					Reader scriptReader = getScriptInfo().openReader();
 					
 					CharStream input = new ANTLRNoCaseReaderStream(scriptReader);
 					WSLLexer lex = new WSLLexer(input);

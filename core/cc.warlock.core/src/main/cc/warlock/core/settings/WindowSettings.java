@@ -25,8 +25,8 @@ import cc.warlock.core.client.IWarlockFont;
 
 public class WindowSettings extends ColorFontSetting implements IWindowSettings {
 
-	protected String id;
-	protected FontSetting columnFont;
+	private String id;
+	private FontSetting columnFont;
 	
 	public WindowSettings(IWarlockSetting parent, String id) {
 		super(parent, id);

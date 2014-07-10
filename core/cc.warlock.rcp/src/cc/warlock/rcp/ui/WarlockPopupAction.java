@@ -35,9 +35,11 @@ import org.eclipse.swt.widgets.Control;
 
 public class WarlockPopupAction extends Composite implements PaintListener {
 
-	protected Composite parent;
-	protected Color background;
-	protected Font smallFont;
+	private Composite parent;
+	private Color background;
+	private Font smallFont;
+	
+	private boolean fontSet = false;
 	
 	public WarlockPopupAction (Composite parent, int style)
 	{
@@ -58,7 +60,6 @@ public class WarlockPopupAction extends Composite implements PaintListener {
 		setFont(smallFont);
 	}
 	
-	protected boolean fontSet = false;
 	protected void setChildrenFont (Composite composite)
 	{
 		for (Control child : composite.getChildren())

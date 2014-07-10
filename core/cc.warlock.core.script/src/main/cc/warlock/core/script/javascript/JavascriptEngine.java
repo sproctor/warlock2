@@ -59,8 +59,12 @@ import cc.warlock.core.script.javascript.JavascriptScript.StopException;
 public class JavascriptEngine implements IScriptEngine {
 
 	public static final String ENGINE_ID = "cc.warlock.script.javascript.JavascriptEngine";
-	protected ArrayList<IJavascriptVariableProvider> varProviders = new ArrayList<IJavascriptVariableProvider>();
-	protected ArrayList<JavascriptScript> runningScripts = new ArrayList<JavascriptScript>();
+	
+	public static final String includeFunction = "function include (src) { script.include(src); }";
+	public static final String includeFunctionName = "<warlock js:include>";
+	
+	private ArrayList<IJavascriptVariableProvider> varProviders = new ArrayList<IJavascriptVariableProvider>();
+	private ArrayList<JavascriptScript> runningScripts = new ArrayList<JavascriptScript>();
 	
 	public Scriptable scope;
 	
@@ -139,10 +143,6 @@ public class JavascriptEngine implements IScriptEngine {
 		
 		return false;
 	}
-	
-	protected static String includeFunction = "function include (src) { script.include(src); }";
-	protected static String includeFunctionName = "<warlock js:include>";
-	
 
 	public IScript startScript(IScriptInfo info, final IWarlockClientViewer viewer, final String[] arguments) {
 		

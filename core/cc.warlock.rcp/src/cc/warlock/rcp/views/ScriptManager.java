@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IWarlockClient;
@@ -57,10 +56,9 @@ import cc.warlock.rcp.ui.WarlockSharedImages;
  *
  */
 public class ScriptManager extends ViewPart implements IGameViewFocusListener, IScriptListener {
-	protected Text entry;
-	protected TableViewer scriptsTable;
-	protected Composite main;
-	protected TableColumn nameColumn, playColumn, pauseColumn, stopColumn;
+	private TableViewer scriptsTable;
+	private Composite main;
+	private TableColumn nameColumn, pauseColumn, stopColumn;
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.views.ScriptManager";
 	
@@ -253,8 +251,8 @@ public class ScriptManager extends ViewPart implements IGameViewFocusListener, I
 	
 	
 	class ScriptRow implements IScript {
-		protected String name;
-		protected Boolean suspended;
+		private String name;
+		private Boolean suspended;
 		
 		public ScriptRow(String name, Boolean suspended) {
 			this.name = name;

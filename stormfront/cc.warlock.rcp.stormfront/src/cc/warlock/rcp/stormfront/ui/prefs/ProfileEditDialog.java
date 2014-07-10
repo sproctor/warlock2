@@ -47,12 +47,14 @@ import cc.warlock.rcp.ui.ComboField;
 
 public class ProfileEditDialog extends Dialog {
 
-	protected Account account;
-	protected ProfileSetting profile;
+	private Account account;
+	private ProfileSetting profile;
 	
-	protected ComboField gameField;
-	protected ComboField characterField;
-	protected Label statusLabel;
+	private ComboField gameField;
+	private ComboField characterField;
+	private Label statusLabel;
+	
+	protected SGEConnection connection;
 	
 	public ProfileEditDialog (Shell parentShell, Account account)
 	{
@@ -127,7 +129,6 @@ public class ProfileEditDialog extends Dialog {
 		return main;
 	}
 	
-	protected SGEConnection connection;
 	protected void updateData()
 	{
 		

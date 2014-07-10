@@ -21,10 +21,8 @@
  */
 package cc.warlock.core.stormfront.tags;
 
-import java.io.File;
 import java.io.IOException;
 
-import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
@@ -46,7 +44,7 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 		
 		// FIXME: the following try-block should be removed when this function is made to work again.
 		try {
-			handler.getClient().getConnection().sendLine("");
+			getHandler().getClient().getConnection().sendLine("");
 			return;
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -57,9 +55,9 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 			&& attributes.getAttribute("found") != null)
 		{
 			// This is a character that has no server settings, we need to immediately send our own
-			// StormFrontServerSettings.sendInitialServerSettings(handler.getClient());
+			// StormFrontServerSettings.sendInitialServerSettings(getHandler().getClient());
 			
-			//PromptTagHandler promptHandler = (PromptTagHandler) handler.getTagHandler(PromptTagHandler.class);
+			//PromptTagHandler promptHandler = (PromptTagHandler) getHandler().getTagHandler(PromptTagHandler.class);
 			// promptHandler.setWaitingForInitialStreams(true);
 			return;
 		}
@@ -76,23 +74,23 @@ public class SettingsInfoTagHandler extends DefaultTagHandler {
 		
 		String clientVersion = attributes.getValue("client");
 		if(clientVersion != null) {
-			handler.getClient().getServerSettings().setClientVersion(clientVersion);
+			getHandler().getClient().getServerSettings().setClientVersion(clientVersion);
 		}
 		*/
 		
-		/*String playerId = handler.getClient().getPlayerId();
+		/*String playerId = getHandler().getClient().getPlayerId();
 		
 		File serverSettings = ConfigurationUtil.getConfigurationFile("serverSettings_" + playerId + ".xml", false);
 		if (!serverSettings.exists())
 		{
 			try {
-				handler.getClient().getConnection().send("<sendSettings/>\n");
+				getHandler().getClient().getConnection().send("<sendSettings/>\n");
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				handler.getClient().getConnection().sendLine("");
+				getHandler().getClient().getConnection().sendLine("");
 			} catch(IOException e) {
 				e.printStackTrace();
 			}

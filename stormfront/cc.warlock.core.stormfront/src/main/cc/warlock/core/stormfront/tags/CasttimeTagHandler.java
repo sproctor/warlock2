@@ -27,6 +27,6 @@ public class CasttimeTagHandler extends DefaultTagHandler {
 
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
-		handler.getClient().getTimer("casttime").setup(new Long(attributes.getValue("value")));
+		getHandler().getClient().getTimer("casttime").setup(new Long(attributes.getValue("value")));
 	}
 }

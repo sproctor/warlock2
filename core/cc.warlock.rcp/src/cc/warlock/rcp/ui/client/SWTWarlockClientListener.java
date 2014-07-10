@@ -28,7 +28,7 @@ import cc.warlock.core.client.IWarlockClientListener;
 
 public class SWTWarlockClientListener implements IWarlockClientListener {
 
-	protected IWarlockClientListener listener;
+	private IWarlockClientListener listener;
 	
 	public SWTWarlockClientListener (IWarlockClientListener listener)
 	{

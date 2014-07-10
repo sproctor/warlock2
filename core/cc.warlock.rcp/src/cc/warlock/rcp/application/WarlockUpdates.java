@@ -54,7 +54,7 @@ public class WarlockUpdates {
 	public static final String UPDATE_SITE = "warlock.updates.url";
 	public static final String AUTO_UPDATE = "warlock.updates.autoupdate";
 	
-	protected static Properties updateProperties;
+	private static Properties updateProperties;
 	
 	static {
 		updateProperties = new Properties();

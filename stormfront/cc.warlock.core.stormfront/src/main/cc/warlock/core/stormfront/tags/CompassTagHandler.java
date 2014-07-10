@@ -31,7 +31,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 public class CompassTagHandler extends DefaultTagHandler {
 
 	Compass compass;
-	protected static final HashMap<String, DirectionType> directions = new HashMap<String, DirectionType>();
+	private static final HashMap<String, DirectionType> directions = new HashMap<String, DirectionType>();
 	
 	static {
 		for (DirectionType direction : DirectionType.values())
@@ -67,6 +67,6 @@ public class CompassTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.getClient().getCompass().set(compass);
+		getHandler().getClient().getCompass().set(compass);
 	}
 }

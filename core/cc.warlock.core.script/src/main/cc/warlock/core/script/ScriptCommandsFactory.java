@@ -26,7 +26,7 @@ import cc.warlock.core.script.internal.ScriptCommands;
 
 public class ScriptCommandsFactory {
 
-	protected static ScriptCommandsFactory factory = new ScriptCommandsFactoryDefault();
+	private static ScriptCommandsFactory factory = new ScriptCommandsFactoryDefault();
 	
 	public static ScriptCommandsFactory getFactory()
 	{

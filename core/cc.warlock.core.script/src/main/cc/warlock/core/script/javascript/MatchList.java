@@ -63,7 +63,7 @@ public class MatchList extends ScriptableObject {
 		
 		private Function function;
 		private String expression;
-		protected Object[] args = new Object[0];
+		private Object[] args = new Object[0];
 		
 		public JSMatchData(Function function, String expression) {
 			this.function = function;
@@ -79,6 +79,10 @@ public class MatchList extends ScriptableObject {
 
 				jsCommand.exec(script.getContext(), script.getScope());
 			}
+		}
+		
+		protected void setArgs(Object[] args) {
+			this.args = args;
 		}
 	}
 	
@@ -115,7 +119,7 @@ public class MatchList extends ScriptableObject {
 				i++;
 			}
 			
-			args = new Object[] { groups };
+			setArgs(new Object[] { groups });
 			super.run();
 		}
 	}

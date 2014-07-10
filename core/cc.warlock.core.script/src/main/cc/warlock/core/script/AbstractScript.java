@@ -21,7 +21,6 @@
  */
 package cc.warlock.core.script;
 
-import java.io.Reader;
 import java.util.ArrayList;
 
 import cc.warlock.core.client.IWarlockClient;
@@ -29,10 +28,9 @@ import cc.warlock.core.client.IWarlockClientViewer;
 
 public abstract class AbstractScript implements IScript {
 
-	protected ArrayList<IScriptListener> listeners;
+	private ArrayList<IScriptListener> listeners;
 	private boolean stopped = true;
-	protected Reader reader;
-	protected IScriptInfo info;
+	private IScriptInfo info;
 	private IWarlockClientViewer viewer;
 	private int debugLevel = 1;
 	

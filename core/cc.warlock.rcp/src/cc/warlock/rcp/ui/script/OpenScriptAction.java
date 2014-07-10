@@ -37,8 +37,8 @@ import cc.warlock.core.script.IScriptFileInfo;
 
 public class OpenScriptAction extends Action 
 {
-	protected IWorkbenchPage page;
-	protected ISelectionProvider provider;
+	private IWorkbenchPage page;
+	private ISelectionProvider provider;
 	
 	public OpenScriptAction (IWorkbenchPage page, ISelectionProvider provider)
 	{

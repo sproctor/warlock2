@@ -32,8 +32,8 @@ import cc.warlock.core.stormfront.internal.StormFrontProtocolParser;
 
 public class StormFrontDocument implements IStormFrontXMLHandler {
 
-	protected Stack<StormFrontElement> elementStack = new Stack<StormFrontElement>();
-	protected StormFrontElement rootElement;
+	private Stack<StormFrontElement> elementStack = new Stack<StormFrontElement>();
+	private StormFrontElement rootElement;
 
 	public StormFrontElement getRootElement() {
 		return rootElement;

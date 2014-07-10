@@ -18,7 +18,7 @@ import cc.warlock.rcp.wizards.WizardWithNotification;
 
 public class ImportServerSettingsWizard extends WizardWithNotification implements IImportWizard {
 
-	protected ImportSettingsWizardPage page1;
+	private ImportSettingsWizardPage page1;
 
 	@Override
 	public void addPages() {

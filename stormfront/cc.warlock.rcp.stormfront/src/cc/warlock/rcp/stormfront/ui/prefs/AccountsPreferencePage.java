@@ -58,13 +58,16 @@ public class AccountsPreferencePage extends PropertyPage implements
 		IWorkbenchPropertyPage {
 
 	public static final String PAGE_ID = "cc.warlock.rcp.stormfront.ui.prefs.accountsAndProfiles";
-	protected ArrayList<Account> addedAccounts = new ArrayList<Account>();
-	protected ArrayList<Account> removedAccounts = new ArrayList<Account>();
-	protected HashMap<ProfileSetting, Account> addedProfiles = new HashMap<ProfileSetting, Account>();
-	protected HashMap<ProfileSetting, Account> removedProfiles = new HashMap<ProfileSetting, Account>();
+	//private ArrayList<Account> addedAccounts = new ArrayList<Account>();
+	private ArrayList<Account> removedAccounts = new ArrayList<Account>();
+	//private HashMap<ProfileSetting, Account> addedProfiles = new HashMap<ProfileSetting, Account>();
+	private HashMap<ProfileSetting, Account> removedProfiles = new HashMap<ProfileSetting, Account>();
 	
-	protected TreeViewer accountViewer;
-	protected Button removeAccount, editAccount, addProfile, removeProfile;
+	private TreeViewer accountViewer;
+	private Button removeAccount, editAccount, addProfile, removeProfile;
+	
+	private Account currentAccount;
+	private ProfileSetting currentProfile;
 	
 	@Override
 	protected Control createContents(Composite parent) {
@@ -235,7 +238,6 @@ public class AccountsPreferencePage extends PropertyPage implements
 		accountViewer.expandAll();
 	}
 	
-	protected Account currentAccount;
 	protected void accountSelected (Account account)
 	{
 		removeAccount.setEnabled(true);
@@ -247,7 +249,6 @@ public class AccountsPreferencePage extends PropertyPage implements
 		currentProfile = null;
 	}
 	
-	protected ProfileSetting currentProfile;
 	protected void profileSelected (ProfileSetting profile)
 	{
 		removeProfile.setEnabled(true);

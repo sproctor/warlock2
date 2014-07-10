@@ -38,13 +38,13 @@ public class ATagHandler extends DefaultTagHandler {
 		private IWarlockClient client;
 		private String coord;
 		private String noun;
-		private String exist;
+		//private String exist;
 		
 		CommandRunner(IWarlockClient client, String coord, String noun, String exist) {
 			this.client = client;
 			this.coord = coord;
 			this.noun = noun;
-			this.exist = exist;
+			//this.exist = exist;
 		}
 		
 		public void run() {
@@ -79,7 +79,7 @@ public class ATagHandler extends DefaultTagHandler {
 				client.send(new Command(command, false));
 
 				client.getViewer().createMenu(id);
-				handler.setMenuData(id, noun);
+				getHandler().setMenuData(id, noun);
 			}
 		}
 
@@ -97,7 +97,7 @@ public class ATagHandler extends DefaultTagHandler {
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		if(style != null) {
-			handler.removeStyle(style);
+			getHandler().removeStyle(style);
 			style = null;
 		}
 		String coord = attributes.getValue("coord");
@@ -107,17 +107,17 @@ public class ATagHandler extends DefaultTagHandler {
 		style = new WarlockStyle();
 		style.setUnderline(true);
 		if(coord != null) {
-			style.setAction(new CommandRunner(handler.getClient(), coord, noun, exist));
+			style.setAction(new CommandRunner(getHandler().getClient(), coord, noun, exist));
 		} else {
-			style.setAction(new CommandMenuRunner(handler.getClient(), noun, exist));
+			style.setAction(new CommandMenuRunner(getHandler().getClient(), noun, exist));
 		}
-		handler.addStyle(style);
+		getHandler().addStyle(style);
 		
 		// TODO this should probably be done elsewhere
 		if(!requestedList) {
 			String command = "_menu update "
-					+ CmdlistSettings.getProvider(handler.getClient().getClientSettings()).getTimestamp();
-			handler.getClient().send(new Command(command, false));
+					+ CmdlistSettings.getProvider(getHandler().getClient().getClientSettings()).getTimestamp();
+			getHandler().getClient().send(new Command(command, false));
 			requestedList = true;
 		}
 	}
@@ -125,7 +125,7 @@ public class ATagHandler extends DefaultTagHandler {
 	@Override
 	public void handleEnd(String rawXML) {
 		if(style != null) {
-			handler.removeStyle(style);
+			getHandler().removeStyle(style);
 			style = null;
 		}
 	}

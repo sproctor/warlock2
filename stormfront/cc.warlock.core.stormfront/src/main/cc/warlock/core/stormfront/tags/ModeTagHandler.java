@@ -46,7 +46,7 @@ public class ModeTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleEnd(String rawXML) {
 		if(id != null) {
-			IWarlockClient client = handler.getClient();
+			IWarlockClient client = getHandler().getClient();
 
 			if (id.equals("CMGR"))
 			{

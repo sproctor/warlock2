@@ -26,8 +26,8 @@ import org.eclipse.swt.graphics.Image;
 
 public class ConnectionAction implements IConnectionCommand {
 
-	protected Action action;
-	protected Image image;
+	private Action action;
+	private Image image;
 	
 	public ConnectionAction (Action action)
 	{

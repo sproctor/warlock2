@@ -31,11 +31,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 public class StormFrontElement {
 
-	protected String name;
-	protected StormFrontElement parent;
-	protected StormFrontAttributeList attributes = new StormFrontAttributeList();
-	protected ArrayList<StormFrontElement> elements = new ArrayList<StormFrontElement>();
-	protected StringBuffer text = new StringBuffer();
+	private String name;
+	private StormFrontElement parent;
+	private StormFrontAttributeList attributes = new StormFrontAttributeList();
+	private ArrayList<StormFrontElement> elements = new ArrayList<StormFrontElement>();
+	private StringBuffer text = new StringBuffer();
 	
 	public StormFrontElement (String name)
 	{

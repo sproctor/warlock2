@@ -26,7 +26,7 @@ import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
 
 
 public class InvTagHandler extends DefaultTagHandler {
-	protected String streamId;
+	//private String streamId;
 
 	public InvTagHandler(IStormFrontProtocolHandler handler) {
 		super(handler);

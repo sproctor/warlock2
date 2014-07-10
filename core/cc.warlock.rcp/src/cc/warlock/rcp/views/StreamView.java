@@ -52,15 +52,15 @@ public class StreamView extends WarlockView implements IGameViewFocusListener {
 	public static final String LEFT_STREAM_PREFIX = "leftStream";
 	public static final String TOP_STREAM_PREFIX = "topStream";
 	
-	protected static ArrayList<StreamView> openViews = new ArrayList<StreamView>();
+	private static ArrayList<StreamView> openViews = new ArrayList<StreamView>();
 	
-	protected String streamName;
+	private String streamName;
 	
-	protected StreamText activeStream;
-	protected IWarlockClient activeClient;
-	protected PageBook book;
+	private StreamText activeStream;
+	private IWarlockClient activeClient;
+	private PageBook book;
 	
-	protected HashMap<IWarlockClient, StreamText> streams =
+	private HashMap<IWarlockClient, StreamText> streams =
 		new HashMap<IWarlockClient, StreamText>();
 	
 	private StyledText nullTextWidget;

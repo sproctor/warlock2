@@ -38,6 +38,6 @@ public class PopBoldTagHandler extends DefaultTagHandler {
 	
 	@Override
 	public void handleEnd(String rawXML) {
-		handler.removeStyle(WarlockStyle.boldStyle);
+		getHandler().removeStyle(WarlockStyle.boldStyle);
 	}
 }

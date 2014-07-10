@@ -47,10 +47,10 @@ public class ComponentTagHandler extends DefaultTagHandler {
 			return;
 		
 		if(id.equals("room objs"))
-			handler.resetMonsterCount();
+			getHandler().resetMonsterCount();
 		
-		handler.flushBuffer();
-		//handler.setDestComponent(id);
+		getHandler().flushBuffer();
+		//getHandler().setDestComponent(id);
 	}
 	
 	@Override
@@ -59,13 +59,13 @@ public class ComponentTagHandler extends DefaultTagHandler {
 			return;
 		
 		if(id.equals("room objs")) {
-			int count = handler.getMonsterCount();
-			handler.getClient().setProperty("monstercount", String.valueOf(count));
+			int count = getHandler().getMonsterCount();
+			getHandler().getClient().setProperty("monstercount", String.valueOf(count));
 		}
 		
-		WarlockString str = handler.getBuffer();
-		handler.getClient().updateComponent(id, str);
-		handler.clearBuffer();
+		WarlockString str = getHandler().getBuffer();
+		getHandler().getClient().updateComponent(id, str);
+		getHandler().clearBuffer();
 	}
 
 }

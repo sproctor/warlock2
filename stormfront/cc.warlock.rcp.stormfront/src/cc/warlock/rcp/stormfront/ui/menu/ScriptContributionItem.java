@@ -11,11 +11,11 @@ import cc.warlock.rcp.menu.SubMenuContributionItem;
 
 public class ScriptContributionItem extends SubMenuContributionItem {
 
-	IScript m_Script;
+	private IScript m_Script;
 
 	public class StopScriptAction extends Action {
 		
-		IScript m_Script = null;
+		private IScript m_Script = null;
 		
 		public StopScriptAction(IScript script) {
 			super("Stop");
@@ -30,7 +30,7 @@ public class ScriptContributionItem extends SubMenuContributionItem {
 
 	public class PauseScriptAction extends Action {
 		
-		IScript m_Script = null;
+		private IScript m_Script = null;
 		
 		public PauseScriptAction(IScript script) {
 			super("Pause");
@@ -45,7 +45,7 @@ public class ScriptContributionItem extends SubMenuContributionItem {
 
 	public class ResumeScriptAction extends Action {
 		
-		IScript m_Script = null;
+		private IScript m_Script = null;
 		
 		public ResumeScriptAction(IScript script) {
 			super("Resume");

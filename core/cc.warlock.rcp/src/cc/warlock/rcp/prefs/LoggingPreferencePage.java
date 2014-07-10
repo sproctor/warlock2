@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 
-import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.logging.LoggingConfiguration;
 
 /**
@@ -48,8 +47,8 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 
 	public static final String PAGE_ID = "cc.warlock.rcp.prefs.logging";
 	
-	protected Combo loggingType;
-	protected Text logDir;
+	private Combo loggingType;
+	private Text logDir;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -84,19 +83,15 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 			}
 		});
 		
-		if (settings == null)
-			settings = getDefaultSettings();
-		
-		setData(settings);
+		updateData();
 		
 		// Return the main composite
 		return main;
 	}
 	
-	protected void setData (IClientSettings settings) {
-		this.settings = settings;
-		loggingType.setText(LoggingConfiguration.getProvider(settings).getLogFormat());
-		logDir.setText(LoggingConfiguration.getProvider(settings).getLogDirectory().getAbsolutePath());
+	protected void updateData () {
+		loggingType.setText(LoggingConfiguration.getProvider(getSettings()).getLogFormat());
+		logDir.setText(LoggingConfiguration.getProvider(getSettings()).getLogDirectory().getAbsolutePath());
 	}
 	
 	/*
@@ -121,8 +116,8 @@ public class LoggingPreferencePage extends PreferencePageUtils implements
 
 	@Override
 	public boolean performOk() {
-		LoggingConfiguration.getProvider(settings).setLogFormat(loggingType.getText());
-		LoggingConfiguration.getProvider(settings).setLogDirectory(new File(logDir.getText()));
+		LoggingConfiguration.getProvider(getSettings()).setLogFormat(loggingType.getText());
+		LoggingConfiguration.getProvider(getSettings()).setLogDirectory(new File(logDir.getText()));
 		return true;
 	}
 }

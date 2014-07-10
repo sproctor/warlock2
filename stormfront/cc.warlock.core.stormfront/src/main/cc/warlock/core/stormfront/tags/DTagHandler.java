@@ -60,7 +60,7 @@ public class DTagHandler extends DefaultTagHandler {
 	@Override
 	public void handleStart(StormFrontAttributeList attributes, String rawXML) {
 		if(style != null) {
-			handler.removeStyle(style);
+			getHandler().removeStyle(style);
 			style = null;
 		}
 		command = null;
@@ -68,12 +68,12 @@ public class DTagHandler extends DefaultTagHandler {
 		style = new WarlockStyle();
 		style.setUnderline(true);
 		if(cmd != null) {
-			style.setAction(new CommandRunner(handler.getClient(), cmd));
+			style.setAction(new CommandRunner(getHandler().getClient(), cmd));
 			gotCommand = true;
 		} else {
 			gotCommand = false;
 		}
-		handler.addStyle(style);
+		getHandler().addStyle(style);
 	}
 	
 	@Override
@@ -91,9 +91,9 @@ public class DTagHandler extends DefaultTagHandler {
 	public void handleEnd(String rawXML) {
 		if(style != null) {
 			if(command != null) {
-				style.setAction(new CommandRunner(handler.getClient(), command));
+				style.setAction(new CommandRunner(getHandler().getClient(), command));
 			}
-			handler.removeStyle(style);
+			getHandler().removeStyle(style);
 			style = null;
 		}
 		

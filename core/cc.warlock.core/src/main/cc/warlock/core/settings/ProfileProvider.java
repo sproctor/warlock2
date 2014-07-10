@@ -59,7 +59,7 @@ public class ProfileProvider extends ArrayConfigurationProvider<ProfileSetting> 
 	public ProfileSetting getProfileByViewId (String viewId)
 	{	
 		for (ProfileSetting profile : getSettings()) {
-			if (viewId.equals(profile.viewId))
+			if (viewId.equals(profile.getViewId()))
 				return profile;
 		}
 		return null;

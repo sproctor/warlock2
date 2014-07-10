@@ -21,8 +21,6 @@
  */
 package cc.warlock.core.script.javascript;
 
-import java.util.HashMap;
-
 import org.mozilla.javascript.Scriptable;
 
 import cc.warlock.core.client.IWarlockClient;
@@ -30,7 +28,7 @@ import cc.warlock.core.script.ScriptEngineRegistry;
 
 public class JavascriptVars implements IJavascriptVariableProvider {
 
-	//protected HashMap<JavascriptScript, JavascriptCommands> scriptCommands = new HashMap<JavascriptScript, JavascriptCommands>();
+	//private HashMap<JavascriptScript, JavascriptCommands> scriptCommands = new HashMap<JavascriptScript, JavascriptCommands>();
 	
 	public JavascriptVars ()
 	{

@@ -37,8 +37,8 @@ import cc.warlock.core.script.wsl.internal.IWSLCommandDefinitionProvider;
 public class WSLEngine implements IScriptEngine, IScriptListener {
 
 	public static final String ENGINE_ID = "cc.warlock.script.wsl.WSLEngine";
-	protected ArrayList<IScript> runningScripts = new ArrayList<IScript>();
-	protected ArrayList<IWSLCommandDefinitionProvider> commandProviders = new ArrayList<IWSLCommandDefinitionProvider>();
+	private ArrayList<IScript> runningScripts = new ArrayList<IScript>();
+	private ArrayList<IWSLCommandDefinitionProvider> commandProviders = new ArrayList<IWSLCommandDefinitionProvider>();
 	private ArrayList<String> supportedExtensions = new ArrayList<String>();
 	
 	public WSLEngine () {

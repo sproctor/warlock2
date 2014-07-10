@@ -55,8 +55,8 @@ import cc.warlock.core.settings.DirectorySetting;
 
 public class ScriptingPreferencePage extends PropertyPage implements IWorkbenchPropertyPage {
 
-	protected TreeViewer scriptDirectories;
-	protected Button addScriptDir, removeScriptDir /*, moveUp, moveDown*/;
+	private TreeViewer scriptDirectories;
+	private Button addScriptDir, removeScriptDir /*, moveUp, moveDown*/;
 	
 
 	@Override
