@@ -2,7 +2,7 @@
 <feature
       id="cc.warlock.rcp.feature"
       label="Warlock RCP Feature"
-      version="2.0.0"
+      version="2.0.0.qualifier"
       provider-name="Warlock Team"
       plugin="cc.warlock.rcp">
 

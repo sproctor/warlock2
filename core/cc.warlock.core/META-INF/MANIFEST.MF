@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Warlock2 Core Plug-in
 Bundle-SymbolicName: cc.warlock.core
-Bundle-Version: 2.0.246.snapshot
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: cc.warlock.core.Activator
 Bundle-Vendor: Warlock Team
 Require-Bundle: org.eclipse.core.runtime

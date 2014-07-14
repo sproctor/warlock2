@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Warlock Stormfront Client
 Bundle-SymbolicName: cc.warlock.core.stormfront
-Bundle-Version: 2.0.0
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: cc.warlock.core.stormfront.StormFrontCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core

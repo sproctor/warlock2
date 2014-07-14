@@ -2,7 +2,7 @@
 <feature
       id="cc.warlock.rcp.stormfront.feature"
       label="Stormfront RCP Feature"
-      version="2.0.0"
+      version="2.0.0.qualifier"
       provider-name="Warlock Team">
 
    <description url="http://www.warlock.cc">
