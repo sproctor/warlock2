@@ -29,10 +29,10 @@ import cc.warlock.rcp.ui.client.WarlockClientAdapterFactory;
 public class StormFrontClientAdapterFactory extends WarlockClientAdapterFactory {
 
 	@Override
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		
-		ArrayList<Class> classes = new ArrayList<Class>();
-		for (Class c : super.getAdapterList())
+		ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+		for (Class<?> c : super.getAdapterList())
 			classes.add(c);
 		
 		classes.add(IWarlockClient.class);

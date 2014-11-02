@@ -23,23 +23,19 @@ package cc.warlock.rcp.stormfront.ui.menu;
 
 import java.util.ArrayList;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.core.client.IStream;
 import cc.warlock.rcp.actions.OpenStreamWindowAction;
 import cc.warlock.rcp.views.GameView;
-import cc.warlock.rcp.views.ScriptManager;
 import cc.warlock.rcp.views.StreamView;
 
 
 public class StreamWindowContributionItem extends CompoundContributionItem {
 	
-	private class ScriptManagerAction extends Action {
+	/*private class ScriptManagerAction extends Action {
 		
 		private static final String title = "Scripts Manager";
 		
@@ -61,7 +57,7 @@ public class StreamWindowContributionItem extends CompoundContributionItem {
 		public String getText() {
 	 		return title;
 		}
-	}
+	}*/
 	
 	@Override
 	protected IContributionItem[] getContributionItems() {	

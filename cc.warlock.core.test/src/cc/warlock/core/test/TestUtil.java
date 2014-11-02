@@ -27,8 +27,8 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.settings.ProfileSetting;
-import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.network.ISGEConnectionListener;
 import cc.warlock.core.stormfront.network.SGEConnection;
 
@@ -37,7 +37,7 @@ import cc.warlock.core.stormfront.network.SGEConnection;
 public class TestUtil {
 
 
-	protected static Hashtable<ProfileSetting, StormFrontClient> clients = new Hashtable<ProfileSetting, StormFrontClient>();
+	protected static Hashtable<ProfileSetting, WarlockClient> clients = new Hashtable<ProfileSetting, WarlockClient>();
 	protected static Hashtable<ProfileSetting, Map<String,String>> profileProperties = new Hashtable<ProfileSetting, Map<String,String>>();
 	
 	public static Map<String,String> autoLogin (ProfileSetting profile, ISGEConnectionListener listener)
@@ -49,13 +49,13 @@ public class TestUtil {
 		return profileProperties.get(profile);
 	}
 	
-	public static StormFrontClient autoConnectToClient (ProfileSetting profile)
+	public static WarlockClient autoConnectToClient (ProfileSetting profile)
 	{
 		if (!clients.containsKey(profile))
 		{
 			Map<String,String> loginProperties = autoLogin(profile, null);
 		
-			StormFrontClient client = new StormFrontClient("TS");
+			WarlockClient client = new WarlockClient("TS");
 			
 			int port = Integer.parseInt(loginProperties.get(SGEConnection.PROPERTY_GAMEPORT));
 			

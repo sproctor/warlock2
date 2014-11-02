@@ -8,9 +8,9 @@ import org.junit.Assert;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.WarlockClientRegistry;
+import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.settings.AccountProvider;
 import cc.warlock.core.settings.ProfileSetting;
-import cc.warlock.core.stormfront.client.internal.StormFrontClient;
 import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.core.stormfront.tags.SettingsInfoTagHandler;
@@ -44,7 +44,7 @@ public class ResetServerSettings {
 		if (profile != null)
 		{
 			Map<String,String> loginProperties = TestUtil.autoLogin(profile, null);
-			StormFrontClient client = new StormFrontClient(loginProperties.get("GAMECODE"));
+			WarlockClient client = new WarlockClient(loginProperties.get("GAMECODE"));
 			int port = Integer.parseInt(loginProperties.get(SGEConnection.PROPERTY_GAMEPORT));			
 			
 			try {
@@ -52,8 +52,8 @@ public class ResetServerSettings {
 					public void clientConnected(IWarlockClient client) {
 						StormFrontConnection connection = (StormFrontConnection) client.getConnection();
 						
-						SettingsInfoTagHandler handler = 
-							(SettingsInfoTagHandler) connection.getProtocolHandler().getTagHandler(SettingsInfoTagHandler.class);
+						//SettingsInfoTagHandler handler = 
+							//(SettingsInfoTagHandler) connection.getProtocolHandler().getTagHandler(SettingsInfoTagHandler.class);
 						
 						//handler.setNewSettings(true);
 					}

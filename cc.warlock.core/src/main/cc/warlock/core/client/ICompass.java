@@ -52,8 +52,8 @@ public interface ICompass {
 				case West: return DirectionType.East;
 				case Up: return DirectionType.Down;
 				case Down: return DirectionType.Up;
+				default: return DirectionType.None;
 			}
-			return DirectionType.None;
 		}
 		
 		public String getShortName() {
@@ -69,8 +69,8 @@ public interface ICompass {
 				case Up: return "up";
 				case Down: return "down";
 				case Out: return "out";
+				default: return "";
 			}
-			return "";
 		}
 		
 		public String getName() {
@@ -86,8 +86,8 @@ public interface ICompass {
 				case Up: return "up";
 				case Down: return "down";
 				case Out: return "out";
+				default: return "";
 			}
-			return "";
 		}
 	};
 	

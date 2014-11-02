@@ -64,7 +64,7 @@ public class AccountsPreferencePage extends PropertyPage implements
 	private HashMap<ProfileSetting, Account> removedProfiles = new HashMap<ProfileSetting, Account>();
 	
 	private TreeViewer accountViewer;
-	private Button removeAccount, editAccount, addProfile, removeProfile;
+	private Button removeAccount, editAccount, removeProfile;
 	
 	private Account currentAccount;
 	private ProfileSetting currentProfile;
@@ -111,16 +111,6 @@ public class AccountsPreferencePage extends PropertyPage implements
 		editAccount.addSelectionListener(new SelectionAdapter () {
 			public void widgetSelected(SelectionEvent e) {
 				editAccountClicked();
-			}
-		});
-		
-		addProfile = new Button(buttonsComposite, SWT.PUSH);
-		addProfile.setText("Add Profile");
-		addProfile.setEnabled(false);
-		addProfile.setImage(WarlockSharedImages.getImage(WarlockSharedImages.IMG_ADD));
-		addProfile.addSelectionListener(new SelectionAdapter () {
-			public void widgetSelected(SelectionEvent e) {
-				addProfileClicked();
 			}
 		});
 		
@@ -243,7 +233,6 @@ public class AccountsPreferencePage extends PropertyPage implements
 		removeAccount.setEnabled(true);
 		editAccount.setEnabled(true);
 		removeProfile.setEnabled(false);
-		addProfile.setEnabled(true);
 		
 		currentAccount = account;
 		currentProfile = null;
@@ -265,14 +254,6 @@ public class AccountsPreferencePage extends PropertyPage implements
 		removedProfiles.put(currentProfile, currentAccount);
 		currentAccount.getProfileProvider().removeSetting(currentProfile);
 		accountViewer.refresh();
-	}
-
-	protected void addProfileClicked() {
-		if (currentAccount == null)
-			return;
-		
-		ProfileEditDialog dialog = new ProfileEditDialog(getShell(), currentAccount);
-		dialog.open();
 	}
 
 	protected void editAccountClicked() {

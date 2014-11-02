@@ -21,21 +21,8 @@
  */
 package cc.warlock.rcp.util;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -90,74 +77,6 @@ public class RCPUtil {
 			PlatformUI.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(perspectiveId);
 		
 		page.setPerspective(perspective);
-	}
-	
-	public static int getPixelSizeInPoints (int pixelSize)
-	{
-		double points = pixelSize * (72.0/96.0);
-		return (int) Math.round(points);
-	}
-	
-	public static int getPointSizeInPixels (int pointSize)
-	{
-		double pixels = pointSize * (96.0/72.0);
-		
-		return (int) Math.round(pixels);
-	}
-	
-	private static class Flag {
-		public boolean value;
-	}
-	
-	public static void playSound (InputStream soundStream)
-	{
-		try {
-			Clip clip = AudioSystem.getClip();
-			
-			BufferedInputStream bufferedStream = new BufferedInputStream(soundStream);
-			AudioFileFormat format = AudioSystem.getAudioFileFormat(bufferedStream);
-			
-			final Flag finished = new Flag();
-			finished.value = false;
-			final AudioInputStream stream = new AudioInputStream(bufferedStream, format.getFormat(), format.getFrameLength()); 
-			clip.open(stream);
-			clip.addLineListener(new LineListener() {
-				public void update(LineEvent event) {
-					if (event.getType() == LineEvent.Type.STOP) {
-						try {
-							stream.close();
-							finished.value = true;
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			});
-			clip.start();
-			
-			while (!finished.value) {
-				if (Display.getDefault() != null) {
-					Display.getDefault().readAndDispatch();
-				} else {
-					Thread.sleep((long)500);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static int openPreferences (String pageId)

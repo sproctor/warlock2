@@ -35,7 +35,7 @@ public class SGEConnectionHandler extends SimpleCommandHandler {
 		WarlockWizardDialog dialog = new WarlockWizardDialog(Display.getDefault().getActiveShell(),
 			new SGEConnectWizard());
 		
-		int response = dialog.open();
+		dialog.open();
 		
 		return null;
 	}
