@@ -48,7 +48,7 @@ public class SoundPlayer
 			if (System.getProperty("os.name").equals("Linux")) {
 				Boolean extPlay = true;
 				try {
-					Runtime.getRuntime().exec("aplay "+strFilename);
+					Runtime.getRuntime().exec("aplay \"" + strFilename + "\"");
 				} catch (Exception e) {
 					e.printStackTrace();
 					extPlay = false;
