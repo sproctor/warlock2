@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyleRange;
@@ -507,8 +508,8 @@ public class WarlockText {
 			fullLine |= presetStyle.isFullLine();
 		}
 		
-		if(monoFont != null && style.isMonospace()) {
-			styleRange.font = monoFont;
+		if(style.isMonospace()) {
+				styleRange.font = monoFont;
 		}
 		
 		
@@ -797,7 +798,7 @@ public class WarlockText {
 		
 		IWarlockFont columnFont = provider.getWindowMonoFont(streamName);
 		if(columnFont == null || columnFont.isDefaultFont()) {
-			this.monoFont = null;
+			this.monoFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
 		} else {
 			String fontFace = columnFont.getFamilyName();
 			int fontSize = columnFont.getSize();
