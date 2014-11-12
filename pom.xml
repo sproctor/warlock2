@@ -10,14 +10,14 @@
 	<name>Warlock 2</name>
 
 	<modules>
-        <module>core/cc.warlock.core.script/</module>
-        <module>core/cc.warlock.core/</module>
-        <module>core/cc.warlock.rcp/</module>
-        <module>stormfront/cc.warlock.core.stormfront/</module>
-        <module>stormfront/cc.warlock.rcp.stormfront/</module>
-        <module>features/cc.warlock.rcp.feature/</module>
-        <module>features/cc.warlock.rcp.stormfront.feature/</module>
-        <module>build/cc.warlock.rcp.product/</module>
+        <module>cc.warlock.core.script/</module>
+        <module>cc.warlock.core/</module>
+        <module>cc.warlock.rcp/</module>
+        <module>cc.warlock.core.stormfront/</module>
+        <module>cc.warlock.rcp.stormfront/</module>
+        <module>cc.warlock.rcp.feature/</module>
+        <module>cc.warlock.rcp.stormfront.feature/</module>
+        <module>cc.warlock.rcp.product/</module>
 	</modules>
 
 	<properties>
