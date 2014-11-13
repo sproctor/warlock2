@@ -9,7 +9,7 @@
 	<name>Warlock StormFront RCP Feature</name>
 
 	<parent>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
 		<version>2.0.0-SNAPSHOT</version>
 		<groupId>cc.warlock</groupId>
 		<artifactId>parent</artifactId>
