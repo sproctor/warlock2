@@ -1,0 +1,197 @@
+PARSER_BEGIN(StormFrontProtocolParser)
+package cc.warlock.core.stormfront.internal;
+
+import java.io.IOException;
+
+import cc.warlock.core.stormfront.xml.IStormFrontXMLHandler;
+import cc.warlock.core.stormfront.xml.StormFrontAttribute;
+import cc.warlock.core.stormfront.xml.StormFrontAttributeList;
+
+public class StormFrontProtocolParser {
+	private IStormFrontXMLHandler handler;
+	private StormFrontAttributeList currentAttributes = new StormFrontAttributeList();
+	
+	public void setHandler (IStormFrontXMLHandler handler)
+	{
+		this.handler = handler;
+	}
+	
+	protected void characters (String characters)
+	{
+		handler.characters(characters);
+	}
+	
+	protected void startElement (String name)
+	{
+		handler.startElement(name, currentAttributes, token_source.tagBuffer.toString());
+		currentAttributes.clear();
+	}
+	
+	protected void addAttribute (String name, String value)
+	{	
+		StormFrontAttribute attribute = new StormFrontAttribute();
+		attribute.setName(name);
+		attribute.setValue(value);
+		
+		currentAttributes.add(attribute);
+	}
+	
+	protected void endElement (String name)
+	{
+		handler.endElement(name, token_source.tagBuffer.toString());
+	}
+	
+	protected void emptyElement (String name)
+	{
+		handler.startElement(name, currentAttributes, token_source.tagBuffer.toString());
+		currentAttributes.clear();
+		handler.endElement(name, null);
+	}
+	
+	public void passThrough() {
+		SetState(PASS_THRU);
+	}
+	
+	private void SetState(int state) {
+  		if (state != token_source.curLexState) {
+    		Token root = new Token(), last=root;
+    		root.next = null;
+
+    		// First, we build a list of tokens to push back, in backwards order
+    		while (token.next != null) {
+      			Token t = token;
+      			// Find the token whose token.next is the last in the chain
+      			while (t.next != null && t.next.next != null)
+        			t = t.next;
+
+      			// put it at the end of the new chain
+      			last.next = t.next;
+      			last = t.next;
+
+      			// If there are special tokens, these go before the regular tokens,
+      			// so we want to push them back onto the input stream in the order
+      			// we find them along the specialToken chain.
+
+      			if (t.next.specialToken != null) {
+        			Token tt=t.next.specialToken;
+        			while (tt != null) {
+          				last.next = tt;
+          				last = tt;
+          				tt.next = null;
+          				tt = tt.specialToken;
+        			}
+      			}
+      			t.next = null;
+    		}
+
+    		while (root.next != null) {
+      			token_source.backup(root.next.image.length());
+      			root.next = root.next.next;
+    		}
+    		jj_ntk = -1;
+    		token_source.SwitchTo(state);
+  		}
+	}
+}
+
+PARSER_END(StormFrontProtocolParser)
+
+void Document() : {}
+{
+	(
+	try {
+		Element()
+	} catch (TokenMgrError e) {
+		System.err.println("Lexer error");
+		try {
+			while(jj_input_stream.readChar() != '\n') { }
+		} catch (IOException io_e) {
+			throw e;
+		}
+	}
+	)* <EOF>
+}
+
+void Element() : {Token data; String str; }
+{
+	(
+	Tag() | EndTag()
+	| ( data=<PCDATA> { characters(data.image); } )
+	| ( str=Entity() { characters(str); } )
+	| ( data=<PASS_STRING> { characters(data.image); } )
+	)
+}
+
+void Tag() : {Token name; }
+{
+	<TAG_START_OPEN> name=<GENERIC_ID> (Attribute())* (<TAG_CLOSE> { startElement(name.image); } | <TAG_EMPTY_CLOSE> { emptyElement(name.image); })
+}
+
+void Attribute(): {Token name, value;}
+{
+	name=<GENERIC_ID> { value = name; } (<ATTR_EQ> value=<ATTR_VALUE>)?	{ addAttribute(name.image,value.image); }
+}
+
+void EndTag(): {Token name;}
+{
+	<TAG_END_OPEN> name=<GENERIC_ID> <TAG_CLOSE> { endElement(name.image); }
+}
+
+String Entity(): { Token entity; }
+{
+	entity=<ENTITY>	{
+		if(entity.image.equals("gt")) return ">";
+		if(entity.image.equals("lt")) return "<";
+		if(entity.image.equals("apos")) return "'";
+		if(entity.image.equals("quot")) return "\"";
+		if(entity.image.equals("amp")) return "&";
+		if(entity.image.startsWith("#")) return "?";
+		return "?";
+	}
+}
+
+TOKEN_MGR_DECLS :
+{
+	// Required by SetState
+	void backup(int n) { input_stream.backup(n); }
+	
+	private void buffer(String str) { if(str != null) tagBuffer.append(str); }
+ 	public StringBuffer tagBuffer = new StringBuffer();
+}
+
+TOKEN: {
+	<TAG_START_OPEN: "<"> { tagBuffer.setLength(0); buffer(matchedToken.image); }: IN_TAG_MODE |
+	<TAG_END_OPEN: "</"> { tagBuffer.setLength(0); buffer(matchedToken.image); }: IN_TAG_MODE |
+	
+	<ENTITY: "&" ("#")? (<LETTER> | <DIGIT>)+ ";"> { buffer(matchedToken.image); matchedToken.image = matchedToken.image.substring(1, matchedToken.image.length() - 1); } |
+	<PCDATA: (~["<","&","\07"])+ | "&" | "<" ~["A"-"Z","a"-"z", "_"]> { buffer(matchedToken.image); } |
+	 <NAMECHAR: (<LETTER> | <DIGIT> | "." | "-" | "_" | ":")> |
+	 <DIGIT: (["0"-"9"])> |
+	 <LETTER: (["A"-"Z","a"-"z"])>
+}
+
+SKIP: {
+	<BELL: "\07"> { java.awt.Toolkit.getDefaultToolkit().beep(); }
+}
+
+<IN_TAG_MODE> TOKEN: {
+	<TAG_CLOSE: ">"> { buffer(matchedToken.image); }: DEFAULT |
+	<TAG_EMPTY_CLOSE: "/>"> { buffer(matchedToken.image); }: DEFAULT |
+	
+	<ATTR_EQ: "="> { buffer(matchedToken.image); } |
+	<ATTR_VALUE: ( "\"" (~["\""])* ("\"" (~["\"", "=", ">"])*)* "\"" | "'" (~["'"])* ("'" (~["'", "=", ">"])*)* "'")> { buffer(matchedToken.image); matchedToken.image = matchedToken.image.substring(1, matchedToken.image.length() - 1); } |
+	
+	<GENERIC_ID: (<LETTER> | "_") (<NAMECHAR>)*> { buffer(matchedToken.image); }
+}
+
+<IN_TAG_MODE> SKIP: {
+	 <WS: ([" ","\r","\t","\n"])> { tagBuffer.append(image); }
+}
+
+<PASS_THRU> SKIP: {
+	"<mode" { input_stream.backup(5); }: DEFAULT
+}
+
+<PASS_THRU> TOKEN: {
+	<PASS_STRING: ~[]>
+}
