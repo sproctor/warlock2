@@ -13,16 +13,24 @@
   <artifactId>cc.warlock.core.script</artifactId>
   <packaging>eclipse-plugin</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>4.3</version>
+    </dependency>
+  </dependencies>
+  
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>antlr3-maven-plugin</artifactId>
-        <version>1.0</version>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>4.3</version>
         <executions>
           <execution>
             <goals>
-              <goal>antlr</goal>
+              <goal>antlr4</goal>
             </goals>
           </execution>
         </executions>
