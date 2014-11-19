@@ -3,7 +3,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="lib" path="lib/js.jar"/>
-	<classpathentry kind="src" path="src/main/"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/antlr"/>
 	<classpathentry kind="src" path="target/generated-sources"/>
 	<classpathentry kind="src" path="src/eclipse/"/>
 	<classpathentry kind="output" path="target/classes"/>
