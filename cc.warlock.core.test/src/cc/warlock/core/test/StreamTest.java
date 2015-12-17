@@ -30,8 +30,8 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.WarlockString;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.client.internal.Stream;
-import cc.warlock.core.client.internal.WarlockStyle;
 
 public class StreamTest {
 

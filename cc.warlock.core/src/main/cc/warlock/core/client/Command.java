@@ -22,12 +22,10 @@
 /*
  * Created on Jan 15, 2005
  */
-package cc.warlock.core.client.internal;
+package cc.warlock.core.client;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import cc.warlock.core.client.ICommand;
 
 /**
  * @author Marshall

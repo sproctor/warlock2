@@ -57,7 +57,7 @@ import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.PresetStyleConfigurationProvider;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;

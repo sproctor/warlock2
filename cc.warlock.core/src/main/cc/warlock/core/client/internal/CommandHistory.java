@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.prefs.Preferences;
 
+import cc.warlock.core.client.Command;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.ICommandHistoryListener;

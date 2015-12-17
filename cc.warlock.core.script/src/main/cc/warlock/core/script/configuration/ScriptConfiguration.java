@@ -26,7 +26,7 @@ import java.util.Collection;
 import org.osgi.service.prefs.Preferences;
 
 import cc.warlock.core.client.IProperty;
-import cc.warlock.core.client.internal.Property;
+import cc.warlock.core.client.Property;
 import cc.warlock.core.settings.DirectorySetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.core.settings.WarlockSetting;

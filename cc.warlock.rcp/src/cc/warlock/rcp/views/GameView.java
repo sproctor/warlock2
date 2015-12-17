@@ -59,7 +59,7 @@ import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.script.ScriptEngineRegistry;
 import cc.warlock.core.script.configuration.ScriptConfiguration;
 import cc.warlock.rcp.ui.StreamText;

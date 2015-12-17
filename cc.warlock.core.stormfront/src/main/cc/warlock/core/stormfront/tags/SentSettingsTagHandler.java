@@ -21,7 +21,7 @@
  */
 package cc.warlock.core.stormfront.tags;
 
-import cc.warlock.core.client.internal.Command;
+import cc.warlock.core.client.Command;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 
 

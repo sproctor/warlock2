@@ -26,6 +26,7 @@ import java.util.HashMap;
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
+import cc.warlock.core.client.Property;
 
 public class CharacterStatus extends Property<String> implements ICharacterStatus {
 	

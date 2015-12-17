@@ -25,8 +25,6 @@ package cc.warlock.core.client;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cc.warlock.core.client.internal.Property;
-
 public class WarlockTimer {
 	static private Timer timer = new Timer();
 	

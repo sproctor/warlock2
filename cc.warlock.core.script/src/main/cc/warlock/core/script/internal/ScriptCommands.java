@@ -22,11 +22,13 @@
 package cc.warlock.core.script.internal;
 
 import java.io.InputStream;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +36,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import cc.warlock.core.client.Command;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.IRoomListener;
@@ -43,15 +46,13 @@ import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.Command;
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.client.settings.ClientSettings;
 import cc.warlock.core.client.settings.VariableConfigurationProvider;
 import cc.warlock.core.script.IMatch;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptCommands;
 import cc.warlock.core.settings.IVariable;
-import cc.warlock.core.util.Pair;
 
 public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomListener {
 
@@ -86,7 +87,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	/**
 	 * Storage for active actions. Users must acquire the monitor first!
 	 */
-	private ArrayList<Pair<IMatch, Runnable>> actions = new ArrayList<Pair<IMatch, Runnable>>();
+	private ArrayList<Map.Entry<IMatch, Runnable>> actions = new ArrayList<Map.Entry<IMatch, Runnable>>();
 	private Thread actionThread = null;
 	
 	private class ScriptActionThread extends Thread {
@@ -117,9 +118,9 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 					}
 	
 					synchronized(actions) {
-						for(Pair<IMatch, Runnable> action : actions) {
-							if(action.first().matches(text))
-								action.second().run();
+						for(Map.Entry<IMatch, Runnable> action : actions) {
+							if(action.getKey().matches(text))
+								action.getValue().run();
 						}
 					}
 				}
@@ -531,7 +532,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	@Override
 	public void addAction(Runnable action, IMatch match) {
 		synchronized(actions) {
-			actions.add(new Pair<IMatch, Runnable>(match, action));
+			actions.add(new SimpleEntry<IMatch, Runnable>(match, action));
 			
 			if(actionThread == null) {	
 				actionThread = new ScriptActionThread();
@@ -562,8 +563,8 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void removeAction(String text) {
 		synchronized(actions) {
 			boolean changed = false;
-			for(Iterator<Pair<IMatch, Runnable>> iter = actions.iterator(); iter.hasNext(); ) {
-				IMatch match = iter.next().first();
+			for(Iterator<Map.Entry<IMatch, Runnable>> iter = actions.iterator(); iter.hasNext(); ) {
+				IMatch match = iter.next().getKey();
 				// remove the element with the same name as text
 				if(match.getText().equals(text)) {
 					iter.remove();

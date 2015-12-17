@@ -42,7 +42,7 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.IConnectionListener;

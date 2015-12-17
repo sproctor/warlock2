@@ -19,11 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package cc.warlock.core.client.internal;
-
-import cc.warlock.core.client.IWarlockStyle;
-import cc.warlock.core.client.WarlockColor;
-
+package cc.warlock.core.client;
 
 public class WarlockStyle implements IWarlockStyle {
 

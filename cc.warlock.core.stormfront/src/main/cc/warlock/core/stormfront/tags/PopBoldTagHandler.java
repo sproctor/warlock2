@@ -21,7 +21,7 @@
  */
 package cc.warlock.core.stormfront.tags;
 
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.stormfront.IStormFrontProtocolHandler;
 
 

@@ -41,11 +41,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import cc.warlock.core.client.Command;
 import cc.warlock.core.client.ICompass;
 import cc.warlock.core.client.ICompass.DirectionType;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.internal.Command;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
 import cc.warlock.rcp.ui.style.CompassTheme;
 

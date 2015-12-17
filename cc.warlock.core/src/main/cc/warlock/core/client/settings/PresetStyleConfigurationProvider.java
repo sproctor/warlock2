@@ -26,7 +26,7 @@ import java.util.HashMap;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockStyle;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.WarlockStyle;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.StyleSetting;
 import cc.warlock.core.settings.WarlockSetting;

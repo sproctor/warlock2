@@ -27,7 +27,6 @@ Export-Package: cc.warlock.core;uses:="org.eclipse.core.runtime,org.osgi.framewo
    org.eclipse.core.runtime.preferences,
    javax.crypto",
  cc.warlock.core.network;uses:="cc.warlock.core.client",
- cc.warlock.core.util,
  com.martiansoftware.jsap;uses:="com.martiansoftware.jsap.stringparsers",
  com.martiansoftware.jsap.ant;uses:="org.apache.tools.ant,com.martiansoftware.jsap",
  com.martiansoftware.jsap.defaultsources;uses:="com.martiansoftware.jsap",

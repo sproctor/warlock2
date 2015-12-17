@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import cc.warlock.core.client.internal.WarlockStyle;
-
 
 public class WarlockStringMarker {
 	

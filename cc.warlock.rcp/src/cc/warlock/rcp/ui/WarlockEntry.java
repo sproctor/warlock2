@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import cc.warlock.core.client.Command;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
@@ -50,7 +51,6 @@ import cc.warlock.core.client.IWarlockEntry;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
-import cc.warlock.core.client.internal.Command;
 import cc.warlock.core.client.internal.CommandHistory;
 import cc.warlock.core.client.internal.DefaultMacros;
 import cc.warlock.core.client.settings.MacroConfigurationProvider;

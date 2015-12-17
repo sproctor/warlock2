@@ -28,11 +28,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
 import cc.warlock.core.client.ICharacterStatus;
@@ -48,8 +50,10 @@ import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockStyle;
+import cc.warlock.core.client.Property;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockString;
+import cc.warlock.core.client.WarlockStyle;
 import cc.warlock.core.client.WarlockTimer;
 import cc.warlock.core.client.logging.SimpleLogger;
 import cc.warlock.core.client.settings.ClientSettings;
@@ -58,7 +62,6 @@ import cc.warlock.core.client.settings.MacroConfigurationProvider;
 import cc.warlock.core.network.IConnection;
 import cc.warlock.core.settings.MacroSetting;
 import cc.warlock.core.settings.WarlockPreferencesScope;
-import cc.warlock.core.util.Pair;
 
 
 /**
@@ -75,7 +78,7 @@ public class WarlockClient implements IWarlockClient {
 	private SimpleLogger logger;
 	private HashMap<String, IStream> streams = new HashMap<String, IStream>();
 	private final IStream mainStream;
-	private ArrayList<Pair<String, IStreamListener>> streamListeners = new ArrayList<Pair<String, IStreamListener>>();
+	private ArrayList<Entry<String, IStreamListener>> streamListeners = new ArrayList<Entry<String, IStreamListener>>();
 	private ArrayList<Collection<? extends IWarlockPattern>> highlightLists = new ArrayList<Collection<? extends IWarlockPattern>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
@@ -275,11 +278,11 @@ public class WarlockClient implements IWarlockClient {
 			if(stream == null) {
 				stream = new Stream(this, streamName);
 				streams.put(streamName, stream);
-				for(Iterator<Pair<String, IStreamListener>> iter = streamListeners.iterator();
+				for(Iterator<Entry<String, IStreamListener>> iter = streamListeners.iterator();
 						iter.hasNext(); ) {
-					Pair<String, IStreamListener> pair = iter.next();
-					if(pair.first().equals(streamName)) {
-						stream.addStreamListener(pair.second());
+					Entry<String, IStreamListener> pair = iter.next();
+					if(pair.getKey().equals(streamName)) {
+						stream.addStreamListener(pair.getValue());
 						iter.remove();
 					}
 				}
@@ -300,7 +303,7 @@ public class WarlockClient implements IWarlockClient {
 				// WTF?
 				return;
 			} else {
-				streamListeners.add(new Pair<String, IStreamListener>(streamName, listener));
+				streamListeners.add(new SimpleEntry<String, IStreamListener>(streamName, listener));
 			}
 		}
 	}
@@ -310,11 +313,11 @@ public class WarlockClient implements IWarlockClient {
 		if(stream != null) {
 			stream.removeStreamListener(listener);
 		} else {
-			for(Iterator<Pair<String, IStreamListener>> iter = streamListeners.iterator();
+			for(Iterator<Entry<String, IStreamListener>> iter = streamListeners.iterator();
 			iter.hasNext(); ) {
-				Pair<String, IStreamListener> pair = iter.next();
+				Entry<String, IStreamListener> pair = iter.next();
 				
-				if(pair.first().equals(streamName) && pair.second() == listener) {
+				if(pair.getKey().equals(streamName) && pair.getValue() == listener) {
 					iter.remove();
 					break;
 				}
