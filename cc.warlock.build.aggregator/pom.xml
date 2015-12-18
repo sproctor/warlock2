@@ -18,7 +18,7 @@
     <module>../cc.warlock.rcp.stormfront/</module>
     <module>../cc.warlock.rcp.feature/</module>
     <module>../cc.warlock.rcp.stormfront.feature/</module>
-    <!--<module>cc.warlock.rcp.product/</module>-->
+    <module>../cc.warlock.build.p2/</module>
   </modules>
 	
 </project>

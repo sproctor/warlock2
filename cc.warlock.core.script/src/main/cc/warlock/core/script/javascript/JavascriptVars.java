@@ -35,7 +35,11 @@ public class JavascriptVars implements IJavascriptVariableProvider {
 		JavascriptEngine engine = (JavascriptEngine)
 			ScriptEngineRegistry.getScriptEngine(JavascriptEngine.ENGINE_ID);
 		
-		engine.addVariableProvider(this);
+		if (engine == null) {
+			System.err.println("Couldn't find JavaScript engine.");
+		} else {
+			engine.addVariableProvider(this);
+		}
 	}
 	
 	public void loadVariables(JavascriptScript script, Scriptable scope) {
