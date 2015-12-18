@@ -3,3 +3,8 @@ warlock2-build
 *.swp
 *.tokens
 bin
+/*/target
+/*/.settings
+/*/.classpath
+/*/.project
+/*/workspace
