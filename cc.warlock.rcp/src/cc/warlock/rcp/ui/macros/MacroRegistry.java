@@ -27,10 +27,12 @@
  */
 package cc.warlock.rcp.ui.macros;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -42,7 +44,6 @@ import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.internal.WarlockMacro;
-import cc.warlock.core.util.Pair;
 import cc.warlock.rcp.plugin.Warlock2Plugin;
 
 
@@ -60,7 +61,7 @@ public class MacroRegistry {
 	// TODO - determine if variables and commands should be synchronized
 	private HashMap<String, IMacroVariable> variables = new HashMap<String, IMacroVariable>();
 	private HashMap<String, IMacroCommand> commands = new HashMap<String, IMacroCommand>();
-	public ArrayList<Pair<String, Integer>> keys = new ArrayList<Pair<String, Integer>>();
+	public ArrayList<Entry<String, Integer>> keys = new ArrayList<Entry<String, Integer>>();
 	public HashMap<String, Integer> mods = new HashMap<String, Integer>();
 	
 	private MacroRegistry () {
@@ -177,9 +178,9 @@ public class MacroRegistry {
 			break;
 		}
 		Integer keycode = null;
-		for(Pair<String, Integer> mapping : keys) {
-			if(mapping.first().equals(keyString)) {
-				keycode = mapping.second();
+		for(Entry<String, Integer> mapping : keys) {
+			if(mapping.getKey().equals(keyString)) {
+				keycode = mapping.getValue();
 				break;
 			}
 		}
@@ -192,7 +193,7 @@ public class MacroRegistry {
 	
 	public int getModifiers(String keyString) {
 		int modifiers = 0;
-		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
+		for(Entry<String, Integer> entry : mods.entrySet()) {
 			if(keyString.startsWith(entry.getKey() + "+")) {
 				keyString = keyString.substring(entry.getKey().length() + 1);
 				modifiers |= entry.getValue();
@@ -204,9 +205,9 @@ public class MacroRegistry {
 	
 	public String getKeyString(int keycode, int modifiers) {
 		String key = null;
-		for(Pair<String, Integer> entry : keys) {
-			if(keycode == entry.second()) {
-				key = entry.first();
+		for(Entry<String, Integer> entry : keys) {
+			if(keycode == entry.getValue()) {
+				key = entry.getKey();
 				break;
 			}
 		}
@@ -214,7 +215,7 @@ public class MacroRegistry {
 			key = String.valueOf((char)keycode);
 		
 		String modString = "";
-		for(Map.Entry<String, Integer> entry : mods.entrySet()) {
+		for(Entry<String, Integer> entry : mods.entrySet()) {
 			if((modifiers & entry.getValue()) != 0) {
 				modString += entry.getKey() + "+";
 			}
@@ -224,7 +225,7 @@ public class MacroRegistry {
 	}
 	
 	private void mapKey(String keyName, int keyCode) {
-		keys.add(new Pair<String, Integer>(keyName, keyCode));
+		keys.add(new SimpleEntry<String, Integer>(keyName, keyCode));
 	}
 	
 	private void loadKeys() {

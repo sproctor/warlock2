@@ -8,10 +8,10 @@
 	<name>Warlock StormFront RCP Feature</name>
 
 	<parent>
-        <relativePath>../cc.warlock.build</relativePath>
+        <relativePath>../cc.warlock.build.parent</relativePath>
 		<version>2.0.0-SNAPSHOT</version>
 		<groupId>cc.warlock</groupId>
-		<artifactId>cc.warlock.build</artifactId>
+		<artifactId>cc.warlock.build.parent</artifactId>
 	</parent>
 
 </project>

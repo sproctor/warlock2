@@ -5,23 +5,12 @@
 
 	<version>2.0.0-SNAPSHOT</version>
 	<groupId>cc.warlock</groupId>
-	<artifactId>cc.warlock.build</artifactId>
+	<artifactId>cc.warlock.build.parent</artifactId>
 	<packaging>pom</packaging>
 	<name>Warlock 2</name>
 
-	<modules>
-        <module>../cc.warlock.core/</module>
-        <module>../cc.warlock.core.script/</module>
-        <module>../cc.warlock.core.stormfront/</module>
-        <module>../cc.warlock.rcp/</module>
-        <module>../cc.warlock.rcp.stormfront/</module>
-        <module>../cc.warlock.rcp.feature/</module>
-        <module>../cc.warlock.rcp.stormfront.feature/</module>
-        <!--<module>cc.warlock.rcp.product/</module>-->
-	</modules>
-
 	<properties>
-		<tycho-version>0.23.0</tycho-version>
+		<tycho-version>0.24.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

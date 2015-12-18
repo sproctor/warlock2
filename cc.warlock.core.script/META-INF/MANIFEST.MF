@@ -5,9 +5,7 @@ Bundle-SymbolicName: cc.warlock.core.script;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: cc.warlock.core.script.WarlockCoreScriptPlugin
 Bundle-Vendor: Warlock Team
-Import-Package: org.eclipse.core.runtime, org.osgi.framework, org.osgi.service.prefs, cc.warlock.core,
-  cc.warlock.core.client, cc.warlock.core.settings, com.martiansoftware.jsap,
-  cc.warlock.core.client.settings, org.antlr.runtime
+Require-Bundle: org.eclipse.core.runtime, cc.warlock.core
 Export-Package: .,
  cc.warlock.core.script;uses:="org.eclipse.core.runtime,org.osgi.framework",
  cc.warlock.core.script.configuration;
@@ -25,6 +23,12 @@ Export-Package: .,
   uses:="cc.warlock.core.client,
    cc.warlock.core.script,
    cc.warlock.core.script.internal",
+ com.martiansoftware.jsap;uses:="com.martiansoftware.jsap.stringparsers",
+ com.martiansoftware.jsap.ant;uses:="org.apache.tools.ant,com.martiansoftware.jsap",
+ com.martiansoftware.jsap.defaultsources;uses:="com.martiansoftware.jsap",
+ com.martiansoftware.jsap.stringparsers;uses:="com.martiansoftware.jsap",
+ com.martiansoftware.jsap.xml;uses:="com.thoughtworks.xstream,com.martiansoftware.jsap",
+ com.martiansoftware.util,
  org.mozilla.classfile,
  org.mozilla.javascript;uses:="org.mozilla.classfile,org.mozilla.javascript.debug,org.mozilla.javascript.xml",
  org.mozilla.javascript.debug;uses:="org.mozilla.javascript",
@@ -68,6 +72,8 @@ Export-Package: .,
    javax.xml.namespace",
  org.mozilla.javascript.xmlimpl;uses:="org.mozilla.javascript,org.w3c.dom,org.mozilla.javascript.xml"
 Bundle-ClassPath: lib/js.jar,
+ lib/JSAP-2.1.jar,
+ lib/antlr-3.5.2-complete-no-st3.jar,
  warlock2-script-core.jar,
  warlock2-script-core-eclipse.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

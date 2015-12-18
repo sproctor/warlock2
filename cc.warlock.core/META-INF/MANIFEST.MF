@@ -10,8 +10,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/commons-lang-2.6.jar,
  lib/commons-codec-1.5.jar,
  warlock2-core.jar,
- warlock2-core-eclipse.jar,
- lib/JSAP-2.1.jar
+ warlock2-core-eclipse.jar
 Export-Package: cc.warlock.core;uses:="org.eclipse.core.runtime,org.osgi.framework",
  cc.warlock.core.client;
   uses:="cc.warlock.core.settings,
@@ -27,12 +26,6 @@ Export-Package: cc.warlock.core;uses:="org.eclipse.core.runtime,org.osgi.framewo
    org.eclipse.core.runtime.preferences,
    javax.crypto",
  cc.warlock.core.network;uses:="cc.warlock.core.client",
- com.martiansoftware.jsap;uses:="com.martiansoftware.jsap.stringparsers",
- com.martiansoftware.jsap.ant;uses:="org.apache.tools.ant,com.martiansoftware.jsap",
- com.martiansoftware.jsap.defaultsources;uses:="com.martiansoftware.jsap",
- com.martiansoftware.jsap.stringparsers;uses:="com.martiansoftware.jsap",
- com.martiansoftware.jsap.xml;uses:="com.thoughtworks.xstream,com.martiansoftware.jsap",
- com.martiansoftware.util,
  org.apache.commons.codec,
  org.apache.commons.codec.binary;uses:="org.apache.commons.codec",
  org.apache.commons.codec.language;uses:="org.apache.commons.codec",
