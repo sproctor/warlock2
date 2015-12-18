@@ -13,6 +13,30 @@
   <artifactId>cc.warlock.core.stormfront</artifactId>
   <packaging>eclipse-plugin</packaging>
 
+  <build>
+    <pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>ant-magic</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <ant antfile="${basedir}/buildParsers.xml"
+                     target="create"/>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    </pluginManagement>
+  </build>
   <!--  <build>
     <plugins>
       <plugin>
