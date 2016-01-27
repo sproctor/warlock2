@@ -4,7 +4,7 @@
 <product name="Warlock 2" uid="warlock.product" id="cc.warlock.rcp.product" application="cc.warlock.rcp.warlock" version="2.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/cc.warlock.rcp/images/warlock-about.gif"/>
+      <image path="/cc.warlock.build.p2/images/warlock-about.gif"/>
       <text>
          %aboutText
       </text>
@@ -26,14 +26,14 @@
       startupMessageRect="163,76,280,14"
       startupForegroundColor="000000" />
    <launcher name="warlock2">
-      <linux icon="/cc.warlock.rcp/images/warlock_32.xpm"/>
-      <macosx icon="/cc.warlock.rcp/images/warlock.icns"/>
+      <linux icon="/cc.warlock.build.p2/images/warlock_32.xpm"/>
+      <macosx icon="/cc.warlock.build.p2/images/warlock.icns"/>
       <solaris/>
       <win useIco="false">
          <bmp
-            winSmallHigh="/cc.warlock.rcp/images/warlock_16.bmp"
-            winMediumHigh="/cc.warlock.rcp/images/warlock_32.bmp"
-            winLargeHigh="/cc.warlock.rcp/images/warlock_48.bmp"/>
+            winSmallHigh="/cc.warlock.build.p2/images/warlock_16.bmp"
+            winMediumHigh="/cc.warlock.build.p2/images/warlock_32.bmp"
+            winLargeHigh="/cc.warlock.build.p2/images/warlock_48.bmp"/>
       </win>
    </launcher>
 
