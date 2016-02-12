@@ -243,10 +243,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		if(getEntry() != null) {
 			getEntry().loadSettings(settings);
 		}
-		
-		if (HandsView.getDefault() != null) {
-			HandsView.getDefault().loadSettings(settings);
-		}
 	}
 	
 	@Override
@@ -279,7 +275,6 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 //		});
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (IWarlockClient.class.equals(adapter)) {

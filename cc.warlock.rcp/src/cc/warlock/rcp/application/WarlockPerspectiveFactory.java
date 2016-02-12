@@ -55,9 +55,6 @@ public class WarlockPerspectiveFactory implements IPerspectiveFactory {
 		mainFolder.addView(ConnectionView.VIEW_ID);
 		
 		mainFolder.addPlaceholder("*GameView:*");
-
-//		layout.addStandaloneView(HandsView.VIEW_ID, false, IPageLayout.TOP, 0.05f, GameView.VIEW_ID);
-//		layout.addStandaloneView(StatusView.VIEW_ID, false, IPageLayout.RIGHT, .5f, HandsView.VIEW_ID);
 		
 		IPlaceholderFolderLayout topFolder =
 			layout.createPlaceholderFolder(TOP_FOLDER_ID, IPageLayout.TOP, 0.15f, MAIN_FOLDER_ID);

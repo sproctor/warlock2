@@ -59,33 +59,31 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	private IWarlockClient activeClient;
 	private WarlockText activeText;
 	private WarlockStyle sentStyle;
-	private SWTConnectionListenerAdapter connListener;
-	private SWTWarlockClientListener clientListener;
+	private SWTConnectionListenerAdapter connListener = new SWTConnectionListenerAdapter(DebugView.this);;
+	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+		@Override
+		public void clientConnected(final IWarlockClient client) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run () {
+					IConnection conn = client.getConnection();
+					if(conn != null) {
+						conn.removeConnectionListener(connListener);
+						conn.addConnectionListener(connListener);
+					}
+				}
+			});
+		}
+		@Override
+		public void clientDisconnected(IWarlockClient client) {}
+		@Override
+		public void clientSettingsLoaded(IWarlockClient client) {}
+	});;
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.views.DebugView";
 	
 	public DebugView() {
 		sentStyle = new WarlockStyle();
 		sentStyle.setForegroundColor(new WarlockColor("#FF0000"));
-		connListener = new SWTConnectionListenerAdapter(DebugView.this);
-		clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
-			@Override
-			public void clientConnected(final IWarlockClient client) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run () {
-						IConnection conn = client.getConnection();
-						if(conn != null) {
-							conn.removeConnectionListener(connListener);
-							conn.addConnectionListener(connListener);
-						}
-					}
-				});
-			}
-			@Override
-			public void clientDisconnected(IWarlockClient client) {}
-			@Override
-			public void clientSettingsLoaded(IWarlockClient client) {}
-		});
 		
 		// Add listeners to existing clients
 		for(IWarlockClient client : WarlockClientRegistry.getActiveClients()) {

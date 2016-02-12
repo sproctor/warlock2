@@ -49,12 +49,14 @@ public class WarlockClientRegistry {
 	
 	public static void clientConnected (IWarlockClient client)
 	{
+		clients.add(client);
 		for (IWarlockClientListener listener : listeners)
 			listener.clientConnected(client);
 	}
 	
 	public static void clientDisconnected (IWarlockClient client)
 	{
+		clients.remove(client);
 		for (IWarlockClientListener listener : listeners)
 			listener.clientDisconnected(client);
 	}
@@ -68,15 +70,5 @@ public class WarlockClientRegistry {
 	public static List<IWarlockClient> getActiveClients ()
 	{
 		return Collections.unmodifiableList(clients);
-	}
-	
-	public static List<IWarlockClient> getActiveClientsOrListen (IWarlockClientListener listener)
-	{
-		if (clients.size() > 0) {
-			return getActiveClients();
-		} else {
-			addWarlockClientListener(listener);
-			return Collections.emptyList();
-		}
 	}
 }

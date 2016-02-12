@@ -38,7 +38,6 @@ import cc.warlock.core.stormfront.network.SGEConnection;
 import cc.warlock.core.stormfront.network.StormFrontConnection;
 import cc.warlock.rcp.stormfront.ui.StormFrontPerspectiveFactory;
 import cc.warlock.rcp.stormfront.ui.views.BarsView;
-import cc.warlock.rcp.stormfront.ui.views.HandsView;
 import cc.warlock.rcp.stormfront.ui.views.StormFrontGameView;
 import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.GameView;
@@ -53,8 +52,6 @@ public class LoginUtil {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		
 		try {
-			if (page.findView(HandsView.VIEW_ID) == null)
-				page.showView(HandsView.VIEW_ID);
 			if (page.findView(BarsView.VIEW_ID) == null)
 				page.showView(BarsView.VIEW_ID);
 		} catch (PartInitException e) {

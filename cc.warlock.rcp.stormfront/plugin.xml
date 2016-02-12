@@ -17,13 +17,6 @@
             name="Bars">
       </view>
       <view
-            allowMultiple="false"
-            class="cc.warlock.rcp.stormfront.ui.views.HandsView"
-            icon="images/handview.gif"
-            id="cc.warlock.rcp.stormfront.ui.views.HandsView"
-            name="Hands">
-      </view>
-      <view
             allowMultiple="true"
             class="cc.warlock.rcp.views.StreamView"
             id="cc.warlock.rcp.views.stream.rightStream"

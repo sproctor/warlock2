@@ -104,6 +104,7 @@ public class BarsView extends ViewPart {
 		StormFrontStatus status;
 		WarlockCompass compass;
 		StormFrontDialogControl minivitals;
+		HandsView hands;
 		
 		public BarsPageView(Composite parent, GameView view) {
 			super(parent, SWT.NONE);
@@ -124,7 +125,7 @@ public class BarsView extends ViewPart {
 			status.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING, false, false));
 			
 			compass = new WarlockCompass(this, SWT.NONE, theme);
-			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 2);
+			GridData compassData = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 3);
 			compassData.heightHint = theme.getMainImage().getImageData().height;
 			compass.setLayoutData(compassData);
 			
@@ -132,6 +133,12 @@ public class BarsView extends ViewPart {
 			GridData mvData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 			mvData.heightHint = 20;
 			minivitals.setLayoutData(mvData);
+			
+			hands = new HandsView(this, view);
+			GridData handsData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+			handsData.heightHint = 30;
+			hands.setLayoutData(handsData);
+			
 			
 			view.setEntry(entry);
 			setClient(view.getClient());
