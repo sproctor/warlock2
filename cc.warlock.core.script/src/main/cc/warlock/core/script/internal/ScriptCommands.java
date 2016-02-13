@@ -145,15 +145,14 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		IWarlockClient client = getClient();
 		if(client != null) {
 			setClient(client);
-		} else {
-			viewer.addClientViewerListener(new IWarlockClientViewerListener() {
-				@Override
-				public void clientChanged(IWarlockClient client) {
-					setClient(client);
-					ScriptCommands.this.viewer.removeClientViewerListener(this);
-				}
-			});
 		}
+		viewer.addClientViewerListener(new IWarlockClientViewerListener() {
+			@Override
+			public void clientChanged(IWarlockClient client) {
+				setClient(client);
+				// TODO make sure that we're removed as a listener from the old client
+			}
+		});
 	}
 	
 	private void setClient(IWarlockClient client) {
@@ -308,9 +307,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void streamCleared(IStream stream) {}
 	
 	@Override
-	public void streamFlush(IStream stream) {}
-	
-	@Override
 	public void streamPrompted(IStream stream, String prompt) {
 		synchronized(this) {
 			if(typeAhead > 0)
@@ -456,12 +452,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 
 	@Override
 	public void streamTitleChanged(IStream stream, String title) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void streamCreated(IStream stream) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -70,8 +70,7 @@ public interface IWarlockClient extends IRoomListener {
 	 * @return
 	 */
 	public IConnection getConnection();
-	
-	public void flushStreams();
+	public void setConnection(IConnection connection);
 	
 	/**
 	 * Listen when the client has received a "nextRoom" event
@@ -113,12 +112,12 @@ public interface IWarlockClient extends IRoomListener {
 	/**
 	 * @return The character's name (display name for character)
 	 */
-	public String getCharacterName ();
+	public String getCharacterName();
 	
 	/**
 	 * Set the character's name (this is used in various places)
 	 */
-	public void setCharacterName (String name);
+	public void setCharacterName(String name);
 	
 	/**
 	 * @return The last command sent
@@ -184,7 +183,7 @@ public interface IWarlockClient extends IRoomListener {
 	 */
 	public String getComponent(String componentName);
 	
-	public void setComponent (String componentName, String value, String stream);
+	public void setComponent(String componentName, String value, String stream);
 	
 	public void updateComponent(String name, WarlockString value);
 	

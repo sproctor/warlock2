@@ -31,14 +31,8 @@ package cc.warlock.core.client;
  * IStreamListener implementations will subscribe to an IStream and
  *  receive an event when the Stream receives new data.
  */
-public interface IStreamListener {
-	/**
-	 * Notify Listner than a new stream has been created.
-	 * 
-	 * @param stream New stream
-	 */
-	public void streamCreated(IStream stream);
-	
+public interface IStreamListener
+{	
 	/**
 	 * Notify when stream recieves text
 	 * 
@@ -69,15 +63,6 @@ public interface IStreamListener {
 	 * @param stream
 	 */
 	public void streamCleared (IStream stream);
-	
-	/**
-	 * Flush Stream?
-	 * TODO: What is this?
-	 * 
-	 * @param stream
-	 */
-	public void streamFlush (IStream stream);
-	
 	
 	/**
 	 * Stream title has changed.

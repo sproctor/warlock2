@@ -136,7 +136,7 @@ public class BarsView extends ViewPart {
 			
 			hands = new HandsView(this, view);
 			GridData handsData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-			handsData.heightHint = 30;
+			handsData.heightHint = 20;
 			hands.setLayoutData(handsData);
 			
 			

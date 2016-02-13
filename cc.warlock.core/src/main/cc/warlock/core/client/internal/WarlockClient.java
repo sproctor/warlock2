@@ -115,6 +115,7 @@ public class WarlockClient implements IWarlockClient {
 		WarlockClientRegistry.addWarlockClientListener(listener);
 	}
 	
+	@Override
 	public void dispose() {
 		// Disconnect if we havn't already.
 		if (this.getConnection() != null && this.getConnection().isConnected())
@@ -133,15 +134,17 @@ public class WarlockClient implements IWarlockClient {
 	}
 	
 	// IWarlockClient methods
-	
+	@Override
 	public IConnection getConnection() {
 		return connection;
 	}
 	
+	@Override
 	public void setConnection(IConnection connection) {
 		this.connection = connection;
 	}
 	
+	@Override
 	public synchronized void send(ICommand command) {
 		if(command.isVisible())
 			mainStream.sendCommand(command);
@@ -157,48 +160,48 @@ public class WarlockClient implements IWarlockClient {
 		}
 	}
 	
+	@Override
 	public String getLastCommand() {
 		return lastCommand;
 	}
 	
+	@Override
 	public void setViewer(IWarlockClientViewer viewer) {
 		this.viewer = viewer;
 	}
 	
+	@Override
 	public IWarlockClientViewer getViewer() {
 		return viewer;
 	}
 	
+	@Override
 	public IStream getStream(String streamName) {
 		synchronized(streams) {
 			return streams.get(streamName);
 		}
 	}
 	
+	@Override
 	public Collection<IStream> getStreams() {
 		return streams.values();
 	}
 	
-	public void flushStreams() {
-		synchronized(streams) {
-			for(IStream stream : streams.values()) {
-				stream.flush();
-			}
-		}
-	}
-	
+	@Override
 	public void addRoomListener(IRoomListener roomListener) {
 		synchronized(roomListeners) {
 			roomListeners.add(roomListener);
 		}
 	}
 	
+	@Override
 	public void removeRoomListener(IRoomListener roomListener) {
 		synchronized(roomListeners) {
 			roomListeners.remove(roomListener);
 		}
 	}
 	
+	@Override
 	public void nextRoom() {
 		synchronized(roomListeners) {
 			for(IRoomListener listener : roomListeners)
@@ -206,6 +209,7 @@ public class WarlockClient implements IWarlockClient {
 		}
 	}
 	
+	@Override
 	public IProperty<ICompass> getCompass() {
 		return compass;
 	}
@@ -255,6 +259,7 @@ public class WarlockClient implements IWarlockClient {
 	    }
 	}
 	
+	@Override
 	public Iterator<IWarlockPattern> getHighlightsIterator() {
 		return new MultiIterator<IWarlockPattern>(highlightLists);
 	}
@@ -264,10 +269,12 @@ public class WarlockClient implements IWarlockClient {
 		highlightLists.add(highlights);
 	}
 	
+	@Override
 	public boolean removeHighlights(Collection<IWarlockPattern> highlights) {
 		return highlightLists.remove(highlights);
 	}
 	
+	@Override
 	public void playSound(InputStream stream) {
 		viewer.playSound(stream);
 	}
@@ -287,14 +294,14 @@ public class WarlockClient implements IWarlockClient {
 						iter.remove();
 					}
 				}
-				// TODO: or should this always be called?
-				stream.create();
+				//stream.create();
 			}
 			stream.addStreamListener(logger);
 			return stream;
 		}
 	}
 	
+	@Override
 	public void addStreamListener(String streamName, IStreamListener listener) {
 		IStream stream = streams.get(streamName);
 		if(stream != null) {
@@ -309,6 +316,7 @@ public class WarlockClient implements IWarlockClient {
 		}
 	}
 	
+	@Override
 	public void removeStreamListener(String streamName, IStreamListener listener) {
 		IStream stream = streams.get(streamName);
 		if(stream != null) {
@@ -326,10 +334,12 @@ public class WarlockClient implements IWarlockClient {
 		}
 	}
 	
+	@Override
 	public ICharacterStatus getCharacterStatus() {
 		return status;
 	}
 	
+	@Override
 	public WarlockTimer getTimer(String name) {
 		WarlockTimer timer = timers.get(name);
 		if(timer == null) {
@@ -340,18 +350,21 @@ public class WarlockClient implements IWarlockClient {
 		return timer;
 	}
 	
+	@Override
 	public void syncTime(Long time) {
 		for(WarlockTimer timer : timers.values()) {
 			timer.sync(time);
 		}
 	}
 	
+	@Override
 	public void setComponent (String componentName, String value, String streamName) {
 		String name = componentName.toLowerCase();
 
 		components.put(name, Pair.of(value, streamName));
 	}
 	
+	@Override
 	public void updateComponent(String componentName, WarlockString value) {
 		String name = componentName.toLowerCase();
 
@@ -365,6 +378,7 @@ public class WarlockClient implements IWarlockClient {
 			stream.updateComponent(componentName, value);
 	}
 	
+	@Override
 	public String getComponent(String name) {
 		Pair<String, String> pair = components.get(name.toLowerCase());
 		if (pair != null)
@@ -372,6 +386,7 @@ public class WarlockClient implements IWarlockClient {
 		return null;
 	}
 	
+	@Override
 	public WarlockDialog getDialog(String id) {
 		WarlockDialog dialog = dialogs.get(id);
 		
@@ -383,6 +398,7 @@ public class WarlockClient implements IWarlockClient {
 		return dialog;
 	}
 	
+	@Override
 	public IProperty<String> getProperty(String name) {
 		IProperty<String> property = properties.get(name);
 		if(property == null) {
@@ -392,10 +408,12 @@ public class WarlockClient implements IWarlockClient {
 		return property;
 	}
 	
+	@Override
 	public void setProperty(String name, IProperty<String> property) {
 		properties.put(name, property);
 	}
 	
+	@Override
 	public void setProperty(String name, String value) {
 		IProperty<String> property = getProperty(name);
 		property.set(value);
@@ -456,14 +474,17 @@ public class WarlockClient implements IWarlockClient {
 		return getGameCode() + getPlayerId();
 	}
 	
+	@Override
 	public IClientSettings getClientSettings() {
 		return clientSettings;
 	}
 	
+	@Override
 	public synchronized void put(WarlockString text) {
 		mainStream.put(text);
 	}
 	
+	@Override
 	public synchronized void put(String streamName, WarlockString text) {
 		IStream stream = streams.get(streamName);
 		if(stream == null) {
@@ -480,15 +501,18 @@ public class WarlockClient implements IWarlockClient {
 		}
 	}
 	
+	@Override
 	public synchronized void prompt(String prompt) {
 		mainStream.prompt(prompt);
 	}
 	
 	// TODO flush buffer before and after echo
+	@Override
 	public void echo(String text) {
 		echo(text, WarlockStyle.echoStyle);
 	}
 	
+	@Override
 	public synchronized void echo(String text, IWarlockStyle style) {
 		WarlockString string = new WarlockString(text);
 		string.addStyle(style);
@@ -496,10 +520,12 @@ public class WarlockClient implements IWarlockClient {
 		mainStream.echo(string);
 	}
 	
+	@Override
 	public void echo(String streamName, String text) {
 		echo(streamName, text, WarlockStyle.echoStyle);
 	}
 	
+	@Override
 	public synchronized void echo(String streamName, String text, IWarlockStyle style) {
 		WarlockString string = new WarlockString(text, style);
 
@@ -518,15 +544,18 @@ public class WarlockClient implements IWarlockClient {
 		}
 	}
 	
+	@Override
 	public synchronized void clear(String streamName) {
 		streams.get(streamName).clear();
 	}
 	
+	@Override
 	public synchronized String getStreamTitle(String streamName) {
 		IStream stream = streams.get(streamName);
 		return stream == null ? "" : stream.getFullTitle();
 	}
 	
+	@Override
 	public synchronized WarlockString getStreamHistory(String streamName) {
 		IStream stream = streams.get(streamName);
 		return stream == null ? null : stream.getHistory();

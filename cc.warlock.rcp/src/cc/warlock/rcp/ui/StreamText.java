@@ -14,14 +14,12 @@ import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.client.SWTStreamListener;
 import cc.warlock.rcp.views.GameView;
 
-public class StreamText extends WarlockText implements IStreamListener {
-
+public class StreamText extends WarlockText implements IStreamListener
+{
 	private boolean isPrompting = false;
 	private String prompt = null;
 	private Property<String> title = new Property<String>();
 	private IStreamListener streamListener = new SWTStreamListener(this);
-	
-	private WarlockString textBuffer;
 	
 	private static final WarlockString basicPrompt = new WarlockString(">");
 	
@@ -29,51 +27,18 @@ public class StreamText extends WarlockText implements IStreamListener {
 		super(parent, viewer, streamName);
 	}
 	
-	protected void bufferText (WarlockString string)
-	{
-		if(textBuffer == null) {
-			textBuffer = new WarlockString();
-		}
-
-		textBuffer.append(string);
-	}
-	
-	protected void bufferText (String string)
-	{
-		if(textBuffer == null) {
-			textBuffer = new WarlockString();
-		}
-
-		textBuffer.append(string);
-	}
-	
 	public Property<String> getTitle() {
 		return title;
 	}
 	
-	public void streamCreated(IStream stream) {
-		this.title.set(stream.getFullTitle());
-	}
-	
+	@Override
 	public void componentUpdated(IStream stream, String id, WarlockString value) {
-		flushBuffer();
 		replaceMarker(id, value);
 	}
-
+	
+	@Override
 	public void streamCleared(IStream stream) {
-		flushBuffer();
 		clearText();
-	}
-
-	public void streamFlush(IStream stream) {
-		flushBuffer();
-	}
-
-	private void flushBuffer() {
-		if(textBuffer != null) {
-			append(textBuffer);
-			textBuffer = null;
-		}
 	}
 	
 	private void showPrompt(String prompt) {
@@ -83,7 +48,6 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 	
 	public void streamPrompted(IStream stream, String prompt) {
-		flushBuffer();
 		if(!isPrompting) {
 			isPrompting = true;
 			if(prompt != null)
@@ -102,8 +66,6 @@ public class StreamText extends WarlockText implements IStreamListener {
 	}
 
 	public void streamReceivedCommand(IStream stream, ICommand command) {
-		flushBuffer();
-		
 		WarlockString string = new WarlockString(command.getText(), WarlockStyle.commandStyle);
 		
 		if(!isPrompting && prompt != null)
@@ -124,7 +86,7 @@ public class StreamText extends WarlockText implements IStreamListener {
 			isPrompting = false;
 		}
 		
-		bufferText(text);
+		append(text);
 	}
 	
 	public void streamTitleChanged(IStream stream, String title) {
@@ -154,10 +116,8 @@ public class StreamText extends WarlockText implements IStreamListener {
 			title.set(client.getStreamTitle(this.getName()));
 			WarlockString history = client.getStreamHistory(this.getName());
 			if(history != null)
-				bufferText(history);
+				append(history);
 		}
-		
-		this.flushBuffer();
 	}
 	
 	public void dispose() {

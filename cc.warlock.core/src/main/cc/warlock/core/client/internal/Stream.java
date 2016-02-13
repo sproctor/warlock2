@@ -60,37 +60,25 @@ public class Stream implements IStream {
 		}
 	}
 
+	@Override
 	public synchronized void addStreamListener(IStreamListener listener) {
 		if (!listeners.contains(listener))
 			listeners.add(listener);
 	}
 	
+	@Override
 	public synchronized void removeStreamListener(IStreamListener listener) {
 		listeners.remove(listener);
 	}
-
-	/*
-	 * this function should be called when the stream is first created, after
-	 * the initial listeners are added.
-	 */
-	public synchronized void create() {
-		for(IStreamListener listener : listeners) {
-			listener.streamCreated(this);
-		}
-	}
 	
+	@Override
 	public synchronized void clear() {
 		for(IStreamListener listener : listeners) {
 			listener.streamCleared(this);
 		}
 	}
 	
-	public synchronized void flush() {
-		for(IStreamListener listener : listeners) {
-			listener.streamFlush(this);
-		}
-	}
-	
+	@Override
 	public synchronized void put(WarlockString text) {
 		for(IStreamListener listener : listeners) {
 			try {
@@ -102,6 +90,7 @@ public class Stream implements IStream {
 		}
 	}
 	
+	@Override
 	public synchronized void prompt(String prompt) {
 		for (IStreamListener listener : listeners)
 		{
@@ -113,6 +102,7 @@ public class Stream implements IStream {
 		}
 	}
 	
+	@Override
 	public synchronized void sendCommand(ICommand command) {
 		for (IStreamListener listener : listeners)
 		{
@@ -120,28 +110,35 @@ public class Stream implements IStream {
 		}
 	}
 	
+	@Override
 	public synchronized void echo(WarlockString text) {
 		for (IStreamListener listener : listeners)
 		{
 			try {
-				listener.streamFlush(this);
 				listener.streamReceivedText(this, text);
-				listener.streamFlush(this);
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
 		}
 	}
 	
+	@Override
 	public String getName() {
 		return streamName;
 	}
 	
+	@Override
 	public IWarlockClient getClient ()
 	{
 		return client;
 	}
 
+	/*
+	 * This should be called when the stream is first created
+	 * (non-Javadoc)
+	 * @see cc.warlock.core.client.IStream#setTitle(java.lang.String)
+	 */
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 		
@@ -150,34 +147,42 @@ public class Stream implements IStream {
 		}
 	}
 	
+	@Override
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
 	}
 	
+	@Override
 	public String getTitle() {
 		return title;
 	}
 	
+	@Override
 	public String getFullTitle() {
 		return subtitle == null ? title : title + subtitle;
 	}
 	
+	@Override
 	public void setClosedTarget(String target) {
 		this.closedTarget = target;
 	}
 	
+	@Override
 	public String getClosedTarget() {
 		return closedTarget;
 	}
 	
+	@Override
 	public void setClosedStyle(String style) {
 		this.closedStyle = style;
 	}
 	
+	@Override
 	public String getClosedStyle() {
 		return closedStyle;
 	}
 	
+	@Override
 	public synchronized void updateComponent(String id, WarlockString text) {
 		for (IStreamListener listener : listeners)
 		{
@@ -189,14 +194,17 @@ public class Stream implements IStream {
 		}
 	}
 	
+	@Override
 	public void setLocation(String location) {
 		this.location = location;
 	}
 	
+	@Override
 	public String getLocation() {
 		return location;
 	}
 	
+	@Override
 	public WarlockString getHistory() {
 		if(history == null)
 			return null;

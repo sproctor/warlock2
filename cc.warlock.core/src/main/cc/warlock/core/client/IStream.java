@@ -46,9 +46,6 @@ public interface IStream {
 	
 	public void prompt(String prompt);
 	public void sendCommand(ICommand command);
-	//public boolean isPrompting();
-	public void flush();
-	public void create();
 	
 	public void setClosedTarget(String target);
 	public String getClosedTarget();

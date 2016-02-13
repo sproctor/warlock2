@@ -71,7 +71,8 @@ import cc.warlock.rcp.util.SoundPlayer;
 /**
  * @author marshall
  */
-public abstract class GameView extends WarlockView implements IWarlockClientViewer {
+public abstract class GameView extends WarlockView implements IWarlockClientViewer
+{
 	public static final String VIEW_ID = "cc.warlock.rcp.ui.views.GameView";
 	
 	private static ArrayList<GameView> openViews = new ArrayList<GameView>();
