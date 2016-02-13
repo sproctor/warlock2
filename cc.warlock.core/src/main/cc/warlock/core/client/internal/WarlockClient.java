@@ -37,6 +37,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import cc.warlock.core.client.ICharacterStatus;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.ICommand;
@@ -82,8 +84,7 @@ public class WarlockClient implements IWarlockClient {
 	private ArrayList<Collection<? extends IWarlockPattern>> highlightLists = new ArrayList<Collection<? extends IWarlockPattern>>();
 	private ICharacterStatus status;
 	private HashMap<String, WarlockTimer> timers = new HashMap<String, WarlockTimer>();
-	private HashMap<String, String> components = new HashMap<String, String>();
-	private HashMap<String, String> componentStreams = new HashMap<String, String>();
+	private HashMap<String, Pair<String, String>> components = new HashMap<String, Pair<String, String>>();
 	private HashMap<String, WarlockDialog> dialogs = new HashMap<String, WarlockDialog>();
 	private HashMap<String, IProperty<String>> properties = new HashMap<String, IProperty<String>>();
 	private String gameCode;
@@ -348,24 +349,27 @@ public class WarlockClient implements IWarlockClient {
 	public void setComponent (String componentName, String value, String streamName) {
 		String name = componentName.toLowerCase();
 
-		components.put(name, value);
-		componentStreams.put(name, streamName);
+		components.put(name, Pair.of(value, streamName));
 	}
 	
 	public void updateComponent(String componentName, WarlockString value) {
 		String name = componentName.toLowerCase();
 
-		components.put(name, value.toString());
+		Pair<String, String> oldPair = components.get(name);
+		String streamName = oldPair.getRight();
+		components.put(name, Pair.of(value.toString(), streamName));
 		
-		String streamName = componentStreams.get(name);
-		IStream stream = streamName == null ? null : streams.get(streamName);
+		IStream stream = streams.get(streamName);
 		// FIXME: The streams store them in a case-senstive fashion.
 		if(stream != null)
 			stream.updateComponent(componentName, value);
 	}
 	
 	public String getComponent(String name) {
-		return components.get(name.toLowerCase());
+		Pair<String, String> pair = components.get(name.toLowerCase());
+		if (pair != null)
+			return pair.getLeft();
+		return null;
 	}
 	
 	public WarlockDialog getDialog(String id) {

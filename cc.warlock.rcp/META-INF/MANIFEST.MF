@@ -44,4 +44,4 @@ Export-Package: cc.warlock.rcp.actions,
  cc.warlock.rcp.util,
  cc.warlock.rcp.views,
  cc.warlock.rcp.wizards
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

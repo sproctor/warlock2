@@ -7,34 +7,19 @@ Bundle-Activator: cc.warlock.core.Activator
 Bundle-Vendor: Warlock Team
 Require-Bundle: org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/commons-lang-2.6.jar,
- lib/commons-codec-1.5.jar,
+Bundle-ClassPath: lib/commons-lang3-3.4.jar,
+ lib/commons-codec-1.10.jar,
  warlock2-core.jar,
  warlock2-core-eclipse.jar
-Export-Package: cc.warlock.core;uses:="org.eclipse.core.runtime,org.osgi.framework",
- cc.warlock.core.client;
-  uses:="cc.warlock.core.settings,
-   cc.warlock.core.network,
-   cc.warlock.core.client.logging,
-   cc.warlock.core.client.internal",
- cc.warlock.core.client.internal;uses:="cc.warlock.core.network,cc.warlock.core.client.logging,cc.warlock.core.client",
+Export-Package: cc.warlock.core;uses:="org.osgi.framework,org.eclipse.core.runtime",
+ cc.warlock.core.client;uses:="cc.warlock.core.settings,cc.warlock.core.client.internal,cc.warlock.core.network",
+ cc.warlock.core.client.internal;uses:="cc.warlock.core.settings,cc.warlock.core.network,cc.warlock.core.client",
  cc.warlock.core.client.logging;uses:="cc.warlock.core.settings,cc.warlock.core.client",
  cc.warlock.core.client.settings;uses:="cc.warlock.core.settings,org.osgi.service.prefs,cc.warlock.core.client",
- cc.warlock.core.settings;
-  uses:="cc.warlock.core.client.settings,
-   org.osgi.service.prefs,
-   org.eclipse.core.runtime.preferences,
-   javax.crypto",
  cc.warlock.core.network;uses:="cc.warlock.core.client",
+ cc.warlock.core.settings;uses:="org.osgi.service.prefs,org.eclipse.core.runtime.preferences,cc.warlock.core.client",
  org.apache.commons.codec,
  org.apache.commons.codec.binary;uses:="org.apache.commons.codec",
  org.apache.commons.codec.language;uses:="org.apache.commons.codec",
- org.apache.commons.lang;uses:="org.apache.commons.lang.exception",
- org.apache.commons.lang.builder,
- org.apache.commons.lang.enums,
- org.apache.commons.lang.exception,
- org.apache.commons.lang.math,
- org.apache.commons.lang.mutable,
- org.apache.commons.lang.text,
- org.apache.commons.lang.time
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ org.apache.commons.lang3
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

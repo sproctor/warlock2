@@ -21,7 +21,7 @@
  */
 package cc.warlock.core.stormfront.xml;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class StormFrontAttribute {
 
