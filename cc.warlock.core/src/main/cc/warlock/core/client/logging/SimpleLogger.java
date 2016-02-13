@@ -43,8 +43,8 @@ import cc.warlock.core.client.internal.WarlockClient;
  * @author marshall
  *
  */
-public class SimpleLogger implements IStreamListener {
-
+public class SimpleLogger implements IStreamListener
+{
 	private IWarlockClient client;
 	private int maxBufferSize = 2000;
 	private StringBuffer buffer = new StringBuffer(maxBufferSize);
@@ -82,7 +82,7 @@ public class SimpleLogger implements IStreamListener {
 			appendBuffer(command.getText() + "\n");
 	}
 	
-	protected synchronized void appendBuffer(String str) {
+	private synchronized void appendBuffer(String str) {
 		if (nextlineStamp) {
 			nextlineStamp = false;
 			str = timeFormat.format(Calendar.getInstance().getTime()) + str;
@@ -93,11 +93,11 @@ public class SimpleLogger implements IStreamListener {
 		}
 		buffer.append(str);
 		if (buffer.length() >= maxBufferSize) {
-			dumpBuffer();
+			flush();
 		}
 	}
 
-	protected File getLogFile ()
+	private File getLogFile ()
 	{
 		String characterName = client.getCharacterName();
 		
@@ -105,11 +105,7 @@ public class SimpleLogger implements IStreamListener {
 			characterName + "-" + dateFormat.format(Calendar.getInstance().getTime()) + ".txt");
 	}
 	
-	public synchronized void flush() {
-		dumpBuffer();
-	}
-	
-	protected void dumpBuffer ()
+	public void flush()
 	{
 		try {
 			FileOutputStream stream = new FileOutputStream(getLogFile(), true);
@@ -123,20 +119,10 @@ public class SimpleLogger implements IStreamListener {
 		
 		buffer.setLength(0);
 	}
-
-	@Override
-	public void streamCreated(IStream stream) {
-		// Don't care
-	}
 	
 	@Override
 	public void streamCleared(IStream stream) {
 		// Don't care
-	}
-
-	@Override
-	public void streamFlush(IStream stream) {
-		// Don't care .. or maybe we should flush the buffer here?
 	}
 
 	@Override

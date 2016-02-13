@@ -39,8 +39,8 @@ import java.util.Collection;
  */
 public interface IWarlockClientViewer
 {
-	public IWarlockClient getClient ();
-	public IWarlockEntry getEntry ();
+	public IWarlockClient getClient();
+	public IWarlockEntry getEntry();
 	
 	public void send(ICommand command);
 	

@@ -308,9 +308,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 	public void streamCleared(IStream stream) {}
 	
 	@Override
-	public void streamFlush(IStream stream) {}
-	
-	@Override
 	public void streamPrompted(IStream stream, String prompt) {
 		synchronized(this) {
 			if(typeAhead > 0)
@@ -456,12 +453,6 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 
 	@Override
 	public void streamTitleChanged(IStream stream, String title) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void streamCreated(IStream stream) {
 		// TODO Auto-generated method stub
 		
 	}

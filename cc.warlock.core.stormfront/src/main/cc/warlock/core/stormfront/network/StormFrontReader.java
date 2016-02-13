@@ -96,7 +96,6 @@ public class StormFrontReader extends BufferedReader {
 		if(recentText.length() > 0) {
 			connection.dataReady(recentText.toString());
 			recentText.setLength(0);
-			connection.getClient().flushStreams();
 		}
 	}
 }

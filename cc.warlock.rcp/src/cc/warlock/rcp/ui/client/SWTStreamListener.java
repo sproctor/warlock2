@@ -37,19 +37,6 @@ public class SWTStreamListener implements IStreamListener {
 		this.listener = listener;
 	}
 	
-	private class CreatedWrapper implements Runnable
-	{
-		private IStream stream;
-		
-		public CreatedWrapper(IStream stream) {
-			this.stream = stream;
-		}
-		
-		public void run() {
-			listener.streamCreated(stream);
-		}
-	}
-	
 	private class ClearedWrapper implements Runnable
 	{
 		private IStream stream;
@@ -123,19 +110,6 @@ public class SWTStreamListener implements IStreamListener {
 		}
 	}
 	
-	private class FlushWrapper implements Runnable
-	{
-		private IStream stream;
-		
-		public FlushWrapper(IStream stream) {
-			this.stream = stream;
-		}
-		
-		public void run() {
-			listener.streamFlush(stream);
-		}
-	}
-	
 	private class ComponentUpdatedWrapper implements Runnable
 	{
 		private IStream stream;
@@ -158,38 +132,37 @@ public class SWTStreamListener implements IStreamListener {
 		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
 	}
 	
-	public void streamCreated(IStream stream) {
-		run(new CreatedWrapper(stream));
-	}
-	
+	@Override
 	public void streamCleared(IStream stream) {
 		run(new ClearedWrapper(stream));
 	}
-
+	
+	@Override
 	public void streamReceivedText(IStream stream, WarlockString text) {
 		run(new ReceivedTextWrapper(stream, text));
 	}
 	
+	@Override
 	public void streamTitleChanged(IStream stream, String title) {
 		run(new TitleChangedWrapper(stream, title));
 	}
 	
+	@Override
 	public void streamPrompted(IStream stream, String prompt) {
 		run(new PromptedWrapper(stream, prompt));
 	}
-
+	
+	@Override
 	public void streamReceivedCommand (IStream stream, ICommand command) {
 		run(new CommandWrapper(stream, command));
 	}
 	
-	public void streamFlush(IStream stream) {
-		run(new FlushWrapper(stream));
-	}
-	
+	@Override
 	public void componentUpdated(IStream stream, String id, WarlockString text) {
 		run(new ComponentUpdatedWrapper(stream, id, text));
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof SWTStreamListener) {
 			return this.listener.equals(((SWTStreamListener)obj).listener);

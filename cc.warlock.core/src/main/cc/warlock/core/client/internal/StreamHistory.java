@@ -6,28 +6,29 @@ import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.WarlockString;
 import cc.warlock.core.client.WarlockStringMarker;
 
-public class StreamHistory implements IStreamListener {
-	
+public class StreamHistory implements IStreamListener
+{
 	private WarlockString buffer = new WarlockString();
 	private int lineLimit = 5000;
-
+	
+	@Override
 	public void streamCleared(IStream stream) {
 		buffer.clear();
 	}
-
-	public void streamCreated(IStream stream) {}
-
-	public void streamFlush(IStream stream) {}
-
+	
+	@Override
 	public void streamPrompted(IStream stream, String prompt) {}
-
+	
+	@Override
 	public void streamReceivedCommand(IStream stream, ICommand command) {}
-
+	
+	@Override
 	public void streamReceivedText(IStream stream, WarlockString text) {
 		buffer.append(text);
 		constrainLines();
 	}
-
+	
+	@Override
 	public void componentUpdated(IStream stream, String id, WarlockString value) {
 		WarlockStringMarker marker = buffer.getMarkerByComponent(id);
 		if(marker == null)
@@ -46,7 +47,8 @@ public class StreamHistory implements IStreamListener {
 		}
 		constrainLines();
 	}
-
+	
+	@Override
 	public void streamTitleChanged(IStream stream, String title) {}
 	
 	public WarlockString getHistory() {

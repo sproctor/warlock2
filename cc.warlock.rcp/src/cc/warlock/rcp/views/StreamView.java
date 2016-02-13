@@ -44,10 +44,9 @@ import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
 import cc.warlock.rcp.util.ColorUtil;
 
-public class StreamView extends WarlockView implements IGameViewFocusListener {
-	
+public class StreamView extends WarlockView implements IGameViewFocusListener
+{	
 	public static final String STREAM_VIEW_PREFIX = "cc.warlock.rcp.views.stream.";
-	
 	public static final String RIGHT_STREAM_PREFIX = "rightStream";
 	public static final String LEFT_STREAM_PREFIX = "leftStream";
 	public static final String TOP_STREAM_PREFIX = "topStream";
