@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientViewer;
 
-public abstract class AbstractScript implements IScript {
-
+public abstract class AbstractScript implements IScript
+{
 	private ArrayList<IScriptListener> listeners;
 	private boolean stopped = true;
 	private IScriptInfo info;
@@ -42,31 +42,37 @@ public abstract class AbstractScript implements IScript {
 		this.viewer = viewer;
 	}
 	
-	public void start () {
+	public void start() {
 		stopped = false;
 		echo("[script started: " + getName() + "]");
 		
-		for (IScriptListener listener : listeners) listener.scriptStarted(this);
+		for (IScriptListener listener : listeners)
+			listener.scriptStarted(this);
 	}
 	
+	@Override
 	public boolean isRunning() {
 		return !stopped;
 	}
 	
+	@Override
 	public void stop() {
 		stopped = true;
 		echo("[script stopped: " + getName() + "]");
 		getCommands().stop();
 		
-		for (IScriptListener listener : listeners) listener.scriptStopped(this, true);
+		for (IScriptListener listener : listeners)
+			listener.scriptStopped(this, true);
 		
 		listeners.clear();
 	}
-
+	
+	@Override
 	public boolean isSuspended() {
 		return getCommands().isSuspended();
 	}
 	
+	@Override
 	public void suspend() {
 		if(!getCommands().isSuspended()) {
 			echo("[script paused: " + getName() + "]");
@@ -78,6 +84,7 @@ public abstract class AbstractScript implements IScript {
 		}
 	}
 	
+	@Override
 	public void resume() {
 		if(getCommands().isSuspended()) {
 			echo("[script resumed: " + getName() + "]");
@@ -89,35 +96,41 @@ public abstract class AbstractScript implements IScript {
 		}
 	}
 	
+	@Override
 	public void addScriptListener(IScriptListener listener) {
 		listeners.add(listener);
 	}
 	
+	@Override
 	public void removeScriptListener(IScriptListener listener) {
 		listeners.remove(listener);
 	}
 	
+	@Override
 	public String getName() {
 		return info.getScriptName();
 	}
 	
+	@Override
 	public IScriptInfo getScriptInfo() {
 		return info;
 	}
 	
-	protected void echo(String message) {
+	private void echo(String message) {
 		getClient().echo(message + "\n");
 	}
 	
+	@Override
 	public IWarlockClient getClient() {
 		return viewer.getClient();
 	}
 	
+	@Override
 	public IWarlockClientViewer getViewer() {
 		return viewer;
 	}
 	
-	abstract public IScriptCommands getCommands();
+	abstract protected IScriptCommands getCommands();
 	
 	/*
 	 * Debug levels:
@@ -127,10 +140,12 @@ public abstract class AbstractScript implements IScript {
 	 *   3: Verbose script debugging output
 	 *   4: For Warlock developers, engine debugging output
 	 */
+	@Override
 	public void setDebugLevel(int level) {
 		this.debugLevel = level;
 	}
 	
+	@Override
 	public int getDebugLevel() {
 		return this.debugLevel;
 	}

@@ -34,10 +34,9 @@ public class WSLScriptContext implements Runnable {
 		private IWSLCommand returnCommand;
 		private HashMap<String, IWSLValue> localVariables;
 		
-		@SuppressWarnings("unchecked")
 		public WSLFrame(IWSLCommand command, HashMap<String, IWSLValue> variables) {
 			this.returnCommand = command;
-			this.localVariables = (HashMap<String, IWSLValue>)variables.clone();
+			this.localVariables = new HashMap<String, IWSLValue>(variables);
 		}
 
 		public void restore() {

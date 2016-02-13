@@ -145,15 +145,14 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 		IWarlockClient client = getClient();
 		if(client != null) {
 			setClient(client);
-		} else {
-			viewer.addClientViewerListener(new IWarlockClientViewerListener() {
-				@Override
-				public void clientChanged(IWarlockClient client) {
-					setClient(client);
-					ScriptCommands.this.viewer.removeClientViewerListener(this);
-				}
-			});
 		}
+		viewer.addClientViewerListener(new IWarlockClientViewerListener() {
+			@Override
+			public void clientChanged(IWarlockClient client) {
+				setClient(client);
+				// TODO make sure that we're removed as a listener from the old client
+			}
+		});
 	}
 	
 	private void setClient(IWarlockClient client) {
