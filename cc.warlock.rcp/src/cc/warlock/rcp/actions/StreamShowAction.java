@@ -26,27 +26,25 @@ package cc.warlock.rcp.actions;
 
 import java.util.Random;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 
-import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.views.UserStream;
 
 /**
  * @author Will Robertson
  * Action for Selecting UserStreams from the Menu
  */
-public class StreamShowAction extends Action {
-	private String name;
+public class StreamShowAction extends AbstractHandler {
+	public final static String VIEW_ID = "cc.warlock.rcp.actions.StreamShowAction";
 	
-	public StreamShowAction (String name) {
-		super(name);
-		this.name = name;
-		setDescription("Custom output window: " + this.name);
-		setImageDescriptor(WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_WINDOW));
-	}
-	
-	public void run() {
-		UserStream.getViewForUserStream(this.name);
+	@Override
+	public Object execute(ExecutionEvent event)
+	throws ExecutionException{
+		String name = event.getParameter("name");
+		UserStream.getViewForUserStream(name);
+		return null;
 	}
 	
 	protected static String generateUniqueId () {

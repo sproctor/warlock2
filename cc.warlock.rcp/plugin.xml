@@ -261,10 +261,19 @@
             id="cc.warlock.rcp.command.preferences"
             name="Preferences">
       </command>
-      <command
+      <!--<command
             defaultHandler="cc.warlock.rcp.menu.DebugOpen"
             id="cc.warlock.rcp.command.debug"
             name="Debug">
+      </command>-->
+      <command
+            defaultHandler="cc.warlock.rcp.actions.StreamShowAction"
+            id="cc.warlock.rcp.command.streamshow"
+            name="StreamOpen">
+            <commandParameter
+            	id="cc.warlock.rcp.command.streamshow.name"
+            	name="name"
+            	optional="false"/>
       </command>
       <command
             defaultHandler="cc.warlock.rcp.menu.VisitWarlockWebpageHandler"
