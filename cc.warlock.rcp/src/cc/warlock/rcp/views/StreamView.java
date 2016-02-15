@@ -63,26 +63,36 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		new HashMap<IWarlockClient, StreamText>();
 	
 	private StyledText nullTextWidget;
+	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+		@Override
+		public void clientConnected(IWarlockClient client) {
+			addClient(client);
+		}
+		@Override
+		public void clientDisconnected(IWarlockClient client) {}
+		@Override
+		public void clientSettingsLoaded(IWarlockClient client) {}
+	});
 
 	public StreamView() {
 		super();
 		
 		openViews.add(this);
-
-		GameView.addGameViewFocusListener(this);
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
-			@Override
-			public void clientConnected(IWarlockClient client) {
-				addClient(client);
-			}
-			@Override
-			public void clientDisconnected(IWarlockClient client) {}
-			@Override
-			public void clientSettingsLoaded(IWarlockClient client) {}
-		}));
 	}
 
-	public static StreamView getViewForStream (String prefix, String streamName) {
+	public static StreamView getViewForName(String streamName) {
+		for (StreamView view : openViews)
+		{
+			String curName = view.getStreamName();
+			if (curName != null && curName.equals(streamName))
+			{
+				return view;
+			}
+		}
+		return null;
+	}
+	
+	public static StreamView getOrCreateViewForStream (String prefix, String streamName) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		
 		for (StreamView view : openViews)
@@ -90,7 +100,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 			String curName = view.getStreamName();
 			if (curName != null && curName.equals(streamName))
 			{
-				page.activate(view);
+				//page.activate(view);
 				return view;
 			}
 		}
@@ -140,11 +150,17 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) {
 			addClient(client);
 		}
+		WarlockClientRegistry.addWarlockClientListener(clientListener);
 		
+		GameView.addGameViewFocusListener(this);
 		GameView inFocus = GameView.getGameViewInFocus();
 		if (inFocus != null) {
 			setClient(inFocus.getClient());
 		}
+	}
+	
+	public void hide() {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(this);
 	}
 	
 	protected void addClient(IWarlockClient client) {

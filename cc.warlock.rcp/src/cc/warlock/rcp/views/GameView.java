@@ -316,7 +316,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	}
 	
 	public void openCustomStream(String name) {
-		StreamView view = StreamView.getViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
+		StreamView view = StreamView.getOrCreateViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
 		view.setClient(client);
 		customStreams.put(name, view.getStreamTextForClient(client));
 	}

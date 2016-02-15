@@ -22,11 +22,8 @@
 package cc.warlock.rcp.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.rcp.ui.WarlockSharedImages;
-import cc.warlock.rcp.views.GameView;
 import cc.warlock.rcp.views.StreamView;
 
 public class OpenStreamWindowAction extends Action {
@@ -36,7 +33,7 @@ public class OpenStreamWindowAction extends Action {
 	public OpenStreamWindowAction (String title, String streamName, String viewPrefix)
 	{
 		super(title, Action.AS_CHECK_BOX);
-		this.setImageDescriptor(WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_WINDOW));
+		//this.setImageDescriptor(WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_WINDOW));
 		
 		this.title = title;
 		this.streamName = streamName;
@@ -45,27 +42,19 @@ public class OpenStreamWindowAction extends Action {
 	
 	@Override
 	public void run() {
-		boolean shown = false;
-		String viewId = StreamView.STREAM_VIEW_PREFIX + viewPrefix;
-		for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
-		{
-			if (viewId.equals(view.getId())) {
-				shown = true;
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
-				break;
-			}
+		StreamView streamView = StreamView.getViewForName(streamName);
+		if (streamView != null) {
+			streamView.hide();
+			setChecked(false);
+		} else {
+			streamView = StreamView.getOrCreateViewForStream(viewPrefix, streamName);
+			setChecked(true);
 		}
-		StreamView streamView = StreamView.getViewForStream(viewPrefix, streamName);
 		
 		//streamView.setStreamName(streamName);
-		streamView.setViewTitle(title);
+		//streamView.setViewTitle(title);
 		
-		GameView inFocus = GameView.getGameViewInFocus();
-		if (inFocus != null) {
-			streamView.setClient(inFocus.getClient());
-		}
-		
-		setChecked(true);
+		//this.set
 	}
 	
 	@Override
