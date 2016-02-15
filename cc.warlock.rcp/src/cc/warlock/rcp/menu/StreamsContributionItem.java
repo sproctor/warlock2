@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -43,10 +44,10 @@ import cc.warlock.rcp.views.DebugView;
  * Streams Menu Contribution - Adds all menu items to preferences.
  */
 public class StreamsContributionItem extends CompoundContributionItem  {
-
+	ActionContributionItem debugitem;
 	// Moved hard settings to cc.warlock.userstreams.ui.views/UserStream.java
 
-	protected IContributionItem createStreamContributionItem (String name)
+	private IContributionItem createStreamContributionItem (String name)
 	{
 		return new ActionContributionItem(new StreamShowAction(name));
 	}
@@ -57,14 +58,14 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
-		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
-		items.add(new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID)));
-		//items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
-		items.add(createStreamContributionItem("Events"));
-		items.add(createStreamContributionItem("Conversations"));
-		items.add(createStreamContributionItem("Healing"));
-		
-		return items.toArray(new IContributionItem[items.size()]); 
+		debugitem = new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID));
+		return new IContributionItem[] {
+				//debugitem,
+				//items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
+				createStreamContributionItem("Events"),
+				createStreamContributionItem("Conversations"),
+				createStreamContributionItem("Healing")
+		};
 	}
 	
 	private class ShowViewAction extends Action {
@@ -92,6 +93,9 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 				}
 				if (!shown)
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
+				setChecked(shown);
+				//event.doit = false;
+				debugitem.update();
 			} catch(PartInitException e) {
 				e.printStackTrace();
 			}

@@ -22,8 +22,8 @@
 package cc.warlock.rcp.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Event;
 
-import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.views.StreamView;
 
 public class OpenStreamWindowAction extends Action {
@@ -41,15 +41,19 @@ public class OpenStreamWindowAction extends Action {
 	}
 	
 	@Override
-	public void run() {
+	public void runWithEvent(Event e) {
 		StreamView streamView = StreamView.getViewForName(streamName);
 		if (streamView != null) {
 			streamView.hide();
 			setChecked(false);
+			//setImageDescriptor(WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_WINDOW));
 		} else {
 			streamView = StreamView.getOrCreateViewForStream(viewPrefix, streamName);
 			setChecked(true);
+			//setImageDescriptor(WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_STOP));
 		}
+		
+		e.doit = false;
 		
 		//streamView.setStreamName(streamName);
 		//streamView.setViewTitle(title);

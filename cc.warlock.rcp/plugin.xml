@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
+<?eclipse version="3.2"?>
 <plugin>
    <extension-point id="connectionCommands" name="connectionCommands" schema="schema/connectionCommands.exsd"/>
    <extension-point id="macroVariables" name="macroVariables" schema="schema/macroVariables.exsd"/>
@@ -233,11 +233,15 @@
             </command>
          </menu>
      </menuContribution>
-      <menuContribution
+     <menuContribution
             locationURI="menu:cc.warlock.rcp.menu.window">
+            <command
+            	commandId="cc.warlock.rcp.command.debug"
+            	label="Debug View"
+            	style="toggle"/>
          <dynamic
                class="cc.warlock.rcp.menu.StreamsContributionItem"
-               id="cc.warlock.rcp.userstreams.dynamicStreams">
+               id="cc.warlock.rcp.menu.dynamicStreams">
          </dynamic>
          <separator
                name="cc.warlock.rcp.userstreams.window.seperator"
@@ -256,6 +260,11 @@
             defaultHandler="cc.warlock.rcp.menu.PreferencesHandler"
             id="cc.warlock.rcp.command.preferences"
             name="Preferences">
+      </command>
+      <command
+            defaultHandler="cc.warlock.rcp.menu.DebugOpen"
+            id="cc.warlock.rcp.command.debug"
+            name="Debug">
       </command>
       <command
             defaultHandler="cc.warlock.rcp.menu.VisitWarlockWebpageHandler"

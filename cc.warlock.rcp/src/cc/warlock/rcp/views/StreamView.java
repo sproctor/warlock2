@@ -235,9 +235,12 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		
 		openViews.remove(this);
 		
+		WarlockClientRegistry.removeWarlockClientListener(clientListener);
+		
 		for(StreamText stream : streams.values()) {
 			stream.dispose();
 		}
+		activeClient = null;
 		super.dispose();
 	}
 	
