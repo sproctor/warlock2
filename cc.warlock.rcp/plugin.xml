@@ -261,11 +261,11 @@
             id="cc.warlock.rcp.command.preferences"
             name="Preferences">
       </command>
-      <!--<command
+      <command
             defaultHandler="cc.warlock.rcp.menu.DebugOpen"
             id="cc.warlock.rcp.command.debug"
             name="Debug">
-      </command>-->
+      </command>
       <command
             defaultHandler="cc.warlock.rcp.actions.StreamShowAction"
             id="cc.warlock.rcp.command.streamshow"
