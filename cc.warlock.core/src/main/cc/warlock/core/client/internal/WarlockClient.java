@@ -369,10 +369,10 @@ public class WarlockClient implements IWarlockClient {
 		String name = componentName.toLowerCase();
 
 		Pair<String, String> oldPair = components.get(name);
-		String streamName = oldPair.getRight();
+		String streamName = oldPair != null ? oldPair.getRight() : null;
 		components.put(name, Pair.of(value.toString(), streamName));
 		
-		IStream stream = streams.get(streamName);
+		IStream stream = streamName != null ? streams.get(streamName) : null;
 		// FIXME: The streams store them in a case-senstive fashion.
 		if(stream != null)
 			stream.updateComponent(componentName, value);

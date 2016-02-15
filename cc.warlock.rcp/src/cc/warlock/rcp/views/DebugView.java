@@ -67,17 +67,25 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 				public void run () {
 					IConnection conn = client.getConnection();
 					if(conn != null) {
-						conn.removeConnectionListener(connListener);
 						conn.addConnectionListener(connListener);
 					}
 				}
 			});
 		}
 		@Override
-		public void clientDisconnected(IWarlockClient client) {}
+		public void clientDisconnected(final IWarlockClient client) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run () {
+					IConnection conn = client.getConnection();
+					if(conn != null) {
+						conn.removeConnectionListener(connListener);
+					}
+				}
+			});
+		}
 		@Override
 		public void clientSettingsLoaded(IWarlockClient client) {}
-	});;
+	});
 	
 	public static final String VIEW_ID = "cc.warlock.rcp.views.DebugView";
 	
