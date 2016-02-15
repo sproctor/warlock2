@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -72,7 +73,7 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 		private String viewId;
 		
 		public ShowViewAction(String title, String viewId) {
-			super(title, Action.AS_PUSH_BUTTON);
+			super(title, Action.AS_CHECK_BOX);
 			this.title = title;
 			this.viewId = viewId;
 		}
@@ -80,7 +81,17 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 		@Override
 		public void run() {
 			try {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
+				boolean shown = false;
+				for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
+				{
+					if (viewId.equals(view.getId())) {
+						shown = true;
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+						break;
+					}
+				}
+				if (!shown)
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
 			} catch(PartInitException e) {
 				e.printStackTrace();
 			}

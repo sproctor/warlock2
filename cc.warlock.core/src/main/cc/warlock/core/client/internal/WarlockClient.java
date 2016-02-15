@@ -295,8 +295,8 @@ public class WarlockClient implements IWarlockClient {
 					}
 				}
 				//stream.create();
+				stream.addStreamListener(logger);
 			}
-			stream.addStreamListener(logger);
 			return stream;
 		}
 	}

@@ -22,6 +22,8 @@
 package cc.warlock.rcp.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.views.GameView;
@@ -43,8 +45,18 @@ public class OpenStreamWindowAction extends Action {
 	
 	@Override
 	public void run() {
-		
+		boolean shown = false;
+		String viewId = StreamView.STREAM_VIEW_PREFIX + viewPrefix;
+		for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
+		{
+			if (viewId.equals(view.getId())) {
+				shown = true;
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+				break;
+			}
+		}
 		StreamView streamView = StreamView.getViewForStream(viewPrefix, streamName);
+		
 		//streamView.setStreamName(streamName);
 		streamView.setViewTitle(title);
 		
