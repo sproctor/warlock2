@@ -27,24 +27,25 @@ package cc.warlock.rcp.menu;
 import java.util.HashMap;
 
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
-
-import cc.warlock.rcp.views.UserStream;
+import org.eclipse.ui.menus.IWorkbenchContribution;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author Will Robertson
  * Streams Menu Contribution - Adds all menu items to preferences.
  */
-public class StreamsContributionItem extends CompoundContributionItem  {
-	// Moved hard settings to cc.warlock.userstreams.ui.views/UserStream.java
+public class StreamsContributionItem extends CompoundContributionItem implements IWorkbenchContribution {
+	private IServiceLocator mServiceLocator;
 
 	private IContributionItem createStreamContributionItem (String name)
 	{
-		CommandContributionItemParameter param = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
-				UserStream.VIEW_ID + "." + name, "cc.warlock.rcp.command.streamshow", CommandContributionItem.STYLE_CHECK);
+		CommandContributionItemParameter param = new CommandContributionItemParameter(mServiceLocator,
+				null, "cc.warlock.rcp.command.streamshow", CommandContributionItem.STYLE_CHECK);
+		param.label = name;
+		param.visibleEnabled = true;
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("name", name);
 		param.parameters = params;
@@ -62,5 +63,10 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 				createStreamContributionItem("Conversations"),
 				createStreamContributionItem("Healing")
 		};
+	}
+	
+	@Override  
+	public void initialize(final IServiceLocator serviceLocator) {  
+		mServiceLocator = serviceLocator;  
 	}
 }
