@@ -24,32 +24,31 @@
  */
 package cc.warlock.rcp.menu;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 
-import cc.warlock.rcp.actions.StreamShowAction;
-import cc.warlock.rcp.views.DebugView;
+import cc.warlock.rcp.views.UserStream;
 
 /**
  * @author Will Robertson
  * Streams Menu Contribution - Adds all menu items to preferences.
  */
 public class StreamsContributionItem extends CompoundContributionItem  {
-	ActionContributionItem debugitem;
 	// Moved hard settings to cc.warlock.userstreams.ui.views/UserStream.java
 
 	private IContributionItem createStreamContributionItem (String name)
 	{
-		return new ActionContributionItem(new StreamShowAction(name));
+		CommandContributionItemParameter param = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
+				UserStream.VIEW_ID + "." + name, "cc.warlock.rcp.command.streamshow", CommandContributionItem.STYLE_CHECK);
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("name", name);
+		param.parameters = params;
+		return new CommandContributionItem(param);
 	}
 	
 	/* (non-Javadoc)
@@ -58,52 +57,10 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
-		debugitem = new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID));
 		return new IContributionItem[] {
-				//debugitem,
-				//items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
 				createStreamContributionItem("Events"),
 				createStreamContributionItem("Conversations"),
 				createStreamContributionItem("Healing")
 		};
-	}
-	
-	private class ShowViewAction extends Action {
-		
-		private String title;
-		private String viewId;
-		
-		public ShowViewAction(String title, String viewId) {
-			super(title, Action.AS_CHECK_BOX);
-			this.title = title;
-			this.viewId = viewId;
-		}
-		
-		@Override
-		public void run() {
-			try {
-				boolean shown = false;
-				for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
-				{
-					if (viewId.equals(view.getId())) {
-						shown = true;
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
-						break;
-					}
-				}
-				if (!shown)
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
-				setChecked(shown);
-				//event.doit = false;
-				debugitem.update();
-			} catch(PartInitException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public String getText() {
-	 		return title;
-		}
 	}
 }
