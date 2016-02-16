@@ -524,7 +524,7 @@ public class WSLScriptCommands {
 				if(stream == null)
 					cx.scriptWarning("Stream \"" + streamName + "\" does not exist.");
 				else
-					cx.getScript().setGlobalVariable(var, client.getStreamTitle(streamName));
+					cx.getScript().setGlobalVariable(var, stream.getTitle());
 			} else {
 				cx.scriptError("Invalid arguments");
 			}

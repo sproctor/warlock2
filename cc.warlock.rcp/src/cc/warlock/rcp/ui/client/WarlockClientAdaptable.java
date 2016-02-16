@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
+import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 
@@ -37,7 +38,6 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 		this.client = client;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (IWarlockClient.class.isAssignableFrom(adapter))
 		{
@@ -58,8 +58,10 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 	public String getLabel(Object o) {
 		if(client == null)
 			return null;
-		
-		return client.getStreamTitle(IWarlockClient.MAIN_STREAM_NAME);
+		IStream stream = client.getStream(IWarlockClient.MAIN_STREAM_NAME);
+		if (stream == null)
+			return null;
+		return stream.getTitle();
 	}
 	
 	public Object getParent(Object o) {

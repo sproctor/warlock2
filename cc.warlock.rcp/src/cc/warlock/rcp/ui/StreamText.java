@@ -111,12 +111,15 @@ public class StreamText extends WarlockText implements IStreamListener
 				this.getTextWidget().addVerifyKeyListener(game.getEntry().getVerifyKeyListener());
 			}
 			
-			client.addStreamListener(this.getName(), streamListener);
+			client.addStreamListener(getName(), streamListener);
 			
-			title.set(client.getStreamTitle(this.getName()));
-			WarlockString history = client.getStreamHistory(this.getName());
-			if(history != null)
-				append(history);
+			IStream stream = client.getStream(getName());
+			if (stream != null) {
+				title.set(stream.getTitle());
+				WarlockString history = stream.getHistory();
+				if(history != null)
+					append(history);
+			}
 		}
 	}
 	

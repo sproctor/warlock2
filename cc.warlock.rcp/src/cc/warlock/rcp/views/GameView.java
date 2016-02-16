@@ -314,7 +314,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		ArrayList<StreamView> openViews = new ArrayList<StreamView>();
 		for (IViewReference view : this.getSite().getWorkbenchWindow().getActivePage().getViewReferences()) {
 			if (view.getId().startsWith(StreamView.STREAM_VIEW_PREFIX))
-				openViews.add((StreamView)view);
+				openViews.add((StreamView)view.getView(true));
 		}
 		return openViews;
 	}

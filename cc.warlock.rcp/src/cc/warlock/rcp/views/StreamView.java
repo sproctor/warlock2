@@ -21,8 +21,6 @@
  */
 package cc.warlock.rcp.views;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
@@ -30,12 +28,9 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.PageBook;
 
+import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientListener;
 import cc.warlock.core.client.PropertyListener;
@@ -171,11 +166,11 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 	
 	// Allow this to be overridden for UserStreams
 	protected void updateViewTitle() {
-		String title = activeClient == null ? "" : activeClient.getStreamTitle(streamName);
-		if(title.length() > 0)
-			setViewTitle(title);
-		else
+		IStream stream = activeClient == null ? null : activeClient.getStream(streamName);
+		if (stream == null)
 			setViewTitle("(" + streamName + ")");
+		else
+			setViewTitle(stream.getTitle());
 	}
 	
 	@Override

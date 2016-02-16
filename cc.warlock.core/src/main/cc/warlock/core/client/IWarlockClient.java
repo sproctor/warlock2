@@ -216,10 +216,6 @@ public interface IWarlockClient extends IRoomListener {
 	
 	public void clear(String streamName);
 	
-	public String getStreamTitle(String streamName);
-	
-	public WarlockString getStreamHistory(String streamName);
-	
 	public void launchURL(String url);
 	
 	public void appendImage(String url);

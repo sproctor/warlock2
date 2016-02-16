@@ -554,18 +554,6 @@ public class WarlockClient implements IWarlockClient {
 	}
 	
 	@Override
-	public synchronized String getStreamTitle(String streamName) {
-		IStream stream = getStream(streamName);
-		return stream == null ? "" : stream.getFullTitle();
-	}
-	
-	@Override
-	public synchronized WarlockString getStreamHistory(String streamName) {
-		IStream stream = getStream(streamName);
-		return stream == null ? null : stream.getHistory();
-	}
-	
-	@Override
 	public void launchURL(String url) {
 		try {
 			getViewer().launchURL(new URL(url));
