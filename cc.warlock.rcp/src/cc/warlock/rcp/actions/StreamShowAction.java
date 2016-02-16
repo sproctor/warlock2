@@ -25,17 +25,15 @@
 package cc.warlock.rcp.actions;
 
 import java.util.Random;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.rcp.ui.WarlockSharedImages;
-import cc.warlock.rcp.views.DebugView;
-import cc.warlock.rcp.views.UserStream;
 
 /**
  * @author Will Robertson

@@ -25,6 +25,7 @@
 package cc.warlock.rcp.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewReference;
@@ -152,27 +153,22 @@ public class UserStream extends StreamView {
 		return filters.toArray(new IStreamFilter[filters.size()]);
 	}
 	
-	public static UserStream getViewForName(String name) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		
-		for (IViewReference view : page.getViewReferences())
-		{
-			if (VIEW_ID.equals(view.getId()) && view.getSecondaryId().equals("rightFolder." + name))
-			{
-				return (UserStream)view.getView(false);
-			}
-		}
-		return null;
-	}
-	
 	public static UserStream getViewForUserStream (String streamName) {
 		// none of the already created views match, create a new one
 		try {
-			return (UserStream) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(VIEW_ID , "rightFolder."+ streamName, IWorkbenchPage.VIEW_ACTIVATE);
+			return (UserStream) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(VIEW_ID , "rightFolder."+ streamName, IWorkbenchPage.VIEW_VISIBLE);
 		} catch (PartInitException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static Collection<String> getCustomViewNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		names.add("Events");
+		names.add("Conversations");
+		names.add("Healing");
+		return names;
 	}
 	
 	@Override

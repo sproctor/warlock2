@@ -26,6 +26,7 @@ package cc.warlock.rcp.views;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -300,11 +302,21 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 		if(streamName == IWarlockClient.MAIN_STREAM_NAME)
 			return true;
 		
-		for(StreamView streamView : StreamView.getOpenViews()) {
-			if(streamView.getStreamName().equals(streamName))
+		for (StreamView view : getOpenViews()) {
+			if (view.getStreamName().equals(streamName))
 				return true;
 		}
 		return false;
+	}
+	
+	public Collection<StreamView> getOpenViews ()
+	{
+		ArrayList<StreamView> openViews = new ArrayList<StreamView>();
+		for (IViewReference view : this.getSite().getWorkbenchWindow().getActivePage().getViewReferences()) {
+			if (view.getId().startsWith(StreamView.STREAM_VIEW_PREFIX))
+				openViews.add((StreamView)view);
+		}
+		return openViews;
 	}
 	
 	public IProfile getProfile() {
@@ -316,9 +328,13 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	}
 	
 	public void openCustomStream(String name) {
-		StreamView view = StreamView.getOrCreateViewForStream(StreamView.RIGHT_STREAM_PREFIX, name);
-		view.setClient(client);
-		customStreams.put(name, view.getStreamTextForClient(client));
+		try {
+			StreamView view = (StreamView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(StreamView.STREAM_VIEW_PREFIX + StreamView.RIGHT_STREAM_PREFIX, name, IWorkbenchPage.VIEW_ACTIVATE);
+			view.setClient(client);
+			customStreams.put(name, view.getStreamTextForClient(client));
+		} catch(PartInitException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void printToCustomStream(String name, WarlockString text) {

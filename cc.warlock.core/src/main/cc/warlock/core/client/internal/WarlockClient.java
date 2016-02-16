@@ -78,7 +78,7 @@ public class WarlockClient implements IWarlockClient {
 	private Collection<IRoomListener> roomListeners = Collections.synchronizedCollection(new ArrayList<IRoomListener>());
 	private Property<ICompass> compass = new Property<ICompass>(null);
 	private SimpleLogger logger;
-	private HashMap<String, IStream> streams = new HashMap<String, IStream>();
+	private ArrayList<IStream> streams = new ArrayList<IStream>();
 	private final IStream mainStream;
 	private ArrayList<Entry<String, IStreamListener>> streamListeners = new ArrayList<Entry<String, IStreamListener>>();
 	private ArrayList<Collection<? extends IWarlockPattern>> highlightLists = new ArrayList<Collection<? extends IWarlockPattern>>();
@@ -178,13 +178,17 @@ public class WarlockClient implements IWarlockClient {
 	@Override
 	public IStream getStream(String streamName) {
 		synchronized(streams) {
-			return streams.get(streamName);
+			for (IStream stream : streams) {
+				if (streamName.equals(stream.getName()))
+					return stream;
+			}
+			return null;
 		}
 	}
 	
 	@Override
 	public Collection<IStream> getStreams() {
-		return streams.values();
+		return streams;
 	}
 	
 	@Override
@@ -285,7 +289,7 @@ public class WarlockClient implements IWarlockClient {
 			IStream stream = getStream(streamName);
 			if(stream == null) {
 				stream = new Stream(this, streamName);
-				streams.put(streamName, stream);
+				streams.add(stream);
 				for(Iterator<Entry<String, IStreamListener>> iter = streamListeners.iterator();
 						iter.hasNext(); ) {
 					Entry<String, IStreamListener> pair = iter.next();
@@ -303,7 +307,7 @@ public class WarlockClient implements IWarlockClient {
 	
 	@Override
 	public void addStreamListener(String streamName, IStreamListener listener) {
-		IStream stream = streams.get(streamName);
+		IStream stream = getStream(streamName);
 		if(stream != null) {
 			stream.addStreamListener(listener);
 		} else {
@@ -318,7 +322,7 @@ public class WarlockClient implements IWarlockClient {
 	
 	@Override
 	public void removeStreamListener(String streamName, IStreamListener listener) {
-		IStream stream = streams.get(streamName);
+		IStream stream = getStream(streamName);
 		if(stream != null) {
 			stream.removeStreamListener(listener);
 		} else {
@@ -372,7 +376,7 @@ public class WarlockClient implements IWarlockClient {
 		String streamName = oldPair != null ? oldPair.getRight() : null;
 		components.put(name, Pair.of(value.toString(), streamName));
 		
-		IStream stream = streamName != null ? streams.get(streamName) : null;
+		IStream stream = streamName != null ? getStream(streamName) : null;
 		// FIXME: The streams store them in a case-senstive fashion.
 		if(stream != null)
 			stream.updateComponent(componentName, value);
@@ -486,7 +490,7 @@ public class WarlockClient implements IWarlockClient {
 	
 	@Override
 	public synchronized void put(String streamName, WarlockString text) {
-		IStream stream = streams.get(streamName);
+		IStream stream = getStream(streamName);
 		if(stream == null) {
 			// panic
 			throw new Error("Printing to uninstantiated stream");
@@ -496,7 +500,7 @@ public class WarlockClient implements IWarlockClient {
 		if(!viewer.isStreamOpen(streamName) && !closedTarget.equals("")) {
 			String closedStyle = stream.getClosedStyle();
 			WarlockString closedText = new WarlockString(text.toString(), new WarlockStyle(closedStyle));
-			IStream targetStream = streams.get(closedTarget);
+			IStream targetStream = getStream(closedTarget);
 			targetStream.put(closedText);
 		}
 	}
@@ -529,7 +533,7 @@ public class WarlockClient implements IWarlockClient {
 	public synchronized void echo(String streamName, String text, IWarlockStyle style) {
 		WarlockString string = new WarlockString(text, style);
 
-		IStream stream = streams.get(streamName);
+		IStream stream = getStream(streamName);
 		if(stream == null) {
 			// panic
 			throw new Error("Printing to uninstantiated stream");
@@ -539,25 +543,25 @@ public class WarlockClient implements IWarlockClient {
 		if(!viewer.isStreamOpen(streamName) && !closedTarget.equals("")) {
 			String closedStyle = stream.getClosedStyle();
 			WarlockString closedText = new WarlockString(text, new WarlockStyle(closedStyle));
-			IStream targetStream = streams.get(closedTarget);
+			IStream targetStream = getStream(closedTarget);
 			targetStream.echo(closedText);
 		}
 	}
 	
 	@Override
 	public synchronized void clear(String streamName) {
-		streams.get(streamName).clear();
+		getStream(streamName).clear();
 	}
 	
 	@Override
 	public synchronized String getStreamTitle(String streamName) {
-		IStream stream = streams.get(streamName);
+		IStream stream = getStream(streamName);
 		return stream == null ? "" : stream.getFullTitle();
 	}
 	
 	@Override
 	public synchronized WarlockString getStreamHistory(String streamName) {
-		IStream stream = streams.get(streamName);
+		IStream stream = getStream(streamName);
 		return stream == null ? null : stream.getHistory();
 	}
 	

@@ -24,12 +24,17 @@
  */
 package cc.warlock.rcp.menu;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
+import cc.warlock.core.client.IStream;
 import cc.warlock.rcp.actions.StreamShowAction;
 import cc.warlock.rcp.views.DebugView;
+import cc.warlock.rcp.views.GameView;
+import cc.warlock.rcp.views.StreamView;
 import cc.warlock.rcp.views.UserStream;
 
 /**
@@ -37,12 +42,10 @@ import cc.warlock.rcp.views.UserStream;
  * Streams Menu Contribution - Adds all menu items to preferences.
  */
 public class StreamsContributionItem extends CompoundContributionItem  {
-	ActionContributionItem debugitem;
-	// Moved hard settings to cc.warlock.userstreams.ui.views/UserStream.java
 
 	private IContributionItem createUserStreamItem (String name)
 	{
-		return new ActionContributionItem(new StreamShowAction(name, UserStream.VIEW_ID, "rightFolder." + name));
+		return new ActionContributionItem(new StreamShowAction("Custom - " + name, UserStream.VIEW_ID, "rightFolder." + name));
 	}
 	
 	/* (non-Javadoc)
@@ -51,11 +54,26 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
-		return new IContributionItem[] {
-				new ActionContributionItem(new StreamShowAction("Debug Console", DebugView.VIEW_ID, null)),
-				createUserStreamItem("Events"),
-				createUserStreamItem("Conversations"),
-				createUserStreamItem("Healing")
-		};
+		ArrayList<IContributionItem> items = new ArrayList<IContributionItem>();
+		items.add(new ActionContributionItem(new StreamShowAction("Debug Console", DebugView.VIEW_ID, null)));
+		for (String name : UserStream.getCustomViewNames()) {
+			items.add(createUserStreamItem(name));
+		}
+		GameView gameView = GameView.getGameViewInFocus();
+		if (gameView != null && gameView.getClient() != null) {
+			for (IStream stream : gameView.getClient().getStreams()) {
+				if (stream.getName().equals("main"))
+					continue;
+				String location = StreamView.RIGHT_STREAM_PREFIX;
+				if (stream.getLocation().equals("center")) {
+					location = StreamView.TOP_STREAM_PREFIX;
+				} else if (stream.getLocation().equals("left")) {
+					location = StreamView.LEFT_STREAM_PREFIX;
+				}
+				items.add(new ActionContributionItem(new StreamShowAction(stream.getTitle(),
+						StreamView.STREAM_VIEW_PREFIX + location, stream.getName())));
+			}
+		}
+		return items.toArray(new IContributionItem[items.size()]);
 	}
 }

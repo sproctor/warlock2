@@ -74,43 +74,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		@Override
 		public void clientSettingsLoaded(IWarlockClient client) {}
 	});
-
-	public static StreamView getViewForName(String streamName) {
-		for (StreamView view : getOpenViews())
-		{
-			String curName = view.getStreamName();
-			if (curName != null && curName.equals(streamName))
-			{
-				return view;
-			}
-		}
-		return null;
-	}
-	
-	public static StreamView getOrCreateViewForStream (String prefix, String streamName) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		
-		for (StreamView view : getOpenViews())
-		{
-			String curName = view.getStreamName();
-			if (curName != null && curName.equals(streamName))
-			{
-				//page.activate(view);
-				return view;
-			}
-		}
-		
-		// none of the already created views match, create a new one
-		try {
-			StreamView nextInstance = (StreamView) page.showView(STREAM_VIEW_PREFIX + prefix, streamName, IWorkbenchPage.VIEW_ACTIVATE);
-			//nextInstance.setStreamName(streamName);
-			
-			return nextInstance;
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}	
-		return null;
-	}
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -154,10 +117,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		}
 	}
 	
-	public void hide() {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(this);
-	}
-	
 	protected void addClient(IWarlockClient client) {
 		if(book == null) {
 			System.err.println("Adding client before intializing StreamView");
@@ -195,16 +154,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 
 	public void gameViewFocused(GameView gameView) {
 		setClient(gameView.getClient());
-	}
-	
-	public static Collection<StreamView> getOpenViews ()
-	{
-		ArrayList<StreamView> openViews = new ArrayList<StreamView>();
-		for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()) {
-			if (view.getId().startsWith(STREAM_VIEW_PREFIX))
-				openViews.add((StreamView)view);
-		}
-		return openViews;
 	}
 	
 	public synchronized void setClient (IWarlockClient client)
