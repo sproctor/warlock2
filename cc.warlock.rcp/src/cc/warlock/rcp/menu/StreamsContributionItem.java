@@ -43,13 +43,15 @@ public class StreamsContributionItem extends CompoundContributionItem implements
 	private IContributionItem createStreamContributionItem (String name)
 	{
 		CommandContributionItemParameter param = new CommandContributionItemParameter(mServiceLocator,
-				null, "cc.warlock.rcp.command.streamshow", CommandContributionItem.STYLE_CHECK);
+				"cc.warlock.rcp.userstream." + name, "cc.warlock.rcp.command.streamshow", CommandContributionItem.STYLE_CHECK);
 		param.label = name;
-		param.visibleEnabled = true;
+		//param.visibleEnabled = true;
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("name", name);
 		param.parameters = params;
-		return new CommandContributionItem(param);
+		
+		CommandContributionItem item = new CommandContributionItem(param);
+		return item;
 	}
 	
 	/* (non-Javadoc)

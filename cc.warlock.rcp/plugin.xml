@@ -30,7 +30,7 @@
       <view
             allowMultiple="true"
             class="cc.warlock.rcp.views.UserStream"
-            id="cc.warlock.rcp.views.rightView.userStream"
+            id="cc.warlock.rcp.views.userStream.rightStream"
             name="Stream">
       </view>
       <view
@@ -271,9 +271,13 @@
             id="cc.warlock.rcp.command.streamshow"
             name="StreamOpen">
             <commandParameter
-            	id="cc.warlock.rcp.command.streamshow.name"
+            	id="name"
             	name="name"
             	optional="false"/>
+            <state 
+         		class="org.eclipse.core.commands.State" 
+         		id="org.eclipse.ui.commands.toggleState"> 
+   			</state>
       </command>
       <command
             defaultHandler="cc.warlock.rcp.menu.VisitWarlockWebpageHandler"

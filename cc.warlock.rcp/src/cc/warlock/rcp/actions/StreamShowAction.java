@@ -29,6 +29,7 @@ import java.util.Random;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import cc.warlock.rcp.views.UserStream;
 
@@ -41,9 +42,11 @@ public class StreamShowAction extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event)
-	throws ExecutionException{
+	throws ExecutionException {
 		String name = event.getParameter("name");
 		UserStream.getViewForUserStream(name);
+		HandlerUtil.toggleCommandState(event.getCommand());
+		//HandlerUtil.toggleCommandState(event.getCommand());
 		return null;
 	}
 	

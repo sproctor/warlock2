@@ -44,7 +44,7 @@ import cc.warlock.rcp.ui.StreamText;
  * ViewPart/Stream View Class that shows user configurable content filtered from the main window.
  */
 public class UserStream extends StreamView {
-	public static final String VIEW_ID = "cc.warlock.rcp.views.userStream";
+	public static final String VIEW_ID = "cc.warlock.rcp.views.userStream.rightStream";
 	protected static ArrayList<UserStream> openStreams = new ArrayList<UserStream>();
 	private IStreamFilter[] filters = null;
 	private String name;
