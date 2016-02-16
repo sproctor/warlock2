@@ -24,32 +24,36 @@
  */
 package cc.warlock.rcp.menu;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
-import org.eclipse.ui.menus.IWorkbenchContribution;
-import org.eclipse.ui.services.IServiceLocator;
+
+import cc.warlock.rcp.actions.StreamShowAction;
+import cc.warlock.rcp.views.DebugView;
+import cc.warlock.rcp.views.UserStream;
 
 /**
  * @author Will Robertson
  * Streams Menu Contribution - Adds all menu items to preferences.
  */
-public class StreamsContributionItem extends CompoundContributionItem implements IWorkbenchContribution {
-	private IServiceLocator mServiceLocator;
+public class StreamsContributionItem extends CompoundContributionItem  {
+	ActionContributionItem debugitem;
+	// Moved hard settings to cc.warlock.userstreams.ui.views/UserStream.java
 
-	private IContributionItem createStreamContributionItem (String name)
+	private IContributionItem createUserStreamItem (String name)
 	{
-		CommandContributionItemParameter param = new CommandContributionItemParameter(mServiceLocator,
-				null, "cc.warlock.rcp.command.streamshow", CommandContributionItem.STYLE_CHECK);
-		param.label = name;
-		param.visibleEnabled = true;
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("name", name);
-		param.parameters = params;
-		return new CommandContributionItem(param);
+		Action action = new StreamShowAction(name);
+		if(UserStream.getViewForName(name) != null)
+			action.setChecked(true);
+		return new ActionContributionItem(action);
 	}
 	
 	/* (non-Javadoc)
@@ -58,15 +62,52 @@ public class StreamsContributionItem extends CompoundContributionItem implements
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
+		debugitem = new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID));
 		return new IContributionItem[] {
-				createStreamContributionItem("Events"),
-				createStreamContributionItem("Conversations"),
-				createStreamContributionItem("Healing")
+				//debugitem,
+				//items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
+				createUserStreamItem("Events"),
+				createUserStreamItem("Conversations"),
+				createUserStreamItem("Healing")
 		};
 	}
 	
-	@Override  
-	public void initialize(final IServiceLocator serviceLocator) {  
-		mServiceLocator = serviceLocator;  
+	private class ShowViewAction extends Action {
+		
+		private String title;
+		private String viewId;
+		
+		public ShowViewAction(String title, String viewId) {
+			super(title, Action.AS_CHECK_BOX);
+			this.title = title;
+			this.viewId = viewId;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				boolean shown = false;
+				for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
+				{
+					if (viewId.equals(view.getId())) {
+						shown = true;
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+						break;
+					}
+				}
+				if (!shown)
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
+				setChecked(shown);
+				//event.doit = false;
+				debugitem.update();
+			} catch(PartInitException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
+		public String getText() {
+	 		return title;
+		}
 	}
 }
