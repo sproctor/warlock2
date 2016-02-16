@@ -312,7 +312,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	public Collection<StreamView> getOpenViews ()
 	{
 		ArrayList<StreamView> openViews = new ArrayList<StreamView>();
-		for (IViewReference view : this.getSite().getWorkbenchWindow().getActivePage().getViewReferences()) {
+		for (IViewReference view : getSite().getWorkbenchWindow().getActivePage().getViewReferences()) {
 			if (view.getId().startsWith(StreamView.STREAM_VIEW_PREFIX))
 				openViews.add((StreamView)view.getView(true));
 		}
@@ -329,7 +329,7 @@ public abstract class GameView extends WarlockView implements IWarlockClientView
 	
 	public void openCustomStream(String name) {
 		try {
-			StreamView view = (StreamView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(StreamView.STREAM_VIEW_PREFIX + StreamView.RIGHT_STREAM_PREFIX, name, IWorkbenchPage.VIEW_ACTIVATE);
+			StreamView view = (StreamView)getSite().getWorkbenchWindow().getActivePage().showView(StreamView.STREAM_VIEW_PREFIX + StreamView.RIGHT_STREAM_PREFIX, name, IWorkbenchPage.VIEW_ACTIVATE);
 			view.setClient(client);
 			customStreams.put(name, view.getStreamTextForClient(client));
 		} catch(PartInitException e) {
