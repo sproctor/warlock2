@@ -30,6 +30,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -51,7 +52,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 	public static final String LEFT_STREAM_PREFIX = "leftStream";
 	public static final String TOP_STREAM_PREFIX = "topStream";
 	
-	private static ArrayList<StreamView> openViews = new ArrayList<StreamView>();
+	//private static ArrayList<StreamView> openViews = new ArrayList<StreamView>();
 	
 	private String streamName;
 	
@@ -74,14 +75,8 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		public void clientSettingsLoaded(IWarlockClient client) {}
 	});
 
-	public StreamView() {
-		super();
-		
-		openViews.add(this);
-	}
-
 	public static StreamView getViewForName(String streamName) {
-		for (StreamView view : openViews)
+		for (StreamView view : getOpenViews())
 		{
 			String curName = view.getStreamName();
 			if (curName != null && curName.equals(streamName))
@@ -95,7 +90,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 	public static StreamView getOrCreateViewForStream (String prefix, String streamName) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		
-		for (StreamView view : openViews)
+		for (StreamView view : getOpenViews())
 		{
 			String curName = view.getStreamName();
 			if (curName != null && curName.equals(streamName))
@@ -204,6 +199,11 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 	
 	public static Collection<StreamView> getOpenViews ()
 	{
+		ArrayList<StreamView> openViews = new ArrayList<StreamView>();
+		for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()) {
+			if (view.getId().startsWith(STREAM_VIEW_PREFIX))
+				openViews.add((StreamView)view);
+		}
 		return openViews;
 	}
 	
@@ -232,8 +232,6 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 	@Override
 	public void dispose() {
 		GameView.removeGameViewFocusListener(this);
-		
-		openViews.remove(this);
 		
 		WarlockClientRegistry.removeWarlockClientListener(clientListener);
 		

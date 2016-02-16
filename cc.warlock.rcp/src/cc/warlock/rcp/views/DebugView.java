@@ -106,7 +106,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		GameView.addGameViewFocusListener(this);
 	}
 	
-	public void setClient(IWarlockClient client) {
+	private void setClient(IWarlockClient client) {
 		activeClient = client;
 		if(client != null) {
 			activeText = getTextForClient(client);
@@ -163,7 +163,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		}
 	}
 	
-	protected void sendRawText ()
+	private void sendRawText ()
 	{
 		String toSend = entry.getText() + "\n";
 		try {
@@ -174,33 +174,39 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		}
 	}
 	
+	@Override
 	public void connected(IConnection connection) {
 		debug (connection.getClient(), "{connected}");
 	}
 	
+	@Override
 	public void dataSent(IConnection connection, String data) {
 		WarlockString str = new WarlockString(data);
 		str.addStyle(sentStyle);
 		debug (connection.getClient(), str);
 	}
 	
+	@Override
 	public void dataReady(IConnection connection, String data) {
 		debug (connection.getClient(), data);
 	}
 	
+	@Override
 	public void disconnected(IConnection connection) {
 		debug (connection.getClient(), "{disconnected}");
 	}
 	
+	@Override
 	public void connectionError(IConnection connection, ErrorType errorType) {
 		debug (connection.getClient(), "error: " + errorType.toString());
 	}
 	
+	@Override
 	public void gameViewFocused(GameView gameView) {
 		setClient(gameView.getClient());
 	}
 	
-	public WarlockText getTextForClient(IWarlockClient client) {
+	private WarlockText getTextForClient(IWarlockClient client) {
 		if(client == null)
 			return null;
 		
@@ -215,10 +221,12 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 		return text;
 	}
 	
+	@Override
 	public void pageUp() {
 		activeText.pageUp();
 	}
 	
+	@Override
 	public void pageDown() {
 		activeText.pageDown();
 	}

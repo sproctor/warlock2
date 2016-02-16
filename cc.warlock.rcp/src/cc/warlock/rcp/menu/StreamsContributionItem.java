@@ -24,16 +24,8 @@
  */
 package cc.warlock.rcp.menu;
 
-import java.util.ArrayList;
-
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 import cc.warlock.rcp.actions.StreamShowAction;
@@ -50,10 +42,7 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 
 	private IContributionItem createUserStreamItem (String name)
 	{
-		Action action = new StreamShowAction(name);
-		if(UserStream.getViewForName(name) != null)
-			action.setChecked(true);
-		return new ActionContributionItem(action);
+		return new ActionContributionItem(new StreamShowAction(name, UserStream.VIEW_ID, "rightFolder." + name));
 	}
 	
 	/* (non-Javadoc)
@@ -62,52 +51,11 @@ public class StreamsContributionItem extends CompoundContributionItem  {
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		// Add Menu Items
-		debugitem = new ActionContributionItem(new ShowViewAction("Debug", DebugView.VIEW_ID));
 		return new IContributionItem[] {
-				//debugitem,
-				//items.add(new ActionContributionItem(new ShowViewAction("Compass", CompassView.VIEW_ID)));
+				new ActionContributionItem(new StreamShowAction("Debug Console", DebugView.VIEW_ID, null)),
 				createUserStreamItem("Events"),
 				createUserStreamItem("Conversations"),
 				createUserStreamItem("Healing")
 		};
-	}
-	
-	private class ShowViewAction extends Action {
-		
-		private String title;
-		private String viewId;
-		
-		public ShowViewAction(String title, String viewId) {
-			super(title, Action.AS_CHECK_BOX);
-			this.title = title;
-			this.viewId = viewId;
-		}
-		
-		@Override
-		public void run() {
-			try {
-				boolean shown = false;
-				for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
-				{
-					if (viewId.equals(view.getId())) {
-						shown = true;
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
-						break;
-					}
-				}
-				if (!shown)
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId, null, IWorkbenchPage.VIEW_VISIBLE);
-				setChecked(shown);
-				//event.doit = false;
-				debugitem.update();
-			} catch(PartInitException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public String getText() {
-	 		return title;
-		}
 	}
 }

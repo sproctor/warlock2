@@ -27,6 +27,7 @@ package cc.warlock.rcp.views;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -44,8 +45,8 @@ import cc.warlock.rcp.ui.StreamText;
  * ViewPart/Stream View Class that shows user configurable content filtered from the main window.
  */
 public class UserStream extends StreamView {
-	public static final String VIEW_ID = "cc.warlock.rcp.views.userStream";
-	protected static ArrayList<UserStream> openStreams = new ArrayList<UserStream>();
+	public static final String VIEW_ID = "cc.warlock.rcp.views.userStream.rightStream";
+	//protected static ArrayList<UserStream> openStreams = new ArrayList<UserStream>();
 	private IStreamFilter[] filters = null;
 	private String name;
 	private ArrayList<String> styles;
@@ -150,26 +151,28 @@ public class UserStream extends StreamView {
 		
 		return filters.toArray(new IStreamFilter[filters.size()]);
 	}
-
-	public static UserStream getViewForUserStream (String streamName) {
+	
+	public static UserStream getViewForName(String name) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		
-		for (UserStream view : openStreams)
+		for (IViewReference view : page.getViewReferences())
 		{
-			if (view.name.equals(streamName))
+			if (VIEW_ID.equals(view.getId()) && view.getSecondaryId().equals("rightFolder." + name))
 			{
-				page.activate(view);
-				return view;
+				return (UserStream)view.getView(false);
 			}
 		}
-		
+		return null;
+	}
+	
+	public static UserStream getViewForUserStream (String streamName) {
 		// none of the already created views match, create a new one
 		try {
-			return (UserStream) page.showView(VIEW_ID , "rightFolder."+ streamName, IWorkbenchPage.VIEW_ACTIVATE);
+			return (UserStream) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(VIEW_ID , "rightFolder."+ streamName, IWorkbenchPage.VIEW_ACTIVATE);
 		} catch (PartInitException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	
 	@Override

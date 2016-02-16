@@ -3,6 +3,7 @@ package cc.warlock.rcp.menu;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -17,13 +18,15 @@ public class DebugOpen extends AbstractHandler {
 			// Hide the view if we have one
 			for (IViewReference view : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences())
 			{
+				String viewId = view.getId();
 				if (DebugView.VIEW_ID.equals(view.getId())) {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view.getView(true));
 					return null;
 				}
 			}
 			// Otherwise show it
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(DebugView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
+			IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(DebugView.VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
+			view.setFocus();
 		} catch(PartInitException e) {
 			e.printStackTrace();
 		}

@@ -25,10 +25,16 @@
 package cc.warlock.rcp.actions;
 
 import java.util.Random;
-
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import cc.warlock.rcp.ui.WarlockSharedImages;
+import cc.warlock.rcp.views.DebugView;
 import cc.warlock.rcp.views.UserStream;
 
 /**
@@ -36,19 +42,38 @@ import cc.warlock.rcp.views.UserStream;
  * Action for Selecting UserStreams from the Menu
  */
 public class StreamShowAction extends Action {
-	private String name;
+	private String id;
+	private String secondaryId;
 	
-	public StreamShowAction (String name) {
-		super(name);
-		this.name = name;
-		setDescription("Custom output window: " + this.name);
+	public StreamShowAction (String title, String id, String secondaryId) {
+		super(title, IAction.AS_CHECK_BOX);
+		this.id = id;
+		this.secondaryId = secondaryId;
+		setChecked(findView() != null);
+		setDescription("Custom output window: " + title);
 		setImageDescriptor(WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_WINDOW));
 	}
 	
+	@Override
 	public void run() {
-		UserStream.getViewForUserStream(this.name);
+		try {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IViewReference view = findView();
+			// Hide the view if we have one
+			if (view != null) {
+				page.hideView(view.getView(true));
+			} else {
+				page.showView(id, secondaryId, IWorkbenchPage.VIEW_ACTIVATE);
+			}
+		} catch(PartInitException e) {
+			e.printStackTrace();
+		}
+		return;
 	}
 	
+	private IViewReference findView() {
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findViewReference(id, secondaryId);
+	}
 	protected static String generateUniqueId () {
 		return new Random().nextInt() + "";
 	}
