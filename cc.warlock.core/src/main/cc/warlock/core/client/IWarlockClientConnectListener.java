@@ -21,7 +21,7 @@
  */
 package cc.warlock.core.client;
 
-public interface IWarlockClientListener {
+public interface IWarlockClientConnectListener {
 
 	public void clientConnected(IWarlockClient client);
 

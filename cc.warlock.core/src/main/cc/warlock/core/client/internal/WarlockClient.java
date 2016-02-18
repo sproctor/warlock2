@@ -48,7 +48,7 @@ import cc.warlock.core.client.IRoomListener;
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IStreamListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockPattern;
 import cc.warlock.core.client.IWarlockStyle;
@@ -73,7 +73,7 @@ public class WarlockClient implements IWarlockClient {
 
 	private IConnection connection;
 	private IWarlockClientViewer viewer;
-	private IWarlockClientListener listener;
+	private IWarlockClientConnectListener listener;
 	private String lastCommand;
 	private Collection<IRoomListener> roomListeners = Collections.synchronizedCollection(new ArrayList<IRoomListener>());
 	private Property<ICompass> compass = new Property<ICompass>(null);
@@ -98,7 +98,7 @@ public class WarlockClient implements IWarlockClient {
 		
 		status = new CharacterStatus(this);
 		
-		listener = new IWarlockClientListener() {
+		listener = new IWarlockClientConnectListener() {
 			@Override
 			public void clientDisconnected(IWarlockClient client) {
 				if (client == WarlockClient.this && logger != null) {

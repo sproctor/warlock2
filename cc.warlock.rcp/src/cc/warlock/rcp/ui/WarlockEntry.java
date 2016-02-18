@@ -44,7 +44,7 @@ import cc.warlock.core.client.ICommand;
 import cc.warlock.core.client.ICommandHistory;
 import cc.warlock.core.client.IMacro;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.IWarlockEntry;
@@ -134,7 +134,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		widget.setBackground(background);
 		widget.setForeground(foreground);
 		
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientConnectListener() {
 			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override

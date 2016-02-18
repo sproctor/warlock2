@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.WarlockColor;
 import cc.warlock.core.client.WarlockString;
@@ -60,7 +60,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	private WarlockText activeText;
 	private WarlockStyle sentStyle;
 	private SWTConnectionListenerAdapter connListener = new SWTConnectionListenerAdapter(DebugView.this);;
-	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(final IWarlockClient client) {
 			Display.getDefault().asyncExec(new Runnable() {

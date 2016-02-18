@@ -34,14 +34,14 @@ import java.util.List;
 public class WarlockClientRegistry {
 
 	private static ArrayList<IWarlockClient> clients = new ArrayList<IWarlockClient>();
-	private static ArrayList<IWarlockClientListener> listeners = new ArrayList<IWarlockClientListener>();
+	private static ArrayList<IWarlockClientConnectListener> listeners = new ArrayList<IWarlockClientConnectListener>();
 	
-	public static void addWarlockClientListener (IWarlockClientListener listener)
+	public static void addWarlockClientListener (IWarlockClientConnectListener listener)
 	{
 		listeners.add(listener);
 	}
 	
-	public static void removeWarlockClientListener (IWarlockClientListener listener)
+	public static void removeWarlockClientListener (IWarlockClientConnectListener listener)
 	{
 		if (listeners.contains(listener))
 			listeners.remove(listener);
@@ -50,20 +50,20 @@ public class WarlockClientRegistry {
 	public static void clientConnected (IWarlockClient client)
 	{
 		clients.add(client);
-		for (IWarlockClientListener listener : listeners)
+		for (IWarlockClientConnectListener listener : listeners)
 			listener.clientConnected(client);
 	}
 	
 	public static void clientDisconnected (IWarlockClient client)
 	{
 		clients.remove(client);
-		for (IWarlockClientListener listener : listeners)
+		for (IWarlockClientConnectListener listener : listeners)
 			listener.clientDisconnected(client);
 	}
 	
 	public static void clientSettingsLoaded (IWarlockClient client)
 	{
-		for (IWarlockClientListener listener : listeners)
+		for (IWarlockClientConnectListener listener : listeners)
 			listener.clientSettingsLoaded(client);
 	}
 	

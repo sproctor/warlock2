@@ -71,10 +71,10 @@ public class LoginUtil {
 			gameView.setFocus();
 		} catch (IOException e) {
 			String errorConnectMessage =
-			"******************************************************************\n" +
-			"* The connection was refused, possibly meaning the server is currently down,\n" +
-			"* or your internet connection is not active\n" +
-			"******************************************************************\n";
+			"*********************************************************************************\n" +
+			"* The connection was refused, possibly meaning the server is currently down,    *\n" +
+			"* or your internet connection is not active                                     *" +
+			"*********************************************************************************\n";
 			
 			client.echo(errorConnectMessage, WarlockMonospace.getInstance());
 		}

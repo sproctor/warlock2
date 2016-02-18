@@ -37,13 +37,17 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -84,6 +88,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 	private WarlockColor newCtColor = null, newRtColor = null;
 	
 	private ColorSelector bgSelector, fgSelector;
+	private Button bgToggle, fgToggle;
 	private StyledText preview;
 	private TableViewer stylesTable;
 	
@@ -143,7 +148,6 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		
 		Composite main = new Composite (parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
-		main.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		mainBGSelector = colorSelectorWithLabel(main, "Default background color:");
 		mainFGSelector = colorSelectorWithLabel(main, "Default foreground color:");
@@ -153,20 +157,20 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		rtSelector = colorSelectorWithLabel(main, "Roundtime bar color:");
 		ctSelector = colorSelectorWithLabel(main, "Cast time color:");
 		
-		createPresetsTable(main);
+		Composite presets = createPresetsTable(main);
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
+		data.horizontalSpan = 2;
+		presets.setLayoutData(data);
 		
 		Group previewGroup = new Group(main, SWT.NONE);
 		previewGroup.setText("Preview");
-		GridData data = new GridData();
-		data.horizontalSpan = 2;
-		data.grabExcessHorizontalSpace = true;
-		data.horizontalAlignment = SWT.FILL;
-		data.verticalAlignment = SWT.FILL;
-		previewGroup.setLayoutData(data);
-		previewGroup.setLayout(new GridLayout(1, false));
+		previewGroup.setLayout(new FillLayout());
+		GridData previewData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		previewData.horizontalSpan = 2;
+		previewGroup.setLayoutData(previewData);
 		
 		preview = new StyledText(previewGroup, SWT.BORDER);
-		preview.setLayoutData(new GridData(GridData.FILL_BOTH));
+		//preview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		updateData();
 		initPreview();
@@ -264,28 +268,50 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		public void removeListener(ILabelProviderListener listener) {}
 	}
 	
-	protected void createPresetsTable (Composite main)
+	private Composite createPresetsTable (Composite main)
 	{
 		Group presetsGroup = new Group(main, SWT.NONE);
-		presetsGroup.setLayout(new GridLayout(6, false));
-		GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
-		data.horizontalSpan = 2;
-		presetsGroup.setLayoutData(data);
+		presetsGroup.setLayout(new GridLayout(3, false));
 		presetsGroup.setText("Presets");
 		
+		bgToggle = new Button(presetsGroup, SWT.CHECK);
+		if (currentStyle != null)
+			bgToggle.setSelection(!currentStyle.getForegroundColor().isDefault());
+		bgToggle.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (currentStyle != null) {
+					currentStyle.setBackgroundColor(WarlockColor.DEFAULT_COLOR);
+				}
+				updatePreview();
+			}
+		});
 		bgSelector = colorSelectorWithLabel(presetsGroup, "Background color:");
+		
+		fgToggle = new Button(presetsGroup, SWT.CHECK);
+		if (currentStyle != null)
+			fgToggle.setSelection(!currentStyle.getForegroundColor().isDefault());
+		fgToggle.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (currentStyle != null) {
+					currentStyle.setForegroundColor(WarlockColor.DEFAULT_COLOR);
+				}
+				updatePreview();
+			}
+		});
 		fgSelector = colorSelectorWithLabel(presetsGroup, "Foreground color:");
 		
-		stylesTable = new TableViewer(presetsGroup, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		stylesTable = new TableViewer(presetsGroup, SWT.SINGLE | SWT.BORDER | SWT.NO_SCROLL);
 		TableColumn column = new TableColumn(stylesTable.getTable(), SWT.NONE, 0);
-		column.setWidth(400);
+		column.setWidth(200);
 		
 		stylesTable.setUseHashlookup(true);
 		stylesTable.setColumnProperties(new String[] { "preset" });
 		stylesTable.setContentProvider(ArrayContentProvider.getInstance());
 		stylesTable.setLabelProvider(new PresetsLabelProvider());
-		data = new GridData(GridData.FILL, GridData.FILL, true, true);
-		data.horizontalSpan = 6;
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		data.horizontalSpan = 3;
 		stylesTable.getTable().setLayoutData(data);
 		
 		stylesTable.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -293,6 +319,9 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 				presetSelected((IStructuredSelection)stylesTable.getSelection());
 			}
 		});
+		// TODO: select the first element
+		
+		return presetsGroup;
 	}
 	
 	
@@ -301,16 +330,27 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 		currentStyle = (IWarlockStyle) selection.getFirstElement();
 		
 		bgSelector.setColorValue(getWorkingBackgroundColor(currentStyle).getRGB());
+		if (currentStyle.getBackgroundColor().isDefault()) {
+			bgSelector.setEnabled(false);
+			bgToggle.setSelection(false);
+		} else {
+			bgSelector.setEnabled(true);
+			bgToggle.setSelection(true);
+		}
 		fgSelector.setColorValue(getWorkingForegroundColor(currentStyle).getRGB());
+		if (currentStyle.getForegroundColor().isDefault()) {
+			fgSelector.setEnabled(false);
+			fgToggle.setSelection(false);
+		} else {
+			fgSelector.setEnabled(true);
+			fgToggle.setSelection(true);
+		}
 	}
 
 	private ColorSelector colorSelectorWithLabel (Composite parent, String text)
 	{
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(text);
-		//GridData data = new GridData();
-		//data.horizontalSpan = 2;
-		//label.setLayoutData(data);
 		
 		ColorSelector selector = new ColorSelector(parent);
 		selector.addListener(new IPropertyChangeListener () {

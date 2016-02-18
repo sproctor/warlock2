@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
 
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.IWarlockFont;
 import cc.warlock.core.client.IWarlockPattern;
@@ -101,7 +101,7 @@ public class WarlockText {
 	private boolean ignoreEmptyLines = true;
 	private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
-	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+	private IWarlockClientConnectListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(IWarlockClient client) {}
 		@Override

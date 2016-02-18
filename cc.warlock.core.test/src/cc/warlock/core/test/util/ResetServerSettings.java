@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.internal.WarlockClient;
 import cc.warlock.core.settings.AccountProvider;
@@ -48,7 +48,7 @@ public class ResetServerSettings {
 			int port = Integer.parseInt(loginProperties.get(SGEConnection.PROPERTY_GAMEPORT));			
 			
 			try {
-				WarlockClientRegistry.addWarlockClientListener(new IWarlockClientListener() {
+				WarlockClientRegistry.addWarlockClientListener(new IWarlockClientConnectListener() {
 					public void clientConnected(IWarlockClient client) {
 						StormFrontConnection connection = (StormFrontConnection) client.getConnection();
 						

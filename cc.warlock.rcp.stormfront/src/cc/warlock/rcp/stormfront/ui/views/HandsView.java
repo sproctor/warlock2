@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import cc.warlock.core.client.IClientSettings;
 import cc.warlock.core.client.IPropertyListener;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.IWarlockClientViewerListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.client.settings.WindowConfigurationProvider;
@@ -76,7 +76,7 @@ public class HandsView extends Composite
 				loadSettings(settings);
 		}
 	});
-	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(IWarlockClient client) {}
 		@Override

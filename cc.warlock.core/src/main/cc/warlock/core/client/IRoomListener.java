@@ -21,7 +21,9 @@
  */
 package cc.warlock.core.client;
 
-public interface IRoomListener {
+import java.util.EventListener;
+
+public interface IRoomListener extends EventListener {
 	/* received when the character moves into the next room */
 	public void nextRoom();
 }

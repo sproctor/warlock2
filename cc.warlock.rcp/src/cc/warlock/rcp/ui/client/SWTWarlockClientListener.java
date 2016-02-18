@@ -24,13 +24,13 @@ package cc.warlock.rcp.ui.client;
 import org.eclipse.swt.widgets.Display;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 
-public class SWTWarlockClientListener implements IWarlockClientListener {
+public class SWTWarlockClientListener implements IWarlockClientConnectListener {
 
-	private IWarlockClientListener listener;
+	private IWarlockClientConnectListener listener;
 	
-	public SWTWarlockClientListener (IWarlockClientListener listener)
+	public SWTWarlockClientListener (IWarlockClientConnectListener listener)
 	{
 		this.listener = listener;
 	}

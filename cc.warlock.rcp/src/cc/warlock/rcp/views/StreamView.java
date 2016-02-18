@@ -32,7 +32,7 @@ import org.eclipse.ui.part.PageBook;
 
 import cc.warlock.core.client.IStream;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
@@ -59,7 +59,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		new HashMap<IWarlockClient, StreamText>();
 	
 	private StyledText nullTextWidget;
-	private IWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientListener() {
+	private IWarlockClientConnectListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(IWarlockClient client) {
 			addClient(client);

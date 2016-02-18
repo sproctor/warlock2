@@ -43,7 +43,7 @@ import cc.warlock.core.client.IMacroCommand;
 import cc.warlock.core.client.IMacroVariable;
 import cc.warlock.core.client.IProfile;
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.IWarlockClientViewer;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.settings.AccountProvider;
@@ -206,7 +206,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		if(settings != null)
 			loadClientSettings(settings);
 
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientListener() {
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientConnectListener() {
 			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override
