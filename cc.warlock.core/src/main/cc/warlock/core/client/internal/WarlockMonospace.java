@@ -6,8 +6,8 @@ import cc.warlock.core.client.WarlockColor;
 public class WarlockMonospace implements IWarlockStyle {
 	private static IWarlockStyle instance = new WarlockMonospace();
 	
-	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
-	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
+	private WarlockColor foregroundColor = new WarlockColor();
+	private WarlockColor backgroundColor = new WarlockColor();
 	
 	public static IWarlockStyle getInstance() {
 		return instance;

@@ -30,8 +30,8 @@ import cc.warlock.core.client.WarlockColor;
  */
 public abstract class ColorFontSetting extends WarlockSetting implements IFontSetting {
 
-	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
-	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
+	private WarlockColor foregroundColor = new WarlockColor();
+	private WarlockColor backgroundColor = new WarlockColor();
 	private FontSetting font;
 	
 	public ColorFontSetting (IWarlockSetting parent, String path)

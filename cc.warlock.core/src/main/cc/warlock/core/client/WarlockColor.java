@@ -27,10 +27,8 @@ package cc.warlock.core.client;
  * @author Marshall
  */
 public class WarlockColor {
-
-	public static final WarlockColor DEFAULT_COLOR = new WarlockColor(-1, -1, -1);
 	
-	private int red, green, blue;
+	private int red = -1, green = -1, blue = -1;
 	
 	public WarlockColor () { }
 	
@@ -57,6 +55,10 @@ public class WarlockColor {
 				green = Integer.parseInt(colorString.substring(3, 5), 16);
 				blue = Integer.parseInt(colorString.substring(5, 7), 16);
 			}
+		} else if (colorString.equals("default")) {
+			red = -1;
+			green = -1;
+			blue = -1;
 		} else {
 			System.out.println("Bad Color: " + colorString);
 		}
@@ -107,6 +109,8 @@ public class WarlockColor {
 	
 	@Override
 	public String toString() {
+		if (isDefault())
+			return "default";
 		return "#" + padHexString(Integer.toHexString(red).toUpperCase()) +
 				"" + padHexString(Integer.toHexString(green).toUpperCase()) +
 				"" + padHexString(Integer.toHexString(blue).toUpperCase());
@@ -114,6 +118,6 @@ public class WarlockColor {
 	
 	public boolean isDefault ()
 	{
-		return this.equals(DEFAULT_COLOR);
+		return red < 0 || green < 0 || blue < 0;
 	}
 }

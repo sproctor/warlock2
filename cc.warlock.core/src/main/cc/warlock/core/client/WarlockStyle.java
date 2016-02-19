@@ -40,8 +40,8 @@ public class WarlockStyle implements IWarlockStyle {
 	public static final WarlockStyle commandStyle = new WarlockStyle(COMMAND);
 	public static final WarlockStyle debugStyle = new WarlockStyle(DEBUG);
 	
-	private WarlockColor foregroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
-	private WarlockColor backgroundColor = new WarlockColor(WarlockColor.DEFAULT_COLOR);
+	private WarlockColor foregroundColor = new WarlockColor();
+	private WarlockColor backgroundColor = new WarlockColor();
 	private boolean fullLine;
 	private String name;
 	private String componentName;
@@ -161,10 +161,10 @@ public class WarlockStyle implements IWarlockStyle {
 	
 	public void mergeWith(IWarlockStyle style) {
 		WarlockColor fg = style.getForegroundColor();
-		if(fg != null && !fg.equals(WarlockColor.DEFAULT_COLOR))
+		if(fg != null && !fg.isDefault())
 			setForegroundColor(fg);
 		WarlockColor bg = style.getForegroundColor();
-		if(bg != null && !bg.equals(WarlockColor.DEFAULT_COLOR))
+		if(bg != null && !bg.isDefault())
 			setBackgroundColor(bg);
 		if(style.isBold())
 			setBold(true);

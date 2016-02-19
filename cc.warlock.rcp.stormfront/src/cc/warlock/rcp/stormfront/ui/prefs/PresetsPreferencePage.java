@@ -281,7 +281,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (currentStyle != null) {
-					currentStyle.setBackgroundColor(WarlockColor.DEFAULT_COLOR);
+					currentStyle.setBackgroundColor(new WarlockColor());
 				}
 				updatePreview();
 			}
@@ -295,7 +295,7 @@ public class PresetsPreferencePage extends PreferencePageUtils implements
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (currentStyle != null) {
-					currentStyle.setForegroundColor(WarlockColor.DEFAULT_COLOR);
+					currentStyle.setForegroundColor(new WarlockColor());
 				}
 				updatePreview();
 			}

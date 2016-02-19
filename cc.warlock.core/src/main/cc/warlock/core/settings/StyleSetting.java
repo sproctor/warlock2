@@ -49,10 +49,10 @@ public class StyleSetting extends WarlockSetting implements IWarlockStyle {
 		super(parent, path);
 		
 		String fgString = getNode().get("fgcolor", null);
-		fgColor = fgString == null ? new WarlockColor(WarlockColor.DEFAULT_COLOR) : new WarlockColor(fgString);
+		fgColor = fgString == null ? new WarlockColor() : new WarlockColor(fgString);
 		
 		String bgString = getNode().get("bgcolor", null);
-		bgColor = bgString == null ? new WarlockColor(WarlockColor.DEFAULT_COLOR) : new WarlockColor(bgString);
+		bgColor = bgString == null ? new WarlockColor() : new WarlockColor(bgString);
 		
 		fullLine = getNode().getBoolean("full-line", false);
 		

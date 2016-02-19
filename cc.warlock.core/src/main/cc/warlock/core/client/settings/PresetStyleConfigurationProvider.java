@@ -98,8 +98,8 @@ public class PresetStyleConfigurationProvider extends WarlockSetting
 	
 	private static void setDefaultStyle(String name, String fg, String bg, boolean fullLine) {
 		IWarlockStyle style = new WarlockStyle(name);
-		style.setForegroundColor(fg == null ? WarlockColor.DEFAULT_COLOR : new WarlockColor(fg));
-		style.setBackgroundColor(bg == null ? WarlockColor.DEFAULT_COLOR : new WarlockColor(bg));
+		style.setForegroundColor(fg == null ? new WarlockColor() : new WarlockColor(fg));
+		style.setBackgroundColor(bg == null ? new WarlockColor() : new WarlockColor(bg));
 		style.setFullLine(fullLine);
 		defaultStyles.put(name, style);
 	}
