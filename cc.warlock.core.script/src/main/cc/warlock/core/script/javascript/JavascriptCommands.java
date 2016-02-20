@@ -37,7 +37,6 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Script;
 
 import cc.warlock.core.script.IMatch;
-import cc.warlock.core.script.IScriptCommands;
 import cc.warlock.core.script.IScriptFileInfo;
 import cc.warlock.core.script.internal.RegexMatch;
 import cc.warlock.core.script.internal.TextMatch;
@@ -45,7 +44,6 @@ import cc.warlock.core.script.javascript.JavascriptScript.StopException;
 
 public class JavascriptCommands {
 
-	private IScriptCommands commands;
 	private JavascriptScript script;
 	private HashMap<Integer, TimerTask> timeTasks = new HashMap<Integer, TimerTask>();
 	private int nextTimerID = 1;
@@ -75,21 +73,20 @@ public class JavascriptCommands {
 		}
 	}
 	
-	public JavascriptCommands(IScriptCommands commands, JavascriptScript script) {
-		this.commands = commands;
+	public JavascriptCommands(JavascriptScript script) {
 		this.script = script;
 	}
 	
 	public void echo(String text) throws InterruptedException {
 		script.checkStop();
 		
-		commands.echo(text);
+		script.getCommands().echo(text);
 	}
 	
 	public void echo()  throws InterruptedException {
 		script.checkStop();
 		
-		commands.echo("");
+		script.getCommands().echo("");
 	}
 
 	public boolean include (String otherScript)
@@ -123,7 +120,7 @@ public class JavascriptCommands {
 					e.printStackTrace();
 				}
 			} else {
-				commands.debug("ERROR:  Cannot include specified file: " + otherScript);
+				script.getCommands().debug("ERROR:  Cannot include specified file: " + otherScript);
 			}
 		}
 		return false;
@@ -134,7 +131,7 @@ public class JavascriptCommands {
 		
 		try {
 			// TODO: figure out the line number
-			commands.move(direction,0);
+			script.getCommands().move(direction,0);
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -144,8 +141,18 @@ public class JavascriptCommands {
 		script.checkStop();
 		
 		try {
-			commands.pause(seconds);
-			commands.waitForRoundtime();
+			script.getCommands().pause(seconds);
+			script.getCommands().waitForRoundtime();
+		} catch(InterruptedException e) {
+			script.checkStop();
+		}
+	}
+	
+	public void pause() {
+		script.checkStop();
+		
+		try {
+			script.getCommands().waitForRoundtime();
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -155,7 +162,7 @@ public class JavascriptCommands {
 		script.checkStop();
 		
 		try {
-			commands.put(text,0);
+			script.getCommands().put(text,0);
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -186,7 +193,7 @@ public class JavascriptCommands {
 		script.checkStop();
 		
 		try {
-			commands.waitFor(match);
+			script.getCommands().waitFor(match);
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -196,23 +203,16 @@ public class JavascriptCommands {
 		script.checkStop();
 		
 		try {
-			commands.waitForPrompt();
+			script.getCommands().waitForPrompt();
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
 	}
 
 	public void exit() throws Error {
-		commands.stop();
+		script.getCommands().stop();
 		
 		throw script.new StopException();
-	}
-	
-	public IScriptCommands getScriptCommands ()
-	{
-		script.checkStop();
-		
-		return commands;
 	}
 	
 	public JavascriptScript getScript ()
@@ -236,12 +236,12 @@ public class JavascriptCommands {
 
 				jsCommand.exec(script.getContext(), script.getScope());
 			} catch(EcmaError e) {
-				commands.debug(e.getMessage());
+				script.getCommands().debug(e.getMessage());
 				this.cancel();
 			} catch(StopException e) {
 				this.cancel();
 			} catch(Exception e) {
-				commands.debug(e.getMessage());
+				script.getCommands().debug(e.getMessage());
 				e.printStackTrace();
 				this.cancel();
 			} finally {
@@ -280,7 +280,7 @@ public class JavascriptCommands {
 		File file = new File(filename);
 		if (file.exists()) {
 			try {
-				commands.playSound(new FileInputStream(file));
+				script.getCommands().playSound(new FileInputStream(file));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -294,32 +294,32 @@ public class JavascriptCommands {
 
 		RegexMatch match = new RegexMatch(text);
 		JSActionHandler command = new JSActionHandler(action, match);
-		commands.addAction(command, match);
+		script.getCommands().addAction(command, match);
 	}
 
 	public void removeAction(String text) {
 		script.checkStop();
 
-		commands.removeAction(text);
+		script.getCommands().removeAction(text);
 	}
 
 	public void removeAction(IMatch action) {
 		script.checkStop();
 
-		commands.removeAction(action);
+		script.getCommands().removeAction(action);
 	}
 
 	public void clearActions() {
 		script.checkStop();
 
-		commands.clearActions();
+		script.getCommands().clearActions();
 	}
 
 	public void waitForRoundtime() {
 		script.checkStop();
 
 		try {
-			commands.waitForRoundtime();
+			script.getCommands().waitForRoundtime();
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -329,25 +329,25 @@ public class JavascriptCommands {
 		script.checkStop();
 
 		try {
-			commands.waitNextRoom();
+			script.getCommands().waitNextRoom();
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
 	}
 
 	public String getComponent(String component) {
-		return commands.getClient().getComponent(component);
+		return script.getClient().getComponent(component);
 	}
 
 	public String getVariable(String name) {
-		return commands.getStoredVariable(name);
+		return script.getCommands().getStoredVariable(name);
 	}
 
 	public String getVital(String name) {
-		return commands.getClient().getProperty(name).get();
+		return script.getClient().getProperty(name).get();
 	}
 
 	public void setVariable(String name, String value) {
-		commands.setStoredVariable(name, value);
+		script.getCommands().setStoredVariable(name, value);
 	}
 }

@@ -49,7 +49,7 @@ public class JavascriptVars implements IJavascriptVariableProvider {
 		//JavascriptCommands commands = new JavascriptCommands(script.getCommands(), script);
 		//scriptCommands.put(script, script.);
 
-		scope.put("script", scope, script.getCommands());
+		scope.put("script", scope, new JavascriptCommands(script));
 		scope.put("compass", scope, client.getCompass());
 		scope.put("commandHistory", scope, script.getViewer().getEntry().getCommandHistory());
 
