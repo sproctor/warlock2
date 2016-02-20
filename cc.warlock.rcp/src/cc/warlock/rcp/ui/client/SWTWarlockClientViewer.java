@@ -175,6 +175,17 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 		}
 	}
 	
+	private class StreamOpenWrapper implements Runnable {
+		private String streamName;
+		public boolean isOpen;
+		public StreamOpenWrapper(String streamName) {
+			this.streamName = streamName;
+		}
+		public void run() {
+			isOpen = viewer.isStreamOpen(streamName);
+		}
+	}
+	
 	protected void run(Runnable runnable) {
 		Display.getDefault().asyncExec(new CatchingRunnable(runnable));
 	}
@@ -192,8 +203,9 @@ public class SWTWarlockClientViewer implements IWarlockClientViewer {
 	}
 	
 	public boolean isStreamOpen(String streamName) {
-		// This method is not allowed to use any SWT methods
-		return viewer.isStreamOpen(streamName);
+		StreamOpenWrapper wrapper = new StreamOpenWrapper(streamName);
+		Display.getDefault().syncExec(new CatchingRunnable(wrapper));
+		return wrapper.isOpen;
 	}
 
 	public Collection<IMacroVariable> getMacroVariables() {
