@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/cc.warlock.rcp.feature_2.0.0.qualifier.jar" id="cc.warlock.rcp.feature" version="2.0.0.qualifier">
+      <category name="warlock2"/>
+   </feature>
+   <feature url="features/cc.warlock.rcp.stormfront.feature_2.0.0.qualifier.jar" id="cc.warlock.rcp.stormfront.feature" version="2.0.0.qualifier">
+      <category name="warlock2"/>
+   </feature>
+   <category-def name="warlock2" label="Warlock 2"/>
+</site>

@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="connectionCommands" name="connectionCommands" schema="schema/connectionCommands.exsd"/>
+   <extension-point id="macroVariables" name="macroVariables" schema="schema/macroVariables.exsd"/>
+   <extension-point id="macroCommands" name="macroCommands" schema="schema/macroCommands.exsd"/>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="cc.warlock.rcp.views.DebugView"
+            icon="images/console.gif"
+            id="cc.warlock.rcp.views.DebugView"
+            name="Debug Console">
+      </view>
+      <view
+            class="cc.warlock.rcp.views.ConnectionView"
+            icon="images/connect.png"
+            id="cc.warlock.rcp.views.ConnectionView"
+            name="Connections">
+      </view>
+      <view
+            allowMultiple="false"
+            class="org.eclipse.ui.navigator.CommonNavigator"
+            icon="images/script.gif"
+            id="cc.warlock.rcp.views.scriptNavigatorView"
+            name="Script Navigator">
+      </view>
+      <view
+            allowMultiple="true"
+            class="cc.warlock.rcp.views.UserStream"
+            id="cc.warlock.rcp.views.userStream.rightStream"
+            name="Stream">
+      </view>
+      <view
+            allowMultiple="true"
+            class="cc.warlock.rcp.views.GameView"
+            id="cc.warlock.rcp.ui.views.GameView"
+            name="GameView">
+      </view>
+      <view
+            allowMultiple="false"
+            class="cc.warlock.rcp.views.ScriptManager"
+            icon="images/script.gif"
+            id="cc.warlock.rcp.views.ScriptManager"
+            name="Script Manager">
+      </view>
+   </extension>
+   <extension
+         id="warlock"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run class="cc.warlock.rcp.application.WarlockApplication"/>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="cc.warlock.rcp.application.WarlockPerspectiveFactory"
+            name="Warlock Perspective"
+            id="cc.warlock.warlockPerspective"/>
+      <perspective
+            class="cc.warlock.rcp.application.ScriptsPerspectiveFactory"
+            id="cc.warlock.scriptsPerspective"
+            name="Scripts Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="cc.warlock.rcp.macroVariables">
+      <macroVariable classname="cc.warlock.rcp.ui.macros.variables.CurrentCommandMacroVariable"/>
+      <macroVariable classname="cc.warlock.rcp.ui.macros.variables.LastCommandMacroVariable"/>
+      <macroVariable classname="cc.warlock.rcp.ui.macros.variables.NextCommandMacroVariable"/>
+   </extension>
+   <extension
+         point="cc.warlock.rcp.macroCommands">
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.HistoryPrevMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.HistorySearchMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.HistoryNextMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.PauseScriptMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.StopScriptMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.ReturnMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.ReturnOrRepeatLastMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.RepeatLastMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.RepeatSecondToLastMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.CopyMacroCommand"/>
+      <macroCommand classname="cc.warlock.rcp.ui.macros.commands.PasteMacroCommand"/>
+      <macroCommand
+            classname="cc.warlock.rcp.ui.macros.commands.PageUpCommand">
+      </macroCommand>
+      <macroCommand
+            classname="cc.warlock.rcp.ui.macros.commands.PageDownCommand">
+      </macroCommand>
+      <macroCommand
+            classname="cc.warlock.rcp.ui.macros.commands.HighlightsDialogMacroCommand">
+      </macroCommand>
+      <macroCommand
+            classname="cc.warlock.rcp.ui.macros.commands.MacrosDialogMacroCommand">
+      </macroCommand>
+      <macroCommand
+            classname="cc.warlock.rcp.ui.macros.commands.VariablesDialogMacroCommand">
+      </macroCommand>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="cc.warlock.rcp.warlock"
+            description="Warlock: A Simutronics Game Client"
+            name="Warlock 2">
+         <property
+               name="appName"
+               value="Warlock 2">
+         </property>
+         <property
+               name="windowImages"
+               value="images/character.gif">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="10,84,149,10">
+         </property>
+         <property
+               name="aboutImage"
+               value="images/warlock-about.gif">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="000000">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="163,76,280,14">
+         </property>
+         <property
+               name="aboutText"
+               value="%aboutText">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="cc.warlock.rcp.menu.connect"
+               label="Connect"
+               mnemonic="C"
+               tooltip="Connect to a game">
+			  <command
+           commandId="cc.warlock.rcp.command.newConnection"
+           icon="images/connect.png"
+           id="cc.warlock.rcp.menu.newConnection"
+           label="Connect..."
+           mnemonic="C"
+           style="push">
+               </command>
+         </menu>
+         <menu
+               id="cc.warlock.rcp.menu.prefs"
+               label="Preferences"
+               mnemonic="P">
+            <command
+                  commandId="cc.warlock.rcp.commands.scriptsWindow"
+                  icon="images/script.gif"
+                  id="cc.warlock.rcp.menu.scripts"
+                  label="Script Manager..."
+                  mnemonic="S">
+            </command>
+            <separator
+                  name="cc.warlock.rcp.prefsSeperator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="cc.warlock.rcp.command.preferences"
+                  icon="images/preferences.png"
+                  id="cc.warlock.rcp.menu.preferences"
+                  label="Preferences"
+                  mnemonic="P"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="cc.warlock.rcp.menu.window"
+               label="Window"
+               mnemonic="W">
+         </menu>
+         <menu
+         		id="cc.warlock.rcp.menu.scriptControl"
+         		label="Script Control"
+         		mnemonic="S">
+	         <separator
+	               name="cc.warlock.rcp.menu.scriptControl.seperator"
+	               visible="true">
+	         </separator>
+         </menu>
+         <menu
+               id="cc.warlock.rcp.menu.help"
+               label="Help"
+               mnemonic="H">
+            <command
+                  commandId="cc.warlock.rcp.command.helpContents"
+                  icon="images/help.gif"
+                  id="cc.warlock.rcp.menu.helpContents"
+                  label="Help Contents"
+                  mnemonic="C">
+            </command>
+            <command
+                  commandId="cc.warlock.rcp.commands.visitWebpage"
+                  icon="images/website.gif"
+                  id="cc.warlock.rcp.menu.visitWebpage"
+                  label="Visit Warlock Webpage">
+            </command>
+            <command
+                  commandId="cc.warlock.rcp.commands.checkForUpdates"
+                  icon="images/updates_obj.gif"
+                  id="cc.warlock.rcp.menu.checkForUpdates"
+                  label="Check for Updates">
+            </command>
+            <separator
+                  name="cc.warlock.rcp.aboutSeparator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.help.aboutAction"
+                  id="cc.warlock.rcp.menu.about"
+                  label="About Warlock"
+                  mnemonic="A">
+            </command>
+         </menu>
+     </menuContribution>
+     <menuContribution
+            locationURI="menu:cc.warlock.rcp.menu.window">
+         <dynamic
+               class="cc.warlock.rcp.menu.StreamsContributionItem"
+               id="cc.warlock.rcp.menu.dynamicStreams">
+         </dynamic>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="cc.warlock.rcp.menu.NewConnectionHandler"
+            id="cc.warlock.rcp.command.newConnection"
+            name="New Connection...">
+      </command>
+      <command
+            defaultHandler="cc.warlock.rcp.menu.PreferencesHandler"
+            id="cc.warlock.rcp.command.preferences"
+            name="Preferences">
+      </command>
+      <command
+            defaultHandler="cc.warlock.rcp.menu.VisitWarlockWebpageHandler"
+            id="cc.warlock.rcp.commands.visitWebpage"
+            name="Visit Warlock Webpage">
+      </command>
+      <command
+            defaultHandler="cc.warlock.rcp.menu.CheckForUpdatesHandler"
+            id="cc.warlock.rcp.commands.checkForUpdates"
+            name="Check For Updates">
+      </command>
+      <command
+            defaultHandler="cc.warlock.rcp.menu.ScriptsWindowHandler"
+            id="cc.warlock.rcp.commands.scriptsWindow"
+            name="Scripts Window">
+      </command>
+      <command
+            defaultHandler="cc.warlock.rcp.menu.HelpContentsCommand"
+            id="cc.warlock.rcp.command.helpContents"
+            name="Help Contents">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="cc.warlock.rcp.prefs.WarlockPreferencePage"
+            id="cc.warlock.rcp.warlockPrefs"
+            name="Warlock Preferences">
+         
+      </page>
+      <page
+            category="cc.warlock.rcp.warlockPrefs"
+            class="cc.warlock.rcp.prefs.HighlightStringsPreferencePage"
+            id="cc.warlock.rcp.prefs.highlightStrings"
+            name="Highlight Strings">
+         
+      </page>
+      <page
+            category="cc.warlock.rcp.warlockPrefs"
+            class="cc.warlock.rcp.prefs.ScriptingPreferencePage"
+            id="cc.warlock.rcp.prefs.scriptingPrefs"
+            name="Scripting">
+         
+      </page>
+      <page
+            category="cc.warlock.rcp.warlockPrefs"
+            class="cc.warlock.rcp.prefs.MacrosPreferencePage"
+            id="cc.warlock.rcp.prefs.macros"
+            name="Macros">
+         
+      </page>
+      <page
+            category="cc.warlock.rcp.warlockPrefs"
+            class="cc.warlock.rcp.prefs.VariablesPreferencePage"
+            id="cc.warlock.rcp.prefs.variables"
+            name="Variables">
+         
+      </page>
+      <page
+            category="cc.warlock.rcp.warlockPrefs"
+            class="cc.warlock.rcp.prefs.LoggingPreferencePage"
+            id="cc.warlock.rcp.prefs.logging"
+            name="Logging">
+         
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="cc.warlock.rcp.ui.script.ScriptFilesystemContentProvider"
+            icon="images/fldr_obj.gif"
+            id="cc.warlock.rcp.navigator.localScripts"
+            labelProvider="cc.warlock.rcp.ui.script.ScriptFilesystemLabelProvider"
+            name="Local Scripts"
+            priority="normal">
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="cc.warlock.rcp.application.WarlockApplication">
+               </instanceof>
+               <instanceof
+                     value="cc.warlock.core.script.IScriptInfo">
+               </instanceof>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="cc.warlock.core.script.IScriptInfo">
+               </instanceof>
+               <instanceof
+                     value="java.lang.String">
+               </instanceof>
+            </or>
+         </possibleChildren>
+         <actionProvider
+               class="cc.warlock.rcp.ui.script.ScriptActionProvider"
+               id="cc.warlock.rcp.navigator.actions.ScriptActionProvider">
+         </actionProvider>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="cc.warlock.rcp.views.scriptNavigatorView">
+         <popupMenu
+                allowsPlatformContributions="true"
+                id="cc.warlock.rcp.views.scriptNavigatorView#PopupMenu">  
+             <insertionPoint name="group.new"/>
+             <insertionPoint
+                   name="group.open"
+                   separator="true"/>
+             <insertionPoint name="group.openWith"/>   
+             <insertionPoint name="group.edit"
+                   separator="true"/>   
+             <insertionPoint name="group.reorganize" />         
+             <insertionPoint
+                   name="group.port"
+                   separator="true"/>     
+             <insertionPoint
+                   name="group.build"
+                   separator="true"/> 
+             <insertionPoint
+                   name="group.generate"
+                   separator="true"/> 
+             <insertionPoint
+                   name="group.search"
+                   separator="true"/>              
+             <insertionPoint
+                   name="additions"
+                   separator="true"/>              
+             <insertionPoint
+                   name="group.properties"
+                   separator="true"/>             
+          </popupMenu>
+      </viewer>
+      <viewerContentBinding
+            viewerId="cc.warlock.rcp.views.scriptNavigatorView">
+         <includes>
+            <contentExtension
+                  pattern="cc.warlock.rcp.navigator.localScripts">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.helpSupport">
+      <config
+            class="cc.warlock.rcp.help.WarlockHelpUI">
+      </config>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="cc.warlock.rcp.WarlockClientPropertyTester"
+            id="cc.warlock.rcp.client.tester"
+            namespace="cc.warlock.rcp"
+            properties="clientConnected,settingsLoaded"
+            type="cc.warlock.rcp.ui.client.WarlockClientAdaptable">
+      </propertyTester>
+   </extension>
+
+</plugin>
