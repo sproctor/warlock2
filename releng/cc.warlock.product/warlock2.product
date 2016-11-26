@@ -14,6 +14,8 @@
    </configIni>
 
    <launcherArgs>
+      <programArgs>-data @user.home/.warlock2
+      </programArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
