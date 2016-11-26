@@ -6,5 +6,6 @@ bin
 /*/target
 /*/.settings
 /*/.classpath
-/*/workspace
-/*/*.jar
+workspace
+warlock2*.jar
+target
