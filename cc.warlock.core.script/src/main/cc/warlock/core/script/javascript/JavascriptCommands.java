@@ -131,7 +131,7 @@ public class JavascriptCommands {
 		
 		try {
 			// TODO: figure out the line number
-			script.getCommands().move(direction,0);
+			script.getCommands().move(direction, -1);
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}
@@ -162,7 +162,7 @@ public class JavascriptCommands {
 		script.checkStop();
 		
 		try {
-			script.getCommands().put(text,0);
+			script.getCommands().put(text, -1);
 		} catch(InterruptedException e) {
 			script.checkStop();
 		}

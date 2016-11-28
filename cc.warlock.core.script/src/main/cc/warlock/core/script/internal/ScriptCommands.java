@@ -261,7 +261,7 @@ public class ScriptCommands implements IScriptCommands, IStreamListener, IRoomLi
 			typeAhead++;
 		}
 		Command command = new Command(text);
-		command.setPrefix("[" + script.getName() + ":" + lineNum + "]: ");
+		command.setPrefix("[" + script.getName() + (lineNum >= 0 ? ":" + lineNum : "") + "]: ");
 		getClient().send(command);
 	}
 
