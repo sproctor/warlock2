@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Warlock2 Core Plug-in
+Bundle-SymbolicName: cc.warlock.core
+Bundle-Version: 2.0.0.qualifier
+Bundle-Activator: cc.warlock.core.Activator
+Bundle-Vendor: Warlock Team
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/commons-lang3-3.4.jar,
+ lib/commons-codec-1.10.jar,
+ warlock2-core.jar,
+ warlock2-core-eclipse.jar
+Export-Package: cc.warlock.core;uses:="org.osgi.framework,org.eclipse.core.runtime",
+ cc.warlock.core.client;uses:="cc.warlock.core.settings,cc.warlock.core.client.internal,cc.warlock.core.network",
+ cc.warlock.core.client.internal;uses:="cc.warlock.core.settings,cc.warlock.core.network,cc.warlock.core.client",
+ cc.warlock.core.client.logging;uses:="cc.warlock.core.settings,cc.warlock.core.client",
+ cc.warlock.core.client.settings;uses:="cc.warlock.core.settings,org.osgi.service.prefs,cc.warlock.core.client",
+ cc.warlock.core.network;uses:="cc.warlock.core.client",
+ cc.warlock.core.settings;uses:="org.osgi.service.prefs,org.eclipse.core.runtime.preferences,cc.warlock.core.client",
+ org.apache.commons.codec,
+ org.apache.commons.codec.binary;uses:="org.apache.commons.codec",
+ org.apache.commons.codec.language;uses:="org.apache.commons.codec",
+ org.apache.commons.lang3
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
