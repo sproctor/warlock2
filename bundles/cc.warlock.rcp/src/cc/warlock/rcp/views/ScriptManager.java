@@ -55,7 +55,7 @@ import cc.warlock.rcp.ui.WarlockSharedImages;
  * @author kassah
  *
  */
-public class ScriptManager extends ViewPart implements IGameViewFocusListener, IScriptListener {
+public class ScriptManager extends ViewPart implements IGameViewFocusListener {
 	private TableViewer scriptsTable;
 	private Composite main;
 	private TableColumn nameColumn, pauseColumn, stopColumn;
@@ -181,29 +181,10 @@ public class ScriptManager extends ViewPart implements IGameViewFocusListener, I
 	/* (non-Javadoc)
 	 * @see cc.warlock.rcp.views.IGameViewFocusListener#gameViewFocused(cc.warlock.rcp.views.GameView)
 	 */
+	@Override
 	public void gameViewFocused(GameView gameView) {
 		// TODO Auto-generated method stub
 
-	}
-	
-	public void scriptPaused(IScript script) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void scriptResumed(IScript script) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void scriptStarted(IScript script) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void scriptStopped(IScript script, boolean userStopped) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	class ScriptsLabelProvider 
@@ -259,69 +240,76 @@ public class ScriptManager extends ViewPart implements IGameViewFocusListener, I
 			this.suspended = suspended;
 		}
 
+		@Override
 		public void addScriptListener(IScriptListener listener) {
 			// TODO Auto-generated method stub
 			
 		}
 
+		@Override
 		public IWarlockClient getClient() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public IWarlockClientViewer getViewer() {
 			// FIXME added to fix error, should this not be a stub?
 			return null;
 		}
 		
+		@Override
 		public String getName() {
-			// TODO Auto-generated method stub
 			return name;
 		}
 
+		@Override
 		public IScriptEngine getScriptEngine() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public IScriptInfo getScriptInfo() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public boolean isRunning() {
 			// TODO Auto-generated method stub
 			return true;
 		}
 
+		@Override
 		public boolean isSuspended() {
-			// TODO Auto-generated method stub
 			return suspended;
 		}
 
+		@Override
 		public void removeScriptListener(IScriptListener listener) {
 			// TODO Auto-generated method stub
 			
 		}
 
+		@Override
 		public void resume() {
 			suspended = false;
 		}
 
+		@Override
 		public void stop() {
-			// TODO Auto-generated method stub
 			suspended = true;
 		}
 
+		@Override
 		public void suspend() {
-			// TODO Auto-generated method stub
 			suspended = true;
 		}
 
 		@Override
 		public void setDebugLevel(int level) {
 			// TODO Auto-generated method stub
-			
 		}
 
 		@Override

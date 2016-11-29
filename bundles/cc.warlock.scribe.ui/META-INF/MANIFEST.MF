@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.ui,
  cc.warlock.core.stormfront,
  cc.warlock.rcp.stormfront
 Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

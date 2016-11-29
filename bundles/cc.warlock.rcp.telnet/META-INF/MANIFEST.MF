@@ -7,5 +7,7 @@ Bundle-Activator: cc.warlock.rcp.telnet.TelnetRCPPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  cc.warlock.core,
- cc.warlock.rcp
+ cc.warlock.rcp,
+ org.eclipse.equinox.p2.core;bundle-version="2.4.100",
+ org.eclipse.pde.runtime;bundle-version="3.5.0"
 Eclipse-LazyStart: true

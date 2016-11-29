@@ -47,7 +47,7 @@ import cc.warlock.core.network.IConnection;
 import cc.warlock.core.network.IConnection.ErrorType;
 import cc.warlock.core.network.IConnectionListener;
 import cc.warlock.rcp.ui.WarlockText;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.rcp.ui.network.SWTConnectionListenerAdapter;
 
 public class DebugView extends WarlockView implements IConnectionListener, IGameViewFocusListener {
@@ -60,7 +60,7 @@ public class DebugView extends WarlockView implements IConnectionListener, IGame
 	private WarlockText activeText;
 	private WarlockStyle sentStyle;
 	private SWTConnectionListenerAdapter connListener = new SWTConnectionListenerAdapter(DebugView.this);;
-	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
+	private SWTWarlockClientConnectListener clientListener = new SWTWarlockClientConnectListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(final IWarlockClient client) {
 			Display.getDefault().asyncExec(new Runnable() {

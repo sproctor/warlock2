@@ -64,7 +64,7 @@ import cc.warlock.core.client.settings.WindowConfigurationProvider;
 import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.util.FontUtil;
@@ -101,7 +101,7 @@ public class WarlockText {
 	private boolean ignoreEmptyLines = true;
 	private Font monoFont = null;
 	private LinkedList<WarlockStringMarker> markers = new LinkedList<WarlockStringMarker>();
-	private IWarlockClientConnectListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
+	private IWarlockClientConnectListener clientListener = new SWTWarlockClientConnectListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(IWarlockClient client) {}
 		@Override

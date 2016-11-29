@@ -37,7 +37,7 @@ import cc.warlock.core.client.PropertyListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
 import cc.warlock.rcp.ui.StreamText;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.rcp.util.ColorUtil;
 
 public class StreamView extends WarlockView implements IGameViewFocusListener
@@ -59,7 +59,7 @@ public class StreamView extends WarlockView implements IGameViewFocusListener
 		new HashMap<IWarlockClient, StreamText>();
 	
 	private StyledText nullTextWidget;
-	private IWarlockClientConnectListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
+	private IWarlockClientConnectListener clientListener = new SWTWarlockClientConnectListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(IWarlockClient client) {
 			addClient(client);

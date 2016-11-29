@@ -26,11 +26,11 @@ import org.eclipse.swt.widgets.Display;
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.IWarlockClientConnectListener;
 
-public class SWTWarlockClientListener implements IWarlockClientConnectListener {
+public class SWTWarlockClientConnectListener implements IWarlockClientConnectListener {
 
 	private IWarlockClientConnectListener listener;
 	
-	public SWTWarlockClientListener (IWarlockClientConnectListener listener)
+	public SWTWarlockClientConnectListener (IWarlockClientConnectListener listener)
 	{
 		this.listener = listener;
 	}

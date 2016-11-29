@@ -43,7 +43,7 @@ import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.rcp.stormfront.ui.StormFrontSharedImages;
 import cc.warlock.rcp.ui.client.SWTPropertyListener;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.util.ColorUtil;
 import cc.warlock.rcp.views.GameView;
@@ -76,7 +76,7 @@ public class HandsView extends Composite
 				loadSettings(settings);
 		}
 	});
-	private SWTWarlockClientListener clientListener = new SWTWarlockClientListener(new IWarlockClientConnectListener() {
+	private SWTWarlockClientConnectListener clientListener = new SWTWarlockClientConnectListener(new IWarlockClientConnectListener() {
 		@Override
 		public void clientConnected(IWarlockClient client) {}
 		@Override

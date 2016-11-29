@@ -59,7 +59,7 @@ import cc.warlock.core.settings.IWarlockSetting;
 import cc.warlock.core.settings.IWarlockSettingListener;
 import cc.warlock.core.settings.WarlockPreferencesScope;
 import cc.warlock.rcp.configuration.GameViewConfiguration;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.rcp.ui.client.SWTWarlockClientViewerListener;
 import cc.warlock.rcp.ui.client.SWTWarlockSettingListener;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
@@ -134,7 +134,7 @@ abstract public class WarlockEntry implements IWarlockEntry {
 		widget.setBackground(background);
 		widget.setForeground(foreground);
 		
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientConnectListener() {
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientConnectListener(new IWarlockClientConnectListener() {
 			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override

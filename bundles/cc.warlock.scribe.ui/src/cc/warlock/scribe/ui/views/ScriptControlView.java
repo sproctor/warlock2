@@ -39,12 +39,12 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.part.ViewPart;
 
 import cc.warlock.core.client.IWarlockClient;
-import cc.warlock.core.client.IWarlockClientListener;
+import cc.warlock.core.client.IWarlockClientConnectListener;
 import cc.warlock.core.client.WarlockClientRegistry;
 import cc.warlock.core.script.IScript;
 import cc.warlock.core.script.IScriptListener;
 import cc.warlock.rcp.ui.client.SWTScriptListener;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.scribe.ui.ScribeSharedImages;
 
 public class ScriptControlView extends ViewPart implements IScriptListener {
@@ -67,25 +67,21 @@ public class ScriptControlView extends ViewPart implements IScriptListener {
 	
 	protected void updateCurrentClient ()
 	{
-		if (WarlockClientRegistry.getActiveClients().size() > 0)
+		for (IWarlockClient client : WarlockClientRegistry.getActiveClients())
 		{
-			for (IWarlockClient client : WarlockClientRegistry.getActiveClients())
-			{
-					listenToClient(client);
-			}
-		} else {
-			WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(
-			new IWarlockClientListener() {
-				@Override
-				public void clientConnected(IWarlockClient client) {
-					listenToClient(client);
-				}
-				@Override
-				public void clientDisconnected(IWarlockClient client) {}
-				@Override
-				public void clientSettingsLoaded(IWarlockClient client) {}
-			}));
+			listenToClient(client);
 		}
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientConnectListener(
+				new IWarlockClientConnectListener() {
+					@Override
+					public void clientConnected(IWarlockClient client) {
+						listenToClient(client);
+					}
+					@Override
+					public void clientDisconnected(IWarlockClient client) {}
+					@Override
+					public void clientSettingsLoaded(IWarlockClient client) {}
+				}));
 	}
 	
 	@Override
@@ -243,15 +239,5 @@ public class ScriptControlView extends ViewPart implements IScriptListener {
 		resetControls();
 		
 		if (create) main.layout();
-	}
-	
-	public void scriptAdded(IScript script) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void scriptRemoved(IScript script) {
-		// TODO Auto-generated method stub
-		
 	}
 }

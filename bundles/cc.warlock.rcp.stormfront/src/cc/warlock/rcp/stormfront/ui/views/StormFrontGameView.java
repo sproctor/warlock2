@@ -54,7 +54,7 @@ import cc.warlock.rcp.ui.StreamText;
 import cc.warlock.rcp.ui.WarlockPopupAction;
 import cc.warlock.rcp.ui.WarlockSharedImages;
 import cc.warlock.rcp.ui.WarlockWizardDialog;
-import cc.warlock.rcp.ui.client.SWTWarlockClientListener;
+import cc.warlock.rcp.ui.client.SWTWarlockClientConnectListener;
 import cc.warlock.rcp.ui.macros.MacroRegistry;
 import cc.warlock.rcp.util.RCPUtil;
 import cc.warlock.rcp.views.ConnectionView;
@@ -206,7 +206,7 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 		if(settings != null)
 			loadClientSettings(settings);
 
-		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientListener(new IWarlockClientConnectListener() {
+		WarlockClientRegistry.addWarlockClientListener(new SWTWarlockClientConnectListener(new IWarlockClientConnectListener() {
 			@Override
 			public void clientConnected(IWarlockClient client) {}
 			@Override
