@@ -39,6 +39,23 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+    				<products>
+      					<product>
+        					<id>warlock2</id>
+        					<!-- optional parameters -->
+        					<rootFolder>warlock2</rootFolder>
+        					<rootFolders>
+          						<macosx>Warlock 2.app</macosx>
+        					</rootFolders>
+      					</product>
+    				</products>
+    				<formats>
+    					<macosx>tar.gz</macosx>
+                        <linux>tar.gz</linux>
+                        <win32>zip</win32>
+                    </formats>
+ 				</configuration>
             </plugin>
         </plugins>
     </build>
