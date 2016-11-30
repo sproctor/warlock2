@@ -5,10 +5,10 @@ Bundle-SymbolicName: cc.warlock.core.stormfront
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: cc.warlock.core.stormfront.StormFrontCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
- cc.warlock.core
+ cc.warlock.core,
+ org.apache.commons.lang3;bundle-version="3.1.0"
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: warlock2-stormfront-core.jar,
- warlock2-stormfront-core-eclipse.jar
+Bundle-ClassPath: warlock2-stormfront.jar
 Export-Package: cc.warlock.core.stormfront;uses:="cc.warlock.core.stormfront.xml,cc.warlock.core.client",
  cc.warlock.core.stormfront.client;uses:="cc.warlock.core.client",
  cc.warlock.core.stormfront.internal;uses:="cc.warlock.core.stormfront,cc.warlock.core.stormfront.xml,cc.warlock.core.client",
@@ -25,4 +25,3 @@ Export-Package: cc.warlock.core.stormfront;uses:="cc.warlock.core.stormfront.xml
    cc.warlock.core.client",
  cc.warlock.core.stormfront.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.apache.commons.lang3

@@ -51,6 +51,7 @@ public class CommandHistory implements ICommandHistory {
 	private ArrayList<ICommandHistoryListener> listeners = new ArrayList<ICommandHistoryListener>();
 	static private Preferences prefs = Preferences.userNodeForPackage(Command.class);
 	
+	@SuppressWarnings("unchecked")
 	public CommandHistory () {
 		// load saved history
 		byte[] array = prefs.getByteArray("command", null);
@@ -58,7 +59,9 @@ public class CommandHistory implements ICommandHistory {
 			ByteArrayInputStream bytes = new ByteArrayInputStream(array);
 			try {
 				ObjectInputStream stream = new ObjectInputStream(bytes);
-				commands = (LinkedList<ICommand>)stream.readObject();
+				Object obj = stream.readObject();
+				if (obj instanceof LinkedList<?>)
+					commands = (LinkedList<ICommand>)obj;
 				stream.close();
 			} catch(Exception e) {
 				e.printStackTrace();

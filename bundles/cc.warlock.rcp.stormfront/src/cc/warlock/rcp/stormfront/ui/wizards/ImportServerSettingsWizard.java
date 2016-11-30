@@ -1,19 +1,12 @@
 package cc.warlock.rcp.stormfront.ui.wizards;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
 import cc.warlock.core.client.IWarlockClient;
 import cc.warlock.core.client.WarlockClientRegistry;
-import cc.warlock.core.client.settings.ClientSettings;
-import cc.warlock.core.settings.ConfigurationUtil;
 import cc.warlock.core.settings.ProfileSetting;
-import cc.warlock.core.stormfront.settings.StormFrontServerSettings;
 import cc.warlock.rcp.wizards.WizardWithNotification;
 
 public class ImportServerSettingsWizard extends WizardWithNotification implements IImportWizard {
@@ -30,16 +23,16 @@ public class ImportServerSettingsWizard extends WizardWithNotification implement
 	public boolean performFinish() {
 		ProfileSetting profile = page1.getTargetProfile();
 		
-		StormFrontServerSettings serverSettings = null;
-		ClientSettings clientSettings = null;
-		IWarlockClient profileClient = null;
+		//StormFrontServerSettings serverSettings = null;
+		//ClientSettings clientSettings = null;
+		//IWarlockClient profileClient = null;
 		
 		for (IWarlockClient client : WarlockClientRegistry.getActiveClients()) 
 		{
 				if (client.getCharacterName().equals(profile.getCharacterName())) {
 					//clientSettings = (StormFrontClientSettings) sfClient.getStormFrontClientSettings();
 					//serverSettings = sfClient.getServerSettings();
-					profileClient = client;
+					//profileClient = client;
 				}
 		}
 		

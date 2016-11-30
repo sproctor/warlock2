@@ -11,7 +11,6 @@ public class WarlockWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		super(configurer);
 		configurer.setShowPerspectiveBar(false);
 		configurer.setShowProgressIndicator(false);
-		configurer.setShowFastViewBars(false);
 		configurer.setShowStatusLine(false);
 		configurer.setShowMenuBar(true);
 		configurer.setShowCoolBar(false);

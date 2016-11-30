@@ -14,5 +14,6 @@
     <modules>
         <module>cc.warlock.update</module>
         <module>cc.warlock.product</module>
+        <module>cc.warlock.target</module>
     </modules>
 </project>

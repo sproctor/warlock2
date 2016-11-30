@@ -38,23 +38,28 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 		this.client = client;
 	}
 	
-	public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (IWarlockClient.class.isAssignableFrom(adapter))
 		{
-			return this.client;
+			return (T) this.client;
 		}
 		
 		return null;
 	}
 
+	@Override
 	public Object[] getChildren(Object o) {
 		return new Object[0];
 	}
 	
+	@Override
 	public ImageDescriptor getImageDescriptor(Object object) {
 		return WarlockSharedImages.getImageDescriptor(WarlockSharedImages.IMG_CHARACTER);
 	}
 	
+	@Override
 	public String getLabel(Object o) {
 		if(client == null)
 			return null;
@@ -64,6 +69,7 @@ public class WarlockClientAdaptable implements IAdaptable, IWorkbenchAdapter {
 		return stream.getTitle();
 	}
 	
+	@Override
 	public Object getParent(Object o) {
 		return null;
 	}

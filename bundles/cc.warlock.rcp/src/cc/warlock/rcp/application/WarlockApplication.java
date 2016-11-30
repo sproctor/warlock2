@@ -83,6 +83,7 @@ public class WarlockApplication implements IApplication, IAdaptable {
 		}
 	}
 	
+	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		@SuppressWarnings("rawtypes")
 		Map args = context.getArguments();
@@ -94,12 +95,10 @@ public class WarlockApplication implements IApplication, IAdaptable {
 		
 		Location instanceLocation = Platform.getInstanceLocation();
 		
-		/* had to disable as it breaks on Mac OS
 		if (!instanceLocation.lock()) {
 			MessageDialog.openError(new Shell(display), "Warlock 2", "Another instance of Warlock is currently running.");
 			return EXIT_OK;
 		}
-		*/
 		
 		advisor = new WarlockWorkbenchAdvisor();
 		int ret = PlatformUI.createAndRunWorkbench(display, advisor);
@@ -113,6 +112,7 @@ public class WarlockApplication implements IApplication, IAdaptable {
 		return EXIT_OK;
 	}
 	
+	@Override
 	public void stop() {
 		
 	}
@@ -127,12 +127,12 @@ public class WarlockApplication implements IApplication, IAdaptable {
 		return advisor.getWindowConfigurer(w);
 	}
 
-	// Generic getAdapter because this is used as a model for the CNF-based
-	// script view.
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class adapter) {
+	// Generic getAdapter because this is used as a model for the CNF-based script view.
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter.isInstance(this))
-			return this;
+			return (T) this;
 		else
 			return null;
 	}

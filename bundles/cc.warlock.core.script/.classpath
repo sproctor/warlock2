@@ -7,6 +7,5 @@
 	<classpathentry kind="src" path="src/main/"/>
 	<classpathentry kind="src" path="src/antlr"/>
 	<classpathentry kind="src" path="src/eclipse/"/>
-	<classpathentry exported="true" kind="lib" path="lib/rhino-1.7.7.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

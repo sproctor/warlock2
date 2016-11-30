@@ -275,10 +275,12 @@ public class StormFrontGameView extends GameView implements IWarlockClientViewer
 //		});
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (IWarlockClient.class.equals(adapter)) {
-			return getClient();
+			// FIXME: Can this warning be fixed without adding the suppression?
+			return (T) getClient();
 		}
 		return super.getAdapter(adapter);
 	}
