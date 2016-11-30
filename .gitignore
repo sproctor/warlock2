@@ -1,11 +1,7 @@
-warlock2-build
 *.class
 *.swp
 *.tokens
 bin
-/*/target
-/*/.settings
-/*/.classpath
 workspace
 warlock2*.jar
 target
