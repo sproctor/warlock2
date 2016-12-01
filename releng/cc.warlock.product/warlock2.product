@@ -28,8 +28,8 @@
       startupMessageRect="163,76,280,14"
       startupForegroundColor="000000" />
    <launcher name="warlock2">
-      <linux icon="/cc.warlock.product/images/warlock_32.xpm"/>
-      <macosx icon="/cc.warlock.product/images/warlock.icns"/>
+      <linux icon="images/warlock_32.xpm"/>
+      <macosx icon="images/warlock.icns"/>
       <solaris/>
       <win useIco="false">
          <bmp

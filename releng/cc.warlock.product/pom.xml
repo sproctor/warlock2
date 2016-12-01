@@ -48,6 +48,7 @@
         					<rootFolders>
           						<macosx>Warlock 2.app</macosx>
         					</rootFolders>
+        					<archiveFileName>warlock2-${qualifiedVersion}</archiveFileName>
       					</product>
     				</products>
     				<formats>
