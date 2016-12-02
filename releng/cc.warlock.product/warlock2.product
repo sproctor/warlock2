@@ -33,9 +33,9 @@
       <solaris/>
       <win useIco="false">
          <bmp
-            winSmallHigh="/cc.warlock.rcp/images/warlock_16.bmp"
-            winMediumHigh="/cc.warlock.rcp/images/warlock_32.bmp"
-            winLargeHigh="/cc.warlock.rcp/images/warlock_48.bmp"/>
+            winSmallHigh="images/warlock_16.bmp"
+            winMediumHigh="images/warlock_32.bmp"
+            winLargeHigh="images/warlock_48.bmp"/>
       </win>
    </launcher>
 
