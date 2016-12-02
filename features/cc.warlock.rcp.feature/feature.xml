@@ -480,12 +480,45 @@ DAMAGES.
       <discovery label="Warlock Update Site" url="http://www.warlock.cc/updates"/>
    </url>
 
+   <includes
+         id="org.eclipse.rcp"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.platform"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ecf.core.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ecf.filetransfer.feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.apache.commons.lang3" version="3.1.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.codec" version="1.6.0" match="greaterOrEqual"/>
+      <import plugin="org.mozilla.javascript" version="1.7.5" match="greaterOrEqual"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor" version="3.10.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.ide" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.core.filesystem" version="1.2.0" match="compatible"/>
+      <import plugin="org.eclipse.help"/>
+      <import plugin="org.eclipse.equinox.p2.core"/>
+      <import plugin="org.eclipse.equinox.p2.engine"/>
+      <import plugin="org.eclipse.equinox.p2.metadata"/>
+      <import plugin="org.eclipse.equinox.p2.operations"/>
+      <import plugin="org.eclipse.equinox.p2.updatechecker"/>
+      <import plugin="org.eclipse.equinox.p2.updatesite"/>
+      <import plugin="org.eclipse.equinox.ds"/>
+      <import plugin="org.eclipse.equinox.event"/>
       <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.navigator"/>
    </requires>
 
    <plugin
@@ -505,5 +538,26 @@ DAMAGES.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.lang3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.mozilla.javascript"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

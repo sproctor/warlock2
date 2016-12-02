@@ -6,7 +6,6 @@ Bundle-Version: 2.0.0.qualifier
 Bundle-ClassPath: warlock2-rcp.jar
 Bundle-Activator: cc.warlock.rcp.plugin.Warlock2Plugin
 Bundle-Vendor: Warlock Team
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  cc.warlock.core,
  org.eclipse.swt,

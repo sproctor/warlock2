@@ -91,13 +91,17 @@ public class WarlockUpdates {
 	}
 	
 	public static void checkForUpdates (final Shell parent) {
+		try {
+		System.out.println("Checking for updates...");
 		
 		String repository_loc = updateProperties.getProperty(UPDATE_SITE);
 		
 		BundleContext context = FrameworkUtil.getBundle(WarlockUpdates.class).getBundleContext();
 		ServiceReference<?> reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
-		if(reference == null)
+		if(reference == null) {
+			System.out.println("No service reference");
 			return;
+		}
 		IProvisioningAgent agent = (IProvisioningAgent) context.getService(reference);
 		ProvisioningSession session = new ProvisioningSession(agent);
 		UpdateOperation operation = new UpdateOperation(session);
@@ -119,6 +123,7 @@ public class WarlockUpdates {
 		
 		// Failed to find updates (inform user and exit)
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
+        	System.out.println("No update");
         	MessageDialog.openWarning(parent, "No update",
         			"No updates for the current installation have been found");
           return /*Status.CANCEL_STATUS*/;
@@ -128,14 +133,21 @@ public class WarlockUpdates {
 		if(status.isOK() && status.getSeverity() != IStatus.ERROR) {
 			ProvisioningJob job = operation.getProvisioningJob(monitor);
 			if(job == null) {
+				System.out.println("Error with update (running in eclipse?)");
 				MessageDialog.openInformation(parent, "Resolution", operation.getResolutionDetails()
 						+ "\nLikely cause is from running inside Eclipse.");
 			} else {
+				System.out.println("Scheduling update");
 				job.schedule();
 			}
 		} else {
+			System.out.println("Error with update");
 			MessageDialog.openError(parent, "Error updating", operation.getResolutionDetails());
 		}
 		context.ungetService(reference);
+		} catch(Exception e) {
+			System.out.println("Unexpected exception in updater: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }

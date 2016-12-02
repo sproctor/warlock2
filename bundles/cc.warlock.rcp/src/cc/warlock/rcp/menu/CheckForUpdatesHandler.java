@@ -32,9 +32,7 @@ public class CheckForUpdatesHandler extends SimpleCommandHandler implements
 		IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		System.out.println("Checking for updates...");
 		WarlockUpdates.checkForUpdates(Display.getCurrent().getActiveShell());
-		
 		
 		return null;
 	}
