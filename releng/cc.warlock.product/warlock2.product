@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Warlock 2" uid="warlock2" id="cc.warlock.rcp.product" application="cc.warlock.rcp.warlock" version="2.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Warlock 2" uid="warlock2" id="cc.warlock.rcp.product" application="cc.warlock.rcp.warlock" version="2.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/cc.warlock.rcp/images/warlock-about.gif"/>
@@ -98,6 +98,12 @@
       <plugin id="org.eclipse.e4.ui.workbench.renderers.swt.cocoa" fragment="true"/>
       <plugin id="org.eclipse.e4.ui.workbench.swt"/>
       <plugin id="org.eclipse.e4.ui.workbench3"/>
+      <plugin id="org.eclipse.ecf"/>
+      <plugin id="org.eclipse.ecf.filetransfer"/>
+      <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer.ssl" fragment="true"/>
+      <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
       <plugin id="org.eclipse.emf.common"/>
       <plugin id="org.eclipse.emf.ecore"/>
       <plugin id="org.eclipse.emf.ecore.change"/>
@@ -120,6 +126,7 @@
       <plugin id="org.eclipse.equinox.p2.publisher"/>
       <plugin id="org.eclipse.equinox.p2.publisher.eclipse"/>
       <plugin id="org.eclipse.equinox.p2.repository"/>
+      <plugin id="org.eclipse.equinox.p2.transport.ecf"/>
       <plugin id="org.eclipse.equinox.p2.updatechecker"/>
       <plugin id="org.eclipse.equinox.p2.updatesite"/>
       <plugin id="org.eclipse.equinox.preferences"/>
@@ -167,10 +174,6 @@
    <features>
       <feature id="cc.warlock.rcp.feature" version="2.0.0.qualifier"/>
       <feature id="cc.warlock.rcp.stormfront.feature" version="2.0.0.qualifier"/>
-      <feature id="org.eclipse.rcp" version="4.6.1.v20160907-1200"/>
-      <feature id="org.eclipse.emf.ecore"/>
-      <feature id="org.eclipse.emf.common"/>
-      <feature id="org.eclipse.e4.rcp"/>
    </features>
 
    <configurations>

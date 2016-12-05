@@ -95,6 +95,7 @@ public class WarlockUpdates {
 		System.out.println("Checking for updates...");
 		
 		String repository_loc = updateProperties.getProperty(UPDATE_SITE);
+		System.out.println("Using repository: " + repository_loc);
 		
 		BundleContext context = FrameworkUtil.getBundle(WarlockUpdates.class).getBundleContext();
 		ServiceReference<?> reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
@@ -109,7 +110,7 @@ public class WarlockUpdates {
 		// Create uri
         URI uri = null;
         try {
-          uri = new URI(repository_loc);
+        	uri = new URI(repository_loc);
         } catch (URISyntaxException e) {
               System.out.println( "URI invalid: " + e.getMessage());
         }
