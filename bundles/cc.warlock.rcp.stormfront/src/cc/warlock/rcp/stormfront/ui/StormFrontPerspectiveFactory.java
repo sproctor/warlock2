@@ -34,7 +34,7 @@ public class StormFrontPerspectiveFactory extends WarlockPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		super.createInitialLayout(layout);
 		
-		layout.addStandaloneViewPlaceholder(BarsView.VIEW_ID, IPageLayout.BOTTOM, 1f, MAIN_FOLDER_ID, false);
+		layout.addStandaloneViewPlaceholder(BarsView.VIEW_ID, IPageLayout.BOTTOM, 0.95f, MAIN_FOLDER_ID, false);
 		
 //		layout.addPlaceholder(StatusView.VIEW_ID, IPageLayout.RIGHT, 0.8f, HandsView.VIEW_ID);
 	}

@@ -70,10 +70,6 @@ public class WarlockPerspectiveFactory implements IPerspectiveFactory {
 		
 		rightFolder.addPlaceholder("*DebugView:*");
 		
-		IPlaceholderFolderLayout bottomFolder =
-			layout.createPlaceholderFolder(BOTTOM_FOLDER_ID, IPageLayout.BOTTOM, 0.95f, MAIN_FOLDER_ID);
-		bottomFolder.addPlaceholder("*bottomStream*");
-		
 //		IFolderLayout folder = layout.createFolder(BOTTOM_FOLDER_ID, IPageLayout.BOTTOM, 0.90f, GameView.VIEW_ID);
 //		layout.addStandaloneView(BarsView.VIEW_ID, false, IPageLayout.BOTTOM, 0.95f, GameView.VIEW_ID);
 //		folder.addView("org.eclipse.pde.runtime.LogView");
