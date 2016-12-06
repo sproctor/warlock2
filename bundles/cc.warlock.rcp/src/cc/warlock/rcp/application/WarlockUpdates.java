@@ -113,6 +113,7 @@ public class WarlockUpdates {
         	uri = new URI(repository_loc);
         } catch (URISyntaxException e) {
               System.out.println( "URI invalid: " + e.getMessage());
+              return;
         }
         
         operation.getProvisioningContext().setArtifactRepositories(new URI[] { uri });

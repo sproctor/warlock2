@@ -11,4 +11,33 @@
 
   <artifactId>cc.warlock.rcp</artifactId>
   <packaging>eclipse-plugin</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<ignoreMissingFile>false</ignoreMissingFile>
+					<file>${project.build.directory}/bundles/cc.warlock.rcp/warlock-updates.properties</file>
+					<replacements>
+						<replacement>
+							<token>%CHANNEL%</token>
+							<value>${channel}</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+  
 </project>

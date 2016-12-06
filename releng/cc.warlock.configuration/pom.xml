@@ -13,6 +13,7 @@
 		<tycho.version>0.26.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<neon-repo.url>http://download.eclipse.org/releases/neon</neon-repo.url>
+		<channel>nightly</channel>
 	</properties>
 
 	<!--
