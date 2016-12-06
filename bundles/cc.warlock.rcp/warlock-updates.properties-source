@@ -6,4 +6,4 @@ warlock.updates.autoupdate=false
 ##
 # update site to check for updates
 ##
-warlock.updates.url=http://warlock.cc/updates/nightly
+warlock.updates.url=http://warlock.cc/updates/nightly/

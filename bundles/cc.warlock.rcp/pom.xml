@@ -15,6 +15,24 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>com.coderplus.maven.plugins</groupId>
+				<artifactId>copy-rename-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>copy-file</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<sourceFile>${project.basedir}/warlock-updates.properties-source</sourceFile>
+							<destinationFile>${project.basedir}/warlock-updates.properties</destinationFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>replacer</artifactId>
 				<version>1.5.3</version>
@@ -28,10 +46,10 @@
 				</executions>
 				<configuration>
 					<ignoreMissingFile>false</ignoreMissingFile>
-					<file>${project.build.directory}/bundles/cc.warlock.rcp/warlock-updates.properties</file>
+					<file>${project.basedir}/warlock-updates.properties</file>
 					<replacements>
 						<replacement>
-							<token>%CHANNEL%</token>
+							<token>nightly</token>
 							<value>${channel}</value>
 						</replacement>
 					</replacements>
