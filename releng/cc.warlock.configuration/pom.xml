@@ -26,6 +26,13 @@
 	</repositories>
 	-->
 
+	<distributionManagement>
+		<repository>
+			<id>local-repository</id>
+			<url>file:///content/web/warlock.cc/httpdocs/updates/${channel}</url>
+		</repository>
+	</distributionManagement>
+  
 	<build>
 		<plugins>
 			<plugin>
